@@ -11,13 +11,11 @@ import de.applejuicenet.client.fassade.entity.PartList;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
 import de.applejuicenet.client.fassade.shared.StringConstants;
-import org.apache.xerces.parsers.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.CharArrayWriter;
 import java.io.StringReader;
@@ -61,9 +59,7 @@ public class PartListXMLHolder extends DefaultHandler
             zipMode = StringConstants.MODE_ZIP_AND;
          }
 
-         Class parser = SAXParser.class;
-
-         xr = XMLReaderFactory.createXMLReader(parser.getName());
+         xr = SaxReaders.create();
          xr.setContentHandler(this);
       }
       catch(Exception ex)

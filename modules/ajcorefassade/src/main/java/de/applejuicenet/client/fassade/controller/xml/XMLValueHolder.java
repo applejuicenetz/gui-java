@@ -4,13 +4,11 @@
 
 package de.applejuicenet.client.fassade.controller.xml;
 
-import org.apache.xerces.parsers.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -46,11 +44,9 @@ public class XMLValueHolder extends DefaultHandler
    @SuppressWarnings("unchecked")
    public void parse(String xmlString) throws IllegalArgumentException
    {
-      Class parser = SAXParser.class;
-
       try
       {
-         xr = XMLReaderFactory.createXMLReader(parser.getName());
+         xr = SaxReaders.create();
       }
       catch(SAXException e)
       {
@@ -79,11 +75,9 @@ public class XMLValueHolder extends DefaultHandler
    @SuppressWarnings("unchecked")
    public void parse(File xmlFile) throws IllegalArgumentException
    {
-      Class parser = SAXParser.class;
-
       try
       {
-         xr = XMLReaderFactory.createXMLReader(parser.getName());
+         xr = SaxReaders.create();
       }
       catch(SAXException e)
       {

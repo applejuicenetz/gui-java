@@ -18,13 +18,11 @@ package de.applejuicenet.client.fassade.controller.xml;
 
 import de.applejuicenet.client.fassade.shared.ProxySettings;
 import de.applejuicenet.client.fassade.shared.WebsiteContentLoader;
-import org.apache.xerces.parsers.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -41,9 +39,7 @@ public class NetworkServerXMLHolder extends DefaultHandler
    {
       try
       {
-         Class parser = SAXParser.class;
-
-         xr = XMLReaderFactory.createXMLReader(parser.getName());
+         xr = SaxReaders.create();
          xr.setContentHandler(this);
       }
       catch(Exception ex)

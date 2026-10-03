@@ -8,13 +8,11 @@ import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
 import de.applejuicenet.client.fassade.shared.StringConstants;
-import org.apache.xerces.parsers.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.StringReader;
 import java.util.HashMap;
@@ -58,11 +56,9 @@ public class ShareXMLHolder extends DefaultHandler
       }
 
       xmlCommand += "password=";
-      Class parser = SAXParser.class;
-
       try
       {
-         xr = XMLReaderFactory.createXMLReader(parser.getName());
+         xr = SaxReaders.create();
          xr.setContentHandler(this);
       }
       catch(Exception ex)

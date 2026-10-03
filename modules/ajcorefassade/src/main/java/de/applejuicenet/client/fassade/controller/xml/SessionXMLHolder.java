@@ -8,13 +8,11 @@ import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.exception.CoreLostException;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
 import de.applejuicenet.client.fassade.shared.StringConstants;
-import org.apache.xerces.parsers.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.StringReader;
 
@@ -51,9 +49,7 @@ public class SessionXMLHolder extends DefaultHandler
       try
       {
          xmlCommand = "/xml/getsession.xml?password=";
-         Class parser = SAXParser.class;
-
-         xr = XMLReaderFactory.createXMLReader(parser.getName());
+         xr = SaxReaders.create();
          xr.setContentHandler(this);
       }
       catch(Exception ex)

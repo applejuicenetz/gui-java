@@ -12,6 +12,7 @@
 - [red171] Unvollständige Sprachen Italienisch und Türkisch entfernt
 - [red171] SkinLF und alte Skin-Theme-Packs entfernt
 - [red171] Ungenutzte GUI-Komponenten entfernt
+- [red171] Zusätzliche XML-Bibliotheken durch Java-Bordmittel ersetzt
 
 **0.86.2**
 

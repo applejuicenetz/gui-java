@@ -4,8 +4,6 @@
 
 package de.applejuicenet.client.fassade.shared;
 
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -15,6 +13,12 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
 /**
@@ -189,7 +193,6 @@ public abstract class XMLDecoder
 
       nodes = rootNode.getChildNodes();
       Element       e                 = null;
-      XMLSerializer xs                = null;
       int           attributePathSize = attributePath.length;
       int           nodesSize;
 
@@ -206,11 +209,17 @@ public abstract class XMLDecoder
                   e.setAttribute(attributePath[attributePathSize - 1], newValue);
                   try
                   {
-                     xs = new XMLSerializer(new FileWriter(filePath), new OutputFormat(document, "UTF-8", true));
-                     xs.serialize(document);
+                     Transformer transformer = TransformerFactory.newInstance().newTransformer();
+
+                     transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                     try(Writer writer = new OutputStreamWriter(new FileOutputStream(filePath), "UTF-8"))
+                     {
+                        transformer.transform(new DOMSource(document), new StreamResult(writer));
+                     }
                      return;
                   }
-                  catch(IOException ioE)
+                  catch(IOException | TransformerException ioE)
                   {
                      return;
                   }

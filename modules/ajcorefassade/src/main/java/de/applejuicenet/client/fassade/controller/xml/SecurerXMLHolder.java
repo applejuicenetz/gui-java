@@ -7,13 +7,11 @@ package de.applejuicenet.client.fassade.controller.xml;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
-import org.apache.xerces.parsers.SAXParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.StringReader;
 
@@ -50,9 +48,7 @@ public class SecurerXMLHolder extends DefaultHandler
       try
       {
          xmlCommand = "/xml/modified.xml?filter=informations&password=";
-         Class parser = SAXParser.class;
-
-         xr = XMLReaderFactory.createXMLReader(parser.getName());
+         xr = SaxReaders.create();
          xr.setContentHandler(this);
       }
       catch(Exception ex)
