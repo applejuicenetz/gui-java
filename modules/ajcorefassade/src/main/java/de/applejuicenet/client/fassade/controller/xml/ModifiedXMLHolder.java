@@ -1072,6 +1072,7 @@ public class ModifiedXMLHolder extends DefaultHandler
       {
          try
          {
+            resetState();
             SessionXMLHolder sessionHolder = new SessionXMLHolder(coreHolder);
             String           sessionId = sessionHolder.getNewSessionId();
 
@@ -1083,6 +1084,37 @@ public class ModifiedXMLHolder extends DefaultHandler
             reloadInProgress = false;
             throw clE;
          }
+      }
+   }
+
+   private void resetState()
+   {
+      Vector<DataPropertyChangeEvent> removedEvents = new Vector<DataPropertyChangeEvent>();
+
+      for(Download curDownload : downloadMap.values())
+      {
+         removedEvents.add(new DownloadDataPropertyChangeEvent(downloadMap, DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED,
+                                                               curDownload, null));
+      }
+
+      downloadMap.clear();
+      sourcenZuDownloads.clear();
+      downloadSourcesToDo.clear();
+      uploadMap.clear();
+      serverMap.clear();
+      searchMap.clear();
+      searchEntriesToDo.clear();
+      timestamp             = 0;
+      count                 = 0;
+      connectedWithServerId = -1;
+      tryConnectToServer    = -1;
+      downloadChanged       = true;
+      uploadChanged         = true;
+      serverChanged         = true;
+      searchChanged         = true;
+      if(removedEvents.size() > 0)
+      {
+         downloadPropertyChangeInformer.propertyChanged(new DownloadDataPropertyChangeEvent(removedEvents));
       }
    }
 

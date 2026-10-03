@@ -1,5 +1,10 @@
 # Changelog
 
+**0.86.3**
+
+- [red171] Core-Neustart bei laufender GUI: Download-Liste zeigt nicht mehr alles doppelt
+
+
 **0.86.2**
 
 - [red171] Darstellung von Ordnerbäumen und Listen verbessert, auch bei größeren Schriften und unterschiedlichen Themes
