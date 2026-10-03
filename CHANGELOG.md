@@ -3,6 +3,7 @@
 **0.86.3**
 
 - [red171] Core-Neustart bei laufender GUI: Download-Liste zeigt nicht mehr alles doppelt
+- [red171] „Mein Share“ lädt die Dateiliste beim ersten Öffnen automatisch; „Neu laden“ ist nicht mehr nötig
 
 
 **0.86.2**

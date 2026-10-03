@@ -675,6 +675,10 @@ public class ShareController extends GuiController
                      sharePanel.getBtnPrioritaetSetzen().setEnabled(true);
                      sharePanel.getBtnNeuLaden().setEnabled(true);
                      sharePanel.getBtnRefresh().setEnabled(true);
+                     if(treeInitialisiert)
+                     {
+                        shareNeuLaden();
+                     }
                   }
             }.execute();
          }
