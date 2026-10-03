@@ -25,7 +25,6 @@ import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.SoundPlayer;
-import de.applejuicenet.client.shared.StartupTiming;
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLFrame;
 import de.tklsoft.gui.controls.TKLLabel;
@@ -221,7 +220,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         menuItemDateiliste.setIcon(im.getIcon("speichern"));
         menuItemCheckUpdate.setIcon(im.getIcon("update"));
 
-        setJMenuBar(StartupTiming.measure(logger, "Menue", this::createMenuBar));
+        setJMenuBar(createMenuBar());
 
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(25, "Initialisiere Sprache...");
@@ -233,7 +232,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             AppleJuiceClient.splash.setProgress(30, "Erstelle Register...");
         }
 
-        registerPane = StartupTiming.measure(logger, "Register", () -> new RegisterPanel(this));
+        registerPane = new RegisterPanel(this);
         languageSelector.fireLanguageChanged();
         if (AppleJuiceClient.splash != null) {
             AppleJuiceClient.splash.setProgress(95, "Register erstellt..");

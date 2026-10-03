@@ -22,7 +22,6 @@ import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.applejuicenet.client.shared.Splash;
-import de.applejuicenet.client.shared.StartupTiming;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -285,7 +284,7 @@ public class AppleJuiceClient {
             if (ajFassade == null) {
                 getAjFassade();
             }
-            while (showDialog || (erreichbarkeit = StartupTiming.measure(logger, "Core-Verbindung", ajFassade::isCoreAvailable)) != 0) {
+            while (showDialog || (erreichbarkeit = ajFassade.isCoreAvailable()) != 0) {
                 splash.setVisible(false);
                 if (!showDialog) {
                     if (erreichbarkeit == 2) {

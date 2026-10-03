@@ -18,7 +18,6 @@ import de.applejuicenet.client.gui.share.ShareController;
 import de.applejuicenet.client.gui.start.StartController;
 import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.StartupTiming;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -168,10 +167,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
 
       if(OptionsManagerImpl.getInstance().shouldLoadPluginsOnStartup())
       {
-         StartupTiming.measure(logger, "Plugins", () -> {
-            loadPlugins();
-            return null;
-         });
+         loadPlugins();
       }
    }
 
