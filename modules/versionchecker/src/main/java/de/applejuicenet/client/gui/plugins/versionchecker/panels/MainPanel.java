@@ -1,295 +1,190 @@
 package de.applejuicenet.client.gui.plugins.versionchecker.panels;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.entity.Upload;
-import de.applejuicenet.client.fassade.entity.Version;
-import de.applejuicenet.client.shared.IconManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Pattern;
 
-/**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/versionchecker/panels/MainPanel.java,v 1.1 2006/05/04 14:15:17 maj0r Exp $
- *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r <aj@tkl-soft.de>
- */
+/** Session observations with theme-native controls and explicit counting semantics. */
 public class MainPanel extends JPanel {
-    private final Logger logger;
-    private final HashMap<String, VersionHolder> versions = new HashMap<String, VersionHolder>();
-    private final HashSet<String> ids = new HashSet<String>();
-    private VersionTableModel versionTableModel = new VersionTableModel();
-    private JTable versionTable;
-    private final DecimalFormat formatter = new DecimalFormat("###,##0.00");
+    private final VersionStats stats;
+    private final VersionTableModel model = new VersionTableModel();
+    private final JTable table = new JTable(model);
+    private final JTextField filter = new JTextField(20);
+    private final JLabel contacts = new JLabel("0");
+    private final JLabel versions = new JLabel("0");
+    private final JLabel leading = new JLabel("—");
+    private final JPanel systems = new JPanel(new GridLayout(0, 1, 0, 10));
+    private final JLabel empty = new JLabel("Noch keine Transferkontakte beobachtet", SwingConstants.CENTER);
+    private final CardLayout contentLayout = new CardLayout();
+    private final JPanel content = new JPanel(contentLayout);
 
-    public MainPanel() {
-        logger = LoggerFactory.getLogger(getClass());
-        try {
-            init();
-        } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-        }
+    public MainPanel() { this(new VersionStats()); }
+    public MainPanel(VersionStats stats) {
+        super(new BorderLayout(0, 16));
+        this.stats = stats;
+        setBorder(BorderFactory.createEmptyBorder(18, 18, 18, 18));
+        JPanel header = new JPanel(new BorderLayout(0, 16));
+        JPanel title = new JPanel(new GridLayout(0, 1, 0, 4));
+        JLabel heading = new JLabel("Versionen im Transfernetz");
+        heading.setFont(heading.getFont().deriveFont(Font.BOLD, 22f));
+        title.add(heading);
+        title.add(new JLabel("Core-Versionen und Systeme beobachteter Download-Quellen und Uploads"));
+        header.add(title, BorderLayout.NORTH);
+        JPanel cards = new JPanel(new GridLayout(1, 3, 16, 0));
+        cards.add(card("Beobachtete Kontakte", contacts));
+        cards.add(card("Core-Versionen", versions));
+        cards.add(card("Häufigste Version", leading));
+        header.add(cards, BorderLayout.CENTER);
+        JPanel tools = new JPanel(new BorderLayout(12, 0));
+        JPanel search = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        JLabel label = new JLabel("Version filtern:");
+        label.setLabelFor(filter);
+        search.add(label);
+        search.add(filter);
+        tools.add(search, BorderLayout.CENTER);
+        JButton reset = new JButton("Statistik zurücksetzen");
+        reset.addActionListener(e -> reset());
+        tools.add(reset, BorderLayout.EAST);
+        header.add(tools, BorderLayout.SOUTH);
+        add(header, BorderLayout.NORTH);
+        table.setFillsViewportHeight(true);
+        table.setShowGrid(false);
+        table.setIntercellSpacing(new Dimension(0, 0));
+        table.setRowHeight(table.getFontMetrics(table.getFont()).getHeight() + 16);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        TableRowSorter<VersionTableModel> sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
+        filter.getDocument().addDocumentListener(new DocumentListener() {
+            private void changed() {
+                sorter.setRowFilter(filter.getText().isBlank() ? null : RowFilter.regexFilter("(?i)" + Pattern.quote(filter.getText()), 0));
+            }
+            public void insertUpdate(DocumentEvent e) { changed(); }
+            public void removeUpdate(DocumentEvent e) { changed(); }
+            public void changedUpdate(DocumentEvent e) { changed(); }
+        });
+        DefaultTableCellRenderer text = new DefaultTableCellRenderer() {
+            @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean selected,
+                                                                     boolean focus, int row, int column) {
+                super.getTableCellRendererComponent(table, value, selected, focus, row, column);
+                setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+                return this;
+            }
+        };
+        table.setDefaultRenderer(String.class, text);
+        table.getColumnModel().getColumn(0).setPreferredWidth(170);
+        table.getColumnModel().getColumn(1).setMaxWidth(100);
+        table.getColumnModel().getColumn(2).setMaxWidth(130);
+        table.getColumnModel().getColumn(3).setPreferredWidth(400);
+        DefaultTableCellRenderer number = new DefaultTableCellRenderer();
+        number.setHorizontalAlignment(SwingConstants.RIGHT);
+        table.getColumnModel().getColumn(1).setCellRenderer(number);
+        table.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override protected void setValue(Object value) {
+                setHorizontalAlignment(SwingConstants.RIGHT);
+                setText(String.format(Locale.GERMANY, "%.1f %%", value));
+            }
+        });
+        content.add(new JScrollPane(table), "table");
+        content.add(empty, "empty");
+        JPanel body = new JPanel(new BorderLayout(18, 0));
+        body.add(content, BorderLayout.CENTER);
+        JPanel sidebar = new JPanel(new BorderLayout(0, 14));
+        JLabel osTitle = new JLabel("Betriebssysteme");
+        osTitle.setFont(osTitle.getFont().deriveFont(Font.BOLD, 16f));
+        sidebar.add(osTitle, BorderLayout.NORTH);
+        JPanel systemList = new JPanel(new BorderLayout());
+        systemList.add(systems, BorderLayout.NORTH);
+        sidebar.add(new JScrollPane(systemList), BorderLayout.CENTER);
+        sidebar.setPreferredSize(new Dimension(235, 200));
+        body.add(sidebar, BorderLayout.EAST);
+        add(body, BorderLayout.CENTER);
+        JLabel footer = new JLabel("Seit GUI-Start / Reset · maximal 50.000 Kontakt-IDs · keine eindeutige Nutzerzählung");
+        footer.setToolTipText("Upload- und Quellen-IDs werden getrennt gezählt. Detaildaten werden nur bei aktiven Transferansichten geliefert.");
+        add(footer, BorderLayout.SOUTH);
+        refresh();
     }
 
-    private void init() {
-        setLayout(new BorderLayout());
-        versionTableModel = new VersionTableModel();
-        versionTable = new JTable();
-        versionTable.setModel(versionTableModel);
-        for (int i = 0; i < versionTable.getColumnCount(); i++) {
-            versionTable.getTableHeader().getColumnModel().getColumn(i).setHeaderRenderer(new TableHeaderCellRenderer());
-            if (i > 0) {
-                versionTable.getColumnModel().getColumn(i).setCellRenderer(new TableValueCellRenderer());
+    private JPanel card(String title, JLabel value) {
+        JPanel panel = new JPanel(new BorderLayout(0, 8));
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(UIManager.getColor("Separator.foreground") == null ? Color.GRAY : UIManager.getColor("Separator.foreground")), BorderFactory.createEmptyBorder(12, 14, 12, 14)));
+        panel.add(new JLabel(title), BorderLayout.NORTH);
+        value.setFont(value.getFont().deriveFont(Font.BOLD, 24f));
+        panel.add(value, BorderLayout.CENTER);
+        return panel;
+    }
+
+    public void refresh() {
+        var snapshot = stats.snapshot();
+        String selected = table.getSelectedRow() < 0 ? null : table.getValueAt(table.getSelectedRow(), 0).toString();
+        model.setSnapshot(snapshot);
+        if (selected != null) for (int i = 0; i < table.getRowCount(); i++) {
+            if (selected.equals(table.getValueAt(i, 0))) { table.setRowSelectionInterval(i, i); break; }
+        }
+        contacts.setText(Integer.toString(snapshot.total()));
+        versions.setText(Integer.toString(snapshot.versions().size()));
+        leading.setText(snapshot.versions().stream().max(java.util.Comparator.comparingInt(VersionStats.Row::count)).map(VersionStats.Row::version).orElse("—"));
+        contentLayout.show(content, snapshot.total() == 0 ? "empty" : "table");
+        systems.removeAll();
+        for (var entry : snapshot.systems().entrySet().stream().sorted(Map.Entry.<Integer, Integer>comparingByValue().reversed().thenComparing(Map.Entry.comparingByKey())).toList()) {
+            JPanel row = new JPanel(new BorderLayout(0, 5));
+            double percent = entry.getValue() * 100.0 / snapshot.total();
+            row.add(new JLabel(systemName(entry.getKey()) + " · " + entry.getValue() + String.format(Locale.GERMANY, " (%.1f %%)", percent)), BorderLayout.NORTH);
+            JProgressBar bar = new JProgressBar(0, snapshot.total());
+            bar.setValue(entry.getValue());
+            bar.setPreferredSize(new Dimension(180, 8));
+            row.add(bar, BorderLayout.CENTER);
+            systems.add(row);
+        }
+        systems.revalidate();
+        systems.repaint();
+    }
+
+    public void reset() { stats.clear(); refresh(); }
+
+    public void updateByDownload(Map<String, Download> downloads) {
+        synchronized (downloads) {
+            for (var download : downloads.values()) {
+                if (download == null) continue;
+                for (var source : download.getSources()) {
+                    if (source == null || source.getVersion() == null) continue;
+                    stats.observe("download:" + source.getId(), source.getVersion().getVersion(), source.getVersion().getBetriebsSystem());
+                }
             }
         }
-
-        add(new JScrollPane(versionTable), BorderLayout.CENTER);
+        SwingUtilities.invokeLater(this::refresh);
     }
 
-    public void updateByDownload(HashMap<String, Download> downloads) {
-        String versionsNr;
-        String key;
-        String key2;
-        VersionHolder versionHolder;
-        boolean updateView = false;
-
-        try {
-            synchronized (downloads) {
-                for (Download curDownload : downloads.values()) {
-                    if (curDownload == null) {
-                        continue;
-                    }
-
-                    for (DownloadSource curSource : curDownload.getSources()) {
-                        if (curSource == null || curSource.getVersion() == null) {
-                            continue;
-                        }
-
-                        key = Integer.toString(curSource.getId());
-                        if (!ids.contains(key)) {
-                            updateView = true;
-                            ids.add(key);
-                            versionsNr = curSource.getVersion().getVersion();
-                            key2 = versionsNr;
-                            if (versions.containsKey(key2)) {
-                                versionHolder = versions.get(key2);
-                            } else {
-                                versionHolder = new VersionHolder(versionsNr);
-                                versions.put(key2, versionHolder);
-                            }
-
-                            versionHolder.addUser(curSource.getVersion().getBetriebsSystem());
-                        }
-                    }
-                }
+    public void updateByUploads(Map<String, Upload> uploads) {
+        synchronized (uploads) {
+            for (var upload : uploads.values()) {
+                if (upload == null || upload.getVersion() == null) continue;
+                stats.observe("upload:" + upload.getId(), upload.getVersion().getVersion(), upload.getVersion().getBetriebsSystem());
             }
-
-            if (updateView) {
-                versionTableModel.setTable(versions);
-                updateTableHeader();
-            }
-        } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
+        SwingUtilities.invokeLater(this::refresh);
     }
 
-    private void updateTableHeader() {
-        SwingUtilities.invokeLater(() -> versionTable.getTableHeader().updateUI());
+    public static String systemName(int system) {
+        return switch (system) {
+            case 1 -> "Windows";
+            case 2 -> "Linux";
+            case 3 -> "macOS";
+            case 4 -> "Solaris";
+            case 5 -> "OS/2";
+            case 6 -> "FreeBSD";
+            case 7 -> "NetWare";
+            default -> "Unbekannt";
+        };
     }
 
-    public void updateByUploads(HashMap<String, Upload> uploads) {
-        String versionsNr;
-        String key;
-        String key2;
-        VersionHolder versionHolder;
-        boolean updateView = false;
-
-        try {
-            synchronized (uploads) {
-                for (Upload curUpload : uploads.values()) {
-                    if (curUpload == null || curUpload.getVersion() == null) {
-                        continue;
-                    }
-
-                    key = Integer.toString(curUpload.getId());
-                    if (!ids.contains(key)) {
-                        updateView = true;
-                        ids.add(key);
-                        versionsNr = curUpload.getVersion().getVersion();
-                        key2 = versionsNr;
-                        if (versions.containsKey(key2)) {
-                            versionHolder = versions.get(key2);
-                        } else {
-                            versionHolder = new VersionHolder(versionsNr);
-                            versions.put(key2, versionHolder);
-                        }
-
-                        versionHolder.addUser(curUpload.getVersion().getBetriebsSystem());
-                    }
-                }
-            }
-
-            if (updateView) {
-                versionTableModel.setTable(versions);
-                updateTableHeader();
-            }
-        } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-        }
-    }
-
-    class TableHeaderCellRenderer extends JLabel implements TableCellRenderer {
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
-                                                       int column) {
-            switch (column) {
-
-                case 1: {
-                    setIcon(getVersionIcon(Version.WIN32));
-                    setText(value.toString() + getPercent(Version.WIN32));
-                    break;
-                }
-
-                case 2: {
-                    setIcon(getVersionIcon(Version.LINUX));
-                    setText(value.toString() + getPercent(Version.LINUX));
-                    break;
-                }
-
-                case 3: {
-                    setIcon(getVersionIcon(Version.MACINTOSH));
-                    setText(value.toString() + getPercent(Version.MACINTOSH));
-                    break;
-                }
-
-                case 4: {
-                    setIcon(getVersionIcon(Version.SOLARIS));
-                    setText(value.toString() + getPercent(Version.SOLARIS));
-                    break;
-                }
-
-                case 5: {
-                    setIcon(getVersionIcon(Version.OS2));
-                    setText(value.toString() + getPercent(Version.OS2));
-                    break;
-                }
-
-                case 6: {
-                    setIcon(getVersionIcon(Version.FREEBSD));
-                    setText(value.toString() + getPercent(Version.FREEBSD));
-                    break;
-                }
-
-                case 7: {
-                    setIcon(getVersionIcon(Version.NETWARE));
-                    setText(value.toString() + getPercent(Version.NETWARE));
-                    break;
-                }
-
-                case 8: {
-                    setIcon(getVersionIcon(-11 /*unbekannt*/));
-                    setText(value.toString() + getPercent(-11));
-                    break;
-                }
-
-                default:
-
-                    //setText(value.toString());
-                    break;
-            }
-
-            setBackground(table.getBackground());
-            setForeground(table.getForeground());
-            setEnabled(table.isEnabled());
-            setFont(table.getFont());
-            setOpaque(true);
-            return this;
-        }
-    }
-
-    private String getPercent(int os) {
-        if (VersionHolder.countAll == 0) {
-            return "";
-        }
-
-        int gesamt = 0;
-
-        for (VersionHolder curHolder : versions.values()) {
-            gesamt += curHolder.getUser(os);
-        }
-
-        if (gesamt == 0) {
-            return "";
-        }
-
-        double percent = (double) gesamt / VersionHolder.countAll * 100;
-
-        return "  ( " + formatter.format(percent) + "% )";
-    }
-
-    private Icon getVersionIcon(int version) {
-        switch (version) {
-
-            case Version.WIN32:
-                return IconManager.getInstance().getIcon("winsymbol");
-
-            case Version.LINUX:
-                return IconManager.getInstance().getIcon("linuxsymbol");
-
-            case Version.FREEBSD:
-                return IconManager.getInstance().getIcon("freebsdsymbol");
-
-            case Version.MACINTOSH:
-                return IconManager.getInstance().getIcon("macsymbol");
-
-            case Version.SOLARIS:
-                return IconManager.getInstance().getIcon("sunossymbol");
-
-            case Version.NETWARE:
-                return IconManager.getInstance().getIcon("netwaresymbol");
-
-            case Version.OS2:
-                return IconManager.getInstance().getIcon("os2symbol");
-
-            default:
-                return IconManager.getInstance().getIcon("unbekanntsymbol");
-        }
-    }
-
-    class TableValueCellRenderer extends JLabel implements TableCellRenderer {
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
-                                                       int column) {
-            setText(value.toString());
-            if (isSelected) {
-                setForeground(table.getSelectionForeground());
-                setBackground(table.getSelectionBackground());
-            } else {
-                setBackground(table.getBackground());
-                try {
-                    if (Integer.parseInt(value.toString()) > 0) {
-                        setForeground(Color.BLUE);
-                    } else {
-                        setForeground(table.getForeground());
-                    }
-                } catch (Exception e) {
-                    setForeground(table.getForeground());
-                }
-            }
-
-            setEnabled(table.isEnabled());
-            setFont(table.getFont());
-            setOpaque(true);
-            return this;
-        }
-    }
+    JTable table() { return table; }
+    JTextField filter() { return filter; }
 }

@@ -1,74 +1,76 @@
-/*
- * Copyright 2006 TKLSoft.de   All rights reserved.
- */
-
 package de.applejuicenet.client.gui.plugins.versionchecker;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.Upload;
+import de.applejuicenet.client.fassade.listener.CoreStatusListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.plugins.versionchecker.panels.MainPanel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-/**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/plugin_src/versionchecker/src/de/applejuicenet/client/gui/plugins/versionchecker/VersionChecker.java,v 1.5 2009/01/12 10:18:00 maj0r Exp $
- *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Erstes GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: GPL</p>
- *
- * @author Maj0r <aj@tkl-soft.de>
- */
-public class VersionCheckerPlugin extends PluginConnector {
-    private MainPanel mainPanel;
-    private final Logger logger;
+public class VersionCheckerPlugin extends PluginConnector implements CoreStatusListener {
+    private final MainPanel mainPanel = new MainPanel();
+    private final ApplejuiceFassade facade;
+    private boolean listening;
 
-    public VersionCheckerPlugin(Properties pluginProperties, Map<String, Properties> languageFiles, ImageIcon icon,
-                                Map<String, ImageIcon> availableIcons) {
-        super(pluginProperties, languageFiles, icon, availableIcons);
-        logger = LoggerFactory.getLogger(getClass());
-        try {
-            setLayout(new BorderLayout());
-            mainPanel = new MainPanel();
-            add(mainPanel, BorderLayout.CENTER);
-            AppleJuiceClient.getAjFassade().addDataUpdateListener(this, DATALISTENER_TYPE.DOWNLOAD_CHANGED);
-            AppleJuiceClient.getAjFassade().addDataUpdateListener(this, DATALISTENER_TYPE.UPLOAD_CHANGED);
-        } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+    public VersionCheckerPlugin(Properties properties, Map<String, Properties> languages, ImageIcon icon,
+                                Map<String, ImageIcon> icons) {
+        this(properties, languages, icon, icons, AppleJuiceClient.getAjFassade());
+    }
+
+    VersionCheckerPlugin(Properties properties, Map<String, Properties> languages, ImageIcon icon,
+                         Map<String, ImageIcon> icons, ApplejuiceFassade facade) {
+        super(properties, languages, icon, icons);
+        this.facade = facade;
+        setLayout(new BorderLayout());
+        add(mainPanel, BorderLayout.CENTER);
+        attach();
+    }
+
+    private void attach() {
+        if (listening || facade == null) return;
+        facade.addDataUpdateListener(this, DATALISTENER_TYPE.DOWNLOAD_CHANGED);
+        facade.addDataUpdateListener(this, DATALISTENER_TYPE.UPLOAD_CHANGED);
+        ApplejuiceFassade.addCoreStatusListener(this);
+        listening = true;
+    }
+
+    @Override public void addNotify() { super.addNotify(); attach(); }
+    @Override public void removeNotify() {
+        if (listening) {
+            facade.removeDataUpdateListener(this, DATALISTENER_TYPE.DOWNLOAD_CHANGED);
+            facade.removeDataUpdateListener(this, DATALISTENER_TYPE.UPLOAD_CHANGED);
+            ApplejuiceFassade.removeCoreStatusListener(this);
+            listening = false;
         }
+        super.removeNotify();
     }
 
-    public void fireLanguageChanged() {
-    }
-
-    /*Wird automatisch aufgerufen, wenn neue Informationen vom Server eingegangen sind.
-      ueber den DataManger koennen diese abgerufen werden.*/
-    @SuppressWarnings("unchecked")
-    public void fireContentChanged(DATALISTENER_TYPE type, Object content) {
-        try {
-            if (type == DATALISTENER_TYPE.DOWNLOAD_CHANGED) {
-                HashMap<String, Download> downloads = (HashMap<String, Download>) content;
-
-                mainPanel.updateByDownload(downloads);
-            } else if (type == DATALISTENER_TYPE.UPLOAD_CHANGED) {
-                HashMap<String, Upload> uploads = (HashMap<String, Upload>) content;
-
-                mainPanel.updateByUploads(uploads);
+    @Override public void fireContentChanged(DATALISTENER_TYPE type, Object content) {
+        if (!(content instanceof Map<?, ?> map)) return;
+        if (type == DATALISTENER_TYPE.DOWNLOAD_CHANGED) {
+            Map<String, Download> downloads = new java.util.HashMap<>();
+            synchronized (map) {
+                map.forEach((key, value) -> { if (value instanceof Download download) downloads.put(String.valueOf(key), download); });
             }
-        } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            mainPanel.updateByDownload(downloads);
+        } else if (type == DATALISTENER_TYPE.UPLOAD_CHANGED) {
+            Map<String, Upload> uploads = new java.util.HashMap<>();
+            synchronized (map) {
+                map.forEach((key, value) -> { if (value instanceof Upload upload) uploads.put(String.valueOf(key), upload); });
+            }
+            mainPanel.updateByUploads(uploads);
         }
     }
 
-    public void registerSelected() {
+    @Override public void fireStatusChanged(STATUS status) {
+        // Core may reuse transfer IDs after reconnect; do not merge different sessions.
+        if (status == STATUS.CLOSED) SwingUtilities.invokeLater(mainPanel::reset);
     }
+    @Override public void registerSelected() { mainPanel.refresh(); }
+    @Override public void fireLanguageChanged() { }
 }
