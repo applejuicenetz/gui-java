@@ -16,6 +16,7 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.controller.TableColumnSettings;
+import de.applejuicenet.client.gui.controller.TableSelection;
 import de.applejuicenet.client.shared.ReleaseInfo;
 
 import javax.swing.*;
@@ -369,6 +370,8 @@ public class UploadController extends GuiController {
 
             TableColumnSettings.refreshCompact(uploadPanel.getUploadActiveTable());
             TableColumnSettings.refreshCompact(uploadPanel.getUploadWaitingTable());
+            TableSelection.selectOnlyRow(uploadPanel.getUploadActiveTable());
+            TableSelection.selectOnlyRow(uploadPanel.getUploadWaitingTable());
             uploadPanel.getUploadActiveTable().revalidate();
             uploadPanel.getUploadActiveTable().repaint();
             uploadPanel.getUploadWaitingTable().revalidate();
@@ -461,6 +464,10 @@ public class UploadController extends GuiController {
                             uploadPanel.getUploadWaitingTableModel().forceResort();
                             uploadPanel.getUploadWaitingTable().revalidate();
                             uploadPanel.getUploadWaitingTable().repaint();
+                        }
+                        if (componentSelected) {
+                            TableSelection.selectOnlyRow(uploadPanel.getUploadActiveTable());
+                            TableSelection.selectOnlyRow(uploadPanel.getUploadWaitingTable());
                         }
                     } catch (Exception ex) {
                         logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);

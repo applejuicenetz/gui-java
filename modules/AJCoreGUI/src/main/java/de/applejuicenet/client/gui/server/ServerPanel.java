@@ -24,6 +24,7 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.controller.TableColumnSettings;
+import de.applejuicenet.client.gui.controller.TableSelection;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.server.table.ServerTableCellRenderer;
 import de.applejuicenet.client.gui.server.table.ServerTableDateCellRenderer;
@@ -422,6 +423,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                 TableColumnSettings.installCompact(serverTable, "server", columns);
             }
             TableColumnSettings.refreshCompact(serverTable);
+            TableSelection.selectOnlyRow(serverTable);
         } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
@@ -447,6 +449,9 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
             ((SortableTableModel) serverTable.getModel()).forceResort();
             serverTable.revalidate();
             serverTable.repaint();
+        }
+        if (tabSelected) {
+            TableSelection.selectOnlyRow(serverTable);
         }
     }
 

@@ -19,6 +19,7 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.controller.TableColumnSettings;
+import de.applejuicenet.client.gui.controller.TableSelection;
 import de.applejuicenet.client.gui.download.table.DownloadSourcesTableModel;
 import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
@@ -872,6 +873,7 @@ public class DownloadController extends GuiController {
 
             TableColumnSettings.refreshCompact(downloadPanel.getDownloadTable());
             TableColumnSettings.refreshCompact(downloadPanel.getDownloadSourceTable());
+            selectSingleDownload();
             downloadPanel.getDownloadTable().revalidate();
             downloadPanel.getDownloadTable().repaint();
             if (downloadPanel.getDownloadSourcesScrollPane().isVisible()) {
@@ -887,6 +889,23 @@ public class DownloadController extends GuiController {
         selected = false;
         updateDownloadPolling();
         downloadPartListWatcher.setDownloadNode((Download) null);
+    }
+
+    private void selectSingleDownload() {
+        JTable table = downloadPanel.getDownloadTable();
+        boolean newlySelected = TableSelection.selectOnlyRow(table);
+        if (table.getRowCount() != 1) {
+            return;
+        }
+        Download download = downloadPanel.getDownloadTableModel().getRow(0);
+        if (newlySelected || downloadPanel.getDownloadSourcesTableModel().getDownload() != download) {
+            downloadClicked(download);
+            if (downloadPanel.getDownloadSourcesTableModel().setDownload(download)) {
+                downloadPanel.getDownloadSourcesTableModel().forceResort();
+                downloadPanel.getDownloadSourcesTableModel().fireTableDataChanged();
+                TableColumnSettings.refreshCompact(downloadPanel.getDownloadSourceTable());
+            }
+        }
     }
 
     protected void languageChanged() {
@@ -992,6 +1011,9 @@ public class DownloadController extends GuiController {
                 downloadPanel.getDownloadSourceTable().revalidate();
                 downloadPanel.getDownloadSourceTable().repaint();
             }
+        }
+        if (selected) {
+            selectSingleDownload();
         }
     }
 }
