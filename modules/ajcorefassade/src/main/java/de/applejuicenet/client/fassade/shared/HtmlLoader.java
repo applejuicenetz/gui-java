@@ -9,6 +9,7 @@ import de.applejuicenet.client.fassade.exception.WrongPasswordException;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -16,19 +17,35 @@ public abstract class HtmlLoader
 {
    public static final int POST = 0;
    public static final int GET = 1;
+   private static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 10000;
+   private static final int DEFAULT_READ_TIMEOUT_MILLIS = 60000;
 
    public static String getHtmlXMLContent(String host, Integer port, int method, String command, boolean withResult)
                                    throws WebSiteNotFoundException, WrongPasswordException
    {
+      return getHtmlXMLContent(host, port, method, command, withResult, DEFAULT_CONNECT_TIMEOUT_MILLIS,
+                               DEFAULT_READ_TIMEOUT_MILLIS);
+   }
+
+   static String getHtmlXMLContent(String host, Integer port, int method, String command, boolean withResult,
+                                          int connectTimeoutMillis, int readTimeoutMillis)
+                                   throws WebSiteNotFoundException, WrongPasswordException
+   {
       int           ajPort     = port.intValue();
       StringBuilder urlContent = new StringBuilder();
+      if(connectTimeoutMillis <= 0 || readTimeoutMillis <= 0)
+      {
+         throw new IllegalArgumentException("Timeouts must be positive");
+      }
 
       try
       {
-         try
+         try(Socket socket = new Socket())
          {
             InetAddress addr   = InetAddress.getByName(host);
-            Socket      socket = new Socket(addr, ajPort);
+
+            socket.connect(new InetSocketAddress(addr, ajPort), connectTimeoutMillis);
+            socket.setSoTimeout(readTimeoutMillis);
             PrintWriter out    = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
 
             String      methode = "";
@@ -167,24 +184,17 @@ public abstract class HtmlLoader
       return urlContent.toString();
    }
 
-   private static String readLn(DataInputStream in)
+   private static String readLn(DataInputStream in) throws IOException
    {
-      try
-      {
-         StringBuilder line   = new StringBuilder();
-         byte[]        toRead = new byte[1];
+      StringBuilder line   = new StringBuilder();
+      byte[]        toRead = new byte[1];
 
-         while(in.read(toRead) != -1 && (char) toRead[0] != '\n')
-         {
-            line.append((char) toRead[0]);
-         }
-
-         return line.toString().trim();
-      }
-      catch(Exception e)
+      while(in.read(toRead) != -1 && (char) toRead[0] != '\n')
       {
-         return StringConstants.EMPTY;
+         line.append((char) toRead[0]);
       }
+
+      return line.toString().trim();
    }
 
    public static String getHtmlXMLContent(String host, Integer port, int method, String command)
