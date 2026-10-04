@@ -53,6 +53,8 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
     // Thread
     private final Object workerLock = new Object();
     private Thread workerThread;
+    private final Map<Integer, CancelThread> cancelWorkers = new HashMap<>();
+    private static final System.Logger LOGGER = System.getLogger(ApplejuiceFassade.class.getName());
 
     public ApplejuiceFassade(CoreConnectionSettingsHolder coreConnectionSettingsHolder)
             throws IllegalArgumentException {
@@ -179,6 +181,9 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
         if (updateModifiedXML()) {
             anzahl = 0;
         } else {
+            if (Thread.currentThread().isInterrupted()) {
+                return anzahl;
+            }
             anzahl++;
             if (anzahl == 3) {
                 throw new CoreLostException();
@@ -204,13 +209,25 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
                 setPriority(Thread.NORM_PRIORITY);
                 int versuch = 0;
 
-                // load XMLs
-                informationXML = new InformationXMLHolder(coreHolder);
-                directoryXML = new DirectoryXMLHolder(coreHolder);
-                shareXML = new ShareXMLHolder(coreHolder);
-                if (coreVersion == null) {
-                    coreVersion = informationXML.getCoreVersion();
-                    checkForValidCoreversion();
+                if (isInterrupted()) {
+                    return;
+                }
+                try {
+                    informationXML = new InformationXMLHolder(coreHolder);
+                    directoryXML = new DirectoryXMLHolder(coreHolder);
+                    shareXML = new ShareXMLHolder(coreHolder);
+                    if (coreVersion == null) {
+                        coreVersion = informationXML.getCoreVersion();
+                        checkForValidCoreversion();
+                    }
+                } catch (RuntimeException error) {
+                    if (isInterrupted()) {
+                        return;
+                    }
+                    throw error;
+                }
+                if (isInterrupted()) {
+                    return;
                 }
 
                 informCoreStatusListener(STATUS.STARTED);
@@ -234,6 +251,9 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
 
     public void stopXMLCheck() {
         synchronized (workerLock) {
+            for (CancelThread cancelWorker : cancelWorkers.values()) {
+                cancelWorker.interrupt();
+            }
             if (workerThread == null) {
                 return;
             }
@@ -522,13 +542,19 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
                 "/function/search?password=" + coreHolder.getCorePassword() + "&search=" + toSearch, false);
     }
 
-    public synchronized void cancelSearch(Search search)
+    public void cancelSearch(Search search)
             throws IllegalArgumentException {
         if (search == null) {
             throw new IllegalArgumentException("invalid search");
         }
 
-        new CancelThread(search).start();
+        synchronized (workerLock) {
+            if (!cancelWorkers.containsKey(search.getId())) {
+                CancelThread cancelWorker = new CancelThread(search);
+                cancelWorkers.put(search.getId(), cancelWorker);
+                cancelWorker.start();
+            }
+        }
     }
 
     public void renameDownload(Download download, String newFilename)
@@ -976,10 +1002,9 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
 
     private class CancelThread extends Thread {
         private final Search search;
-        private boolean cancel = false;
-        private Thread innerThread;
 
         public CancelThread(Search search) {
+            super("ApplejuiceFassadeCancelSearch-" + search.getId());
             this.search = search;
         }
 
@@ -988,23 +1013,27 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
                 if (search.getCreationTime() > System.currentTimeMillis() - 10000) {
                     sleep(10000);
                 }
-                while (!cancel) {
-                    innerThread = new Thread() {
-                        public void run() {
-                            HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.POST,
-                                    "/function/cancelsearch?password=" + coreHolder.getCorePassword() + "&id=" +
-                                            search.getId(), true);
-                            cancel = true;
-
+                while (!isInterrupted()) {
+                    try {
+                        HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.POST,
+                                "/function/cancelsearch?password=" + coreHolder.getCorePassword() + "&id=" +
+                                        search.getId(), true);
+                        return;
+                    } catch (WebSiteNotFoundException error) {
+                        if (isInterrupted()) {
+                            return;
                         }
-                    };
-                    innerThread.start();
-                    sleep(4000);
-                    innerThread.interrupt();
+                        LOGGER.log(System.Logger.Level.WARNING,
+                                "Search cancellation failed for search {0}; retrying", search.getId());
+                        sleep(4000);
+                    }
                 }
-            } catch (InterruptedException iE) {
-                innerThread.interrupt();
+            } catch (InterruptedException interrupted) {
                 interrupt();
+            } finally {
+                synchronized (workerLock) {
+                    cancelWorkers.remove(search.getId(), this);
+                }
             }
         }
     }

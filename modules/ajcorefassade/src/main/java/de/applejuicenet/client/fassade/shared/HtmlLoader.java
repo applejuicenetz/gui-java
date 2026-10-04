@@ -12,6 +12,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.channels.SocketChannel;
 
 public abstract class HtmlLoader
 {
@@ -40,8 +41,9 @@ public abstract class HtmlLoader
 
       try
       {
-         try(Socket socket = new Socket())
+         try(SocketChannel channel = SocketChannel.open())
          {
+            Socket socket = channel.socket();
             InetAddress addr   = InetAddress.getByName(host);
 
             socket.connect(new InetSocketAddress(addr, ajPort), connectTimeoutMillis);

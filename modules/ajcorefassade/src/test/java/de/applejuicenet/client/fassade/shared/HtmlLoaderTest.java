@@ -17,6 +17,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.*;
 
@@ -24,6 +27,59 @@ public class HtmlLoaderTest {
     private static final int CONNECT_TIMEOUT_MILLIS = 1000;
     private static final int READ_TIMEOUT_MILLIS = 200;
     private static final String COMMAND = "/xml/information.xml?password=test";
+
+    @Test(timeout = 10000)
+    public void interruptClosesSilentGetConnection() throws Exception {
+        assertInterruptClosesConnection("", HtmlLoader.GET, COMMAND);
+    }
+
+    @Test(timeout = 10000)
+    public void interruptClosesPartialBodyConnection() throws Exception {
+        assertInterruptClosesConnection("HTTP/1.1 200 OK\nContent-Length: 4\n\nab", HtmlLoader.GET, COMMAND);
+    }
+
+    @Test(timeout = 10000)
+    public void interruptClosesCompressedConnection() throws Exception {
+        assertInterruptClosesConnection("HTTP/1.1 200 OK\nContent-Length: 4\n\n", HtmlLoader.GET,
+                COMMAND + "&mode=zip");
+    }
+
+    @Test(timeout = 10000)
+    public void interruptClosesSilentPostConnection() throws Exception {
+        assertInterruptClosesConnection("", HtmlLoader.POST, "/function/cancelsearch?password=test&id=1");
+    }
+
+    private void assertInterruptClosesConnection(String response, int method, String command) throws Exception {
+        AtomicReference<Throwable> failure = new AtomicReference<>();
+        AtomicBoolean interrupted = new AtomicBoolean();
+        try (CoreResponse core = new CoreResponse(response)) {
+            Thread requestThread = new Thread(() -> {
+                try {
+                    HtmlLoader.getHtmlXMLContent("127.0.0.1", core.port(), method, command, true,
+                            CONNECT_TIMEOUT_MILLIS, 60000);
+                } catch (Throwable error) {
+                    failure.set(error);
+                } finally {
+                    interrupted.set(Thread.currentThread().isInterrupted());
+                }
+            }, "HtmlLoaderInterruptTest");
+            try {
+                requestThread.start();
+                assertTrue(core.requestReceived.await(5, TimeUnit.SECONDS));
+                requestThread.interrupt();
+                requestThread.join(1000);
+                assertFalse("Interrupted request still blocks", requestThread.isAlive());
+                assertTrue(interrupted.get());
+                assertTrue(failure.get() instanceof WebSiteNotFoundException);
+                assertTrue(failure.get().getCause() instanceof IOException);
+                core.awaitClientClose();
+            } finally {
+                core.close();
+                requestThread.interrupt();
+                requestThread.join(1000);
+            }
+        }
+    }
 
     @Test(timeout = 10000)
     public void silentCoreTimesOutAndClosesConnection() throws Exception {
@@ -127,6 +183,7 @@ public class HtmlLoaderTest {
     }
 
     private static class CoreResponse implements AutoCloseable {
+        private final CountDownLatch requestReceived = new CountDownLatch(1);
         private final ServerSocket server;
         private final ExecutorService executor = Executors.newSingleThreadExecutor();
         private final Future<?> task;
@@ -147,6 +204,7 @@ public class HtmlLoaderTest {
                         socket.getOutputStream().write(response.getBytes(StandardCharsets.US_ASCII));
                         socket.getOutputStream().flush();
                     }
+                    requestReceived.countDown();
                     try {
                         assertEquals(-1, reader.read());
                     } catch (SocketException connectionReset) {

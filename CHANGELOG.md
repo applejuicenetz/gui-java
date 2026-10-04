@@ -29,6 +29,8 @@
 ### Technische Änderungen
 
 - [red171] Verbindungen und Aktualisierung:
+  - Suchabbruch startet keine parallelen Wiederholungen; Stop beendet auch
+    wartende Polling- und Suchabbruch-Abrufe
   - Core-Anfragen warten nicht mehr unbegrenzt und geben Verbindungen frei
   - News, Serverliste und Update-Prüfung warten nicht mehr unbegrenzt
   - Aktualisierung erholt sich nach fehlerhaften Core-Antworten und läuft nach
