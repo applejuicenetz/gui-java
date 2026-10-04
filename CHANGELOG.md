@@ -10,6 +10,13 @@
   - Heatmap zeigt beobachtete Upload-Aktivität bei aktivem Plugin-Tab und wird
     beim Ende der Core-Verbindung zurückgesetzt
   - Datei-Kontextmenü kopiert den `ajfsp`-Link; unterstützt auch Remote-Core
+- [red171] Log Viewer:
+  - Logs erscheinen als filterbare Tabelle mit Zeit, Stufe, Quelle und Meldung
+  - Fehler und Warnungen sind farbig hervorgehoben; der erste Fehler wird mit
+    Stacktrace automatisch angezeigt
+  - Suche und Filter nach Stufe; Dateiliste zeigt Datum und Größe
+  - Beim Öffnen bleiben die 20 neuesten Logdateien erhalten, ältere werden
+    ohne Rückfrage gelöscht; das laufende Log bleibt immer erhalten
 - [red171] Version Checker:
   - Neue Übersicht mit Kontaktanzahl, Core-Versionen und häufigster Version
   - Filterbare, sortierbare Versionstabelle mit Anteilen und Betriebssystem-Verteilung
