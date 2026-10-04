@@ -72,7 +72,7 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
     private int standardAutomaticPwdlAb = 200;
     private int standardAutomaticPwdlBis = 30;
     private DownloadController downloadController;
-    private AutomaticPowerdownloadPolicy autoPwdlThread;
+    private volatile AutomaticPowerdownloadPolicy autoPwdlThread;
     private Information lastInformation;
     private JPanel backPanel = new JPanel();
     private JScrollPane scrollPane;
@@ -398,6 +398,7 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
                 AutomaticPowerdownloadPolicy selectedPolicy = (AutomaticPowerdownloadPolicy) pwdlPolicies.getSelectedItem();
 
                 manageAutoPwdl(selectedPolicy);
+                downloadController.updateDownloadPolling();
                 AppleJuiceDialog.getApp().informAutomaticPwdlEnabled(true);
             }
         } else {
@@ -409,6 +410,7 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
                     autoPwdlThread.interrupt();
                     autoPwdlThread = null;
                 }
+                downloadController.updateDownloadPolling();
             }
         }
     }
@@ -467,6 +469,7 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
     public void autoPwdlFinished() {
         autoPwdlEinstellungen.setVisible(false);
         autoPwdlThread = null;
+        downloadController.updateDownloadPolling();
         btnAutoInaktiv.setSelected(true);
         btnAutoPdl.doClick();
         AppleJuiceDialog.getApp().informAutomaticPwdlEnabled(false);

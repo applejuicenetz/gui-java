@@ -83,6 +83,11 @@ public class ModifiedXMLHolder extends DefaultHandler
    private boolean                            speedChanged                   = false;
    private boolean                            informationChanged             = false;
    private boolean                            networkInfoChanged             = false;
+   private final Object                       pollingLock                    = new Object();
+   private boolean                            downloadPolling                = false;
+   private boolean                            uploadPolling                  = false;
+   private boolean                            downloadSyncPending            = false;
+   private boolean                            uploadSyncPending              = false;
 
    @SuppressWarnings("unchecked")
    public ModifiedXMLHolder(CoreConnectionSettingsHolder coreHolder, ApplejuiceFassade ajFassade)
@@ -146,6 +151,67 @@ public class ModifiedXMLHolder extends DefaultHandler
       return netInfo;
    }
 
+   public void setDownloadPolling(boolean enabled)
+   {
+      synchronized(pollingLock)
+      {
+         if(enabled && !downloadPolling)
+         {
+            downloadSyncPending = true;
+         }
+
+         downloadPolling = enabled;
+      }
+   }
+
+   public void setUploadPolling(boolean enabled)
+   {
+      synchronized(pollingLock)
+      {
+         if(enabled && !uploadPolling)
+         {
+            uploadSyncPending = true;
+         }
+
+         uploadPolling = enabled;
+      }
+   }
+
+   private String buildPollingFilter(boolean downloads, boolean uploads)
+   {
+      StringBuilder pollingFilter = new StringBuilder("&filter=informations;server;search;ids");
+
+      if(downloads)
+      {
+         pollingFilter.append(";down;user");
+      }
+
+      if(uploads)
+      {
+         pollingFilter.append(";uploads");
+      }
+
+      return pollingFilter.append("&mode=zip").toString();
+   }
+
+   private void synchronize(String syncFilter)
+   {
+      String savedFilter    = filter;
+      long   savedTimestamp = timestamp;
+
+      filter    = syncFilter;
+      timestamp = 0;
+      try
+      {
+         doReload();
+      }
+      finally
+      {
+         filter    = savedFilter;
+         timestamp = savedTimestamp;
+      }
+   }
+
    public boolean update()
    {
       if(reloadInProgress)
@@ -154,6 +220,8 @@ public class ModifiedXMLHolder extends DefaultHandler
       }
       else
       {
+         int stage = count;
+
          switch(count)
          {
 
@@ -175,7 +243,6 @@ public class ModifiedXMLHolder extends DefaultHandler
             case 2:
             {
                count++;
-               filter = "&mode=zip";
                break;
             }
 
@@ -190,7 +257,49 @@ public class ModifiedXMLHolder extends DefaultHandler
          speedChanged       = false;
          informationChanged = false;
          networkInfoChanged = false;
-         reload();
+         reloadInProgress   = true;
+         try
+         {
+            boolean downloads;
+            boolean uploads;
+            boolean syncDownloads = false;
+            boolean syncUploads   = false;
+
+            synchronized(pollingLock)
+            {
+               downloads = downloadPolling;
+               uploads   = uploadPolling;
+               if(stage >= 2)
+               {
+                  syncDownloads       = downloads && downloadSyncPending;
+                  syncUploads         = uploads && uploadSyncPending;
+                  downloadSyncPending = downloadSyncPending && !downloads;
+                  uploadSyncPending   = uploadSyncPending && !uploads;
+               }
+            }
+
+            if(stage >= 2)
+            {
+               if(syncDownloads)
+               {
+                  synchronize("&filter=down;user;ids&mode=zip");
+               }
+
+               if(syncUploads)
+               {
+                  synchronize("&filter=uploads;ids&mode=zip");
+               }
+
+               filter = buildPollingFilter(downloads, uploads);
+            }
+
+            doReload();
+         }
+         finally
+         {
+            reloadInProgress = false;
+         }
+
          return true;
       }
    }

@@ -280,6 +280,7 @@ public class UploadController extends GuiController {
     public void componentSelected() {
         try {
             componentSelected = true;
+            AppleJuiceClient.getAjFassade().setUploadPolling(true);
             if (!initialized) {
                 initialized = true;
                 TableColumnModel headerModelActive = uploadPanel.getUploadActiveTable().getTableHeader().getColumnModel();
@@ -381,6 +382,7 @@ public class UploadController extends GuiController {
 
     public void componentLostSelection() {
         componentSelected = false;
+        AppleJuiceClient.getAjFassade().setUploadPolling(false);
     }
 
     protected void languageChanged() {

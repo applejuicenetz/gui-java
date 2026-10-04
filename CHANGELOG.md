@@ -32,6 +32,10 @@
 
 ### Technische Änderungen
 
+- [red171] Core-Abfragen:
+  - Download- und Uploaddaten werden nur bei aktiver Ansicht abgefragt
+  - Automatischer Powerdownload hält die Download-Abfrage aktiv
+  - Abfrageintervall von 2 auf 1 Sekunde verkürzt
 - [red171] Verbindungen und Aktualisierung:
   - Suchabbruch startet keine parallelen Wiederholungen; Stop beendet auch
     wartende Polling- und Suchabbruch-Abrufe

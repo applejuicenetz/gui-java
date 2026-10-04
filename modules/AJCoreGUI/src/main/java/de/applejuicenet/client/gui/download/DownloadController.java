@@ -71,7 +71,7 @@ public class DownloadController extends GuiController {
     private DownloadPartListWatcher downloadPartListWatcher;
     private boolean firstUpdate = true;
     private boolean isFirstDownloadPropertyChanged = true;
-    private boolean selected = false;
+    private volatile boolean selected = false;
     private String alreadyLoaded;
     private String invalidLink;
     private String linkFailure;
@@ -773,9 +773,15 @@ public class DownloadController extends GuiController {
         }
     }
 
+    public void updateDownloadPolling() {
+        AppleJuiceClient.getAjFassade()
+                .setDownloadPolling(selected || downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive());
+    }
+
     public void componentSelected() {
         try {
             selected = true;
+            updateDownloadPolling();
             if (!initialized) {
                 initialized = true;
                 firstUpdate = false;
@@ -880,6 +886,7 @@ public class DownloadController extends GuiController {
 
     public void componentLostSelection() {
         selected = false;
+        updateDownloadPolling();
         downloadPartListWatcher.setDownloadNode((Download) null);
     }
 

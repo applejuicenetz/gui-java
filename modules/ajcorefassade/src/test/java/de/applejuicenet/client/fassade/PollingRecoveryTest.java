@@ -48,6 +48,44 @@ public class PollingRecoveryTest {
     }
 
     @Test(timeout = 15000)
+    public void downloadAndUploadDataAreOnlyRequestedWhileViewsAreActive() throws Exception {
+        java.util.List<String> requests = new java.util.concurrent.CopyOnWriteArrayList<>();
+        try (CoreStub core = new CoreStub(request -> {
+            if (request.contains("getsession.xml")) {
+                return SESSION;
+            }
+            requests.add(request);
+            return MODIFIED;
+        })) {
+            ModifiedXMLHolder holder = new ModifiedXMLHolder(core.settings(), null);
+
+            for (int index = 0; index < 4; index++) {
+                assertTrue(holder.update());
+            }
+            requests.clear();
+            assertTrue(holder.update());
+            assertTrue(requests.get(0).contains("filter=informations;server;search;ids&"));
+            assertFalse(requests.get(0).contains("down;"));
+            assertFalse(requests.get(0).contains("uploads"));
+
+            requests.clear();
+            holder.setDownloadPolling(true);
+            assertTrue(holder.update());
+            assertTrue(requests.get(0).contains("filter=down;user;ids&"));
+            assertTrue(requests.get(1).contains("filter=informations;server;search;ids;down;user&"));
+            assertFalse(requests.get(1).contains("uploads"));
+
+            requests.clear();
+            holder.setDownloadPolling(false);
+            holder.setUploadPolling(true);
+            assertTrue(holder.update());
+            assertTrue(requests.get(0).contains("filter=uploads;ids&"));
+            assertTrue(requests.get(1).contains("filter=informations;server;search;ids;uploads&"));
+            assertFalse(requests.get(1).contains("down;"));
+        }
+    }
+
+    @Test(timeout = 15000)
     public void stopEndsPollerAndAllowsRestart() throws Exception {
         try (CoreStub core = new CoreStub(request -> {
             if (request.contains("getsession.xml")) {

@@ -48,7 +48,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
     private Version coreVersion;
     private Map<Integer, Share> share = null;
     private PartListXMLHolder partlistXML = null;
-    private long sleepTime = 2000;
+    private long sleepTime = 1000;
 
     // Thread
     private final Object workerLock = new Object();
@@ -241,6 +241,14 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
                 }
             }
         };
+    }
+
+    public void setDownloadPolling(boolean enabled) {
+        modifiedXML.setDownloadPolling(enabled);
+    }
+
+    public void setUploadPolling(boolean enabled) {
+        modifiedXML.setUploadPolling(enabled);
     }
 
     public void setUpdateInterval(long millis) {
