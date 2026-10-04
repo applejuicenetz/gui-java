@@ -37,7 +37,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
 
     private static final int MAX_SUBDIR_DEPTH = 5;
     private static final String WEB_LINK_PREFIX = "web+ajfsp://";
-    private static HashSet<CoreStatusListener> coreListener = new HashSet<CoreStatusListener>();
+    private static final java.util.Set<CoreStatusListener> coreListener = new java.util.concurrent.CopyOnWriteArraySet<>();
     private final CoreConnectionSettingsHolder coreHolder;
     private Map<DATALISTENER_TYPE, DataUpdateInformer> informer = new HashMap<DATALISTENER_TYPE, DataUpdateInformer>();
     private ModifiedXMLHolder modifiedXML;
@@ -157,7 +157,12 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
 
     private void informCoreStatusListener(STATUS newStatus) {
         for (CoreStatusListener curListener : coreListener) {
-            curListener.fireStatusChanged(newStatus);
+            try {
+                curListener.fireStatusChanged(newStatus);
+            } catch (RuntimeException exception) {
+                java.util.logging.Logger.getLogger(ApplejuiceFassade.class.getName()).log(
+                        java.util.logging.Level.WARNING, "Core status listener failed: " + curListener.getClass().getName(), exception);
+            }
         }
     }
 
