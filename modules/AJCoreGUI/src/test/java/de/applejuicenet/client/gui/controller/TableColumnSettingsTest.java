@@ -8,13 +8,89 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TableColumnSettingsTest {
+    @Test
+    public void compactColumnsIgnoreSavedWidthsAndFitAllRowsAfterReordering() throws Exception {
+        AtomicReference<JTable> tableReference = new AtomicReference<>();
+        SwingUtilities.invokeAndWait(() -> {
+            Object[][] rows = new Object[220][3];
+            rows[210][2] = "1234567890".repeat(12);
+            JTable table = new JTable(new DefaultTableModel(rows, new String[] {"Name", "Size", "Requests"}));
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            JScrollPane scrollPane = new JScrollPane(table);
+            scrollPane.getViewport().setSize(1600, 300);
+            tableReference.set(table);
+            TableColumnSettings.install(table, columns(table), key -> {
+                if (key.endsWith("width")) {
+                    return 500;
+                }
+                return "column2_index".equals(key) ? 0 : "column0_index".equals(key) ? 1 : 2;
+            }, (key, value) -> { }, true);
+        });
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = tableReference.get();
+            assertEquals(2, table.getColumnModel().getColumn(0).getModelIndex());
+            assertEquals(requiredWidth(table, 2), table.getColumnModel().getColumn(0).getWidth());
+            assertTrue(table.getColumnModel().getColumn(0).getWidth() > 400);
+            assertEquals(requiredWidth(table, 1), table.getColumnModel().getColumn(2).getWidth());
+            assertEquals(1600 - requiredWidth(table, 1) - requiredWidth(table, 2),
+                    table.getColumnModel().getColumn(1).getWidth());
+            ((DefaultTableModel) table.getModel()).setValueAt("1", 210, 2);
+        });
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = tableReference.get();
+            assertEquals(requiredWidth(table, 2), table.getColumnModel().getColumn(0).getWidth());
+            assertTrue(table.getColumnModel().getColumn(0).getWidth() < 400);
+            assertEquals(1600 - requiredWidth(table, 1) - requiredWidth(table, 2),
+                    table.getColumnModel().getColumn(1).getWidth());
+        });
+    }
+
+    @Test
+    public void compactEmptyTableFitsHeadersAndUpdatesChangedCaptions() throws Exception {
+        AtomicReference<JTable> tableReference = new AtomicReference<>();
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = table();
+            table.setSize(1000, 300);
+            tableReference.set(table);
+            TableColumnSettings.install(table, columns(table), key -> -1, (key, value) -> { }, true);
+        });
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = tableReference.get();
+            assertEquals(requiredWidth(table, 1), table.getColumnModel().getColumn(1).getWidth());
+            table.getColumnModel().getColumn(1).setHeaderValue("Much longer size caption");
+        });
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = tableReference.get();
+            assertEquals(requiredWidth(table, 1), table.getColumnModel().getColumn(1).getWidth());
+            assertEquals(1000 - requiredWidth(table, 1) - requiredWidth(table, 2),
+                    table.getColumnModel().getColumn(0).getWidth());
+        });
+    }
+
+    private static int requiredWidth(JTable table, int modelIndex) {
+        int viewIndex = table.convertColumnIndexToView(modelIndex);
+        TableColumn column = table.getColumnModel().getColumn(viewIndex);
+        TableCellRenderer renderer = table.getTableHeader().getDefaultRenderer();
+        int width = renderer.getTableCellRendererComponent(table, column.getHeaderValue(), false, false, -1, viewIndex)
+                .getPreferredSize().width;
+        for (int row = 0; row < table.getRowCount(); row++) {
+            width = Math.max(width, table.prepareRenderer(table.getCellRenderer(row, viewIndex), row, viewIndex)
+                    .getPreferredSize().width);
+        }
+        return width + 12;
+    }
+
     @Test
     public void preservesDifferentLayoutsAcrossTabChangesAndReload() throws Exception {
         SwingUtilities.invokeAndWait(() -> {

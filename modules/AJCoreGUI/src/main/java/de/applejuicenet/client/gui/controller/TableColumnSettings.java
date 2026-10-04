@@ -26,14 +26,27 @@ public final class TableColumnSettings {
     }
 
     public static void install(JTable table, String view, TableColumn[] columns) {
+        install(table, view, columns, false);
+    }
+
+    public static void installCompact(JTable table, String view, TableColumn[] columns) {
+        install(table, view, columns, true);
+    }
+
+    private static void install(JTable table, String view, TableColumn[] columns, boolean compact) {
         PropertiesManager manager = PropertiesManager.getInstance();
         install(table, columns,
                 key -> manager.getTableColumnSetting("options_columns_" + view + "_" + key),
-                (key, value) -> manager.setTableColumnSetting("options_columns_" + view + "_" + key, value));
+                (key, value) -> manager.setTableColumnSetting("options_columns_" + view + "_" + key, value), compact);
     }
 
     static void install(JTable table, TableColumn[] columns, ToIntFunction<String> read,
                         ObjIntConsumer<String> write) {
+        install(table, columns, read, write, false);
+    }
+
+    static void install(JTable table, TableColumn[] columns, ToIntFunction<String> read,
+                        ObjIntConsumer<String> write, boolean compact) {
         TableColumnModel model = table.getColumnModel();
         List<TableColumn> visible = new ArrayList<>();
         for (int index = 0; index < model.getColumnCount(); index++) {
@@ -42,7 +55,7 @@ public final class TableColumnSettings {
         List<TableColumn> unsaved = new ArrayList<>();
         for (TableColumn column : columns) {
             int width = read.applyAsInt(key(column, "width"));
-            if (width > 0) {
+            if (width > 0 && !compact) {
                 column.setPreferredWidth(width);
                 column.setWidth(width);
             } else {
@@ -64,7 +77,9 @@ public final class TableColumnSettings {
                 }
                 if ("width".equals(event.getPropertyName()) && table.getTableHeader() != null
                         && table.getTableHeader().getResizingColumn() == column) {
-                    unsaved.remove(column);
+                    if (!compact) {
+                        unsaved.remove(column);
+                    }
                     write.accept(key(column, "width"), column.getWidth());
                 } else if ("preferredWidth".equals(event.getPropertyName())) {
                     write.accept(key(column, "width"), column.getPreferredWidth());
@@ -72,7 +87,7 @@ public final class TableColumnSettings {
             });
         }
         if (!unsaved.isEmpty()) {
-            installAutoFit(table, unsaved, autoFitting);
+            installAutoFit(table, unsaved, autoFitting, compact);
         }
         model.addColumnModelListener(new TableColumnModelListener() {
             private void saveOrder() {
@@ -92,17 +107,20 @@ public final class TableColumnSettings {
         });
     }
 
-    private static void installAutoFit(JTable table, List<TableColumn> unsaved, boolean[] autoFitting) {
+    private static void installAutoFit(JTable table, List<TableColumn> unsaved, boolean[] autoFitting,
+                                       boolean compact) {
         boolean[] done = new boolean[1];
         Runnable fitAll = () -> {
-            if (done[0] || table.getRowCount() == 0) {
+            if (!compact && (done[0] || table.getRowCount() == 0)) {
                 return;
             }
             done[0] = true;
             autoFitting[0] = true;
             try {
                 for (TableColumn column : unsaved) {
-                    fit(table, column);
+                    if (!compact || column.getModelIndex() != 0) {
+                        fit(table, column, compact);
+                    }
                 }
                 fillWithNameColumn(table, unsaved);
             } finally {
@@ -111,6 +129,17 @@ public final class TableColumnSettings {
         };
 
         table.getModel().addTableModelListener(event -> SwingUtilities.invokeLater(fitAll));
+        if (compact) {
+            for (TableColumn column : unsaved) {
+                column.addPropertyChangeListener(event -> {
+                    if ("headerValue".equals(event.getPropertyName())) {
+                        SwingUtilities.invokeLater(fitAll);
+                    }
+                });
+            }
+            table.addPropertyChangeListener("font", event -> SwingUtilities.invokeLater(fitAll));
+            table.addPropertyChangeListener("UI", event -> SwingUtilities.invokeLater(fitAll));
+        }
         ComponentAdapter onResize = new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent event) {
@@ -156,7 +185,7 @@ public final class TableColumnSettings {
         }
     }
 
-    private static void fit(JTable table, TableColumn column) {
+    private static void fit(JTable table, TableColumn column, boolean compact) {
         int viewIndex = -1;
         for (int index = 0; index < table.getColumnModel().getColumnCount(); index++) {
             if (table.getColumnModel().getColumn(index) == column) {
@@ -171,12 +200,13 @@ public final class TableColumnSettings {
                 : table.getTableHeader().getDefaultRenderer();
         int width = headerRenderer.getTableCellRendererComponent(table, column.getHeaderValue(), false, false, -1, viewIndex)
                 .getPreferredSize().width;
-        int rows = Math.min(table.getRowCount(), MAX_FIT_ROWS);
+        int rows = compact ? table.getRowCount() : Math.min(table.getRowCount(), MAX_FIT_ROWS);
         for (int row = 0; row < rows; row++) {
             width = Math.max(width, table.prepareRenderer(table.getCellRenderer(row, viewIndex), row, viewIndex)
                     .getPreferredSize().width);
         }
-        width = Math.min(width + FIT_MARGIN, column.getModelIndex() == 0 ? Integer.MAX_VALUE : MAX_FIT_WIDTH);
+        width = Math.min(width + FIT_MARGIN,
+                compact || column.getModelIndex() == 0 ? Integer.MAX_VALUE : MAX_FIT_WIDTH);
         column.setPreferredWidth(width);
         column.setWidth(width);
     }

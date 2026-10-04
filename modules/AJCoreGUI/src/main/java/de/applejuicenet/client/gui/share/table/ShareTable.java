@@ -5,7 +5,11 @@ import de.applejuicenet.client.gui.components.treetable.DefaultTreeTableCellRend
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
 import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.dnd.*;
+import java.util.Collection;
+import de.applejuicenet.client.fassade.entity.Share;
 
 public class ShareTable
     extends JTreeTable {
@@ -14,6 +18,9 @@ public class ShareTable
 
     public ShareTable(ShareTableModel treeTableModel) {
         super(treeTableModel, new DefaultTreeTableCellRenderer(treeTableModel));
+        DefaultTableCellRenderer priorityRenderer = new DefaultTableCellRenderer();
+        priorityRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        getColumnModel().getColumn(2).setCellRenderer(priorityRenderer);
         dragSource.createDefaultDragGestureRecognizer(this,
             DnDConstants.ACTION_COPY_OR_MOVE,
             new DragGestureListener() {
@@ -32,6 +39,10 @@ public class ShareTable
 
     public void setDragEnabled(boolean enabled) {
         dragEnabled = enabled;
+    }
+
+    public void setShares(Collection<Share> shares) {
+        ShareTreeState.refresh(this, shares);
     }
 
     public Object[] getSelectedItems() {

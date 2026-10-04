@@ -564,7 +564,7 @@ public class ShareController extends GuiController
                {
                   return;
                }
-               sharePanel.getShareModel().setShares(shares);
+               sharePanel.getShareTable().setShares(shares);
                anzahlDateien = 0;
                long size = 0;
 
@@ -639,7 +639,7 @@ public class ShareController extends GuiController
             {
                columns[index] = headerModel.getColumn(index);
             }
-            TableColumnSettings.install(sharePanel.getShareTable(), "share", columns);
+            TableColumnSettings.installCompact(sharePanel.getShareTable(), "share", columns);
          }
 
          if(!treeInitialisiert)
@@ -759,7 +759,7 @@ public class ShareController extends GuiController
 
       for(int i = 0; i < tableColumns.length; i++)
       {
-         tcm.getColumn(i).setHeaderValue(tableColumns[i]);
+         tcm.getColumn(i).setHeaderValue(tableColumns[tcm.getColumn(i).getModelIndex()]);
       }
 
       eintraege = languageSelector.getFirstAttrbuteByTagName("javagui.shareform.anzahlShare");
