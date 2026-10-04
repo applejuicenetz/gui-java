@@ -70,6 +70,7 @@ public class ShareController extends GuiController
    private static final int       OPEN_WITH_PROGRAM              = 11;
    private static final int       OPEN_WITH_STANDARD_PROGRAM     = 12;
    private static final int       RELEASE_INFO                   = 13;
+   private static final int       DATEILISTE_AUS_ORDNER           = 14;
    private static ShareController instance                       = null;
    private SharePanel             sharePanel;
    private String                 dateiGroesse;
@@ -124,11 +125,13 @@ public class ShareController extends GuiController
       sharePanel.getMnuCopyToClipboardAsUBBCode()
       .addActionListener(new GuiControllerActionListener(this, COPY_TO_CLIPBOARD_AS_UBB_CODE));
       sharePanel.getBtnNeueListe().addActionListener(new GuiControllerActionListener(this, NEUE_LISTE));
+      sharePanel.getMnuCreateFileList().addActionListener(new GuiControllerActionListener(this, DATEILISTE_AUS_ORDNER));
 
       shareTreeMouseAdapter = new ShareTreeMouseAdapter(sharePanel.getDirectoryTree(), sharePanel.getPopupMenu(),
                                                         sharePanel.getMnuSharedWithSub(), sharePanel.getMnuSharedWithoutSub(),
                                                         sharePanel.getMnuNotShared());
-      sharePanel.getShareTable().addMouseListener(new ShareTableMouseAdapter(sharePanel.getShareTable(), sharePanel.getPopupMenu2()));
+      sharePanel.getShareTable().addMouseListener(new ShareTableMouseAdapter(sharePanel.getShareTable(),
+            sharePanel.getPopupMenu2(), sharePanel.getFolderPopupMenu()));
 
       if(AppleJuiceClient.getAjFassade().isLocalhost())
       {
@@ -221,6 +224,16 @@ public class ShareController extends GuiController
             break;
          }
 
+         case DATEILISTE_AUS_ORDNER:
+         {
+            Object[] selected = sharePanel.getShareTable().getSelectedItems();
+            if(selected != null && selected.length == 1 && !((ShareNode) selected[0]).isLeaf())
+            {
+               neueListe((ShareNode) selected[0]);
+            }
+            break;
+         }
+
          case OPEN_WITH_PROGRAM:
          {
             mitProgrammOeffnen();
@@ -294,12 +307,11 @@ public class ShareController extends GuiController
       }
    }
 
-   private void neueListe()
+   private void neueListe(ShareNode... initialNodes)
    {
-      DateiListeDialog dateiListeDialog = new DateiListeDialog(AppleJuiceDialog.getApp(), false);
+      DateiListeDialog dateiListeDialog = new DateiListeDialog(AppleJuiceDialog.getApp(), false, initialNodes);
 
       sharePanel.getShareTable().setDragEnabled(true);
-      DialogLocation.center(dateiListeDialog);
       dateiListeDialog.setVisible(true);
    }
 
@@ -741,6 +753,7 @@ public class ShareController extends GuiController
       sharePanel.getBtnRefresh().setText(languageSelector.getFirstAttrbuteByTagName("mainform.startsharecheck.caption"));
       sharePanel.getBtnRefresh().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.startsharecheck.hint"));
       sharePanel.getBtnNeueListe().setText(languageSelector.getFirstAttrbuteByTagName("mainform.newfilelist.caption"));
+      sharePanel.getMnuCreateFileList().setText(languageSelector.getFirstAttrbuteByTagName("mainform.createfilelist.caption"));
       sharePanel.getBtnNeueListe().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.newfilelist.hint"));
       sharePanel.getBtnNeuLaden().setText(languageSelector.getFirstAttrbuteByTagName("mainform.sharereload.caption"));
       sharePanel.getBtnNeuLaden().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.sharereload.hint"));

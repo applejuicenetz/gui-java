@@ -58,6 +58,8 @@ public class SharePanel extends TklPanel {
     private JMenuItem sharedwosub;
     private JMenuItem notshared;
     private JPopupMenu popup2 = new JPopupMenu();
+    private JPopupMenu folderPopup = new JPopupMenu();
+    private JMenuItem itemCreateFileList = new JMenuItem();
     private JMenuItem itemReleaseInfo = new JMenuItem();
     private JMenuItem itemCopyToClipboard = new JMenuItem();
     private JMenuItem itemCopyToClipboardWithSources = new JMenuItem();
@@ -160,6 +162,14 @@ public class SharePanel extends TklPanel {
         return popup2;
     }
 
+    public JPopupMenu getFolderPopupMenu() {
+        return folderPopup;
+    }
+
+    public JMenuItem getMnuCreateFileList() {
+        return itemCreateFileList;
+    }
+
     public TitledBorder getFolderTreeBolder() {
         return folderTreeBolder;
     }
@@ -175,6 +185,8 @@ public class SharePanel extends TklPanel {
         itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
         itemCopyToClipboardAsUBBCode.setIcon(im.getIcon("clipboard"));
         itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
+        itemCreateFileList.setIcon(im.getIcon("treeRoot"));
+        folderPopup.add(itemCreateFileList);
         prioritaetAufheben.setEnabled(false);
         prioritaetSetzen.setEnabled(false);
         neuLaden.setEnabled(false);

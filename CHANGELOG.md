@@ -9,6 +9,12 @@
   - Shareanzeige erneuern behält aufgeklappte Ordner und vorhandene Auswahl bei
   - Prio-Zahlen mittig ausgerichtet
   - Datenspalten kompakt; übrige Breite für Namen
+  - Ordner-Kontextmenü erstellt eine Dateiliste mit allen enthaltenen Dateien,
+    einschließlich Unterordnern
+  - Dateilisten öffnen rechts im Hauptfenster, vertikal mittig und
+    innerhalb des Bildschirms
+  - Dateilisten passen die Größe-Spalte an Inhalte an, nutzen die Restbreite
+    für Dateinamen und zeigen Größen in passenden Einheiten wie KB, MB und GB
 - [red171] Downloads:
   - Einzelner Download wird automatisch ausgewählt und zeigt seine Quellen
   - Beide Tabellen passen Datenspalten an ihren Inhalt an; Dateiname nutzt die

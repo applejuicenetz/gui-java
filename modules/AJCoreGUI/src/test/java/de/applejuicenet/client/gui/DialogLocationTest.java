@@ -14,6 +14,27 @@ import static org.junit.Assert.assertSame;
 
 public class DialogLocationTest {
     @Test
+    public void alignsRightInsideOwnerAndFollowsItsMovement() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            JFrame owner = new JFrame();
+            JDialog dialog = new JDialog(owner);
+            try {
+                owner.setBounds(40, 60, 600, 400);
+                owner.setVisible(true);
+                dialog.setSize(200, 100);
+                DialogLocation.alignRight(dialog);
+                assertEquals(new Point(440, 210), dialog.getLocation());
+                owner.setLocation(100, 120);
+                DialogLocation.alignRight(dialog);
+                assertEquals(new Point(500, 270), dialog.getLocation());
+            } finally {
+                dialog.dispose();
+                owner.dispose();
+            }
+        });
+    }
+
+    @Test
     public void centersOverOffCenterWindowAndFollowsItsMovement() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             JFrame owner = new JFrame();

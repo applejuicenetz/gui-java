@@ -83,7 +83,7 @@ public class DateiListeTableModel extends AbstractTableModel
             return share.getShortfilename();
 
          case 1:
-            return Long.toString(share.getSize());
+            return share.getSize();
 
          default:
             return "Fehler";
@@ -105,10 +105,10 @@ public class DateiListeTableModel extends AbstractTableModel
       return dateien.size();
    }
 
-   @SuppressWarnings("unchecked")
-   public Class getClass(int column)
+   @Override
+   public Class<?> getColumnClass(int column)
    {
-      return String.class;
+      return column == 1 ? Long.class : String.class;
    }
 
    public void addNodes(ShareNode shareNode)

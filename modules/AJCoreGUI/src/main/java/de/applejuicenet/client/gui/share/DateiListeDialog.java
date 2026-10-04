@@ -10,15 +10,18 @@ import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.gui.components.dragndrop.DndTargetAdapter;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.TableColumnSettings;
 import de.applejuicenet.client.gui.share.table.DateiListeTableModel;
 import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.tablecellrenderer.SizeTableCellRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -48,9 +51,25 @@ public class DateiListeDialog extends JDialog {
     private final Logger logger;
 
     public DateiListeDialog(Frame parent, boolean modal) {
+        this(parent, modal, new ShareNode[0]);
+    }
+
+    public DateiListeDialog(Frame parent, boolean modal, ShareNode... initialNodes) {
         super(parent, modal);
         logger = LoggerFactory.getLogger(getClass());
         init();
+        DateiListeTableModel model = (DateiListeTableModel) table.getModel();
+        for (ShareNode node : initialNodes) {
+            model.addNodes(node);
+        }
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        if (visible) {
+            DialogLocation.alignRight(this);
+        }
+        super.setVisible(visible);
     }
 
     private void removeSelectedColumn() {
@@ -76,6 +95,8 @@ public class DateiListeDialog extends JDialog {
             });
             popup.add(entfernen);
             table.setModel(new DateiListeTableModel());
+            table.setDefaultRenderer(Long.class, new SizeTableCellRenderer());
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             getContentPane().setLayout(new GridBagLayout());
             JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -101,6 +122,11 @@ public class DateiListeDialog extends JDialog {
             constraints.gridy = 2;
             constraints.weighty = 1;
             JScrollPane scroll = new JScrollPane(table);
+            TableColumn[] columns = new TableColumn[table.getColumnCount()];
+            for (int index = 0; index < columns.length; index++) {
+                columns[index] = table.getColumnModel().getColumn(index);
+            }
+            TableColumnSettings.installCompact(table, "filelist", columns);
 
             scroll.setDropTarget(new DropTarget(scroll, new ListeDndTargetAdapter()));
             table.setDropTarget(new DropTarget(table, new ListeDndTargetAdapter()));

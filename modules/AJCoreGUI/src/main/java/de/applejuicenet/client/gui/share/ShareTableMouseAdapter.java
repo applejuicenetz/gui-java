@@ -23,10 +23,12 @@ public class ShareTableMouseAdapter extends MouseAdapter {
 	
 	private ShareTable shareTable;
 	private JPopupMenu popup;
+	private JPopupMenu folderPopup;
 	
-	public ShareTableMouseAdapter(ShareTable shareTable, JPopupMenu popup){
+	public ShareTableMouseAdapter(ShareTable shareTable, JPopupMenu popup, JPopupMenu folderPopup){
 		this.shareTable = shareTable;
 		this.popup = popup;
+		this.folderPopup = folderPopup;
 	}
 	
     public void mousePressed(MouseEvent me) {
@@ -53,6 +55,8 @@ public class ShareTableMouseAdapter extends MouseAdapter {
             Object[] obj = shareTable.getSelectedItems();
             if ( ( (ShareNode) obj[0]).isLeaf()) {
                 popup.show(shareTable, e.getX(), e.getY());
+            } else {
+                folderPopup.show(shareTable, e.getX(), e.getY());
             }
         }
     }
