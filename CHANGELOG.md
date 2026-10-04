@@ -16,6 +16,7 @@
 - [red171] JSON-Bibliothek für die Update-Prüfung ausgetauscht
 - [red171] Layout-Bibliothek für Download-Link-Leiste und Uploadansicht entfernt
 - [red171] Core-Anfragen warten nicht mehr unbegrenzt und geben Verbindungen frei
+- [red171] News, Serverliste und Update-Prüfung warten nicht mehr unbegrenzt
 
 **0.86.2**
 

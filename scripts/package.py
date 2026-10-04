@@ -177,7 +177,7 @@ def native(args):
         '--app-version', installer_version, '--vendor', 'appleJuiceNETZ',
         '--description', 'appleJuice JavaGUI', '--input', str(INPUT),
         '--main-jar', f'{NAME}.jar', '--main-class', MAIN,
-        '--add-modules', 'java.desktop,java.management,java.naming,java.sql,java.xml,jdk.crypto.ec,jdk.unsupported,jdk.localedata',
+        '--add-modules', 'java.desktop,java.management,java.naming,java.net.http,java.sql,java.xml,jdk.crypto.ec,jdk.unsupported,jdk.localedata',
         '--java-options', '--enable-native-access=ALL-UNNAMED',
         '--dest', str(output),
     ]
