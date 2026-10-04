@@ -1,79 +1,135 @@
 # Changelog
 
-**0.86.3** (unveröffentlicht)
+## 0.86.3 (WIP)
 
-- [red171] Keine doppelten Downloads nach einem Core-Neustart (ghosting)
-- [red171] „Mein Share“ lädt beim ersten Öffnen automatisch
-- [red171] Spaltenbreiten passen sich ohne gespeicherte Werte automatisch an
-- [red171] Cmd-/Strg+A/C/V/X funktionieren in allen Textfeldern
-- [red171] Sprachverwaltung beim GUI-Start verbessert
-- [red171] Soundpakete wechseln ohne GUI-Neustart
-- [red171] Soundpaket-Auswahl spielt eine Hörprobe, auch bei stummer GUI
-- [red171] Unvollständige Sprachen Italienisch und Türkisch entfernt
-- [red171] SkinLF und alte Skin-Theme-Packs entfernt
-- [red171] Ungenutzte GUI-Komponenten entfernt
-- [red171] Zusätzliche XML-Bibliotheken durch Java-Bordmittel ersetzt
-- [red171] JSON-Bibliothek für die Update-Prüfung ausgetauscht
-- [red171] Layout-Bibliothek für Download-Link-Leiste und Uploadansicht entfernt
-- [red171] Core-Anfragen warten nicht mehr unbegrenzt und geben Verbindungen frei
-- [red171] News, Serverliste und Update-Prüfung warten nicht mehr unbegrenzt
-- [red171] Startbild ohne Ladebalken und künstliche Wartepausen
-- [red171] macOS: Menüs (Extras, Sprache, Themes, Core …) erscheinen in der Menüleiste oben am Bildschirm
-- [red171] Menü „Beenden“ mit Symbol; Sprachflaggen auch unter macOS aktiviert
-- [red171] Aktualisierung erholt sich nach fehlerhaften Core-Antworten und läuft nach Stopp nicht weiter
+### Sichtbare Änderungen
 
-**0.86.2**
+- [red171] „Mein Share“:
+  - Lädt beim ersten Öffnen automatisch
+  - Shareanzeige erneuern behält aufgeklappte Ordner und vorhandene Auswahl bei
+  - Prio-Zahlen mittig ausgerichtet
+  - Datenspalten kompakt; übrige Breite für Namen
+- [red171] Downloads:
+  - Keine doppelten Downloads nach einem Core-Neustart (ghosting)
+- [red171] Bedienung und Darstellung:
+  - Spaltenbreiten passen sich ohne gespeicherte Werte automatisch an
+  - Cmd-/Strg+A/C/V/X funktionieren in allen Textfeldern
+  - Startbild ohne Ladebalken und künstliche Wartepausen
+  - macOS: Menüs (Extras, Sprache, Themes, Core …) erscheinen in der Menüleiste
+    oben am Bildschirm
+  - Menü „Beenden“ mit Symbol; Sprachflaggen auch unter macOS aktiviert
+- [red171] Soundpakete:
+  - Wechseln ohne GUI-Neustart
+  - Auswahl spielt eine Hörprobe, auch bei stummer GUI
+- [red171] Sprachen und Themes:
+  - Sprachverwaltung beim GUI-Start verbessert
+  - Unvollständige Sprachen Italienisch und Türkisch entfernt
+  - SkinLF und alte Skin-Theme-Packs entfernt
 
-- [red171] Darstellung von Ordnerbäumen und Listen verbessert, auch bei größeren Schriften und unterschiedlichen Themes
-- [red171] Share-Dateiliste mit Pfeiltasten bedienbar; Ordner lassen sich mit links/rechts schließen und öffnen
-- [red171] Download-, Upload-, Server- und Suchansicht aktualisieren sich ohne unnötigen Neuaufbau
-- [red171] Stabilere Aktualisierung von Listen und Verzeichnisauswahl während des Betriebs
-- [red171] Fehlende Tray-Funktion in Installationspaketen behoben; enthaltene Bibliotheken werden beim Paketbau geprüft
+### Technische Änderungen
 
-**0.86.1**
+- [red171] Verbindungen und Aktualisierung:
+  - Core-Anfragen warten nicht mehr unbegrenzt und geben Verbindungen frei
+  - News, Serverliste und Update-Prüfung warten nicht mehr unbegrenzt
+  - Aktualisierung erholt sich nach fehlerhaften Core-Antworten und läuft nach
+    Stopp nicht weiter
+- [red171] Code und Bibliotheken:
+  - Ungenutzte GUI-Komponenten entfernt
+  - Zusätzliche XML-Bibliotheken durch Java-Bordmittel ersetzt
+  - JSON-Bibliothek für die Update-Prüfung ausgetauscht
+  - Layout-Bibliothek für Download-Link-Leiste und Uploadansicht entfernt
 
-- [red171] `web+ajfsp://`-Links zusätzlich zu `ajfsp://` registriert (Windows, macOS, Flatpak) und im Link-Eingabefeld akzeptiert
-- [red171] Zielordner-Auswahl (F3) zeigt vorhandene Incoming-Unterordner auch ohne zugewiesene Downloads (#21)
-- [red171] Share-Größe mit passender binärer Einheit (MiB/GiB/TiB) statt festem MB angezeigt (#15)
-- [red171] Ungültige Fensterpositionen beim Start korrigiert; Tray-Klick stellt minimierte Fenster wieder her
-- [red171] Extras-Menü um „Beenden“ unter „Über“ ergänzt; GUI speichert Einstellungen und beendet sich
-- [red171] Spaltenbreiten und Reihenfolge pro View gespeichert; unbesuchte Tabs überschreiben keine Einstellungen, Suchergebnisse übernehmen ihr Layout (#6)
-- [red171] Darcula durch FlatLaf 3.7.2 ersetzt; Darkmode bleibt unter Java 25 ohne Zugriff auf interne Swing-Klassen nutzbar
-- [red171] Temp- und Incoming-Felder in den Optionen übernehmen die Theme-Farben statt festem Weiß
-- [red171] VLC-Feld, Ratio-Feld (PWDL) und SpeedGraph-Hintergrund nutzen standardmäßig die Theme-Farbe
-- [red171] Verbindungs-Assistent übernimmt die Theme-Farben statt festem Weiß
-- [red171] Windows-Installer wie das NSIS-Setup: Program Files, Startmenügruppe, Desktop-Verknüpfung, Hilfe-/Info-Link und `ajfsp`-/`.ajl`-Registrierung
-- [red171] LogViewer: Rechtsklick auf eine Logdatei bietet Löschen mit Rückfrage
-- [red171] LogViewer: Button "Alle Logs löschen" unten links; laufendes Log bleibt erhalten, DEBUG-Einträge für das Löschen
-- [red171] Tray-Einzelklick schaltet Fenster um
-- [red171] Tray-Menü-Icons auf 16×16 begrenzt; „Zeigen“ bläht das Menü nicht mehr auf
-- [red171] macOS-Tray-Kontextmenü nativ wie im Core; Rechtsklick ohne Swing-Popup
-- [red171] „Beenden“ im Tray-Menü ergänzt; GUI speichert Einstellungen vor dem Schließen
-- [red171] Upload-/Download-Regler aus dem Tray-Menü entfernt
-- [red171] Linux-Tray mit libtray wie im Collector integriert
-- [red171] AJL-Dateien an laufende GUI übergeben (#13)
-- [red171] GitHub Actions und Maven-Abhängigkeiten aktualisiert, CodeQL entfernt
-- [red171] Java 25 und sechs OS-Pakete mit Laufzeit; ZIP bleibt erhalten
-- [red171] Native Launcher übernehmen ajfsp-Links und AJL-Dateien
-- [red171] Dateien über 2 GiB können korrekt behandelt werden
-- [red171] Ports bis 65535 erlaubt (#17)
-- [red171] AJL-Dateien als UTF-8 gespeichert und gelesen (#16)
-- [red171] Shareanzeige nach Dateiänderungen korrekt aktualisiert (#14)
+## 0.86.2
 
-**0.85.3**
+### Sichtbare Änderungen
+
+- [red171] Bedienung und Darstellung:
+  - Darstellung von Ordnerbäumen und Listen verbessert, auch bei größeren
+    Schriften und unterschiedlichen Themes
+  - Share-Dateiliste mit Pfeiltasten bedienbar; Ordner lassen sich mit
+    links/rechts schließen und öffnen
+- [red171] Listen und Aktualisierung:
+  - Download-, Upload-, Server- und Suchansicht aktualisieren sich ohne
+    unnötigen Neuaufbau
+  - Stabilere Aktualisierung von Listen und Verzeichnisauswahl während des Betriebs
+- [red171] Tray:
+  - Fehlende Tray-Funktion in Installationspaketen behoben
+
+### Technische Änderungen
+
+- [red171] Paketbau:
+  - Enthaltene Bibliotheken werden beim Paketbau geprüft
+
+## 0.86.1
+
+### Sichtbare Änderungen
+
+- [red171] „Mein Share“:
+  - Share-Größe mit passender binärer Einheit (MiB/GiB/TiB) statt festem MB
+    angezeigt (#15)
+  - Shareanzeige nach Dateiänderungen korrekt aktualisiert (#14)
+- [red171] Bedienung und Fenster:
+  - Zielordner-Auswahl (F3) zeigt vorhandene Incoming-Unterordner auch ohne
+    zugewiesene Downloads (#21)
+  - Ungültige Fensterpositionen beim Start korrigiert; Tray-Klick stellt
+    minimierte Fenster wieder her
+  - Extras-Menü um „Beenden“ unter „Über“ ergänzt; GUI speichert Einstellungen
+    und beendet sich
+  - Spaltenbreiten und Reihenfolge pro View gespeichert; unbesuchte Tabs
+    überschreiben keine Einstellungen, Suchergebnisse übernehmen ihr Layout (#6)
+- [red171] Themes und Darstellung:
+  - Darcula durch FlatLaf 3.7.2 ersetzt; Darkmode bleibt unter Java 25 ohne
+    Zugriff auf interne Swing-Klassen nutzbar
+  - Temp- und Incoming-Felder in den Optionen übernehmen die Theme-Farben
+    statt festem Weiß
+  - VLC-Feld, Ratio-Feld (PWDL) und SpeedGraph-Hintergrund nutzen standardmäßig
+    die Theme-Farbe
+  - Verbindungs-Assistent übernimmt die Theme-Farben statt festem Weiß
+- [red171] Tray:
+  - Tray-Einzelklick schaltet Fenster um
+  - Tray-Menü-Icons auf 16×16 begrenzt; „Zeigen“ bläht das Menü nicht mehr auf
+  - macOS-Tray-Kontextmenü nativ wie im Core; Rechtsklick ohne Swing-Popup
+  - „Beenden“ im Tray-Menü ergänzt; GUI speichert Einstellungen vor dem Schließen
+  - Upload-/Download-Regler aus dem Tray-Menü entfernt
+  - Linux-Tray mit libtray wie im Collector integriert
+- [red171] LogViewer:
+  - Rechtsklick auf eine Logdatei bietet Löschen mit Rückfrage
+  - Button "Alle Logs löschen" unten links; laufendes Log bleibt erhalten,
+    DEBUG-Einträge für das Löschen
+- [red171] Links, Dateien und Verbindungen:
+  - `web+ajfsp://`-Links zusätzlich zu `ajfsp://` registriert (Windows, macOS,
+    Flatpak) und im Link-Eingabefeld akzeptiert
+  - AJL-Dateien an laufende GUI übergeben (#13)
+  - Native Launcher übernehmen ajfsp-Links und AJL-Dateien
+  - Dateien über 2 GiB können korrekt behandelt werden
+  - Ports bis 65535 erlaubt (#17)
+- [red171] Installation:
+  - Windows-Installer wie das NSIS-Setup: Program Files, Startmenügruppe,
+    Desktop-Verknüpfung, Hilfe-/Info-Link und `ajfsp`-/`.ajl`-Registrierung
+  - Sechs OS-Pakete mit Laufzeit; ZIP bleibt erhalten
+
+### Technische Änderungen
+
+- [red171] Build und Abhängigkeiten:
+  - Java 25 als Laufzeit- und Build-Basis
+  - GitHub Actions und Maven-Abhängigkeiten aktualisiert, CodeQL entfernt
+- [red171] Dateiformate:
+  - AJL-Dateien als UTF-8 gespeichert und gelesen (#16)
+
+## 0.85.3
 
 - [red171] Zeige Core-Version auch an, wenn die News einen HTTP-Status `404` liefern (z. B. wenn die News-URL nicht erreichbar ist)
 
-**0.85.2**
+## 0.85.2
 
 - [red171] Erzeuge den Splashscreen direkt transparent ohne Bildschirmaufnahme (erzeugt keine Abfrage zur Bildschirmfreigabe mehr)
 
-**0.85.1**
+## 0.85.1
 
 - [red171] Erlaube `%7C` (`|`) in Links auch im „Link hinzufügen“-Feld
 - [red171] In der `wizard.xml` den `maxdownloads`-Wert standardmäßig auf `0` gestellt
 
-**0.85.0**
+## 0.85.0
 
 - [meins57] Iconpack `modern` zusammengestellt
 - [meins57] Neue Java-GUI-Logos für `modern` erstellt
@@ -83,20 +139,20 @@
 - [red171] `ajcorefassade`-Bibliothek als eigenständiges Modul
 - [red171] `tklcontrols`-Bibliothek als eigenständiges Modul
 
-**0.84.2**
+## 0.84.2
 
 - [red171] Iconpack-Unterstützung (siehe [icons](./resources/icons/)-Ordner)
 - [red171] Soundpack-Unterstützung (siehe [sounds](./resources/sounds/)-Ordner)
 - [red171] Unter macOS funktioniert nun `Cmd+V` / `Cmd+C` usw.
 
-**0.84.1**
+## 0.84.1
 
 - [red171] Darkmode über das Java-Look-and-Feel-Theme `Darcula` integriert
 - [red171] Die alternativen Skins funktionieren wieder
 - [red171] Alle alternativen Skins werden mitinstalliert
 - [red171] Sounds funktionieren wieder!
 
-**0.84.0**
+## 0.84.0
 
 - [red171] Codebasis auf Java 11 angehoben
 - [red171] `ajfsp`-URL-Handler funktioniert nun unter macOS und Linux
@@ -105,7 +161,7 @@
 - [red171] Standard-Plugins werden jetzt auf allen Plattformen geladen
 - [red171] Für macOS wird jetzt eine `.dmg`-Datei erstellt (vereinfacht die Installation)
 
-**0.83.4**
+## 0.83.4
 
 - [red171] Die URL für die GUI-News ist nun manuell in der `ajgui.properties` konfigurierbar (`options_news_url`)
 - [red171] Die URL für die Serverliste ist nun manuell in der `ajgui.properties` konfigurierbar (`options_server_list_url`)
@@ -113,12 +169,12 @@
 - [red171] Den Browser-Bug bei der Update-Benachrichtigung final behoben ;)
 - [red171] Der FAQ-Link aus dem „Dein Client“-Bereich wurde entfernt
 
-**0.83.3**
+## 0.83.3
 
 - [red171] Import der dekompilierten `tklcontrols`
 - [red171] Alte `AJCoreGUI.exe` wiederhergestellt (mehrfache Linkübernahme funktioniert nun wieder!)
 
-**0.83.1**
+## 0.83.1
 
 - [red171] Neues, zeitgemäßes Icon für die ausführbaren Dateien und das Tray-Icon
 - [red171] Linkübernahme in Browsern auf Basis von Chromium behoben, auch wenn die GUI bereits geöffnet ist
@@ -131,44 +187,44 @@
 - [red171] GUI und Plugins werden mit Maven kompiliert, Pakete (leider) noch via `ant` komprimiert
 - [red171] Alle GUI-Plugins mit Java 8 und UTF-8-Kodierung neu kompiliert, Sprachdateien mit UTF-8 neu kodiert
 
-**0.82.1**
+## 0.82.1
 
 - [red171] Benutze unter Linux [xdg-open](https://wiki.ubuntuusers.de/xdg-utils/#xdg-open) als Standardbrowser für URLs
 
-**0.82.0**
+## 0.82.0
 
 - [red171] [wizard.xml](./AJClientGUI/wizard.xml) an die aktuellen Gegebenheiten angepasst
 - [red171] Jegliche Konfigurationsdateien werden jetzt im Verzeichnis `user.home` gesichert
 - [red171] Unter Linux wird jetzt der interne Fenstertitel korrekt gesetzt (für `.desktop`-Dateien wichtig)
 
-**0.81.1**
+## 0.81.1
 
 - [red171] Linkübernahme in Browsern auf Basis von Chromium behoben (`%7C` vs `|`)
 
-**0.80.1**
+## 0.80.1
 
 - [red171] VCS-Import
 - [red171] JRE-Versionsprüfung entfernt (so funktioniert das GUI auch mit `Java >= 11`)
 - [red171] URL der Updateprüfung auf GitHub umgestellt
 - [red171] Kompatibilität der Ant-Datei `build.xml` zu Java 8 hergestellt
 
-**0.71.1**
+## 0.71.1
 
 - [Maj0r] Release-Info auf `applefiles.cc` umgestellt
 
-**0.71.0**
+## 0.71.0
 
 - [Maj0r] Sortierung der Tabellen wird gespeichert
 - [Maj0r] Menüpunkt Release-Info in Share, Suche und Download hinzugefügt
 - [Maj0r] Bäume in Suche, Download und Upload durch Tabellen ersetzt
 
-**0.70.5**
+## 0.70.5
 
 - [Maj0r] Fehler beim Hinzufügen von Share-Ordnern behoben
 - [Maj0r] Priorität der Uploads in der Form `1:2,2` (Prioritätswert) anzeigen
 - [Maj0r] Sortierung im Downloadreiter korrigiert
 
-**0.70.4**
+## 0.70.4
 
 - [Maj0r] Deadlock beim Start gefixt
 - [Maj0r] Anzeige der Downloadgeschwindigkeit und des gesamten Down- und Uploads korrigiert
@@ -176,11 +232,11 @@
 - [Maj0r] Mit Java 6 lassen sich bei lokaler Core-Verbindung Share-Dateien und laufende Downloads nun mit dem Standardprogramm öffnen
 - [Maj0r] Bug #670 Reiter per Tastaturschnelltaste anwählbar
 
-**0.70.2**
+## 0.70.2
 
 - [Maj0r] Core-Versionsprüfung gefixt
 
-**0.70.1**
+## 0.70.1
 
 Java ab 5.0 wird benötigt
 
@@ -199,18 +255,18 @@ Java ab 5.0 wird benötigt
 - [Maj0r] GUI komplett überarbeitet und auf die neue `CoreFassade 1.0` umgebaut
 - [loevenwong] Feature-Request #549: Automatischen Powerdownload komplett überarbeitet. (Danke an `xxluckystrikexx`)
 
-**0.61.2**
+## 0.61.2
 
 - [Maj0r] Bug #528 gefixt: Deadlock bei der Darstellung der Partliste behoben. (Danke an `akku`)
 - [Maj0r] Bug #525 gefixt: Das GUI nutzte bei ungünstiger Datenkonstellation 100 % CPU-Zeit (Danke an `akku` und `apokalypse1982`)
 
-**0.61.1**
+## 0.61.1
 
 - [Maj0r] Auf vielfachen Wunsch Partlistenanzeige wieder auf mehrere Threads aufgeteilt. Braucht wieder etwas mehr Ressourcen, ist aber beim gefühlten Laden schneller.
 - [Maj0r] Bug #524 gefixt (Danke an `akku` und `fdh`)
 - [Maj0r] Bug gefixt: Nach Benutzung von „Priorität löschen“ wurde die View nicht aktualisiert.
 
-**0.61.0**
+## 0.61.0
 
 Core ab Version **0.30.146.1202** wird benötigt
 
@@ -241,7 +297,7 @@ Core ab Version **0.30.146.1202** wird benötigt
 - [Maj0r] Bug #505 gefixt (Danke an rexcorda)
 - [loevenwong] Fokus wird auf das Passwortfeld gesetzt.
 
-**0.60.0**
+## 0.60.0
 
 - [Maj0r] Feature-Request #472 (Danke an clickweg)
   Downloads, Shares und Suchergebnisse werden nun mit passenden Icons dargestellt (vgl. Suche).
@@ -273,7 +329,7 @@ Core ab Version **0.30.146.1202** wird benötigt
   -command=getajinfo
   ```
 
-**0.59.3**
+## 0.59.3
 
 - [Maj0r] Bugfix (Danke an muhviehstarr)
   Zwei Deadlocks behoben. Einer bewirkte, dass das GUI beim Start beim Splashscreen hängen bleiben konnte.
@@ -289,12 +345,12 @@ Core ab Version **0.30.146.1202** wird benötigt
   Aktive, indirekte Uploads werden wieder angezeigt.
 - [Maj0r] Dreckigen Rest im Uploadbereich entfernt.
 
-**0.59.2**
+## 0.59.2
 
 - [Maj0r] Bug #420 gefixt (Danke an Up)
   Ganz frischen `NullPointer` gefixt.
 
-**0.59.1**
+## 0.59.1
 
 Core ab Version **0.30.145.610** wird benötigt
 
@@ -304,7 +360,7 @@ Core ab Version **0.30.145.610** wird benötigt
   Beim Neuerzeugen der `properties.xml` wurden die neuen Coredaten nicht für die aktuelle Sitzung übernommen.
   Folge war ein Verbindungsverlust.
 
-**0.59.0**
+## 0.59.0
 
 - [Maj0r] Durch Ändern einer Quellcodevariable in der `AutomaticPowerdownloadPolicy.java` kann das Pausieren von Dateien verhindert werden.
 - [Maj0r] Bug #392 gefixt (Danke an Up und jr17)
@@ -313,7 +369,7 @@ Core ab Version **0.30.145.610** wird benötigt
 - [Maj0r] Downloadadresse für die Updateinfodatei auf Wunsch der BerliOS-Crew von `berlios.de` auf `tkl-soft.de` geändert.
 - [Maj0r] Uploads, die zwar in der Warteschlange sind, aber keine aktive Verbindung halten, werden jetzt im dreckigen Rest angezeigt.
 
-**0.58.0**
+## 0.58.0
 
 Core ab Version **0.30.144.522** wird benötigt
 
@@ -327,7 +383,7 @@ Core ab Version **0.30.144.522** wird benötigt
 - [Maj0r] Anzeige, ob die Warteschlange voll ist, im Uploadbereich eingebaut.
 - [maj0r] In der Statusspalte eines nicht aktiven Uploads wird nun die Corezeit der letzten Aktivität angezeigt.
 
-**0.57.1**
+## 0.57.1
 
 - [Maj0r] Bugfix (Danke an mich ;) )
   Beim Laden von Plugins konnten Fehler beim Classloading auftreten. Wenn der Statusbalken bei „Lade Plugins...“ hängen bleibt, bitte updaten.
@@ -345,7 +401,7 @@ Core ab Version **0.30.144.522** wird benötigt
 - [Maj0r] Standardaussehen auf JGoodies geändert (weniger ressourcenlastig)
   Themes können natürlich weiterhin verwendet werden.
 
-**0.57.0**
+## 0.57.0
 
 - [Maj0r] Bugfix (Danke an whitewindow)
   Die Anzahl der Quellen pro gefundener Datei wurde bei neuen Ergebnissen nicht korrigiert.
@@ -358,7 +414,7 @@ Core ab Version **0.30.144.522** wird benötigt
   Credits geändert.
   Credits lassen sich nun per Mausklick im Dialog anhalten bzw. fortsetzen.
 
-**0.56.2**
+## 0.56.2
 
 - [Maj0r] Bug #293 gefixt (Danke an dsp2004)
   Bei Partlistanfragen an einen überlasteten Core kam es zu Fehlern.
@@ -380,7 +436,7 @@ Core ab Version **0.30.144.522** wird benötigt
 - [loevenwong] Einstellungen der JGoodies werden jetzt gespeichert.
 - [Maj0r] Installierte Look-and-Feels werden beim Generieren der Standard-XML mit aufgenommen.
 
-**0.56.1**
+## 0.56.1
 
 Diese Version benötigt den Core ab Version **0.29.135.208**
 
@@ -420,7 +476,7 @@ Diese Version benötigt den Core ab Version **0.29.135.208**
 - [Maj0r] Passwortfeld unter „Optionen → Proxy“ ist nun wirklich ein Passwortfeld und stellt das Passwort nicht mehr im Klartext dar.
 - [Maj0r] Standard-Theme-Pack auf Toxic geändert.
 
-**0.56.0**
+## 0.56.0
 
 Meine wahrscheinlich letzte GUI für den Core 0.29.x
 
@@ -429,7 +485,7 @@ Meine wahrscheinlich letzte GUI für den Core 0.29.x
 - Unicode-Verwendung im Umgang mit den Sprachdateien korrigiert.
 - Kleinere Korrekturen.
 
-**0.55.10**
+## 0.55.10
 
 - Bug #246 gefixt: Nun können auch bei „voller“ Dateilistentabelle im Sharebereich neue Dateien hineingezogen werden. (Danke an `mail_tom62`)
 - Automatische Sortierung nach Dateinamen eingebaut.
@@ -438,7 +494,7 @@ Meine wahrscheinlich letzte GUI für den Core 0.29.x
 - Bug #241 gefixt: Farbgebung war genau umgekehrt. Nun gilt wirklich: je dunkler, desto mehr Quellen gefunden. (Danke an `computer.ist.org`)
 - Partliste zeigt nun per Mouseover-Effekt den Tooltip zum ausgewählten Partstück an.
 
-**0.55.9**
+## 0.55.9
 
 - Link zur FAQ im Startbereich hinzugefügt.
 - Bug #242 gefixt: Legende für Partliste um „aktive Übertragung“ erweitert. (Danke an `Kossi-Jaki`)
@@ -446,7 +502,7 @@ Meine wahrscheinlich letzte GUI für den Core 0.29.x
 - Bug #239 gefixt: `ArrayIndexOutOfBoundsException` behoben. (Danke an `dsp2004`)
 - Bug #235 gefixt: Passwortfeld im Logindialog funktioniert wieder ordentlich. (Danke an `Up`)
 
-**0.55.8**
+## 0.55.8
 
 - Bug #234 gefixt: Tabellen werden beim Ändern von Spaltengrößen nicht mehr sortiert. (Danke an `hirsch.marcel`)
 - Feature-Request #228: Im Pwdl-Eingabefeld funktionieren nun auch die Hoch-/Runter-Pfeiltasten. (Danke an `Major-Tom`)
@@ -456,27 +512,27 @@ Meine wahrscheinlich letzte GUI für den Core 0.29.x
 - Server werden nun korrekt angezeigt.
 - Weitere Speicheroptimierung.
 
-**0.55.7**
+## 0.55.7
 
 - Bug #223 und #224 gefixt: Das waren noch Bugs in Verbindung mit der DOM/SAX-Umstellung... (Danke an `dsp2004`, `Up` und `whitewindow`)
 
-**0.55.6**
+## 0.55.6
 
 - Die meisten Teile von DOM auf SAX umgebaut, RAM-Verbrauch sollte dadurch spürbar gesenkt werden.
 - Bug #219 gefixt: 100 % CPU-Last bei Eingabe eines falschen Passwortes beim Anmeldedialog gefixt. (Danke an `Up`)
 - Bug #220 gefixt: `OutOfMemoryError` behoben. (Danke an `dsp2004`)
 
-**0.55.5**
+## 0.55.5
 
 - Alten Timestampfehler beseitigt. Trotz Sessionumsetzung wurde immer noch der Timestamp mitgeschleppt.
 - Bug #215 gefixt: Partliste wird nun auch bei kleinen Dateien korrekt gezeichnet. (Danke an `dsp2004`)
 - Bug #129 gefixt: `WebsiteException` durch Überlastung des Cores sollte nun weitgehend unterbunden sein. (Danke an dsp2004)
 
-**0.55.4**
+## 0.55.4
 
 - Bug #23 gefixt: Suche abbrechen korrigiert. (Danke an `computer.ist.org`)
 
-**0.55.3**
+## 0.55.3
 
 - Mehr Logging für `WebSiteNotFoundException` eingebaut.
 - Partliste bearbeitet:
@@ -489,7 +545,7 @@ Meine wahrscheinlich letzte GUI für den Core 0.29.x
 - Bug #167 gefixt: Sortierung nach Anzahl in der Suchtabelle korrigiert. (Danke an `arnoldfake`)
 - Bug #198 gefixt: Sortierung nach Downloadstatus korrigiert. (Danke an `froeschle567`)
 
-**0.55.2**
+## 0.55.2
 
 Core ab **0.29.135.208** ist zu verwenden.
 
@@ -508,13 +564,13 @@ Core ab **0.29.135.208** ist zu verwenden.
 - Downloadlinks können optional mit der eigenen Quelle und ggf. mit dem verbundenen Server in die Ablage kopiert werden.
 - Serverlinks können in die Ablage kopiert werden.
 
-**0.55.1**
+## 0.55.1
 
 Core ab Version 0.29.133.201 ist zu verwenden.
 
 - Kommunikation mit dem Core erfolgt nun komprimiert
 
-**0.54.7**
+## 0.54.7
 
 - `AutomaticPowerdownloadPolicies` können nun von Benutzern mit Java-Erfahrung selbst implementiert werden
   Dazu muss die Klasse `AutomaticPowerdownloadPolicy` abgeleitet und ein JAR gebaut werden.
@@ -539,7 +595,7 @@ Core ab Version 0.29.133.201 ist zu verwenden.
 - Logging verbessert
   `main()` in eine eigene `ThreadGroup` gepackt, dadurch kann keine Exception mehr „durchrasseln“, alle Exceptions finden sich im Log.
 
-**0.54.6**
+## 0.54.6
 
 Nur frische Bugs beseitigt
 
@@ -552,7 +608,7 @@ Nur frische Bugs beseitigt
 - Bug #153 umgesetzt (Danke an jr17)
   Verbindungsdialog kann nun per Option beim nächsten GUI-Start erzwungen werden.
 
-**0.54.5**
+## 0.54.5
 
 - Filter beim Start des GUIs eingebaut
   Die Quellen werden beim ersten Holen der Daten vom Core nicht abgefragt, sodass Downloads sehr schnell gezeigt werden können.
@@ -562,14 +618,14 @@ Nur frische Bugs beseitigt
 - Wiederholtes, zeitintensives Laden der gesamten Infos sollte nun durch ein überarbeitetes Sessionmanagement unterbunden sein.
 - Fehlerhafte Anzeige von Menütexten bei Nicht-Windows-Systemen gefixt.
 
-**0.54.4**
+## 0.54.4
 
 - Kontextmenüs mit Icons ausgestattet.
 - Optionenmenü überarbeitet.
 - An neue Coreschnittstelle angepasst.
 - Tray-Icon-Bug hoffentlich behoben.
 
-**0.54.3**
+## 0.54.3
 
 - Reihenfolge der Spalten der Download- und Uploadtabelle wird gespeichert
   Da die `properties.xml` angefasst werden musste, wird diese beim ersten Start neu generiert.
@@ -581,7 +637,7 @@ Nur frische Bugs beseitigt
   Müll oder nicht standardkonforme Plugins im Plugin-Ordner werden nun korrekt behandelt.
 - Bug #98 gefixt (Danke an twix)
 
-**0.54.2**
+## 0.54.2
 
 - Bug #91 umgesetzt (Danke an hirsch.marcel)
   Maxupload- und Maxdownloadgeschwindigkeit können nun über das Tray-Icon eingestellt werden (Windowsversion).
@@ -598,7 +654,7 @@ Nur frische Bugs beseitigt
 - Bug #33 gefixt (Danke an oz_2k)
   Obwohl ich denke, dass es sich um ein Feature der Themes handelt, wurde der Vollbildmodus auf Wunsch vieler Benutzer an den Windows-Standard angepasst.
 
-**0.54.1**
+## 0.54.1
 
 - Bug #53 gefixt (Danke an o_a_s_e_)
   Bug mit 98 % CPU-Last durch Suche gefixt.
@@ -608,12 +664,12 @@ Nur frische Bugs beseitigt
 - Bug #23 gefixt (Danke an computer.ist.org)
   Suche lässt sich nun korrekt abbrechen.
 
-**0.53.2**
+## 0.53.2
 
 - Bug #67 gefixt (Danke an dsp2004)
   Probleme mit der Funktion automatisch Partliste anzeigen korrigiert.
 
-**0.53.1**
+## 0.53.1
 
 - Wenn die Verbindung zum Core aufgrund von Überlastung des Cores abreißt, wird zweimal erneut probiert, bevor das GUI beendet wird.
 - Tray-Icon für Windowsplattformen eingebaut
@@ -640,14 +696,14 @@ Nur frische Bugs beseitigt
   Partlisten von einigen wenigen Downloadquellen wurden bei Bedarf nicht geholt.
 - Sonstige Kleinigkeiten.
 
-**0.52.1**
+## 0.52.1
 
 - Plugin-Entwickler können nun ein `JPanel` für Optionen implementieren, welches ggf. im Plugin-Reiter der Optionen aufgerufen werden kann.
 - Plugin-Entwickler können nun Objekte direkt mittels ID vom Core erfragen (Danke an webhamster).
 - Bug #19 gefixt (Danke an dsp2004)
   `NullPointer` behoben.
 
-**0.51.2**
+## 0.51.2
 
 - Bug #14 umgesetzt (Danke an Dragonne)
   Es konnte zu einem Fehler kommen, wenn gleichzeitig zwei Instanzen des GUIs liefen.
@@ -665,7 +721,7 @@ Nur frische Bugs beseitigt
 - Bug #10 gefixt (Danke an muhviestarr)
   Wenn man keine Downloads hat, steht nun nicht mehr „bitte warten“ in der Downloadtabelle.
 
-**0.51.1**
+## 0.51.1
 
 - Downloadlinks werden jetzt in `ISO-8859-1` an den Core übertragen.
 - Versionsupdateinformation geändert
@@ -680,7 +736,7 @@ Nur frische Bugs beseitigt
 - Dateigrößen in der Sharetabelle werden nun korrekt ausgegeben (Danke an schnigger und TuxHomer).
 - `NullPointer` behoben, der auftrat, wenn der verbundene Server keinen Namen hat (Danke an paderborner).
 
-**0.50**
+## 0.50
 
 - Logging kann nun komplett deaktiviert werden (Danke an muhviestarr).
 - Im Verbindungsfenster geht nun ein einfaches `Enter` (Danke an muhviestarr).
@@ -693,7 +749,7 @@ Nur frische Bugs beseitigt
 - DAU-Button zum Anzeigen der Partliste eingebaut.
 - Bug der Tabellenköpfe der Share- und der Uploadtabelle behoben (Danke an muhviestarr).
 
-**0.49**
+## 0.49
 
 - Bug bei der Wiedergabe von Sounds korrigiert (Danke an mrbond).
   Audiogerät wird nun nach Ausgabe eines Sounds wieder freigegeben.
@@ -702,7 +758,7 @@ Nur frische Bugs beseitigt
 - Bug im Sharebaum behoben.
 - Bug beim Sortieren der Sharetabelle behoben.
 
-**0.48**
+## 0.48
 
 - Initialen Aufruf des Sharetabs durch einen Initialisierungsthread beschleunigt.
 - In der Downloadtabelle nun ein Warte-Icon angezeigt, bis erstmalig Daten geholt wurden.
@@ -710,7 +766,7 @@ Nur frische Bugs beseitigt
 - Partliste wird nun nur noch über das Popupmenü geholt.
   Wenn der Downloadtab verlassen wird, wird das Aktualisieren der aktuellen Partliste beendet.
 
-**0.47**
+## 0.47
 
 - Sharetabelle auf vielfachen Wunsch komplett überarbeitet.
 - Partliste wird erst nach 2 Sekunden Wartezeit geholt (Danke an muhviestarr).
@@ -722,7 +778,7 @@ Nur frische Bugs beseitigt
 - Neuen Downloadstatus „Fehler beim Fertigstellen“ und neuen Quellenstatus „Eigenes Limit erreicht“ eingebaut.
 - Rundungsfehler beim automatischen Powerdownload behoben (Danke an garnichda).
 
-**0.46**
+## 0.46
 
 - Bug beim automatischen Powerdownload behoben, der auftrat, wenn nur eine Datei im Download war.
 - Bug im Menü behoben, Auswahl eines Menüpunktes geht nun gewohnt schnell.
@@ -734,40 +790,40 @@ Nur frische Bugs beseitigt
   Die `.reg`-Datei muss neu angepasst und importiert werden, da diese ebenfalls modifiziert werden musste.
 - Diverse andere Bugs behoben
 
-**0.45**
+## 0.45
 
 - Links können nun an das GUI übermittelt werden (für den Internet Explorer muss die entsprechende `.reg`-Datei angepasst und importiert und die Windows-EXE verwendet werden).
 - Themes sind nun deaktivierbar
 
-**0.44**
+## 0.44
 
 - Themes eingebaut (Danke an `LinuxDoc`)
   Passende Themes gibt es auf [GitHub](https://github.com/l2fprod/javootoo.com/tree/master/plaf/skinlf/themepacks).
 - Automatischen Powerdownload eingebaut.
   Verschiedene Arten des automatischen Powerdownloads können in Zukunft durch selbst implementierte Klassen per ComboBox ausgewählt werden (nächste Version).
 
-**0.43**
+## 0.43
 
 - Anzeige des maximalen RAM-Verbrauchs im Memory-Monitor eingebaut (Anzeige oben links nun „reserviert / max allocated“).
 - Sound-Icons optisch korrigiert.
 - Fehler bei der Soundausgabe bei fehlerhaften Audiodateien (z. B. falsches Format) oder fehlendem Audiogerät behoben.
 
-**0.42**
+## 0.42
 
 - Memory-Monitor eingebaut (ja, die Anzeige geht richtig und zeigt den echten RAM-Verbrauch der Anwendung)
 - Manuellen Garbage Collector bei jeder 30. Aktualisierung eingebaut
 
-**0.41**
+## 0.41
 
 - Fehler im Pwdl-Textfeld behoben
 - Sortieren der Downloadtabelle nach Status eingefügt
 - Speicheroptimierungen.
 
-**0.40**
+## 0.40
 
 - Soundeffekte für diverse Ereignisse eingefügt.
 
-**0.39**
+## 0.39
 
 - Standarduploadpriorität ist im Core noch nicht implementiert und deshalb erst einmal wieder aus dem GUI geflogen (Danke an `xcalibur`)
 - Buttons zum Ändern der Pwdl-Werte entsprechend dem Standard vertauscht (Danke an `lova`)

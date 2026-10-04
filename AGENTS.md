@@ -7,6 +7,11 @@
 
 ## Changelog
 
+- Änderungen innerhalb jeder Version nach Themen gruppieren.
+- Sichtbare Änderungen für Nutzer zuerst aufführen; technische Änderungen
+  darunter in einem eigenen Abschnitt sammeln.
+- Zusammengehörige Änderungen unter einem gemeinsamen Themenpunkt bündeln,
+  zum Beispiel „Mein Share“, Soundpakete oder Code und Bibliotheken.
 - Einträge kurz fassen: ein Satz pro Änderung.
 - Zeilen nicht zu lang halten.
 - Technisch nicht zu tief gehen; beschreiben, was Nutzer merken.
