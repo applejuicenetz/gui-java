@@ -389,6 +389,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         constraints.gridx = 7;
         panel.add(sound, constraints);
         getContentPane().add(panel, BorderLayout.SOUTH);
+        AjfspTransferHandler.install(getRootPane(), this::uebernehmeLink);
 
         //Tooltipps einstellen
         ToolTipManager.sharedInstance().setInitialDelay(1);
@@ -423,6 +424,13 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         }
 
         final String link = linkPane.getTxtDownloadLink().getText().trim().replace("%7C", "|");
+        if (!link.isEmpty()) {
+            linkPane.getTxtDownloadLink().setText("");
+            uebernehmeLink(link);
+        }
+    }
+
+    private void uebernehmeLink(String link) {
         Object sel = linkPane.getCmbTargetDir().getSelectedItem();
         String tmp;
 
@@ -435,7 +443,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         final String targetDir = tmp;
 
         if (link.length() != 0) {
-            linkPane.getTxtDownloadLink().setText("");
             Thread linkThread = new Thread() {
                 public void run() {
                     try {

@@ -17,6 +17,8 @@
   - Powerdownload-Bereich bietet genug Platz für Text und Eingaben und scrollt
     bei geringer Höhe ohne Überlappung
 - [red171] Bedienung und Darstellung:
+  - `ajfsp`- und `web+ajfsp`-Links lassen sich per Drag-and-drop ins Hauptfenster
+    übernehmen; das gewählte Zielverzeichnis bleibt berücksichtigt
   - Offene Verbindungen stehen statt auf der Startseite neben dem Verbindungsstatus
     in der Statusbar, ohne zusätzliche Abfragen
   - Statusanzeige nennt den geladenen Servernamen vor DynIP und Port
