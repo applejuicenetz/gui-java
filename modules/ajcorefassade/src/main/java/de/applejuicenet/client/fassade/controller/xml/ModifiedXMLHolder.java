@@ -1004,11 +1004,23 @@ public class ModifiedXMLHolder extends DefaultHandler
 
    public void reload()
    {
+      reloadInProgress = true;
+      try
+      {
+         doReload();
+      }
+      finally
+      {
+         reloadInProgress = false;
+      }
+   }
+
+   private void doReload()
+   {
       boolean reloadSession = false;
 
       try
       {
-         reloadInProgress = true;
          checkForValidSession();
          String xmlString = getXMLString(filter);
 
@@ -1044,8 +1056,6 @@ public class ModifiedXMLHolder extends DefaultHandler
          {
             downloadPropertyChangeInformer.propertyChanged(new DownloadDataPropertyChangeEvent(downloadEvents));
          }
-
-         reloadInProgress = false;
       }
       catch(WebSiteNotFoundException webSiteNotFound)
       {
@@ -1072,12 +1082,10 @@ public class ModifiedXMLHolder extends DefaultHandler
             SessionXMLHolder sessionHolder = new SessionXMLHolder(coreHolder);
             String           sessionId = sessionHolder.getNewSessionId();
 
-            reloadInProgress = false;
             sessionKontext   = "&session=" + sessionId;
          }
          catch(CoreLostException clE)
          {
-            reloadInProgress = false;
             throw clE;
          }
       }

@@ -51,6 +51,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
     private long sleepTime = 2000;
 
     // Thread
+    private final Object workerLock = new Object();
     private Thread workerThread;
 
     public ApplejuiceFassade(CoreConnectionSettingsHolder coreConnectionSettingsHolder)
@@ -188,7 +189,17 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
     }
 
     public void startXMLCheck() {
-        workerThread = new Thread("ApplejuiceFassadeXMLCheckThread") {
+        synchronized (workerLock) {
+            if (workerThread != null && workerThread.isAlive()) {
+                return;
+            }
+            workerThread = createWorkerThread();
+            workerThread.start();
+        }
+    }
+
+    private Thread createWorkerThread() {
+        return new Thread("ApplejuiceFassadeXMLCheckThread") {
             public void run() {
                 setPriority(Thread.NORM_PRIORITY);
                 int versuch = 0;
@@ -208,14 +219,11 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
                         versuch = tryUpdate(versuch);
                         sleep(sleepTime);
                     } catch (InterruptedException e) {
-
-                        // nicht zu tun
-                        ;
+                        return;
                     }
                 }
             }
         };
-        workerThread.start();
     }
 
     public void setUpdateInterval(long millis) {
@@ -225,11 +233,14 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
     }
 
     public void stopXMLCheck() {
-        if (workerThread != null) {
+        synchronized (workerLock) {
+            if (workerThread == null) {
+                return;
+            }
             workerThread.interrupt();
             workerThread = null;
-            informCoreStatusListener(STATUS.CLOSED);
         }
+        informCoreStatusListener(STATUS.CLOSED);
     }
 
     public String[] getCurrentIncomingDirs() {
