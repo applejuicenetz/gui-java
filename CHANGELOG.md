@@ -14,6 +14,7 @@
   - Powerdownload-Bereich bietet genug Platz für Text und Eingaben und scrollt
     bei geringer Höhe ohne Überlappung
 - [red171] Bedienung und Darstellung:
+  - „Über“ zeigt Programmierer und besonderen Dank ohne Mailadressen und Scrollen
   - Spaltenbreiten passen sich ohne gespeicherte Werte automatisch an
   - Cmd-/Strg+A/C/V/X funktionieren in allen Textfeldern
   - Startbild ohne Ladebalken und künstliche Wartepausen

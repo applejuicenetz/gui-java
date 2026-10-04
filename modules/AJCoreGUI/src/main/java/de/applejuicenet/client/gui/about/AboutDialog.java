@@ -15,13 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.image.CropImageFilter;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,32 +29,15 @@ import java.util.List;
  */
 public class AboutDialog extends JDialog {
     private Logger logger;
-    private WorkerThread worker = null;
     private BackPanel backPanel = new BackPanel();
 
     public AboutDialog(Frame parent, boolean modal) {
         super(parent, modal);
         logger = LoggerFactory.getLogger(getClass());
         try {
-            addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent evt) {
-                    if (worker != null) {
-                        worker.interrupt();
-                        worker = null;
-                    }
-                }
-            });
             init();
         } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-        }
-    }
-
-    public Dimension getPreferredSize() {
-        if (backPanel != null) {
-            return backPanel.getPreferredSize();
-        } else {
-            return super.getPreferredSize();
         }
     }
 
@@ -81,6 +57,7 @@ public class AboutDialog extends JDialog {
         private TKLLabel version = new TKLLabel();
         private List<CreditsEntry> credits = new ArrayList<CreditsEntry>();
         private Logger logger;
+        private TKLPanel footer = new TKLPanel(new FlowLayout(FlowLayout.RIGHT));
 
         public BackPanel() {
             super();
@@ -91,34 +68,15 @@ public class AboutDialog extends JDialog {
                 logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
 
-            worker = new WorkerThread(backgroundImage, this, credits);
-            worker.start();
-            addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent me) {
-                    if (worker != null) {
-                        worker.toggleRunStatus();
-                    }
-                }
-            });
         }
 
         private void init() {
             credits.add(new CreditsEntry(true, "Programmierung"));
             credits.add(new CreditsEntry(false, "Maj0r"));
-            credits.add(new CreditsEntry(false, "(tkrall@tkl-soft.de)"));
             credits.add(new CreditsEntry(false, "loevenwong"));
-            credits.add(new CreditsEntry(false, "(tloevenich@tkl-soft.de)"));
             credits.add(new CreditsEntry(false, "red171"));
-            credits.add(new CreditsEntry(false, "(red171@applejuicenet.cc)"));
             credits.add(new CreditsEntry(true, "Besonderen Dank an"));
             credits.add(new CreditsEntry(false, "muhviehstarr"));
-            credits.add(new CreditsEntry(true, "Banner & Bilder"));
-            credits.add(new CreditsEntry(false, "saschxd"));
-            credits.add(new CreditsEntry(true, "Übersetzung"));
-            credits.add(new CreditsEntry(false, "BlueTiger"));
-            credits.add(new CreditsEntry(false, "nurseppel"));
-            credits.add(new CreditsEntry(true, "Kontakt"));
-            credits.add(new CreditsEntry(false, "applejuicenet.cc"));
 
             backgroundImage = IconManager.getInstance().getIcon("applejuiceinfobanner").getImage();
             flagge = IconManager.getInstance().getIcon("deutsch").getImage();
@@ -138,11 +96,9 @@ public class AboutDialog extends JDialog {
             font = new Font(font.getName(), Font.PLAIN, font.getSize());
             version.setFont(font);
             setLayout(new BorderLayout());
-            TKLPanel panel1 = new TKLPanel(new FlowLayout(FlowLayout.RIGHT));
-
-            panel1.add(version);
-            panel1.setOpaque(false);
-            add(panel1, BorderLayout.SOUTH);
+            footer.add(version);
+            footer.setOpaque(false);
+            add(footer, BorderLayout.SOUTH);
         }
 
         public void paintComponent(Graphics g) {
@@ -162,6 +118,48 @@ public class AboutDialog extends JDialog {
                 if (flagge != null) {
                     g.drawImage(flagge, backgroundImage.getWidth(this) - flagge.getWidth(this), 0, this);
                 }
+                paintCredits(g);
+            }
+        }
+
+        Rectangle getCreditsBounds() {
+            if (backgroundImage == null) {
+                return new Rectangle();
+            }
+            int imageWidth = backgroundImage.getWidth(this);
+            int imageX = (getWidth() - imageWidth) / 2;
+            int left = imageX + imageWidth / 2 + 20;
+            int top = (flagge == null ? 0 : flagge.getHeight(this)) + 8;
+            int right = imageX + imageWidth - 8;
+            int bottom = getHeight() - footer.getPreferredSize().height - 8;
+            return new Rectangle(left, top, Math.max(0, right - left), Math.max(0, bottom - top));
+        }
+
+        private int getCreditsHeight() {
+            int height = 0;
+            for (CreditsEntry entry : credits) {
+                height += entry.isUeberschrift() ? 20 : 15;
+            }
+            return height;
+        }
+
+        private void paintCredits(Graphics graphics) {
+            Rectangle bounds = getCreditsBounds();
+            Graphics drawing = graphics.create(bounds.x, bounds.y, bounds.width, bounds.height);
+            try {
+                Font fontBold = new Font("Arial", Font.BOLD, 12);
+                Font fontPlain = new Font("Arial", Font.PLAIN, 12);
+                int textY = Math.max(fontPlain.getSize(), (bounds.height - getCreditsHeight()) / 2
+                        + drawing.getFontMetrics(fontBold).getAscent());
+                for (CreditsEntry entry : credits) {
+                    drawing.setFont(entry.isUeberschrift() ? fontBold : fontPlain);
+                    drawing.setColor(entry.isUeberschrift() ? Color.BLUE : Color.BLACK);
+                    int width = drawing.getFontMetrics().stringWidth(entry.getAusgabetext());
+                    drawing.drawString(entry.getAusgabetext(), (bounds.width - width) / 2, textY);
+                    textY += entry.isUeberschrift() ? 20 : 15;
+                }
+            } finally {
+                drawing.dispose();
             }
         }
 
@@ -205,98 +203,4 @@ public class AboutDialog extends JDialog {
     }
 
 
-    private class WorkerThread extends Thread {
-        private Image backgroundImage;
-        private BackPanel backPanel;
-        private List<CreditsEntry> credits;
-        private boolean run = true;
-        private Logger logger;
-
-        public WorkerThread(Image backgroundImage, BackPanel backPanel, List<CreditsEntry> credits) {
-            logger = LoggerFactory.getLogger(getClass());
-            this.backgroundImage = backgroundImage;
-            this.backPanel = backPanel;
-            this.credits = credits;
-        }
-
-        public void toggleRunStatus() {
-            run = !run;
-        }
-
-        public void run() {
-            logger.debug("About-Workerthread gestartet. " + this);
-
-            Image new_img;
-            Image toDraw;
-            ImageFilter filter = new ImageFilter();
-            int creditsHoehe = 60;
-            int creditsBreite = 135;
-            int imageX = backgroundImage.getWidth(backPanel) / 2 + 20;
-            int imageY = backgroundImage.getHeight(backPanel) / 2 - 15;
-
-            filter = new CropImageFilter(imageX, imageY, creditsBreite, creditsHoehe);
-            new_img = createImage(new FilteredImageSource(backgroundImage.getSource(), filter));
-            filter = new CropImageFilter(0, 0, creditsBreite, creditsHoehe);
-            int y = creditsHoehe;
-
-            try {
-                sleep(1000);
-                Graphics g = backPanel.getGraphics();
-
-                g.setColor(Color.BLACK);
-                Graphics toDrawGraphics;
-                FontMetrics fm;
-                int strWidth;
-                Font fontBold = new Font("Arial", Font.BOLD, 12);
-                Font fontPlain = new Font("Arial", Font.PLAIN, 12);
-                boolean draw = false;
-
-                while (!isInterrupted()) {
-                    if (run) {
-                        toDraw = createImage(creditsBreite, creditsHoehe);
-                        toDrawGraphics = toDraw.getGraphics();
-                        toDrawGraphics.drawImage(new_img, 0, 0, backPanel);
-                        y--;
-                        int abstand = -15;
-
-                        for (CreditsEntry curEntry : credits) {
-                            if (curEntry.isUeberschrift()) {
-                                abstand += 20;
-                                toDrawGraphics.setFont(fontBold);
-                                toDrawGraphics.setColor(Color.BLUE);
-                            } else {
-                                abstand += 15;
-                                toDrawGraphics.setFont(fontPlain);
-                                toDrawGraphics.setColor(Color.BLACK);
-                            }
-
-                            fm = toDrawGraphics.getFontMetrics();
-                            strWidth = fm.stringWidth(curEntry.getAusgabetext());
-                            toDrawGraphics.drawString(curEntry.getAusgabetext(), (creditsBreite - strWidth) / 2, y + abstand);
-                        }
-
-                        if (draw) {
-                            g.drawImage(toDraw, imageX - 1, imageY - 11, backPanel);
-                        } else {
-                            draw = true;
-                        }
-
-                        if (y == -5 - credits.size() * 15) {
-                            y = creditsHoehe;
-                        }
-                    }
-
-                    try {
-                        sleep(100);
-                    } catch (InterruptedException iE) {
-                        interrupt();
-                    }
-                }
-            } catch (Exception e) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            }
-
-            logger.debug("About-Workerthread beendet. " + this);
-        }
-    }
 }
