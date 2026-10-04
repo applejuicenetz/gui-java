@@ -11,6 +11,8 @@
   - Datenspalten kompakt; übrige Breite für Namen
 - [red171] Downloads:
   - Keine doppelten Downloads nach einem Core-Neustart (ghosting)
+  - Powerdownload-Bereich bietet genug Platz für Text und Eingaben und scrollt
+    bei geringer Höhe ohne Überlappung
 - [red171] Bedienung und Darstellung:
   - Spaltenbreiten passen sich ohne gespeicherte Werte automatisch an
   - Cmd-/Strg+A/C/V/X funktionieren in allen Textfeldern

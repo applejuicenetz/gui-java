@@ -75,6 +75,7 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
     private AutomaticPowerdownloadPolicy autoPwdlThread;
     private Information lastInformation;
     private JPanel backPanel = new JPanel();
+    private JScrollPane scrollPane;
 
     public PowerDownloadPanel(DownloadController downloadController) {
         logger = LoggerFactory.getLogger(getClass());
@@ -111,8 +112,7 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
         powerdownload.setBackground(BLUE_BACKGROUND);
         ratioFocusAdapter = new RatioFocusAdapter();
         ratio.addFocusListener(ratioFocusAdapter);
-        ratio.setMinimumSize(new Dimension(50, 21));
-        ratio.setPreferredSize(new Dimension(50, 21));
+        ratio.setColumns(4);
         ratio.setHorizontalAlignment(SwingConstants.RIGHT);
         KeyAdapter ratioKlicker = new KeyAdapter() {
             public void keyPressed(KeyEvent ke) {
@@ -316,10 +316,10 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
 
         panel.add(label10);
         autoAb.setDocument(new NumberInputVerifier());
-        autoAb.setPreferredSize(new Dimension(40, 21));
+        autoAb.setColumns(3);
         autoAb.setText(Integer.toString(standardAutomaticPwdlAb));
         autoBis.setDocument(new NumberInputVerifier());
-        autoBis.setPreferredSize(new Dimension(40, 21));
+        autoBis.setColumns(3);
         autoBis.setText(Integer.toString(standardAutomaticPwdlBis));
         autoAb.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent fe) {
@@ -354,12 +354,16 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
                 alterAutoPwdl();
             }
         });
+        constraints.gridy = 13;
+        constraints.weighty = 1;
+        constraints.insets = new Insets(0, 0, 0, 0);
+        backPanel.add(new JLabel(), constraints);
 
-        JScrollPane sp = new JScrollPane(backPanel);
+        scrollPane = new JScrollPane(backPanel);
 
-        sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        sp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        add(sp, BorderLayout.NORTH);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        add(scrollPane, BorderLayout.CENTER);
         autoPwdlEinstellungen.setVisible(false);
         autoPwdlEinstellungen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -469,7 +473,21 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
     }
 
     public Dimension getPreferredSize() {
-        return backPanel.getPreferredSize();
+        Dimension preferred = super.getPreferredSize();
+        if (scrollPane != null) {
+            Insets border = scrollPane.getInsets();
+            Insets outer = getInsets();
+            int contentWidth = backPanel.getPreferredSize().width + border.left + border.right
+                    + outer.left + outer.right + scrollPane.getVerticalScrollBar().getPreferredSize().width;
+            preferred.width = Math.max(preferred.width, contentWidth);
+        }
+        return preferred;
+    }
+
+    public Dimension getMinimumSize() {
+        Dimension minimum = super.getMinimumSize();
+        minimum.width = getPreferredSize().width;
+        return minimum;
     }
 
     private void fillPwdlPolicies() {
