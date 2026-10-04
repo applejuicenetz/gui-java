@@ -39,7 +39,6 @@ public class StartPanel extends TklPanel {
     private JLabel netzwerk;
     private JLabel status;
     private JLabel verbindungsNachricht;
-    private JLabel verbindungen;
     private JLabel version;
     private JLabel warnungIcon;
     private JTextPane serverMessage;
@@ -83,10 +82,6 @@ public class StartPanel extends TklPanel {
 
     public JLabel getLblVerbindungsnachricht() {
         return verbindungsNachricht;
-    }
-
-    public JLabel getLblVerbindungen() {
-        return verbindungen;
     }
 
     public JLabel getLblNetzwerk() {
@@ -195,12 +190,8 @@ public class StartPanel extends TklPanel {
         verbindungsNachricht = new JLabel();
         panel3.add(verbindungsNachricht, constraints);
 
-        verbindungen = new JLabel();
         constraints.gridy++;
         constraints.insets.top = 5;
-        panel3.add(verbindungen, constraints);
-
-        constraints.gridy++;
         status = new JLabel();
         panel3.add(status, constraints);
 

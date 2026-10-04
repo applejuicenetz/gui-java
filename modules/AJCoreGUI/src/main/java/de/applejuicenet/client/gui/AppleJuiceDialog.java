@@ -115,6 +115,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
     private String linkFailure;
     private String dialogTitel;
     private String verbunden;
+    private String offeneVerbindungen;
     private String verbinden;
     private String nichtVerbunden;
     private ImageIcon firewallIcon;
@@ -811,6 +812,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             verbunden = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.verbunden");
             verbinden = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.verbinden");
             nichtVerbunden = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.nichtverbunden");
+            offeneVerbindungen = languageSelector.getFirstAttrbuteByTagName("mainform.status.status0");
+            updateConnectionStatus();
             keinServer = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.keinserver");
             neustartTitel = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
             neustartNachricht = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.neustartnachricht");
@@ -881,7 +884,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
             SwingUtilities.invokeLater(() -> {
                 try {
                     information = (Information) content;
-                    statusbar[0].setText(getVerbindungsStatusAsString(information));
+                    updateConnectionStatus();
                     updateServerStatus();
 
                     statusbar[2].setText(information.getUpDownAsString());
@@ -894,6 +897,17 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                 }
             });
         }
+    }
+
+    private void updateConnectionStatus() {
+        if (information != null) {
+            statusbar[0].setText(getConnectionStatusText(getVerbindungsStatusAsString(information),
+                    offeneVerbindungen, information.getOpenConnections()));
+        }
+    }
+
+    static String getConnectionStatusText(String status, String connectionsCaption, long openConnections) {
+        return status + " | " + connectionsCaption.replace("%d", Long.toString(openConnections));
     }
 
     private void updateServerStatus() {

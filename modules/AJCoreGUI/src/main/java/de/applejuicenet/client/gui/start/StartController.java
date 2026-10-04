@@ -36,7 +36,6 @@ public class StartController extends GuiController {
     private Information information = null;
     private String firewallWarningText;
     private String keinServer = "";
-    private String verbindungenText;
 
     private StartController() {
         super();
@@ -164,18 +163,6 @@ public class StartController extends GuiController {
         }
 
         startPanel.getLblVerbindungsnachricht().setText(temp.toString());
-        verbindungenText = languageSelector.getFirstAttrbuteByTagName("mainform.status.status0");
-        temp = new StringBuffer(verbindungenText);
-        pos = temp.indexOf("%d");
-        if (pos != -1) {
-            if (information != null) {
-                temp.replace(pos, pos + 2, Long.toString(information.getOpenConnections()));
-            } else {
-                temp.replace(pos, pos + 2, "0");
-            }
-        }
-
-        startPanel.getLblVerbindungen().setText(temp.toString());
         startPanel.getLblNetzwerk()
                 .setText("<html><font><h2>" + languageSelector.getFirstAttrbuteByTagName("mainform.html7") + "</h2></font></html>");
         startPanel.getLblNeuigkeiten()
@@ -272,13 +259,6 @@ public class StartController extends GuiController {
                     }
 
                     startPanel.getLblVerbindungsnachricht().setText(temp.toString());
-                    temp = new StringBuffer(verbindungenText);
-                    pos = temp.indexOf("%d");
-                    if (pos != -1) {
-                        temp.replace(pos, pos + 2, Long.toString(information.getOpenConnections()));
-                    }
-
-                    startPanel.getLblVerbindungen().setText(temp.toString());
                 } catch (Exception e) {
                     logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                 }

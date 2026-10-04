@@ -17,6 +17,8 @@
   - Powerdownload-Bereich bietet genug Platz für Text und Eingaben und scrollt
     bei geringer Höhe ohne Überlappung
 - [red171] Bedienung und Darstellung:
+  - Offene Verbindungen stehen statt auf der Startseite neben dem Verbindungsstatus
+    in der Statusbar, ohne zusätzliche Abfragen
   - Statusanzeige nennt den geladenen Servernamen vor DynIP und Port
   - Upload-Fortschrittsbalken bleiben durch Innenabstand klar voneinander getrennt
   - Suchergebnisse passen Datenspalten laufend an Inhalte an; Dateiname nutzt
