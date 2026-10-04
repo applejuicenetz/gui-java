@@ -67,6 +67,8 @@
   - Aktualisierung erholt sich nach fehlerhaften Core-Antworten und läuft nach
     Stopp nicht weiter
 - [red171] Code und Bibliotheken:
+  - Fensterpositions-Tests warten auf native Fensterereignisse und laufen
+    zuverlässiger auf Linux und macOS
   - Ungenutzte GUI-Komponenten entfernt
   - Zusätzliche XML-Bibliotheken durch Java-Bordmittel ersetzt
   - JSON-Bibliothek für die Update-Prüfung ausgetauscht
