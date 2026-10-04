@@ -4,7 +4,6 @@
 
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
@@ -103,35 +102,10 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
             }
          });
       startController = StartController.getInstance();
-      if(AppleJuiceClient.splash != null)
-      {
-         AppleJuiceClient.splash.setProgress(40, "Lade Sharepanel...");
-      }
-
       shareController = ShareController.getInstance();
-      if(AppleJuiceClient.splash != null)
-      {
-         AppleJuiceClient.splash.setProgress(50, "Lade Downloadpanel...");
-      }
-
       downloadController = DownloadController.getInstance();
-      if(AppleJuiceClient.splash != null)
-      {
-         AppleJuiceClient.splash.setProgress(60, "Lade Uploadpanel...");
-      }
-
       uploadController = UploadController.getInstance();
-      if(AppleJuiceClient.splash != null)
-      {
-         AppleJuiceClient.splash.setProgress(70, "Lade Searchpanel...");
-      }
-
       searchController = SearchController.getInstance();
-      if(AppleJuiceClient.splash != null)
-      {
-         AppleJuiceClient.splash.setProgress(80, "Lade Serverpanel...");
-      }
-
       serverPanel = ServerPanel.getInstance();
 
       IconManager im = IconManager.getInstance();
@@ -159,11 +133,6 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
       ImageIcon icon5 = im.getIcon("server");
 
       addTab("Server", icon5, serverPanel);
-
-      if(AppleJuiceClient.splash != null)
-      {
-         AppleJuiceClient.splash.setProgress(90, "Lade Plugins...");
-      }
 
       if(OptionsManagerImpl.getInstance().shouldLoadPluginsOnStartup())
       {

@@ -222,21 +222,10 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
         setJMenuBar(createMenuBar());
 
-        if (AppleJuiceClient.splash != null) {
-            AppleJuiceClient.splash.setProgress(25, "Initialisiere Sprache...");
-        }
-
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-
-        if (AppleJuiceClient.splash != null) {
-            AppleJuiceClient.splash.setProgress(30, "Erstelle Register...");
-        }
 
         registerPane = new RegisterPanel(this);
         languageSelector.fireLanguageChanged();
-        if (AppleJuiceClient.splash != null) {
-            AppleJuiceClient.splash.setProgress(95, "Register erstellt..");
-        }
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {

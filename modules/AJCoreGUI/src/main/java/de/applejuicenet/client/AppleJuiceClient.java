@@ -242,13 +242,13 @@ public class AppleJuiceClient {
             String nachricht = "appleJuice-GUI " + AppleJuiceDialog.getVersion() + " wird gestartet...";
             ConnectFrame connectFrame = new ConnectFrame();
 
-            splash = new Splash(connectFrame, IconManager.getInstance().getIcon("splashscreen").getImage(), 0, 100);
             KeyStates ks = new KeyStates();
 
-            splash.addKeyListener(ks);
-            splash.setVisible(true);
-
-            splash.setProgress(10, "check system...");
+            SwingUtilities.invokeAndWait(() -> {
+                splash = new Splash(connectFrame, IconManager.getInstance().getIcon("splashscreen"));
+                splash.addKeyListener(ks);
+                splash.setVisible(true);
+            });
 
             if (logger.isInfoEnabled()) {
                 logger.info(nachricht);
@@ -267,10 +267,8 @@ public class AppleJuiceClient {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             QuickConnectionSettingsDialog remoteDialog;
 
-            splash.setProgress(25, "load look and feel...");
             AppleJuiceDialog.initLookAndFeel();
 
-            splash.setProgress(50, "test connection...");
             boolean showDialog = OptionsManagerImpl.getInstance().shouldShowConnectionDialogOnStartup();
             boolean keyDown = ks.isKeyDown(KeyEvent.VK_SHIFT);
 
@@ -285,7 +283,7 @@ public class AppleJuiceClient {
                 getAjFassade();
             }
             while (showDialog || (erreichbarkeit = ajFassade.isCoreAvailable()) != 0) {
-                splash.setVisible(false);
+                SwingUtilities.invokeAndWait(() -> splash.setVisible(false));
                 if (!showDialog) {
                     if (erreichbarkeit == 2) {
                         titel = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
@@ -318,16 +316,14 @@ public class AppleJuiceClient {
                     }
                 }
 
-                splash.setVisible(true);
+                SwingUtilities.invokeAndWait(() -> splash.setVisible(true));
             }
 
             SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
 
-            splash.setProgress(75, "load GUI...");
             SwingUtilities.invokeLater(() -> {
                 final AppleJuiceDialog theApp = new AppleJuiceDialog();
 
-                splash.setProgress(100, "GUI geladen...");
                 PositionManager lm = PositionManagerImpl.getInstance();
 
                 Rectangle savedBounds = lm.isLegal() && lm.getMainXY() != null && lm.getMainDimension() != null
