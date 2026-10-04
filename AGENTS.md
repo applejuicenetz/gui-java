@@ -74,9 +74,9 @@ Flatpak-Synchronisierung und `notify-portable` einen Repository-Dispatch mit
 für amd64 und aarch64 aus den aktuellen Core- und GUI-Releases und veröffentlicht
 anschließend automatisch den nächsten Portable-Patch-Versionstag.
 
-`notify-portable` verwendet `PORTABLE_DISPATCH_TOKEN`, sofern gesetzt, sonst den
-vorhandenen `FLATPAK_DISPATCH_TOKEN`. Der verwendete Token muss auch Zugriff auf
-`applejuicenetz/portable` besitzen: bei einem Fine-grained Token `Contents: write`,
+`notify-flatpak` und `notify-portable` verwenden gemeinsam `PACKAGE_DISPATCH_TOKEN`.
+Der Token benötigt Zugriff auf `applejuicenetz/flatpak` und
+`applejuicenetz/portable`: bei einem Fine-grained Token `Contents: write`,
 bei einem klassischen Token den Scope `repo`. Keine Tokens ins Repository schreiben.
 
 Windows installiert wie das NSIS-Setup nach `Program Files\appleJuiceNETZ\JavaGUI`

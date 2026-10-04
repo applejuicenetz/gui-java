@@ -7,6 +7,7 @@
 - [red171] Release-Pipeline:
   - GUI-Releases starten neben der Flatpak-Synchronisierung auch einen Portable-Build
     mit automatischem Patch-Release
+  - Flatpak- und Portable-Trigger verwenden gemeinsam `PACKAGE_DISPATCH_TOKEN`
 
 ## 0.86.3
 
