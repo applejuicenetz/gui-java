@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.86.3 (WIP)
+## 0.86.3
 
 ### Sichtbare Änderungen
 
