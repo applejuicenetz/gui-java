@@ -398,6 +398,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
         dm.addDataUpdateListener(this, DATALISTENER_TYPE.INFORMATION_CHANGED);
         dm.addDataUpdateListener(this, DATALISTENER_TYPE.NETINFO_CHANGED);
+        dm.addDataUpdateListener(this, DATALISTENER_TYPE.SERVER_CHANGED);
 
         try {
             dm.startXMLCheck();
@@ -874,26 +875,14 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                     logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                 }
             });
+        } else if (type == DATALISTENER_TYPE.SERVER_CHANGED) {
+            SwingUtilities.invokeLater(this::updateServerStatus);
         } else if (type == DATALISTENER_TYPE.INFORMATION_CHANGED) {
             SwingUtilities.invokeLater(() -> {
                 try {
                     information = (Information) content;
                     statusbar[0].setText(getVerbindungsStatusAsString(information));
-                    if (information.getVerbindungsStatus() == Information.NICHT_VERBUNDEN) {
-                        statusbar[1].setText(keinServer);
-                    } else {
-                        String tmp = information.getServerName();
-
-                        if (tmp == null || tmp.length() == 0) {
-                            Server server = information.getServer();
-
-                            if (server != null) {
-                                tmp = server.getHost() + ":" + server.getPort();
-                            }
-                        }
-
-                        statusbar[1].setText(tmp);
-                    }
+                    updateServerStatus();
 
                     statusbar[2].setText(information.getUpDownAsString());
                     statusbar[3].setText(information.getUpDownSessionAsString());
@@ -905,6 +894,23 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                 }
             });
         }
+    }
+
+    private void updateServerStatus() {
+        if (information != null) {
+            statusbar[1].setText(information.getVerbindungsStatus() == Information.NICHT_VERBUNDEN
+                    ? keinServer : getServerStatusText(information));
+        }
+    }
+
+    static String getServerStatusText(Information information) {
+        String address = information.getServerName();
+        Server server = information.getServer();
+        if (address == null || address.isBlank()) {
+            address = server != null ? server.getHost() + ":" + server.getPort() : "";
+        }
+        String name = server != null ? server.getName() : null;
+        return name == null || name.isBlank() ? address : name.strip() + " (" + address + ")";
     }
 
     protected void updateFirewall() {
