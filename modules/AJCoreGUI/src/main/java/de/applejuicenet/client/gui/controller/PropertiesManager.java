@@ -20,6 +20,7 @@ import de.applejuicenet.client.gui.upload.table.UploadActiveTableModel;
 import de.applejuicenet.client.gui.upload.table.UploadWaitingTableModel;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.LookAFeel;
+import de.applejuicenet.client.shared.LookAndFeelLoader;
 import de.applejuicenet.client.shared.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -218,7 +219,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
         if (lookAndFeels.size() == 0) {
             try {
-                lookAndFeels.add(new LookAFeel("JGoodies Plastic", "com.jgoodies.looks.plastic.Plastic3DLookAndFeel"));
+                lookAndFeels.add(LookAndFeelLoader.DEFAULT);
 
                 if (System.getProperty("os.name").toLowerCase().contains("win")) {
                     lookAndFeels.add(new LookAFeel("JGoodies Windows", "com.jgoodies.looks.windows.WindowsLookAndFeel"));
@@ -250,20 +251,19 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     public LookAFeel getDefaultLookAndFeel() {
         try {
             LookAFeel[] looks = this.getLookAndFeels();
-            String temp = propertyHandler.get("options_lookandfeels_default_name", "JGoodies Plastic");
+            String temp = propertyHandler.get("options_lookandfeels_default_name", LookAndFeelLoader.DEFAULT.getName());
             for (LookAFeel look : looks) {
                 if (temp.equals(look.getName())) {
                     return look;
                 }
             }
-        } catch (Exception e) {
-            AppleJuiceDialog.rewriteProperties = true;
-            logger.error(PROPERTIES_ERROR_MESSAGE, e);
-
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
+            logger.warn("Saved theme {} is unavailable; using the default", temp);
+            setDefaultLookAndFeel(LookAndFeelLoader.DEFAULT);
+        } catch (Exception | LinkageError exception) {
+            logger.warn("Cannot read saved theme; using the default", exception);
         }
 
-        return null;
+        return LookAndFeelLoader.DEFAULT;
     }
 
     public void setDefaultLookAndFeel(LookAFeel lookAFeel) {

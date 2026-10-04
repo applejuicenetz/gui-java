@@ -47,6 +47,8 @@
   - Wechseln ohne GUI-Neustart
   - Auswahl spielt eine Hörprobe, auch bei stummer GUI
 - [red171] Sprachen und Themes:
+  - Nicht ladbare oder entfernte Themes fallen auf ein Standard-Theme zurück,
+    damit die GUI weiterhin startet
   - Sprachverwaltung beim GUI-Start verbessert
   - Unvollständige Sprachen Italienisch und Türkisch entfernt
   - SkinLF und alte Skin-Theme-Packs entfernt

@@ -24,6 +24,7 @@ import de.applejuicenet.client.gui.tray.TrayLoader;
 import de.applejuicenet.client.gui.upload.UploadController;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
+import de.applejuicenet.client.shared.LookAndFeelLoader;
 import de.applejuicenet.client.shared.SoundPlayer;
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLFrame;
@@ -185,17 +186,22 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
     }
 
     public static void initLookAndFeel() {
+        LookAFeel preferred = null;
         try {
-            lookAndFeelInitialized = true;
-            LookAFeel defaultlookandfeel = OptionsManagerImpl.getInstance().getDefaultLookAndFeel();
-
-            if (defaultlookandfeel != null) {
-                UIManager.setLookAndFeel(defaultlookandfeel.getClassName());
-                installClipboardKeys();
-            }
-        } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            preferred = OptionsManagerImpl.getInstance().getDefaultLookAndFeel();
+        } catch (Exception | LinkageError exception) {
+            logger.warn("Cannot read selected theme; using the default", exception);
         }
+        LookAFeel active = LookAndFeelLoader.install(preferred);
+        if (preferred == null || !preferred.getClassName().equals(active.getClassName())) {
+            try {
+                OptionsManagerImpl.getInstance().setDefaultLookAndFeel(active);
+            } catch (Exception | LinkageError exception) {
+                logger.warn("Cannot save fallback theme", exception);
+            }
+        }
+        installClipboardKeys();
+        lookAndFeelInitialized = true;
     }
 
     public static AppleJuiceDialog getApp() {
