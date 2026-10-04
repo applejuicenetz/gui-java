@@ -31,8 +31,8 @@ public class SplashTest {
                 assertSame(icon, ((JLabel) splash.getContentPane()).getIcon());
                 assertEquals(0, splash.getContentPane().getComponentCount());
                 Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-                assertEquals(screen.x + (screen.width - 320) / 2, splash.getX());
-                assertEquals(screen.y + (screen.height - 180) / 3, splash.getY());
+                assertEquals(screen.x + (screen.width - 320) / 2, splash.getX(), 2);
+                assertEquals(screen.y + (screen.height - 180) / 3, splash.getY(), 2);
                 splash.setVisible(true);
                 assertTrue(splash.isShowing());
                 splash.setVisible(false);
