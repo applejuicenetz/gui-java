@@ -219,6 +219,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         menuItemCoreBeenden.setIcon(im.getIcon("skull"));
         menuItemDateiliste.setIcon(im.getIcon("speichern"));
         menuItemCheckUpdate.setIcon(im.getIcon("update"));
+        menuItemBeenden.setIcon(im.getIcon("abbrechen"));
 
         setJMenuBar(createMenuBar());
 
@@ -632,13 +633,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                     rb.setSelected(true);
                 }
 
-                if (!Boolean.getBoolean("apple.laf.useScreenMenuBar")) {
-                    Image img = Toolkit.getDefaultToolkit().getImage(path + sprachText.toLowerCase() + ".gif");
-                    ImageIcon result = new ImageIcon();
-
-                    result.setImage(img);
-                    rb.setIcon(result);
-                }
+                String flagFile = curSprachDatei.substring(0, curSprachDatei.length() - ".properties".length()) + ".gif";
+                rb.setIcon(new ImageIcon(new File(languagePath, flagFile).getAbsolutePath()));
 
                 sprachMenu.add(rb);
                 rb.addItemListener(ae -> {
