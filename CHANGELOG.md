@@ -4,6 +4,12 @@
 
 ### Sichtbare Änderungen
 
+- [red171] Neues Plugin „Share-Treemap“:
+  - Größenkarte des Shares mit Ordner-Zoom und Anzeige von Pfaden und Dateigrößen
+  - Farben unterscheiden Videos, Audio, Archive (RAR, ZIP und 7z) und sonstige Dateien
+  - Heatmap zeigt beobachtete Upload-Aktivität bei aktivem Plugin-Tab und wird
+    beim Ende der Core-Verbindung zurückgesetzt
+  - Datei-Kontextmenü kopiert den `ajfsp`-Link; unterstützt auch Remote-Core
 - [red171] Version Checker:
   - Neue Übersicht mit Kontaktanzahl, Core-Versionen und häufigster Version
   - Filterbare, sortierbare Versionstabelle mit Anteilen und Betriebssystem-Verteilung

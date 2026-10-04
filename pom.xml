@@ -18,6 +18,7 @@
         <module>modules/versionchecker</module>
         <module>modules/standardpwdlpolicy</module>
         <module>modules/speedgraph</module>
+        <module>modules/sharetreemap</module>
     </modules>
 
     <build>
