@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client.shared.tablecellrenderer;
 
+import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
@@ -20,46 +22,16 @@ public class SpeedTableCellRenderer extends DefaultTableCellRenderer
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
                                                   int column)
    {
-      return super.getTableCellRendererComponent(table, getSpeedAsString((Integer) value), isSelected, hasFocus, row, column);
+      return super.getTableCellRendererComponent(table, getSpeedAsString((Number) value), isSelected, hasFocus, row, column);
    }
 
-   private String getSpeedAsString(Integer speed)
+   private String getSpeedAsString(Number speed)
    {
-      if(speed == 0)
+      if(speed == null || speed.longValue() == 0)
       {
          return "";
       }
 
-      double size   = speed;
-      int    faktor = 1;
-
-      if(size < 1024)
-      {
-         faktor = 1;
-      }
-      else
-      {
-         faktor = 1024;
-
-      }
-
-      size = size / faktor;
-      String s = Double.toString(size);
-
-      if(s.indexOf(".") + 3 < s.length())
-      {
-         s = s.substring(0, s.indexOf(".") + 3);
-      }
-
-      if(faktor == 1)
-      {
-         s += " Bytes/s";
-      }
-      else
-      {
-         s += " kb/s";
-      }
-
-      return s;
+      return DownloadsTableModel.parseGroesse(speed.longValue()) + "/s";
    }
 }
