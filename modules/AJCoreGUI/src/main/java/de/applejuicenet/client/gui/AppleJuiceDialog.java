@@ -632,11 +632,13 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                     rb.setSelected(true);
                 }
 
-                Image img = Toolkit.getDefaultToolkit().getImage(path + sprachText.toLowerCase() + ".gif");
-                ImageIcon result = new ImageIcon();
+                if (!Boolean.getBoolean("apple.laf.useScreenMenuBar")) {
+                    Image img = Toolkit.getDefaultToolkit().getImage(path + sprachText.toLowerCase() + ".gif");
+                    ImageIcon result = new ImageIcon();
 
-                result.setImage(img);
-                rb.setIcon(result);
+                    result.setImage(img);
+                    rb.setIcon(result);
+                }
 
                 sprachMenu.add(rb);
                 rb.addItemListener(ae -> {

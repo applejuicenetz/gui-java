@@ -18,6 +18,7 @@
 - [red171] Core-Anfragen warten nicht mehr unbegrenzt und geben Verbindungen frei
 - [red171] News, Serverliste und Update-Prüfung warten nicht mehr unbegrenzt
 - [red171] Startbild ohne Ladebalken und künstliche Wartepausen
+- [red171] macOS: Menüs (Extras, Sprache, Themes, Core …) erscheinen in der Menüleiste oben am Bildschirm
 - [red171] Aktualisierung erholt sich nach fehlerhaften Core-Antworten und läuft nach Stopp nicht weiter
 
 **0.86.2**

@@ -80,6 +80,7 @@ public class AppleJuiceClient {
     }
 
     public static void main(String[] args) {
+        useMacScreenMenuBar();
         ApplicationPaths.configure(args);
         logger = LoggerFactory.getLogger(AppleJuiceClient.class);
 
@@ -102,6 +103,12 @@ public class AppleJuiceClient {
         Thread t = new Thread(tg, runnable, "appleJuiceCoreGUI");
 
         t.start();
+    }
+
+    static void useMacScreenMenuBar() {
+        if (System.getProperty("os.name", "").toLowerCase(Locale.ROOT).startsWith("mac")) {
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+        }
     }
 
     public static void runmain(String[] args) {
