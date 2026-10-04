@@ -4,6 +4,12 @@
 
 ### Sichtbare Änderungen
 
+- [red171] Version Checker:
+  - Neue Übersicht mit Kontaktanzahl, Core-Versionen und häufigster Version
+  - Filterbare, sortierbare Versionstabelle mit Anteilen und Betriebssystem-Verteilung
+  - Statistik lässt sich zurücksetzen und zählt Upload- und Quellen-IDs getrennt,
+    ohne sie als eindeutige Nutzer auszugeben
+  - Anzeige folgt dem GUI-Theme; Core-Verbindungsende setzt die Statistik zurück
 - [red171] SpeedGraph:
   - Neue Anzeige mit aktuellen Download- und Uploadraten, Messwert-Durchschnitt
     und Spitzenwerten
@@ -19,11 +25,6 @@
 - [red171] SpeedGraph:
   - Zeitbasierter, begrenzter Verlauf und Zeichenlogik ersetzen alte
     pixelabhängige Speicherung und Timer
-
-- [red171] Release-Pipeline:
-  - GUI-Releases starten neben der Flatpak-Synchronisierung auch einen Portable-Build
-    mit automatischem Patch-Release
-  - Flatpak- und Portable-Trigger verwenden gemeinsam `PACKAGE_DISPATCH_TOKEN`
 
 ## 0.86.3
 
