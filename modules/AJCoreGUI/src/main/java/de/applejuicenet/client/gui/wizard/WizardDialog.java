@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client.gui.wizard;
 
+import de.applejuicenet.client.gui.DialogLocation;
+
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.shared.AJSettings;
@@ -182,7 +184,7 @@ public class WizardDialog extends JDialog implements LanguageListener {
 
     private void close() {
         LanguageSelector.getInstance().removeLanguageListener(this);
-        int result = JOptionPane.showConfirmDialog(this,
+        int result = JOptionPane.showConfirmDialog(DialogLocation.getReference(this),
                 LanguageSelector.getInstance().getFirstAttrbuteByTagName("connect.remember.caption") +
                         " ?", "appleJuice Client", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 

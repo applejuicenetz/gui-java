@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client.gui.connect;
 
+import de.applejuicenet.client.gui.DialogLocation;
+
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
@@ -199,10 +201,7 @@ public class QuickConnectionSettingsDialog extends JDialog
             }
          });
       pack();
-      Dimension appDimension = getSize();
-      Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-      setLocation((screenSize.width - appDimension.width) / 2, (screenSize.height - appDimension.height) / 2);
+      DialogLocation.center(this);
       remotePanel.setFocusOnPassword();
    }
 

@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client.gui.server;
 
+import de.applejuicenet.client.gui.DialogLocation;
+
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Information;
@@ -229,10 +231,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         ActionListener newServerListener = new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 NewServerDialog newServerDialog = new NewServerDialog(AppleJuiceDialog.getApp(), true);
-                Dimension appDimension = newServerDialog.getSize();
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-                newServerDialog.setLocation((screenSize.width - appDimension.width) / 2, (screenSize.height - appDimension.height) / 2);
+                DialogLocation.center(newServerDialog);
                 newServerDialog.setVisible(true);
                 if (newServerDialog.isLegal()) {
                     final String link = newServerDialog.getLink();

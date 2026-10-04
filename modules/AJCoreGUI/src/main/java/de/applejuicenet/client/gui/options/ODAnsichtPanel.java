@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client.gui.options;
 
+import de.applejuicenet.client.gui.DialogLocation;
+
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
@@ -154,7 +156,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
                     }
                 }
 
-                int returnVal = fileChooser.showOpenDialog(source);
+                int returnVal = fileChooser.showOpenDialog(DialogLocation.getReference(source));
 
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     File browserFile = fileChooser.getSelectedFile();

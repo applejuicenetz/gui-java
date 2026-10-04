@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client.gui.download;
 
+import de.applejuicenet.client.gui.DialogLocation;
+
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
@@ -112,10 +114,7 @@ public class RenameDownloadDialog extends JDialog
       getContentPane().add(panel1, BorderLayout.NORTH);
       getContentPane().add(southPanel, BorderLayout.SOUTH);
       pack();
-      Dimension appDimension = getSize();
-      Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-      setLocation((screenSize.width - appDimension.width) / 2, (screenSize.height - appDimension.height) / 2);
+      DialogLocation.center(this);
 
       addKeyListener(disposeKeyAdapter);
    }

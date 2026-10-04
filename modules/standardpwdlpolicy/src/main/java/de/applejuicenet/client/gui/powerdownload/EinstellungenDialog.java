@@ -1,5 +1,7 @@
 package de.applejuicenet.client.gui.powerdownload;
 
+import de.applejuicenet.client.gui.DialogLocation;
+
 import de.applejuicenet.client.gui.powerdownload.StandardAutomaticPwdlPolicy.Reihenfolge;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberAndSpecialCharsInputVerifier;
@@ -203,10 +205,7 @@ public class EinstellungenDialog extends JDialog implements ActionListener {
     }
 
     public void setVisible(boolean visible) {
-        Dimension appDimension = getSize();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation((screenSize.width - appDimension.width) / 2,
-                (screenSize.height - appDimension.height) / 2);
+        DialogLocation.center(this);
         super.setVisible(visible);
     }
 

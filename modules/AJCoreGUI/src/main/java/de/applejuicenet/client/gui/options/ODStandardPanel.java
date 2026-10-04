@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client.gui.options;
 
+import de.applejuicenet.client.gui.DialogLocation;
+
 import ch.qos.logback.classic.Level;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
@@ -394,7 +396,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
 
             ODDirectoryChooser chooser = new ODDirectoryChooser(parent, title);
 
-            chooser.setLocation(parent.getLocation());
+            DialogLocation.center(chooser);
             chooser.setVisible(true);
             if (chooser.isNewPathSelected()) {
                 dirty = true;

@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client.gui.options;
 
+import de.applejuicenet.client.gui.DialogLocation;
+
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
@@ -55,9 +57,6 @@ public class ODPluginOptionsDialog extends JDialog {
         southPanel.add(schliessen);
         getContentPane().add(southPanel, BorderLayout.SOUTH);
         pack();
-        Dimension appDimension = getSize();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        setLocation((screenSize.width - appDimension.width) / 2, (screenSize.height - appDimension.height) / 2);
+        DialogLocation.center(this);
     }
 }

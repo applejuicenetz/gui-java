@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client.gui.share;
 
+import de.applejuicenet.client.gui.DialogLocation;
+
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Information;
@@ -297,6 +299,7 @@ public class ShareController extends GuiController
       DateiListeDialog dateiListeDialog = new DateiListeDialog(AppleJuiceDialog.getApp(), false);
 
       sharePanel.getShareTable().setDragEnabled(true);
+      DialogLocation.center(dateiListeDialog);
       dateiListeDialog.setVisible(true);
    }
 

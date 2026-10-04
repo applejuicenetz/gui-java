@@ -107,10 +107,7 @@ public class UpdateInformationDialog extends JDialog {
         southPanel.add(schliessen);
         getContentPane().add(southPanel, BorderLayout.SOUTH);
         pack();
-        Dimension appDimension = getSize();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        setLocation((screenSize.width - appDimension.width) / 2, (screenSize.height - appDimension.height) / 2);
+        DialogLocation.center(this);
     }
 
     private void executeLink(String link) {

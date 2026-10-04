@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client.gui.plugins.logviewer;
 
+import de.applejuicenet.client.gui.DialogLocation;
+
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
@@ -109,7 +111,7 @@ public class LogViewerPlugin extends PluginConnector {
             return;
         }
         logger.debug("LogViewer: Loeschen angeklickt fuer {}", logFile.getAbsolutePath());
-        int answer = JOptionPane.showConfirmDialog(this, "Logdatei \"" + logFile.getName() + "\" wirklich löschen?",
+        int answer = JOptionPane.showConfirmDialog(DialogLocation.getReference(this), "Logdatei \"" + logFile.getName() + "\" wirklich löschen?",
                                                    "Logdatei löschen", JOptionPane.YES_NO_OPTION,
                                                    JOptionPane.WARNING_MESSAGE);
 
@@ -132,7 +134,7 @@ public class LogViewerPlugin extends PluginConnector {
             logPane.setText("");
         } catch (Exception e) {
             logger.error("LogViewer: Loeschen fehlgeschlagen: " + logFile.getAbsolutePath(), e);
-            JOptionPane.showMessageDialog(this, "Logdatei konnte nicht gelöscht werden:\n" + e.getMessage(),
+            JOptionPane.showMessageDialog(DialogLocation.getReference(this), "Logdatei konnte nicht gelöscht werden:\n" + e.getMessage(),
                                           "Logdatei löschen", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -148,7 +150,7 @@ public class LogViewerPlugin extends PluginConnector {
             return;
         }
 
-        int answer = JOptionPane.showConfirmDialog(this, "Alle " + logFiles.length + " inaktiven Logdateien wirklich löschen?\nDas laufende Log bleibt erhalten.",
+        int answer = JOptionPane.showConfirmDialog(DialogLocation.getReference(this), "Alle " + logFiles.length + " inaktiven Logdateien wirklich löschen?\nDas laufende Log bleibt erhalten.",
                                                    "Alle Logs löschen", JOptionPane.YES_NO_OPTION,
                                                    JOptionPane.WARNING_MESSAGE);
 
@@ -178,7 +180,7 @@ public class LogViewerPlugin extends PluginConnector {
         logPane.setText("");
 
         if (failed > 0) {
-            JOptionPane.showMessageDialog(this, failed + " Logdateien konnten nicht gelöscht werden.",
+            JOptionPane.showMessageDialog(DialogLocation.getReference(this), failed + " Logdateien konnten nicht gelöscht werden.",
                                           "Alle Logs löschen", JOptionPane.ERROR_MESSAGE);
         }
     }

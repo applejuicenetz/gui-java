@@ -334,13 +334,10 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         memory.addActionListener(ae -> {
             if (memoryMonitorDialog == null) {
                 memoryMonitorDialog = new MemoryMonitorDialog(AppleJuiceDialog.this);
-                Point loc = memory.getLocationOnScreen();
-
-                loc.setLocation(loc.getX() - memoryMonitorDialog.getWidth(), loc.getY() - memoryMonitorDialog.getHeight());
-                memoryMonitorDialog.setLocation(loc);
             }
 
             if (!memoryMonitorDialog.isVisible()) {
+                DialogLocation.center(memoryMonitorDialog);
                 memoryMonitorDialog.setVisible(true);
             }
         });
@@ -724,19 +721,13 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
     private void showOptionsDialog() {
         OptionsDialog od = new OptionsDialog(getApp());
-        Dimension optDimension = od.getSize();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        od.setLocation((screenSize.width - optDimension.width) / 2, (screenSize.height - optDimension.height) / 2);
+        DialogLocation.center(od);
         od.setVisible(true);
     }
 
     private void showAboutDialog() {
         AboutDialog aboutDialog = new AboutDialog(getApp(), true);
-        Dimension appDimension = aboutDialog.getSize();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        aboutDialog.setLocation((screenSize.width - appDimension.width) / 2, (screenSize.height - appDimension.height) / 2);
+        DialogLocation.center(aboutDialog);
         aboutDialog.setVisible(true);
     }
 

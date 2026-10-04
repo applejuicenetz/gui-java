@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client;
 
+import de.applejuicenet.client.gui.DialogLocation;
+
 import ch.qos.logback.classic.Level;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
@@ -377,20 +379,14 @@ public class AppleJuiceClient {
 
     public static void showConnectionWizard(JFrame frame) throws HeadlessException {
         WizardDialog wizardDialog = new WizardDialog(frame, true);
-        Dimension appDimension = wizardDialog.getSize();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        wizardDialog.setLocation((screenSize.width - appDimension.width) / 2, (screenSize.height - appDimension.height) / 2);
+        DialogLocation.center(wizardDialog);
         wizardDialog.setVisible(true);
     }
 
     public static boolean showConnectionWizard(JDialog dialog, AJSettings ajSettings)
             throws HeadlessException {
         WizardDialog wizardDialog = new WizardDialog(dialog, true, ajSettings);
-        Dimension appDimension = wizardDialog.getSize();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        wizardDialog.setLocation((screenSize.width - appDimension.width) / 2, (screenSize.height - appDimension.height) / 2);
+        DialogLocation.center(wizardDialog);
         wizardDialog.setVisible(true);
         return wizardDialog.isRegularClosed();
     }

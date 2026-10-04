@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client.gui.share;
 
+import de.applejuicenet.client.gui.DialogLocation;
+
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Share;
 import de.applejuicenet.client.gui.components.dragndrop.DndTargetAdapter;
@@ -179,7 +181,7 @@ public class DateiListeDialog extends JDialog {
                 fileChooser.setFileFilter(new HtmlFileFilter());
             }
 
-            int i = fileChooser.showSaveDialog(DateiListeDialog.this);
+            int i = fileChooser.showSaveDialog(DialogLocation.getReference(DateiListeDialog.this));
 
             if (i == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();

@@ -4,6 +4,8 @@
 
 package de.applejuicenet.client.gui.options;
 
+import de.applejuicenet.client.gui.DialogLocation;
+
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLComboBox;
@@ -104,10 +106,7 @@ public class IncomingDirSelectionDialog extends JDialog
       getContentPane().add(panel1, BorderLayout.NORTH);
       getContentPane().add(southPanel, BorderLayout.SOUTH);
       pack();
-      Dimension appDimension = getSize();
-      Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-      setLocation((screenSize.width - appDimension.width) / 2, (screenSize.height - appDimension.height) / 2);
+      DialogLocation.center(this);
    }
 
    public String getSelectedIncomingDir()
