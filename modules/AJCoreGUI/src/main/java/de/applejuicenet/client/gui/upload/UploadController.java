@@ -295,7 +295,6 @@ public class UploadController extends GuiController {
                 int[] uploadWaitingSort = null;
 
                 if (pm.isLegal()) {
-                    int[] uploadActiveWidths = pm.getUploadWidths();
                     boolean[] uploadActiveVisibilies = pm.getUploadColumnVisibilities();
                     int[] indizesActive = pm.getUploadColumnIndizes();
 
@@ -303,7 +302,6 @@ public class UploadController extends GuiController {
                     ArrayList<TableColumn> visibleColumnsActive = new ArrayList<TableColumn>();
 
                     for (int i = 0; i < columnsActive.length; i++) {
-                        columnsActive[i].setPreferredWidth(uploadActiveWidths[i]);
                         uploadPanel.getUploadActiveTable().removeColumn(columnsActive[i]);
                         if (uploadActiveVisibilies[i]) {
                             visibleColumnsActive.add(columnsActive[i]);
@@ -322,7 +320,6 @@ public class UploadController extends GuiController {
                         }
                     }
 
-                    int[] uploadWaitingWidths = pm.getUploadWaitingWidths();
                     boolean[] uploadWaitingVisibilies = pm.getUploadWaitingColumnVisibilities();
                     int[] indizesWaiting = pm.getUploadWaitingColumnIndizes();
 
@@ -330,7 +327,6 @@ public class UploadController extends GuiController {
                     ArrayList<TableColumn> visibleColumnsWaiting = new ArrayList<TableColumn>();
 
                     for (int i = 0; i < columnsWaiting.length; i++) {
-                        columnsWaiting[i].setPreferredWidth(uploadWaitingWidths[i]);
                         uploadPanel.getUploadWaitingTable().removeColumn(columnsWaiting[i]);
                         if (uploadWaitingVisibilies[i]) {
                             visibleColumnsWaiting.add(columnsWaiting[i]);
@@ -352,8 +348,8 @@ public class UploadController extends GuiController {
 
                 uploadPanel.getUploadActiveTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                 uploadPanel.getUploadWaitingTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-                TableColumnSettings.install(uploadPanel.getUploadActiveTable(), "upload", columnsActive);
-                TableColumnSettings.install(uploadPanel.getUploadWaitingTable(), "uploadwaiting", columnsWaiting);
+                TableColumnSettings.installCompact(uploadPanel.getUploadActiveTable(), "upload", columnsActive);
+                TableColumnSettings.installCompact(uploadPanel.getUploadWaitingTable(), "uploadwaiting", columnsWaiting);
                 if (null != uploadActiveSort) {
                     for (MouseListener curMl : uploadPanel.getUploadActiveTable().getTableHeader().getMouseListeners()) {
                         if (curMl instanceof HeaderListener) {
@@ -371,6 +367,8 @@ public class UploadController extends GuiController {
                 }
             }
 
+            TableColumnSettings.refreshCompact(uploadPanel.getUploadActiveTable());
+            TableColumnSettings.refreshCompact(uploadPanel.getUploadWaitingTable());
             uploadPanel.getUploadActiveTable().revalidate();
             uploadPanel.getUploadActiveTable().repaint();
             uploadPanel.getUploadWaitingTable().revalidate();
@@ -455,6 +453,8 @@ public class UploadController extends GuiController {
 
                         uploadPanel.getUploadListeLabel().setText(tmp);
                         if (componentSelected && change) {
+                            TableColumnSettings.refreshCompact(uploadPanel.getUploadActiveTable());
+                            TableColumnSettings.refreshCompact(uploadPanel.getUploadWaitingTable());
                             uploadPanel.getUploadActiveTableModel().forceResort();
                             uploadPanel.getUploadActiveTable().revalidate();
                             uploadPanel.getUploadActiveTable().repaint();

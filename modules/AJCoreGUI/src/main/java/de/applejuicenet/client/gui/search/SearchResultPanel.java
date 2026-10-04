@@ -232,7 +232,7 @@ public class SearchResultPanel extends JPanel {
 
         JTableHeader header = searchResultTable.getTableHeader();
         searchResultTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        TableColumnSettings.install(searchResultTable, "search", tableColumns);
+        TableColumnSettings.installCompact(searchResultTable, "search", tableColumns);
 
         SortMouseAdapter sortMouseAdapter = new SortMouseAdapter(header, renderer);
 
@@ -308,6 +308,7 @@ public class SearchResultPanel extends JPanel {
 
         try {
             searchResultTableModel.forceResort();
+            TableColumnSettings.refreshCompact(searchResultTable);
             searchResultTable.revalidate();
             searchResultTable.repaint();
             updateZahlen();

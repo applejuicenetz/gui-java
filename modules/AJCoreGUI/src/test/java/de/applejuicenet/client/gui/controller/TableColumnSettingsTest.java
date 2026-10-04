@@ -20,6 +20,100 @@ import static org.junit.Assert.assertTrue;
 
 public class TableColumnSettingsTest {
     @Test
+    public void compactRefreshFitsChangedContentWithoutModelEventOrSelectionLoss() throws Exception {
+        AtomicReference<JTable> tableReference = new AtomicReference<>();
+        String[] values = {"file.bin", "1 KB/s"};
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = new JTable(new javax.swing.table.AbstractTableModel() {
+                @Override public int getRowCount() { return 2; }
+                @Override public int getColumnCount() { return 2; }
+                @Override public Object getValueAt(int row, int column) { return values[column]; }
+            });
+            table.setSize(1200, 300);
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            TableColumnSettings.install(table, columns(table), key -> -1, (key, value) -> { }, true);
+            table.setRowSelectionInterval(1, 1);
+            tableReference.set(table);
+        });
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = tableReference.get();
+            assertEquals(requiredWidth(table, 1), table.getColumnModel().getColumn(1).getWidth());
+            values[1] = "Much longer speed value";
+            TableColumnSettings.refreshCompact(table);
+        });
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = tableReference.get();
+            assertEquals(requiredWidth(table, 1), table.getColumnModel().getColumn(1).getWidth());
+            assertEquals(1200 - requiredWidth(table, 1), table.getColumnModel().getColumn(0).getWidth());
+            assertEquals(1, table.getSelectedRow());
+        });
+    }
+
+    @Test
+    public void compactDestinationStaysBoundedAndFilenameFillsRemainingWidth() throws Exception {
+        AtomicReference<JTable> tableReference = new AtomicReference<>();
+        AtomicReference<TableColumn> destinationReference = new AtomicReference<>();
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = new JTable(new DefaultTableModel(
+                    new Object[][] {{"file.bin", "Downloading", "/long-directory".repeat(60)}},
+                    new String[] {"Dateiname", "Status", "Zielverzeichnis"}));
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            JScrollPane scrollPane = new JScrollPane(table);
+            scrollPane.getViewport().setSize(1200, 300);
+            TableColumn[] columns = columns(table);
+            columns[2].setMaxWidth(280);
+            destinationReference.set(columns[2]);
+            tableReference.set(table);
+            TableColumnSettings.install(table, columns, key -> -1, (key, value) -> { }, true);
+            table.getColumnModel().moveColumn(2, 0);
+        });
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = tableReference.get();
+            assertEquals(280, destinationReference.get().getWidth());
+            assertEquals(1200 - 280 - requiredWidth(table, 1),
+                    table.getColumnModel().getColumn(table.convertColumnIndexToView(0)).getWidth());
+            table.removeColumn(destinationReference.get());
+        });
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = tableReference.get();
+            assertEquals(1200 - requiredWidth(table, 1), table.getColumnModel().getColumn(0).getWidth());
+            table.addColumn(destinationReference.get());
+            ((DefaultTableModel) table.getModel()).setValueAt("/short", 0, 2);
+        });
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = tableReference.get();
+            assertEquals(requiredWidth(table, 2), destinationReference.get().getWidth());
+            assertEquals(1200 - requiredWidth(table, 1) - requiredWidth(table, 2),
+                    table.getColumnModel().getColumn(0).getWidth());
+        });
+    }
+
+    @Test
+    public void compactTablesNeitherReadNorSaveColumnWidths() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            JFrame frame = new JFrame();
+            try {
+                JTable table = table();
+                Properties written = new Properties();
+                TableColumnSettings.install(table, columns(table), key -> {
+                    assertTrue(!key.endsWith("_width"));
+                    return -1;
+                }, (key, value) -> written.setProperty(key, Integer.toString(value)), true);
+                frame.add(new JScrollPane(table));
+                frame.setSize(800, 400);
+                frame.setVisible(true);
+                resizeColumn(table, 1, 250);
+                table.getColumnModel().getColumn(1).setPreferredWidth(260);
+                table.getColumnModel().moveColumn(1, 2);
+                assertTrue(written.stringPropertyNames().stream().noneMatch(key -> key.endsWith("_width")));
+                assertTrue(written.containsKey("column1_index"));
+            } finally {
+                frame.dispose();
+            }
+        });
+    }
+
+    @Test
     public void compactColumnsIgnoreSavedWidthsAndFitAllRowsAfterReordering() throws Exception {
         AtomicReference<JTable> tableReference = new AtomicReference<>();
         SwingUtilities.invokeAndWait(() -> {

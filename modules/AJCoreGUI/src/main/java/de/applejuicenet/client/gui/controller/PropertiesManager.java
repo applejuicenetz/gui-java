@@ -816,26 +816,6 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             propertyHandler.put("options_server_sort_column", serverSort[0]);
             propertyHandler.put("options_server_sort_order", serverSort[1]);
 
-            for (int i = 0; i < downloadWidths.length; i++) {
-                propertyHandler.put("options_columns_download_column" + i + "_width", downloadWidths[i]);
-            }
-
-            for (int i = 0; i < downloadSourcesWidths.length; i++) {
-                propertyHandler.put("options_columns_downloadsources_column" + i + "_width", downloadSourcesWidths[i]);
-            }
-
-            for (int i = 0; i < uploadWidths.length; i++) {
-                propertyHandler.put("options_columns_upload_column" + i + "_width", uploadWidths[i]);
-            }
-
-            for (int i = 0; i < uploadWaitingWidths.length; i++) {
-                propertyHandler.put("options_columns_uploadwaiting_column" + i + "_width", uploadWaitingWidths[i]);
-            }
-
-            for (int i = 0; i < serverWidths.length; i++) {
-                propertyHandler.put("options_columns_server_column" + i + "_width", serverWidths[i]);
-            }
-
             for (int i = 0; i < shareWidths.length; i++) {
                 propertyHandler.put("options_columns_share_column" + i + "_width", shareWidths[i]);
             }

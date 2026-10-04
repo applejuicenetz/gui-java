@@ -406,14 +406,6 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                 PositionManager pm = PositionManagerImpl.getInstance();
                 int[] sort = pm.getServerSort();
 
-                if (pm.isLegal()) {
-                    int[] widths = pm.getServerWidths();
-
-                    for (int i = 0; i < columnCount; i++) {
-                        headerModel.getColumn(i).setPreferredWidth(widths[i]);
-                    }
-                }
-
                 if (null != sort) {
                     for (MouseListener curMl : serverTable.getTableHeader().getMouseListeners()) {
                         if (curMl instanceof HeaderListener) {
@@ -427,8 +419,9 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                 for (int index = 0; index < columnCount; index++) {
                     columns[index] = headerModel.getColumn(index);
                 }
-                TableColumnSettings.install(serverTable, "server", columns);
+                TableColumnSettings.installCompact(serverTable, "server", columns);
             }
+            TableColumnSettings.refreshCompact(serverTable);
         } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
@@ -450,6 +443,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         boolean changed = ((ServerTableModel) serverTable.getModel()).setTable((HashMap<String, Server>) content);
 
         if (changed && tabSelected) {
+            TableColumnSettings.refreshCompact(serverTable);
             ((SortableTableModel) serverTable.getModel()).forceResort();
             serverTable.revalidate();
             serverTable.repaint();

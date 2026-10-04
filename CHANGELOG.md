@@ -10,10 +10,16 @@
   - Prio-Zahlen mittig ausgerichtet
   - Datenspalten kompakt; übrige Breite für Namen
 - [red171] Downloads:
+  - Beide Tabellen passen Datenspalten an ihren Inhalt an; Dateiname nutzt die
+    Restbreite, Zielverzeichnis bleibt begrenzt und Spaltenbreiten werden nicht gespeichert
   - Keine doppelten Downloads nach einem Core-Neustart (ghosting)
   - Powerdownload-Bereich bietet genug Platz für Text und Eingaben und scrollt
     bei geringer Höhe ohne Überlappung
 - [red171] Bedienung und Darstellung:
+  - Suchergebnisse passen Datenspalten laufend an Inhalte an; Dateiname nutzt
+    die Restbreite, ohne gespeicherte Spaltenbreiten
+  - Upload- und Servertabellen passen Datenspalten an Inhalte an; Dateiname
+    beziehungsweise Servername nutzt die Restbreite, ohne gespeicherte Spaltenbreiten
   - Dialoge öffnen mittig über dem Hauptfenster statt mittig auf dem Bildschirm
   - „Über“ zeigt Programmierer und besonderen Dank ohne Mailadressen und Scrollen
   - Spaltenbreiten passen sich ohne gespeicherte Werte automatisch an

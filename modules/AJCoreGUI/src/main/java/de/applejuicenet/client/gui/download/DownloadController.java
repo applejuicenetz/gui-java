@@ -794,13 +794,11 @@ public class DownloadController extends GuiController {
                 int[] sortDownloadSources = null;
 
                 if (pm.isLegal()) {
-                    int[] widths = pm.getDownloadWidths();
                     boolean[] visibilies = pm.getDownloadColumnVisibilities();
                     int[] indizes = pm.getDownloadColumnIndizes();
                     ArrayList<TableColumn> visibleColumns = new ArrayList<TableColumn>();
 
                     for (int i = 0; i < columnsDownload.length; i++) {
-                        columnsDownload[i].setPreferredWidth(widths[i]);
                         downloadPanel.getDownloadTable().removeColumn(columnsDownload[i]);
                         if (visibilies[i]) {
                             visibleColumns.add(columnsDownload[i]);
@@ -819,7 +817,6 @@ public class DownloadController extends GuiController {
                         }
                     }
 
-                    widths = pm.getDownloadSourcesWidths();
                     visibilies = pm.getDownloadSourcesColumnVisibilities();
                     indizes = pm.getDownloadSourcesColumnIndizes();
                     sortDownloads = pm.getDownloadSort();
@@ -827,7 +824,6 @@ public class DownloadController extends GuiController {
                     visibleColumns = new ArrayList<TableColumn>();
 
                     for (int i = 0; i < columnsDownloadSources.length; i++) {
-                        columnsDownloadSources[i].setPreferredWidth(widths[i]);
                         downloadPanel.getDownloadSourceTable().removeColumn(columnsDownloadSources[i]);
                         if (visibilies[i]) {
                             visibleColumns.add(columnsDownloadSources[i]);
@@ -850,8 +846,9 @@ public class DownloadController extends GuiController {
 
                 downloadPanel.getDownloadTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                 downloadPanel.getDownloadSourceTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-                TableColumnSettings.install(downloadPanel.getDownloadTable(), "download", columnsDownload);
-                TableColumnSettings.install(downloadPanel.getDownloadSourceTable(), "downloadsources", columnsDownloadSources);
+                columnsDownload[9].setMaxWidth(280);
+                TableColumnSettings.installCompact(downloadPanel.getDownloadTable(), "download", columnsDownload);
+                TableColumnSettings.installCompact(downloadPanel.getDownloadSourceTable(), "downloadsources", columnsDownloadSources);
                 int loc = (int) ((downloadPanel.getSplitPane().getHeight() - downloadPanel.getSplitPane().getDividerSize() -
                         downloadPanel.getPowerDownloadPanel().getPreferredSize().height));
 
@@ -873,6 +870,8 @@ public class DownloadController extends GuiController {
                 }
             }
 
+            TableColumnSettings.refreshCompact(downloadPanel.getDownloadTable());
+            TableColumnSettings.refreshCompact(downloadPanel.getDownloadSourceTable());
             downloadPanel.getDownloadTable().revalidate();
             downloadPanel.getDownloadTable().repaint();
             if (downloadPanel.getDownloadSourcesScrollPane().isVisible()) {
@@ -982,12 +981,14 @@ public class DownloadController extends GuiController {
         if (selected && (downloadChanged || sourcesChanged)) {
             if (downloadChanged) {
                 downloadPanel.getDownloadTableModel().forceResort();
+                TableColumnSettings.refreshCompact(downloadPanel.getDownloadTable());
                 downloadPanel.getDownloadTable().revalidate();
                 downloadPanel.getDownloadTable().repaint();
             }
 
             if (sourcesChanged) {
                 downloadPanel.getDownloadSourcesTableModel().forceResort();
+                TableColumnSettings.refreshCompact(downloadPanel.getDownloadSourceTable());
                 downloadPanel.getDownloadSourceTable().revalidate();
                 downloadPanel.getDownloadSourceTable().repaint();
             }

@@ -21,6 +21,7 @@ public final class TableColumnSettings {
     private static final int MAX_FIT_WIDTH = 400;
     private static final int FIT_MARGIN = 12;
     private static final int MIN_NAME_WIDTH = 150;
+    private static final String COMPACT_FIT = TableColumnSettings.class.getName() + ".compactFit";
 
     private TableColumnSettings() {
     }
@@ -31,6 +32,13 @@ public final class TableColumnSettings {
 
     public static void installCompact(JTable table, String view, TableColumn[] columns) {
         install(table, view, columns, true);
+    }
+
+    public static void refreshCompact(JTable table) {
+        Runnable fit = (Runnable) table.getClientProperty(COMPACT_FIT);
+        if (fit != null) {
+            SwingUtilities.invokeLater(fit);
+        }
     }
 
     private static void install(JTable table, String view, TableColumn[] columns, boolean compact) {
@@ -54,7 +62,7 @@ public final class TableColumnSettings {
         }
         List<TableColumn> unsaved = new ArrayList<>();
         for (TableColumn column : columns) {
-            int width = read.applyAsInt(key(column, "width"));
+            int width = compact ? -1 : read.applyAsInt(key(column, "width"));
             if (width > 0 && !compact) {
                 column.setPreferredWidth(width);
                 column.setWidth(width);
@@ -72,7 +80,7 @@ public final class TableColumnSettings {
         }
         for (TableColumn column : columns) {
             column.addPropertyChangeListener(event -> {
-                if (!table.isShowing() || autoFitting[0]) {
+                if (compact || !table.isShowing() || autoFitting[0]) {
                     return;
                 }
                 if ("width".equals(event.getPropertyName()) && table.getTableHeader() != null
@@ -130,6 +138,14 @@ public final class TableColumnSettings {
 
         table.getModel().addTableModelListener(event -> SwingUtilities.invokeLater(fitAll));
         if (compact) {
+            table.putClientProperty(COMPACT_FIT, fitAll);
+            table.getColumnModel().addColumnModelListener(new TableColumnModelListener() {
+                @Override public void columnAdded(TableColumnModelEvent event) { SwingUtilities.invokeLater(fitAll); }
+                @Override public void columnRemoved(TableColumnModelEvent event) { SwingUtilities.invokeLater(fitAll); }
+                @Override public void columnMoved(TableColumnModelEvent event) { }
+                @Override public void columnMarginChanged(javax.swing.event.ChangeEvent event) { }
+                @Override public void columnSelectionChanged(ListSelectionEvent event) { }
+            });
             for (TableColumn column : unsaved) {
                 column.addPropertyChangeListener(event -> {
                     if ("headerValue".equals(event.getPropertyName())) {
@@ -207,6 +223,7 @@ public final class TableColumnSettings {
         }
         width = Math.min(width + FIT_MARGIN,
                 compact || column.getModelIndex() == 0 ? Integer.MAX_VALUE : MAX_FIT_WIDTH);
+        width = Math.min(width, column.getMaxWidth());
         column.setPreferredWidth(width);
         column.setWidth(width);
     }
