@@ -2,7 +2,23 @@
 
 ## 0.86.4 (WIP)
 
+### Sichtbare Änderungen
+
+- [red171] SpeedGraph:
+  - Neue Anzeige mit aktuellen Download- und Uploadraten, Messwert-Durchschnitt
+    und Spitzenwerten
+  - Automatische Einheiten mit Auswahl zwischen binären Bytes, dezimalen Bytes
+    und Bits pro Sekunde
+  - Zeiträume von einer Minute bis einer Stunde, Tooltips und optionale Limitlinien
+  - Verlauf bleibt bei Größenänderungen erhalten und zeigt Lücken bei
+    Verbindungsabbrüchen statt falscher Nullwerte
+  - Hintergrund folgt dem GUI-Theme; vorhandene Linienfarben bleiben erhalten
+
 ### Technische Änderungen
+
+- [red171] SpeedGraph:
+  - Zeitbasierter, begrenzter Verlauf und Zeichenlogik ersetzen alte
+    pixelabhängige Speicherung und Timer
 
 - [red171] Release-Pipeline:
   - GUI-Releases starten neben der Flatpak-Synchronisierung auch einen Portable-Build

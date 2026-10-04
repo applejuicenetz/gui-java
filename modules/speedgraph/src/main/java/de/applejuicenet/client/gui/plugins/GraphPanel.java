@@ -1,77 +1,116 @@
 package de.applejuicenet.client.gui.plugins;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
 
-/**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/ajzab0815/Repository/AJStatsPlugin/de/applejuicenet/client/gui/plugins/ajstats/GraphPanel.java,v 1.1 2004/05/21 18:52:21 zab0815 Exp $
- *
- * <p>Titel: AppleJuice Core-GUI</p>
- * <p>Beschreibung: Erstes GUI für den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: open-source</p>
- *
- * @author: Maj0r <aj@tkl-soft.de>
- * <p>
- * $Log: GraphPanel.java,v $
- * Revision 1.1  2004/05/21 18:52:21  zab0815
- * First commit since upgrading to new Plugin interface. Only few changes with settings are needed.
- * <p>
- * Revision 1.1  2004/01/06 20:49:07  andy
- * Initial checkin
- * <p>
- * Revision 1.4  2003/12/29 11:00:02  zab0815
- * Automatisches scaling der Anzeige und scrolling bei vollem Display, komplett überarbeitet.
- * <p>
- * * $Log: GraphPanel.java,v $
- * * Revision 1.1  2004/05/21 18:52:21  zab0815
- * * First commit since upgrading to new Plugin interface. Only few changes with settings are needed.
- * *
- * * Revision 1.1  2004/01/06 20:49:07  andy
- * * Initial checkin
- * *
- * Revision 1.3  2003/12/22 16:25:02  maj0r
- * Bug behoben, der auftratt, wenn das Plugin aktualisiert wurde, obwohl es noch nicht angezeigt wird (Danke an Luke).
- * <p>
- * Revision 1.2  2003/09/15 07:28:45  maj0r
- * Plugin zeigt nun ein Raster und die Zeit auf der x-Achse.
- * <p>
- * Revision 1.1  2003/09/13 11:33:17  maj0r
- * Neues Plugin SpeedGraph.
- */
-
+/** EDT-owned controls and summary above a shared time axis. */
 public class GraphPanel extends JPanel {
+    private static final int[] WINDOWS = {60000, 300000, 900000, 3600000};
+    private final SpeedHistory history;
+    private final Properties settings;
+    private final UpDownChart chart = new UpDownChart();
+    private final JLabel download = new JLabel("—");
+    private final JLabel upload = new JLabel("—");
+    private final JLabel downStats = new JLabel(" ");
+    private final JLabel upStats = new JLabel(" ");
+    private final JLabel status = new JLabel("Warte auf Messdaten");
+    private final JComboBox<String> period = new JComboBox<>(new String[]{"1 min", "5 min", "15 min", "1 h"});
+    private final JComboBox<SpeedFormat> units = new JComboBox<>(SpeedFormat.values());
+    private final JCheckBox limits = new JCheckBox("Limitlinien");
+    private boolean disconnected;
+    private long uploadLimit;
+    private long downloadLimit;
 
-    public GraphPanel() {
-        //private UpDownChart ud = new UpDownChart();
-        Logger logger = LoggerFactory.getLogger(getClass());
-        try {
-            setLayout(new BorderLayout());
-            this.setBackground(Color.BLACK);
-            //add(new JScrollPane(ud), BorderLayout.NORTH);
-            setBackground(Color.BLACK);
-        } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-        }
-
+    GraphPanel(SpeedHistory history, Properties settings, Runnable save) {
+        super(new BorderLayout(0, 8));
+        this.history = history;
+        this.settings = settings;
+        setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        JPanel top = new JPanel(new BorderLayout(0, 12));
+        JPanel summary = new JPanel(new GridLayout(1, 2, 24, 0));
+        summary.add(card("Download — durchgezogen", download, downStats));
+        summary.add(card("Upload — gestrichelt", upload, upStats));
+        top.add(summary, BorderLayout.NORTH);
+        JPanel controls = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        JLabel periodLabel = new JLabel("Zeitraum:");
+        periodLabel.setLabelFor(period);
+        JLabel unitLabel = new JLabel("Einheiten:");
+        unitLabel.setLabelFor(units);
+        controls.add(periodLabel);
+        controls.add(period);
+        controls.add(unitLabel);
+        controls.add(units);
+        controls.add(limits);
+        period.setSelectedIndex(windowIndex(settings.getProperty("Window", "300000")));
+        try { units.setSelectedItem(SpeedFormat.valueOf(settings.getProperty("Units", "BINARY"))); }
+        catch (IllegalArgumentException ignored) { units.setSelectedItem(SpeedFormat.BINARY); }
+        limits.setSelected(Boolean.parseBoolean(settings.getProperty("ShowLimits", "false")));
+        top.add(controls, BorderLayout.SOUTH);
+        add(top, BorderLayout.NORTH);
+        add(chart, BorderLayout.CENTER);
+        add(status, BorderLayout.SOUTH);
+        Runnable changed = () -> {
+            settings.setProperty("Window", Integer.toString(WINDOWS[period.getSelectedIndex()]));
+            settings.setProperty("Units", ((SpeedFormat) units.getSelectedItem()).name());
+            settings.setProperty("ShowLimits", Boolean.toString(limits.isSelected()));
+            save.run();
+            refresh(System.currentTimeMillis());
+        };
+        period.addActionListener(e -> changed.run());
+        units.addActionListener(e -> changed.run());
+        limits.addActionListener(e -> changed.run());
     }
 
-    public void paintComponent(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, getWidth(), getHeight());
-        //System.out.println("GpahPanel ("+getHeight()+","+getWidth()+") paintComponent");
-        //ud.paintComponent(g);
-        //super.paintComponent(g);
+    private JPanel card(String title, JLabel value, JLabel stats) {
+        JPanel panel = new JPanel(new GridLayout(3, 1, 0, 4));
+        panel.add(new JLabel(title));
+        value.setFont(value.getFont().deriveFont(Font.BOLD, 26f));
+        panel.add(value);
+        stats.setToolTipText("Arithmetischer Mittelwert und Spitze der empfangenen Messwerte im gewählten Zeitraum");
+        panel.add(stats);
+        return panel;
     }
 
-    public void update(HashMap speeds) {
-        //ud.update (speeds);
+    private static int windowIndex(String value) {
+        for (int i = 0; i < WINDOWS.length; i++) if (Integer.toString(WINDOWS[i]).equals(value)) return i;
+        return 1;
     }
 
-    ;
+    void setDisconnected(boolean value) { disconnected = value; }
 
+    void setLimits(long upload, long download) {
+        uploadLimit = upload;
+        downloadLimit = download;
+    }
+
+    void refresh(long now) {
+        long window = WINDOWS[period.getSelectedIndex()];
+        List<SpeedHistory.Sample> samples = history.snapshot(now, window);
+        SpeedFormat format = (SpeedFormat) units.getSelectedItem();
+        boolean fresh = !disconnected && !samples.isEmpty() && now - samples.getLast().time() <= UpDownChart.STALE_AFTER;
+        download.setText(fresh ? format.format(samples.getLast().download(), Locale.GERMANY) : "—");
+        upload.setText(fresh ? format.format(samples.getLast().upload(), Locale.GERMANY) : "—");
+        downStats.setText(stats(samples, false, format));
+        upStats.setText(stats(samples, true, format));
+        status.setText(disconnected ? "Keine Verbindung zum Core" : fresh ? "Aktuelle Messwerte · Verlauf seit Öffnen der GUI" : "Keine aktuellen Messdaten");
+        Color upColor = SpeedGraphSettings.color(settings, "UploadColor", new Color(220, 130, 40));
+        Color downColor = SpeedGraphSettings.color(settings, "DownloadColor", new Color(40, 145, 210));
+        upload.setForeground(upColor);
+        download.setForeground(downColor);
+        chart.setColors(upColor, downColor);
+        chart.setLimits(uploadLimit, downloadLimit, limits.isSelected());
+        chart.setData(samples, now, window, format);
+    }
+
+    private String stats(List<SpeedHistory.Sample> samples, boolean up, SpeedFormat format) {
+        if (samples.isEmpty()) return "Messwert-Ø: — · Spitze: —";
+        double average = samples.stream().mapToDouble(s -> up ? s.upload() : s.download()).average().orElse(0);
+        long max = samples.stream().mapToLong(s -> up ? s.upload() : s.download()).max().orElse(0);
+        return "Messwert-Ø: " + format.format(average, Locale.GERMANY) + " · Spitze: " + format.format(max, Locale.GERMANY);
+    }
+
+    String downloadText() { return download.getText(); }
 }
