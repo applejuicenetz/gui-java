@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.86.4 (WIP)
+
+### Technische Änderungen
+
+- [red171] Release-Pipeline:
+  - GUI-Releases starten neben der Flatpak-Synchronisierung auch einen Portable-Build
+    mit automatischem Patch-Release
+
 ## 0.86.3
 
 ### Sichtbare Änderungen

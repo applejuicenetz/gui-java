@@ -249,3 +249,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.FLATPAK_DISPATCH_TOKEN }}
         run: gh api repos/applejuicenetz/flatpak/dispatches -f event_type=flatpak-release
+
+  notify-portable:
+    needs: release
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger portable build
+        env:
+          GH_TOKEN: ${{ secrets.PORTABLE_DISPATCH_TOKEN || secrets.FLATPAK_DISPATCH_TOKEN }}
+        run: gh api repos/applejuicenetz/portable/dispatches -f event_type=portable-release

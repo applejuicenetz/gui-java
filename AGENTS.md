@@ -68,6 +68,17 @@ Architektur. Alle sechs Pakete plus `AJCoreGUI.zip` bleiben bei manueller Ausfü
 als Actions-Artefakt verfügbar; Tags veröffentlichen dieselben Dateien als Release.
 Tag (optional mit `v` davor) muss zur Maven-Version passen.
 
+Nach erfolgreicher Veröffentlichung eines Tags startet `notify-flatpak` die
+Flatpak-Synchronisierung und `notify-portable` einen Repository-Dispatch mit
+`event_type=portable-release` in `applejuicenetz/portable`. Portable baut Windows-ZIPs
+für amd64 und aarch64 aus den aktuellen Core- und GUI-Releases und veröffentlicht
+anschließend automatisch den nächsten Portable-Patch-Versionstag.
+
+`notify-portable` verwendet `PORTABLE_DISPATCH_TOKEN`, sofern gesetzt, sonst den
+vorhandenen `FLATPAK_DISPATCH_TOKEN`. Der verwendete Token muss auch Zugriff auf
+`applejuicenetz/portable` besitzen: bei einem Fine-grained Token `Contents: write`,
+bei einem klassischen Token den Scope `repo`. Keine Tokens ins Repository schreiben.
+
 Windows installiert wie das NSIS-Setup nach `Program Files\appleJuiceNETZ\JavaGUI`
 mit Verzeichnisauswahl, Startmenügruppe `appleJuiceNETZ`, Desktop-Verknüpfung, Hilfe- und
 Info-Link sowie Copyright. WiX registriert `ajfsp`, `web+ajfsp` und `.ajl` unter `HKLM`: `ajfsp`,
