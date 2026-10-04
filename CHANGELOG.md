@@ -17,6 +17,7 @@
   - Powerdownload-Bereich bietet genug Platz für Text und Eingaben und scrollt
     bei geringer Höhe ohne Überlappung
 - [red171] Bedienung und Darstellung:
+  - Upload-Fortschrittsbalken bleiben durch Innenabstand klar voneinander getrennt
   - Suchergebnisse passen Datenspalten laufend an Inhalte an; Dateiname nutzt
     die Restbreite, ohne gespeicherte Spaltenbreiten
   - Upload- und Servertabellen passen Datenspalten an Inhalte an; Dateiname

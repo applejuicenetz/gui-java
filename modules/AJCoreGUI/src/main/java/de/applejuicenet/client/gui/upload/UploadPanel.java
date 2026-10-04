@@ -88,8 +88,8 @@ public class UploadPanel extends TklPanel implements RegisterI {
         uploadActiveTable.setDefaultRenderer(String.class, new StringTableCellRenderer());
         uploadActiveTable.getColumnModel().getColumn(0).setCellRenderer(new UploadTableFilenameCellRenderer());
         uploadActiveTable.getColumnModel().getColumn(2).setCellRenderer(new SpeedTableCellRenderer());
-        uploadActiveTable.getColumnModel().getColumn(3).setCellRenderer(new ProgressTableCellRenderer());
-        uploadActiveTable.getColumnModel().getColumn(4).setCellRenderer(new ProgressTableCellRenderer());
+        uploadActiveTable.getColumnModel().getColumn(3).setCellRenderer(new ProgressTableCellRenderer(4));
+        uploadActiveTable.getColumnModel().getColumn(4).setCellRenderer(new ProgressTableCellRenderer(4));
         uploadActiveTable.getColumnModel().getColumn(5).setCellRenderer(new UploadTablePrioCellRenderer());
         uploadActiveTable.getColumnModel().getColumn(6).setCellRenderer(new VersionTableCellRenderer());
 
@@ -163,7 +163,7 @@ public class UploadPanel extends TklPanel implements RegisterI {
         uploadWaitingTable = new AutoRowHeightTable(uploadWaitingTableModel);
 
         uploadWaitingTable.getColumnModel().getColumn(1).setCellRenderer(new UploadTableWaitingStatusCellRenderer());
-        uploadWaitingTable.getColumnModel().getColumn(3).setCellRenderer(new ProgressTableCellRenderer());
+        uploadWaitingTable.getColumnModel().getColumn(3).setCellRenderer(new ProgressTableCellRenderer(4));
         uploadWaitingTable.getColumnModel().getColumn(4).setCellRenderer(new UploadTablePrioCellRenderer());
 
         uploadWaitingTable.setDefaultRenderer(Version.class, new VersionTableCellRenderer());
