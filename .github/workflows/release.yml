@@ -162,8 +162,68 @@ jobs:
           path: target/AJCoreGUI-linux-${{ matrix.package-arch }}.flatpak
           if-no-files-found: error
 
+  archive32:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows
+            arch: x86
+            file: bellsoft-jre21.0.12.1+1-windows-i586.zip
+            sha256: 5dfc687e12cc9d00a55542cdf9eb1e8b7abb26b0bf43ea929d49d9f0be6106e4
+          - platform: linux
+            arch: x86
+            file: bellsoft-jre21.0.12.1+1-linux-i586.tar.gz
+            sha256: 386c795617217ace46b9acb1ba1a40c604b8c753d9c121972a496a62d95cd305
+          - platform: linux
+            arch: armhf
+            file: bellsoft-jre21.0.12.1+1-linux-arm32-vfp-hflt.tar.gz
+            sha256: 61b1a07a4caeaa68e75a7b5f4a599a8411ad26406e21a3f684a547a38af0a0a5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: zulu
+          java-version: '21'
+          cache: maven
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+      - name: Build payload and bundled 32-bit archive
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RUNTIME_FILE: ${{ matrix.file }}
+          RUNTIME_SHA256: ${{ matrix.sha256 }}
+          PACKAGE_PLATFORM: ${{ matrix.platform }}
+          PACKAGE_ARCH: ${{ matrix.arch }}
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends xvfb xauth
+          xvfb-run -a mvn -B clean package
+          python scripts/package.py prepare
+          python -m unittest discover -s scripts -p 'test_archive.py'
+          mkdir -p target/runtime32
+          curl --fail --location --retry 3 "https://github.com/bell-sw/Liberica/releases/download/21.0.12.1%2B1/${RUNTIME_FILE//+/%2B}" -o "target/$RUNTIME_FILE"
+          printf '%s  %s\n' "$RUNTIME_SHA256" "target/$RUNTIME_FILE" | sha256sum --check -
+          if [[ "$RUNTIME_FILE" == *.zip ]]; then
+            unzip -q "target/$RUNTIME_FILE" -d target/runtime32
+          else
+            tar -xf "target/$RUNTIME_FILE" -C target/runtime32
+          fi
+          python scripts/archive.py --payload target/distribution --runtime target/runtime32/jre-21.0.12.1 --platform "$PACKAGE_PLATFORM" --arch "$PACKAGE_ARCH"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: archive32-${{ matrix.platform }}-${{ matrix.arch }}
+          path: target/AJCoreGUI-${{ matrix.platform }}-${{ matrix.arch }}.${{ matrix.platform == 'windows' && 'zip' || 'tar.gz' }}
+          if-no-files-found: error
+
   release:
-    needs: [package, flatpak]
+    needs: [package, flatpak, archive32]
     permissions:
       contents: write
       packages: read
@@ -201,7 +261,12 @@ jobs:
           pattern: flatpak-*
           merge-multiple: true
           path: target
-      - name: Check all six packages and ZIP
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: archive32-*
+          merge-multiple: true
+          path: target
+      - name: Check all packages and ZIP
         shell: bash
         run: |
           set -euo pipefail
@@ -212,7 +277,10 @@ jobs:
             AJCoreGUI-windows-amd64.exe \
             AJCoreGUI-windows-aarch64.exe \
             AJCoreGUI-linux-amd64.flatpak \
-            AJCoreGUI-linux-aarch64.flatpak; do
+            AJCoreGUI-linux-aarch64.flatpak \
+            AJCoreGUI-windows-x86.zip \
+            AJCoreGUI-linux-x86.tar.gz \
+            AJCoreGUI-linux-armhf.tar.gz; do
             test -s "target/$file"
           done
       - uses: actions/upload-artifact@v7
@@ -223,6 +291,8 @@ jobs:
             target/*.dmg
             target/*.exe
             target/*.flatpak
+            target/AJCoreGUI-*.tar.gz
+            target/AJCoreGUI-windows-x86.zip
           if-no-files-found: error
       - name: Publish GitHub release
         if: github.ref_type == 'tag'
@@ -239,6 +309,9 @@ jobs:
             target/AJCoreGUI-windows-aarch64.exe
             target/AJCoreGUI-linux-amd64.flatpak
             target/AJCoreGUI-linux-aarch64.flatpak
+            target/AJCoreGUI-windows-x86.zip
+            target/AJCoreGUI-linux-x86.tar.gz
+            target/AJCoreGUI-linux-armhf.tar.gz
 
   notify-flatpak:
     needs: release

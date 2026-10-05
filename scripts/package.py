@@ -44,7 +44,7 @@ def prepare():
     validate_classpath(INPUT)
     (INPUT / 'README.txt').write_text(
         'appleJuice JavaGUI\nRequires Java 21 for this portable ZIP.\n'
-        'Start: java -jar AJCoreGUI.jar\n'
+        'Start: java --enable-preview --enable-native-access=ALL-UNNAMED -jar AJCoreGUI.jar\n'
         'Native installers and Flatpak bundles include Java 21.\n', encoding='utf-8')
     with zipfile.ZipFile(TARGET / f'{NAME}.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
         for file in sorted(INPUT.rglob('*')):
