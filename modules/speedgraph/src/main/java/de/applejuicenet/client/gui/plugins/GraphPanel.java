@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.plugins;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -16,10 +17,10 @@ public class GraphPanel extends JPanel {
     private final JLabel upload = new JLabel("—");
     private final JLabel downStats = new JLabel(" ");
     private final JLabel upStats = new JLabel(" ");
-    private final JLabel status = new JLabel("Warte auf Messdaten");
+    private final JLabel status = GuiText.label("plugins.speed.waiting");
     private final JComboBox<String> period = new JComboBox<>(new String[]{"1 min", "5 min", "15 min", "1 h"});
     private final JComboBox<SpeedFormat> units = new JComboBox<>(SpeedFormat.values());
-    private final JCheckBox limits = new JCheckBox("Limitlinien");
+    private final JCheckBox limits = GuiText.checkBox("plugins.speed.limits");
     private boolean disconnected;
     private long uploadLimit;
     private long downloadLimit;
@@ -31,13 +32,13 @@ public class GraphPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         JPanel top = new JPanel(new BorderLayout(0, 12));
         JPanel summary = new JPanel(new GridLayout(1, 2, 24, 0));
-        summary.add(card("Download — durchgezogen", download, downStats));
-        summary.add(card("Upload — gestrichelt", upload, upStats));
+        summary.add(card(GuiText.text("plugins.speed.download"), download, downStats));
+        summary.add(card(GuiText.text("plugins.speed.upload"), upload, upStats));
         top.add(summary, BorderLayout.NORTH);
         JPanel controls = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
-        JLabel periodLabel = new JLabel("Zeitraum:");
+        JLabel periodLabel = GuiText.label("plugins.speed.period");
         periodLabel.setLabelFor(period);
-        JLabel unitLabel = new JLabel("Einheiten:");
+        JLabel unitLabel = GuiText.label("plugins.speed.units");
         unitLabel.setLabelFor(units);
         controls.add(periodLabel);
         controls.add(period);
@@ -62,14 +63,17 @@ public class GraphPanel extends JPanel {
         period.addActionListener(e -> changed.run());
         units.addActionListener(e -> changed.run());
         limits.addActionListener(e -> changed.run());
+        GuiText.onLanguageChange(this, () -> refresh(System.currentTimeMillis()));
     }
 
     private JPanel card(String title, JLabel value, JLabel stats) {
         JPanel panel = new JPanel(new GridLayout(3, 1, 0, 4));
-        panel.add(new JLabel(title));
+        JLabel heading = new JLabel(title);
+        GuiText.setText(heading, title.contains("Download") ? "plugins.speed.download" : "plugins.speed.upload");
+        panel.add(heading);
         value.setFont(value.getFont().deriveFont(Font.BOLD, 26f));
         panel.add(value);
-        stats.setToolTipText("Arithmetischer Mittelwert und Spitze der empfangenen Messwerte im gewählten Zeitraum");
+        GuiText.tooltip(stats, "plugins.speed.statshint");
         panel.add(stats);
         return panel;
     }
@@ -91,11 +95,12 @@ public class GraphPanel extends JPanel {
         List<SpeedHistory.Sample> samples = history.snapshot(now, window);
         SpeedFormat format = (SpeedFormat) units.getSelectedItem();
         boolean fresh = !disconnected && !samples.isEmpty() && now - samples.getLast().time() <= UpDownChart.STALE_AFTER;
-        download.setText(fresh ? format.format(samples.getLast().download(), Locale.GERMANY) : "—");
-        upload.setText(fresh ? format.format(samples.getLast().upload(), Locale.GERMANY) : "—");
+        download.setText(fresh ? format.format(samples.getLast().download(), GuiText.locale()) : "—");
+        upload.setText(fresh ? format.format(samples.getLast().upload(), GuiText.locale()) : "—");
         downStats.setText(stats(samples, false, format));
         upStats.setText(stats(samples, true, format));
-        status.setText(disconnected ? "Keine Verbindung zum Core" : fresh ? "Aktuelle Messwerte · Verlauf seit Öffnen der GUI" : "Keine aktuellen Messdaten");
+        GuiText.clearTextBinding(status);
+        status.setText(disconnected ? GuiText.text("plugins.speed.disconnected") : fresh ? GuiText.text("plugins.speed.current") : GuiText.text("plugins.speed.stale"));
         Color upColor = SpeedGraphSettings.color(settings, "UploadColor", new Color(220, 130, 40));
         Color downColor = SpeedGraphSettings.color(settings, "DownloadColor", new Color(40, 145, 210));
         upload.setForeground(upColor);
@@ -106,10 +111,10 @@ public class GraphPanel extends JPanel {
     }
 
     private String stats(List<SpeedHistory.Sample> samples, boolean up, SpeedFormat format) {
-        if (samples.isEmpty()) return "Messwert-Ø: — · Spitze: —";
+        if (samples.isEmpty()) return GuiText.text("plugins.speed.stats", "—", "—");
         double average = samples.stream().mapToDouble(s -> up ? s.upload() : s.download()).average().orElse(0);
         long max = samples.stream().mapToLong(s -> up ? s.upload() : s.download()).max().orElse(0);
-        return "Messwert-Ø: " + format.format(average, Locale.GERMANY) + " · Spitze: " + format.format(max, Locale.GERMANY);
+        return GuiText.text("plugins.speed.stats", format.format(average, GuiText.locale()), format.format(max, GuiText.locale()));
     }
 
     String downloadText() { return download.getText(); }

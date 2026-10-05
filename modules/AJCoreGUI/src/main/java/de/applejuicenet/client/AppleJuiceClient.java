@@ -4,6 +4,7 @@
 
 package de.applejuicenet.client;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.gui.DialogLocation;
 
 import ch.qos.logback.classic.Level;
@@ -229,7 +230,7 @@ public class AppleJuiceClient {
 
         if (doubleInstance) {
             //bereits ein GUI vorhanden, also GUI schliessen
-            JOptionPane.showMessageDialog(new Frame(), "Eine Instanz des GUIs ist bereits in Verwendung.", "appleJuice Client", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(new Frame(), GuiText.text("javagui.instance.running"), "appleJuice Client", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }
 

@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.plugins;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -74,7 +75,7 @@ public class UpDownChart extends JPanel {
         try {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             int unit = format.unit(ceiling);
-            left = Math.max(90, g.getFontMetrics().stringWidth(format.format(ceiling, unit, Locale.GERMANY)) + 18);
+            left = Math.max(90, g.getFontMetrics().stringWidth(format.format(ceiling, unit, GuiText.locale())) + 18);
             int width = getWidth() - left - 20;
             int height = getHeight() - 65;
             if (width <= 0 || height <= 0) return;
@@ -86,7 +87,7 @@ public class UpDownChart extends JPanel {
             }
             g.setColor(foreground);
             for (int i = 0; i <= 5; i++) {
-                String text = format.format(ceiling * i / 5, unit, Locale.GERMANY);
+                String text = format.format(ceiling * i / 5, unit, GuiText.locale());
                 g.drawString(text, left - g.getFontMetrics().stringWidth(text) - 10, 30 + height - height * i / 5);
             }
             for (int i = 0; i <= 4; i++) {
@@ -133,8 +134,8 @@ public class UpDownChart extends JPanel {
         if (samples.isEmpty() || width <= 0 || event.getX() < left || event.getX() > left + width) return null;
         long time = now - window + (long) ((event.getX() - left) * (double) window / width);
         var closest = samples.stream().min(java.util.Comparator.comparingLong(s -> Math.abs(s.time() - time))).orElseThrow();
-        if (Math.abs(closest.time() - time) > STALE_AFTER) return "Keine Messdaten";
-        return TIME.format(Instant.ofEpochMilli(closest.time())) + " · Download: " + format.format(closest.download(), Locale.GERMANY)
-                + " · Upload: " + format.format(closest.upload(), Locale.GERMANY);
+        if (Math.abs(closest.time() - time) > STALE_AFTER) return GuiText.text("plugins.speed.nodata");
+        return TIME.format(Instant.ofEpochMilli(closest.time())) + " · Download: " + format.format(closest.download(), GuiText.locale())
+                + " · Upload: " + format.format(closest.upload(), GuiText.locale());
     }
 }

@@ -4,6 +4,7 @@
 
 package de.applejuicenet.client.gui.connect;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.gui.DialogLocation;
 
 import de.applejuicenet.client.AppleJuiceClient;
@@ -40,7 +41,7 @@ public class QuickConnectionSettingsDialog extends JDialog
    private ConnectionSettings   remote;
    private ConnectionSettings[] connectionSet;
    private JButton              ok                 = new JButton("OK");
-   private JButton              abbrechen          = new JButton("Abbrechen");
+   private JButton              abbrechen          = GuiText.button("javagui.quickconnect.cancel");
    private JCheckBox            cmbNieWiederZeigen = new JCheckBox();
    private JComboBox            connectionListe    = new JComboBox();
    private Logger logger;

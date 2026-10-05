@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.memorymonitor;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -31,7 +32,8 @@ public class MemoryMonitorDialog
     }
 
     private void init() {
-        setTitle("aj Memory Monitor");
+        setTitle(GuiText.text("javagui.memory.title"));
+        GuiText.onLanguageChange(getRootPane(), () -> setTitle(GuiText.text("javagui.memory.title")));
         memoryMonitorPanel = new MemoryMonitor();
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {

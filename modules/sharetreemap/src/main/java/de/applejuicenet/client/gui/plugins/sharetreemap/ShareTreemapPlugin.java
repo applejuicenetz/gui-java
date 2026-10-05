@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.plugins.sharetreemap;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Share;
@@ -100,8 +101,8 @@ public class ShareTreemapPlugin extends PluginConnector implements CoreStatusLis
         SwingUtilities.invokeLater(() -> {
             view.setActivity(Map.of());
             view.setTree(ShareTree.fromFiles(java.util.List.of()));
-            view.showMessage("Core getrennt. Upload-Beobachtung zurückgesetzt.");
+            view.showLanguageMessage("plugins.treemap.disconnected");
         });
     }
-    @Override public void fireLanguageChanged() { }
+    @Override public void fireLanguageChanged() { GuiText.refreshLanguage(); }
 }

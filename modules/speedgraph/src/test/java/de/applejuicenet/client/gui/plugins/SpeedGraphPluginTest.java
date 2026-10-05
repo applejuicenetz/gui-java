@@ -25,4 +25,26 @@ public class SpeedGraphPluginTest {
         plugin[0].fireStatusChanged(STATUS.CLOSED);
         SwingUtilities.invokeAndWait(() -> assertEquals("—", ((GraphPanel) plugin[0].getComponent(0)).downloadText()));
     }
+
+    @Test public void changesOpenPluginControlsToEnglishAndBack() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            var selector = de.applejuicenet.client.gui.controller.LanguageSelector.getInstance(
+                    java.nio.file.Paths.get("../../resources/language/deutsch.properties").toAbsolutePath().normalize().toString());
+            var plugin = new SpeedGraphPlugin(new Properties(), Map.of(), new ImageIcon(), Map.of(), folder.getRoot().toPath().resolve("i18n.properties"), null);
+            de.applejuicenet.client.gui.controller.LanguageSelector.getInstance(
+                    java.nio.file.Paths.get("../../resources/language/english.properties").toAbsolutePath().normalize().toString());
+            plugin.fireLanguageChanged();
+            assertTrue(containsText(plugin, "Limit lines"));
+            de.applejuicenet.client.gui.controller.LanguageSelector.getInstance(
+                    java.nio.file.Paths.get("../../resources/language/deutsch.properties").toAbsolutePath().normalize().toString());
+            assertFalse(containsText(plugin, "Limit lines"));
+        });
+    }
+    private static boolean containsText(java.awt.Container parent, String text) {
+        for (java.awt.Component c : parent.getComponents()) {
+            if (c instanceof javax.swing.AbstractButton b && text.equals(b.getText())) return true;
+            if (c instanceof java.awt.Container child && containsText(child, text)) return true;
+        }
+        return false;
+    }
 }

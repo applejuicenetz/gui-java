@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.plugins.versionchecker.panels;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.Upload;
 import javax.swing.*;
@@ -22,7 +23,7 @@ public class MainPanel extends JPanel {
     private final JLabel versions = new JLabel("0");
     private final JLabel leading = new JLabel("—");
     private final JPanel systems = new JPanel(new GridLayout(0, 1, 0, 10));
-    private final JLabel empty = new JLabel("Noch keine Transferkontakte beobachtet", SwingConstants.CENTER);
+    private final JLabel empty = GuiText.label("plugins.versions.empty");
     private final CardLayout contentLayout = new CardLayout();
     private final JPanel content = new JPanel(contentLayout);
 
@@ -33,24 +34,24 @@ public class MainPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(18, 18, 18, 18));
         JPanel header = new JPanel(new BorderLayout(0, 16));
         JPanel title = new JPanel(new GridLayout(0, 1, 0, 4));
-        JLabel heading = new JLabel("Versionen im Transfernetz");
+        JLabel heading = GuiText.label("plugins.versions.title");
         heading.setFont(heading.getFont().deriveFont(Font.BOLD, 22f));
         title.add(heading);
-        title.add(new JLabel("Core-Versionen und Systeme beobachteter Download-Quellen und Uploads"));
+        title.add(GuiText.label("plugins.versions.subtitle"));
         header.add(title, BorderLayout.NORTH);
         JPanel cards = new JPanel(new GridLayout(1, 3, 16, 0));
-        cards.add(card("Beobachtete Kontakte", contacts));
-        cards.add(card("Core-Versionen", versions));
-        cards.add(card("Häufigste Version", leading));
+        cards.add(card(GuiText.text("plugins.versions.contacts"), contacts));
+        cards.add(card(GuiText.text("plugins.versions.versions"), versions));
+        cards.add(card(GuiText.text("plugins.versions.leading"), leading));
         header.add(cards, BorderLayout.CENTER);
         JPanel tools = new JPanel(new BorderLayout(12, 0));
         JPanel search = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
-        JLabel label = new JLabel("Version filtern:");
+        JLabel label = GuiText.label("plugins.versions.filter");
         label.setLabelFor(filter);
         search.add(label);
         search.add(filter);
         tools.add(search, BorderLayout.CENTER);
-        JButton reset = new JButton("Statistik zurücksetzen");
+        JButton reset = GuiText.button("plugins.versions.reset");
         reset.addActionListener(e -> reset());
         tools.add(reset, BorderLayout.EAST);
         header.add(tools, BorderLayout.SOUTH);
@@ -89,7 +90,7 @@ public class MainPanel extends JPanel {
         table.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
             @Override protected void setValue(Object value) {
                 setHorizontalAlignment(SwingConstants.RIGHT);
-                setText(String.format(Locale.GERMANY, "%.1f %%", value));
+                setText(String.format(GuiText.locale(), "%.1f %%", value));
             }
         });
         content.add(new JScrollPane(table), "table");
@@ -97,7 +98,7 @@ public class MainPanel extends JPanel {
         JPanel body = new JPanel(new BorderLayout(18, 0));
         body.add(content, BorderLayout.CENTER);
         JPanel sidebar = new JPanel(new BorderLayout(0, 14));
-        JLabel osTitle = new JLabel("Betriebssysteme");
+        JLabel osTitle = GuiText.label("plugins.versions.systems");
         osTitle.setFont(osTitle.getFont().deriveFont(Font.BOLD, 16f));
         sidebar.add(osTitle, BorderLayout.NORTH);
         JPanel systemList = new JPanel(new BorderLayout());
@@ -106,16 +107,24 @@ public class MainPanel extends JPanel {
         sidebar.setPreferredSize(new Dimension(235, 200));
         body.add(sidebar, BorderLayout.EAST);
         add(body, BorderLayout.CENTER);
-        JLabel footer = new JLabel("Seit GUI-Start / Reset · maximal 50.000 Kontakt-IDs · keine eindeutige Nutzerzählung");
-        footer.setToolTipText("Upload- und Quellen-IDs werden getrennt gezählt. Detaildaten werden nur bei aktiven Transferansichten geliefert.");
+        JLabel footer = GuiText.label("plugins.versions.footer");
+        GuiText.tooltip(footer, "plugins.versions.footerhint");
         add(footer, BorderLayout.SOUTH);
+        GuiText.onLanguageChange(this, () -> {
+            for (int i = 0; i < table.getColumnCount(); i++) table.getColumnModel().getColumn(i).setHeaderValue(model.getColumnName(i));
+            table.getTableHeader().repaint();
+            refresh();
+        });
         refresh();
     }
 
     private JPanel card(String title, JLabel value) {
         JPanel panel = new JPanel(new BorderLayout(0, 8));
         panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(UIManager.getColor("Separator.foreground") == null ? Color.GRAY : UIManager.getColor("Separator.foreground")), BorderFactory.createEmptyBorder(12, 14, 12, 14)));
-        panel.add(new JLabel(title), BorderLayout.NORTH);
+        JLabel heading = new JLabel(title);
+        GuiText.setText(heading, title.equals(GuiText.text("plugins.versions.contacts")) ? "plugins.versions.contacts"
+                : title.equals(GuiText.text("plugins.versions.versions")) ? "plugins.versions.versions" : "plugins.versions.leading");
+        panel.add(heading, BorderLayout.NORTH);
         value.setFont(value.getFont().deriveFont(Font.BOLD, 24f));
         panel.add(value, BorderLayout.CENTER);
         return panel;
@@ -136,7 +145,7 @@ public class MainPanel extends JPanel {
         for (var entry : snapshot.systems().entrySet().stream().sorted(Map.Entry.<Integer, Integer>comparingByValue().reversed().thenComparing(Map.Entry.comparingByKey())).toList()) {
             JPanel row = new JPanel(new BorderLayout(0, 5));
             double percent = entry.getValue() * 100.0 / snapshot.total();
-            row.add(new JLabel(systemName(entry.getKey()) + " · " + entry.getValue() + String.format(Locale.GERMANY, " (%.1f %%)", percent)), BorderLayout.NORTH);
+            row.add(new JLabel(systemName(entry.getKey()) + " · " + entry.getValue() + String.format(GuiText.locale(), " (%.1f %%)", percent)), BorderLayout.NORTH);
             JProgressBar bar = new JProgressBar(0, snapshot.total());
             bar.setValue(entry.getValue());
             bar.setPreferredSize(new Dimension(180, 8));
@@ -181,7 +190,7 @@ public class MainPanel extends JPanel {
             case 5 -> "OS/2";
             case 6 -> "FreeBSD";
             case 7 -> "NetWare";
-            default -> "Unbekannt";
+            default -> GuiText.text("plugins.versions.unknown");
         };
     }
 

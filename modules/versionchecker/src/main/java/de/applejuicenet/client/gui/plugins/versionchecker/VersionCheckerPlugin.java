@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.plugins.versionchecker;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
@@ -72,5 +73,5 @@ public class VersionCheckerPlugin extends PluginConnector implements CoreStatusL
         if (status == STATUS.CLOSED) SwingUtilities.invokeLater(mainPanel::reset);
     }
     @Override public void registerSelected() { mainPanel.refresh(); }
-    @Override public void fireLanguageChanged() { }
+    @Override public void fireLanguageChanged() { GuiText.refreshLanguage(); }
 }

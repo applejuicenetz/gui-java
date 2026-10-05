@@ -3,6 +3,7 @@
  */
 package de.applejuicenet.client.gui;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
@@ -300,7 +301,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                                 !alreadyNotified.contains(curDownload.getId())) {
                             // fertiggestellt und noch nicht benachrichtigt
                             alreadyNotified.add(curDownload.getId());
-                            showMessage("Download fertig", curDownload.getFilename() + " abgeschlossen!");
+                            showMessage(GuiText.text("javagui.download.finishedtitle"), GuiText.text("javagui.download.finishedmessage", curDownload.getFilename()));
                         }
                     }
 
@@ -1107,7 +1108,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         }
 
         public String getDescription() {
-            return "AJL-Dateien";
+            return GuiText.text("javagui.filefilter.ajl");
         }
     }
 

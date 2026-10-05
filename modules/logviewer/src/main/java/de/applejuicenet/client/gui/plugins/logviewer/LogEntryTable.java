@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.plugins.logviewer;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -10,7 +11,7 @@ import java.util.Locale;
 
 /** Filterable entry table with the stack trace shown only for the selected entry. */
 final class LogEntryTable extends JPanel {
-    private static final String[] COLUMNS = {"Zeit", "Stufe", "Quelle", "Meldung"};
+    private static final String[] COLUMNS = {"plugins.logviewer.time", "plugins.logviewer.severity", "plugins.logviewer.source", "plugins.logviewer.message"};
     private final EntryModel model = new EntryModel();
     private final JTable table = new JTable(model);
     private final TableRowSorter<EntryModel> sorter = new TableRowSorter<>(model);
@@ -32,6 +33,14 @@ final class LogEntryTable extends JPanel {
         table.getColumnModel().getColumn(2).setPreferredWidth(190);
         table.getColumnModel().getColumn(3).setPreferredWidth(600);
         table.setDefaultRenderer(Object.class, new Cells());
+        for (int i = 0; i < COLUMNS.length; i++) {
+            table.getColumnModel().getColumn(i).setHeaderValue(GuiText.text(COLUMNS[i]));
+        }
+        GuiText.onLanguageChange(this, () -> {
+            for (int i = 0; i < COLUMNS.length; i++) table.getColumnModel().getColumn(i).setHeaderValue(GuiText.text(COLUMNS[i]));
+            table.getTableHeader().repaint();
+            table.repaint();
+        });
         detail.setEditable(false);
         detail.setLineWrap(false);
         detail.setFont(new Font(Font.MONOSPACED, Font.PLAIN, table.getFont().getSize()));
@@ -109,11 +118,11 @@ final class LogEntryTable extends JPanel {
         LogParser.Entry at(int index) { return entries.get(index); }
         @Override public int getRowCount() { return entries.size(); }
         @Override public int getColumnCount() { return COLUMNS.length; }
-        @Override public String getColumnName(int column) { return COLUMNS[column]; }
+        @Override public String getColumnName(int column) { return GuiText.text(COLUMNS[column]); }
         @Override public Object getValueAt(int row, int column) {
             LogParser.Entry e = entries.get(row);
             return switch (column) {
-                case 0 -> String.format(Locale.GERMANY, "+%d,%03d s", e.relativeMillis() / 1000, e.relativeMillis() % 1000);
+                case 0 -> String.format(GuiText.locale(), "+%.3f s", e.relativeMillis() / 1000.0);
                 case 1 -> e.level();
                 case 2 -> e.shortLogger();
                 default -> e.message().lines().findFirst().orElse("") + (e.exception().isEmpty() ? "" : "  (Stacktrace)");
@@ -135,7 +144,7 @@ final class LogEntryTable extends JPanel {
                 setForeground(tint != null && (loud || column == 1) ? tint : t.getForeground());
                 setBackground(loud ? blend(t.getBackground(), tint, 0.12f) : t.getBackground());
             }
-            if (column == 0) setToolTipText(e.relativeMillis() + " ms nach Start");
+            if (column == 0) setToolTipText(GuiText.text("plugins.logviewer.elapsed", e.relativeMillis()));
             else if (column == 3) setToolTipText(e.message().isEmpty() ? null : "<html>" + escape(e.message()).replace("\n", "<br>") + "</html>");
             else setToolTipText(null);
             return this;

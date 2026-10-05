@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.plugins;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.listener.CoreStatusListener;
@@ -109,5 +110,5 @@ public class SpeedGraphPlugin extends PluginConnector implements CoreStatusListe
 
     @Override public JPanel getOptionPanel() { return new SpeedGraphSettings(settings, this::saveSettings); }
     @Override public void registerSelected() { refresh(); }
-    @Override public void fireLanguageChanged() { }
+    @Override public void fireLanguageChanged() { GuiText.refreshLanguage(); }
 }

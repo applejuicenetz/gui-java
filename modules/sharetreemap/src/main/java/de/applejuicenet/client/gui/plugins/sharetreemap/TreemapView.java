@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.plugins.sharetreemap;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -14,10 +15,10 @@ import java.util.Map;
 
 /** Size-weighted binary treemap, drawn without per-file Swing components. */
 public class TreemapView extends JPanel {
-    private final JButton back = new JButton("Zurück");
+    private final JButton back = GuiText.button("plugins.treemap.back");
     private final JLabel path = new JLabel("Share /");
-    private final JComboBox<String> mode = new JComboBox<>(new String[]{"Dateityp", "Upload-Aktivität · Sitzung"});
-    private final JLabel details = new JLabel("Share-Daten werden geladen …");
+    private final JComboBox<String> mode = GuiText.combo("plugins.treemap.type", "plugins.treemap.activity");
+    private final JLabel details = GuiText.label("plugins.treemap.loading");
     private final JLabel legend = new JLabel();
     private final Canvas canvas = new Canvas();
     private final ArrayDeque<ShareTree> history = new ArrayDeque<>();
@@ -36,11 +37,12 @@ public class TreemapView extends JPanel {
         add(top, BorderLayout.NORTH); add(canvas, BorderLayout.CENTER);
         JPanel bottom = new JPanel(new GridLayout(3, 1, 0, 4));
         bottom.add(legend); bottom.add(details);
-        bottom.add(new JLabel("Fläche = Dateigröße · Ordner anklicken · Datei: Rechtsklick für Link"));
+        bottom.add(GuiText.label("plugins.treemap.help"));
         add(bottom, BorderLayout.SOUTH);
         back.setEnabled(false); back.addActionListener(e -> back());
         mode.addActionListener(e -> { updateLegend(); canvas.repaint(); });
         updateLegend();
+        GuiText.onLanguageChange(this, () -> { updateLegend(); canvas.repaint(); });
     }
 
     public void setTree(ShareTree root) {
@@ -52,7 +54,7 @@ public class TreemapView extends JPanel {
             for (int i = 0; i < chain.size() - 1; i++) history.push(chain.get(i));
             current = chain.getLast();
         }
-        details.setText(root.bytes() == 0 ? "Keine freigegebenen Dateien mit bekannter Größe." : "Ordner anklicken zum Öffnen.");
+        GuiText.setText(details, root.bytes() == 0 ? "plugins.treemap.empty" : "plugins.treemap.open");
         updateNavigation();
     }
 
@@ -74,19 +76,18 @@ public class TreemapView extends JPanel {
     }
     public void setActivity(Map<Integer, Long> bytes) { activity = Map.copyOf(bytes); canvas.repaint(); }
     public void showMessage(String message) { details.setText(message); }
+    public void showLanguageMessage(String key) { GuiText.setText(details, key); }
     private void updateNavigation() {
         path.setText(current.path().isEmpty() ? "Share /" : current.path());
         back.setEnabled(!history.isEmpty()); canvas.repaint();
     }
     private void updateLegend() {
-        legend.setText(mode.getSelectedIndex() == 0
-                ? "Blau: Videos · Grün: Audio · Ocker: Archive · Grau: Sonstige"
-                : "Blaugrau: keine Beobachtung · Gelb bis Rot: mehr beobachtete Upload-Bytes · nur bei aktivem Treemap-Tab · diese Verbindung");
+        GuiText.setText(legend, mode.getSelectedIndex() == 0 ? "plugins.treemap.legend" : "plugins.treemap.heatlegend");
     }
     static String format(long bytes) {
         if (bytes < 1024) return bytes + " B";
         int exponent = Math.min(6, (int) (Math.log(bytes) / Math.log(1024)));
-        return String.format(Locale.GERMAN, "%.1f %s", bytes / Math.pow(1024, exponent),
+        return String.format(GuiText.locale(), "%.1f %s", bytes / Math.pow(1024, exponent),
                 new String[]{"B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"}[exponent]);
     }
     private Color typeColor(ShareTree node) {
@@ -114,8 +115,8 @@ public class TreemapView extends JPanel {
         return Color.getHSBColor((1 - fraction) * .15f, .68f, .72f);
     }
     private String describe(ShareTree node) {
-        return node.path() + " · " + format(node.bytes()) + (node.directory() ? " · " + node.children().size() + " Einträge" : "")
-                + (mode.getSelectedIndex() == 1 ? " · beobachteter Upload: " + format(uploaded(node)) : "");
+        return node.path() + " · " + format(node.bytes()) + (node.directory() ? " · " + GuiText.text("plugins.treemap.entries", node.children().size()) : "")
+                + (mode.getSelectedIndex() == 1 ? GuiText.text("plugins.treemap.uploaded", format(uploaded(node))) : "");
     }
 
     private class Canvas extends JPanel {
@@ -126,7 +127,7 @@ public class TreemapView extends JPanel {
             MouseAdapter mouse = new MouseAdapter() {
                 @Override public void mouseMoved(MouseEvent e) {
                     ShareTree node = hit(e.getPoint());
-                    if (node != null) { details.setText(describe(node)); setToolTipText(describe(node)); }
+                    if (node != null) { GuiText.clearTextBinding(details); details.setText(describe(node)); setToolTipText(describe(node)); }
                     else setToolTipText(null);
                     setCursor(Cursor.getPredefinedCursor(node != null && node.directory() ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
                 }
@@ -144,10 +145,10 @@ public class TreemapView extends JPanel {
             ShareTree node = hit(e.getPoint());
             if (node == null || node.directory() || node.link().isEmpty()) return;
             JPopupMenu menu = new JPopupMenu();
-            JMenuItem copy = new JMenuItem("ajfsp-Link kopieren");
+            JMenuItem copy = GuiText.menuItem("plugins.treemap.copy");
             copy.addActionListener(event -> {
                 try { Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(node.link()), null); }
-                catch (IllegalStateException | HeadlessException ex) { showMessage("Zwischenablage nicht verfügbar."); }
+                catch (IllegalStateException | HeadlessException ex) { showLanguageMessage("plugins.treemap.clipboard"); }
             });
             menu.add(copy); menu.show(this, e.getX(), e.getY());
         }
@@ -158,7 +159,7 @@ public class TreemapView extends JPanel {
         @Override protected void paintComponent(Graphics graphics) {
             super.paintComponent(graphics); tiles.clear();
             if (current == null || current.bytes() <= 0) {
-                graphics.drawString("Keine Share-Daten verfügbar", 16, 28); return;
+                graphics.drawString(GuiText.text("plugins.treemap.nodata"), 16, 28); return;
             }
             List<ShareTree> nodes = current.children().stream().filter(n -> n.bytes() > 0).toList();
             if (nodes.isEmpty()) return;

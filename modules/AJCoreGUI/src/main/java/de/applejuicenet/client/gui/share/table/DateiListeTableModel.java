@@ -6,6 +6,8 @@ package de.applejuicenet.client.gui.share.table;
 import de.applejuicenet.client.fassade.entity.Share;
 
 import javax.swing.table.AbstractTableModel;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +26,19 @@ public class DateiListeTableModel extends AbstractTableModel
    final static String[]      COL_NAMES      = {"Name", "Groesze"};
    private Map<String, Share> dateien        = new HashMap<String, Share>();
    private Share[]            sortedChildren;
+   private boolean            descending     = false;
+
+   public boolean isDescending()
+   {
+      return descending;
+   }
+
+   public void setDescending(boolean descending)
+   {
+      this.descending = descending;
+      sortChildren();
+      fireTableDataChanged();
+   }
 
    public Object getRow(int row)
    {
@@ -37,27 +52,10 @@ public class DateiListeTableModel extends AbstractTableModel
 
    private Share[] sortChildren()
    {
-      Share[] children                       = dateien.values().toArray(new Share[dateien.size()]);
-      Share   tmp;
-      int     n                              = children.length;
+      Share[] children = dateien.values().toArray(new Share[dateien.size()]);
+      Comparator<Share> byName = Comparator.comparing(Share::getShortfilename, String.CASE_INSENSITIVE_ORDER);
 
-      for(int i = 0; i < n - 1; i++)
-      {
-         int k = i;
-
-         for(int j = i + 1; j < n; j++)
-         {
-            if((((Share) children[j]).getShortfilename().compareToIgnoreCase(((Share) children[k]).getShortfilename())) < 0)
-            {
-               k = j;
-            }
-         }
-
-         tmp         = children[i];
-         children[i] = children[k];
-         children[k] = tmp;
-      }
-
+      Arrays.sort(children, descending ? byName.reversed() : byName);
       sortedChildren = children;
       return sortedChildren;
    }

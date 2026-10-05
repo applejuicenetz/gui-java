@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.plugins.logviewer;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.gui.DialogLocation;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
@@ -32,9 +33,9 @@ public class LogViewerPlugin extends PluginConnector {
     private final DefaultListModel<File> files = new DefaultListModel<>();
     private final JList<File> list = new JList<>(files);
     private final LogEntryTable entries = new LogEntryTable();
-    private final JLabel summary = new JLabel("Keine Logdatei ausgewählt");
+    private final JLabel summary = GuiText.label("plugins.logviewer.empty");
     private final JLabel notice = new JLabel(" ");
-    private final JComboBox<String> levels = new JComboBox<>(new String[]{"Alle", "Info und höher", "Warnungen und Fehler", "Nur Fehler"});
+    private final JComboBox<String> levels = GuiText.combo("plugins.logviewer.all", "plugins.logviewer.info", "plugins.logviewer.warnings", "plugins.logviewer.errorsonly");
     private final JTextField search = new JTextField(22);
     private SwingWorker<LogParser.Result, Void> loader;
 
@@ -60,15 +61,15 @@ public class LogViewerPlugin extends PluginConnector {
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.addListSelectionListener(e -> { if (!e.getValueIsAdjusting()) display(list.getSelectedValue()); });
 
-        JButton refresh = new JButton("Aktualisieren");
+        JButton refresh = GuiText.button("plugins.logviewer.refresh");
         refresh.addActionListener(e -> reload());
-        JButton delete = new JButton("Auswahl löschen");
+        JButton delete = GuiText.button("plugins.logviewer.delete");
         delete.addActionListener(e -> deleteSelected());
         JPanel listButtons = new JPanel(new GridLayout(1, 2, 6, 0));
         listButtons.add(refresh);
         listButtons.add(delete);
         JPanel left = new JPanel(new BorderLayout(0, 8));
-        JLabel title = new JLabel("Logdateien");
+        JLabel title = GuiText.label("plugins.logviewer.title");
         title.setFont(title.getFont().deriveFont(Font.BOLD, 16f));
         left.add(title, BorderLayout.NORTH);
         left.add(new JScrollPane(list), BorderLayout.CENTER);
@@ -76,9 +77,9 @@ public class LogViewerPlugin extends PluginConnector {
         left.setPreferredSize(new Dimension(270, 100));
 
         JPanel tools = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
-        JLabel levelLabel = new JLabel("Anzeigen:");
+        JLabel levelLabel = GuiText.label("plugins.logviewer.level");
         levelLabel.setLabelFor(levels);
-        JLabel searchLabel = new JLabel("Suchen:");
+        JLabel searchLabel = GuiText.label("plugins.logviewer.search");
         searchLabel.setLabelFor(search);
         tools.add(levelLabel);
         tools.add(levels);
@@ -134,18 +135,18 @@ public class LogViewerPlugin extends PluginConnector {
         files.clear();
         remaining.stream().sorted((a, b) -> Long.compare(b.lastModified(), a.lastModified())).forEach(files::addElement);
         if (deleted > 0) LOGGER.info("LogViewer: {} ältere Logdateien gelöscht, {} behalten", deleted, files.size());
-        notice.setText(deleted > 0 ? deleted + " ältere Logdateien automatisch gelöscht. Es werden immer die neuesten " + MAX_LOG_FILES + " Logdateien behalten."
-                : failed > 0 ? failed + " Logdateien konnten nicht gelöscht werden."
-                : "Es werden immer die neuesten " + MAX_LOG_FILES + " Logdateien behalten; ältere löscht der Log Viewer beim Öffnen.");
+        if (deleted > 0) GuiText.setText(notice, "plugins.logviewer.retentiondeleted", deleted, MAX_LOG_FILES);
+        else if (failed > 0) GuiText.setText(notice, "plugins.logviewer.retentionfailed", failed);
+        else GuiText.setText(notice, "plugins.logviewer.retention", MAX_LOG_FILES);
         if (selected != null && files.contains(selected)) list.setSelectedValue(selected, true);
         else if (!files.isEmpty()) list.setSelectedIndex(0);
-        else { entries.setEntries(List.of()); summary.setText("Keine Logdateien vorhanden"); }
+        else { entries.setEntries(List.of()); GuiText.setText(summary, "plugins.logviewer.nofiles"); }
     }
 
     private void display(File file) {
         if (loader != null) loader.cancel(true);
-        if (file == null) { entries.setEntries(List.of()); summary.setText("Keine Logdatei ausgewählt"); return; }
-        summary.setText("Lade " + file.getName() + " …");
+        if (file == null) { entries.setEntries(List.of()); GuiText.setText(summary, "plugins.logviewer.empty"); return; }
+        GuiText.setText(summary, "plugins.logviewer.loading", file.getName());
         loader = new SwingWorker<>() {
             @Override protected LogParser.Result doInBackground() throws IOException {
                 return LogParser.parse(Files.readString(file.toPath(), StandardCharsets.UTF_8), MAX_ENTRIES);
@@ -155,12 +156,12 @@ public class LogViewerPlugin extends PluginConnector {
                 try {
                     LogParser.Result r = get();
                     entries.setEntries(r.entries());
-                    summary.setText(file.getName() + "  ·  " + r.count(LogParser.Level.ERROR) + " Fehler, "
-                            + r.count(LogParser.Level.WARN) + " Warnungen, " + (r.entries().size() + r.skipped()) + " Einträge"
-                            + (r.skipped() > 0 ? "  ·  nur die letzten " + MAX_ENTRIES + " angezeigt" : ""));
+                    GuiText.setText(summary, r.skipped() > 0 ? "plugins.logviewer.summarylimited" : "plugins.logviewer.summary",
+                            file.getName(), r.count(LogParser.Level.ERROR), r.count(LogParser.Level.WARN),
+                            r.entries().size() + r.skipped(), MAX_ENTRIES);
                 } catch (Exception e) {
                     entries.setEntries(List.of());
-                    summary.setText("Logdatei nicht lesbar: " + file.getName());
+                    GuiText.setText(summary, "plugins.logviewer.unreadable", file.getName());
                     LOGGER.warn("LogViewer: Lesen fehlgeschlagen: {}", file, e);
                 }
             }
@@ -172,20 +173,20 @@ public class LogViewerPlugin extends PluginConnector {
         File file = list.getSelectedValue();
         if (file == null) return;
         if (active.test(file)) {
-            JOptionPane.showMessageDialog(DialogLocation.getReference(this), "Das laufende Log kann nicht gelöscht werden.",
-                    "Logdatei löschen", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(DialogLocation.getReference(this), GuiText.text("plugins.logviewer.active"),
+                    GuiText.text("plugins.logviewer.deletetitle"), JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         int answer = JOptionPane.showConfirmDialog(DialogLocation.getReference(this),
-                "Logdatei \"" + file.getName() + "\" wirklich löschen?", "Logdatei löschen",
+                GuiText.text("plugins.logviewer.confirmdelete", file.getName()), GuiText.text("plugins.logviewer.deletetitle"),
                 JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (answer != JOptionPane.YES_OPTION) return;
         try {
             Files.deleteIfExists(file.toPath());
             reload();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(DialogLocation.getReference(this), "Logdatei konnte nicht gelöscht werden:\n" + e.getMessage(),
-                    "Logdatei löschen", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(DialogLocation.getReference(this), GuiText.text("plugins.logviewer.deletefailed", e.getMessage()),
+                    GuiText.text("plugins.logviewer.deletetitle"), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -195,17 +196,17 @@ public class LogViewerPlugin extends PluginConnector {
     private final class LogFileRenderer extends DefaultListCellRenderer {
         @Override public Component getListCellRendererComponent(JList<?> l, Object value, int index, boolean selected, boolean focus) {
             File file = (File) value;
-            String when = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, Locale.GERMANY).format(new Date(file.lastModified()));
-            String size = file.length() < 1024 ? file.length() + " B" : String.format(Locale.GERMANY, "%.0f KiB", file.length() / 1024.0);
+            String when = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, GuiText.locale()).format(new Date(file.lastModified()));
+            String size = file.length() < 1024 ? file.length() + " B" : String.format(GuiText.locale(), "%.0f KiB", file.length() / 1024.0);
             super.getListCellRendererComponent(l, "<html><b>" + when + "</b><br><small>" + size
-                    + (active.test(file) ? " · läuft gerade" : "") + "</small></html>", index, selected, focus);
+                    + (active.test(file) ? GuiText.text("plugins.logviewer.running") : "") + "</small></html>", index, selected, focus);
             setBorder(BorderFactory.createEmptyBorder(5, 8, 5, 8));
             setToolTipText(file.getAbsolutePath());
             return this;
         }
     }
 
-    @Override public void fireLanguageChanged() { }
+    @Override public void fireLanguageChanged() { GuiText.refreshLanguage(); }
     @Override public void registerSelected() { reload(); }
     @Override public void fireContentChanged(DATALISTENER_TYPE type, Object content) { }
 }

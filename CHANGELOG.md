@@ -4,6 +4,20 @@
 
 ### Sichtbare Änderungen
 
+- [red171] „Mein Share“ – Dateiliste:
+  - Alle Dateien als `ajfsp`-Links oder AJL-Inhalt in die Zwischenablage kopieren
+  - Sortierknopf wechselt zwischen A-Z und Z-A; Kopieren und AJL-Dateiexport
+    übernehmen die gewählte Reihenfolge
+  - Export- und Kopierbuttons zeigen Tooltips und verschieben beim Hover kein Layout
+  - Rechtsklick zeigt „Aus Liste entfernen“, behält Mehrfachauswahl und verursacht
+    auf leeren Tabellenflächen keinen Fehler
+  - HTML-Dateiexport entfernt
+- [red171] Bedienung und Darstellung:
+  - Neues Info-Symbol für „Über“ im Iconset „modern“
+  - Log Viewer, SpeedGraph, Version Checker und Share-Treemap zeigen deutsche
+    und englische Texte und übernehmen Sprachwechsel auch in offenen Ansichten
+  - Statusmeldungen, Tooltips und Zahlenformatierung der Plugins folgen der Sprache
+  - Weitere Dialogtexte, Download-Benachrichtigungen und AJL-Dateifilter übersetzt
 - [red171] Neues Plugin „Share-Treemap“:
   - Größenkarte des Shares mit Ordner-Zoom und Anzeige von Pfaden und Dateigrößen
   - Farben unterscheiden Videos, Audio, Archive (RAR, ZIP und 7z) und sonstige Dateien

@@ -29,4 +29,26 @@ public class ShareTreemapPluginTest {
             assertEquals(1024L, view.current().bytes());
         });
     }
+
+    @Test public void changesOpenPluginControlsToEnglishAndBack() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            var selector = de.applejuicenet.client.gui.controller.LanguageSelector.getInstance(
+                    java.nio.file.Paths.get("../../resources/language/deutsch.properties").toAbsolutePath().normalize().toString());
+            var plugin = new ShareTreemapPlugin(new Properties(), Map.of(), new ImageIcon(), Map.of(), null);
+            de.applejuicenet.client.gui.controller.LanguageSelector.getInstance(
+                    java.nio.file.Paths.get("../../resources/language/english.properties").toAbsolutePath().normalize().toString());
+            plugin.fireLanguageChanged();
+            assertTrue(containsText(plugin, "Back"));
+            de.applejuicenet.client.gui.controller.LanguageSelector.getInstance(
+                    java.nio.file.Paths.get("../../resources/language/deutsch.properties").toAbsolutePath().normalize().toString());
+            assertFalse(containsText(plugin, "Back"));
+        });
+    }
+    private static boolean containsText(java.awt.Container parent, String text) {
+        for (java.awt.Component c : parent.getComponents()) {
+            if (c instanceof javax.swing.AbstractButton b && text.equals(b.getText())) return true;
+            if (c instanceof java.awt.Container child && containsText(child, text)) return true;
+        }
+        return false;
+    }
 }

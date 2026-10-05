@@ -4,6 +4,7 @@
 
 package de.applejuicenet.client.gui.options;
 
+import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.gui.DialogLocation;
 
 import ch.qos.logback.classic.Level;
@@ -113,7 +114,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
 
         JPanel panel8 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-        panel8.add(new JLabel("Logging: "));
+        panel8.add(GuiText.label("javagui.options.logging"));
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         Level logLevel = optionsManager.getLogLevel();
 
