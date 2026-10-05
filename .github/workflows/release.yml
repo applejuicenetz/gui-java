@@ -43,7 +43,7 @@ jobs:
       - uses: actions/setup-java@v6
         with:
           distribution: zulu
-          java-version: '25'
+          java-version: '21'
           cache: maven
           server-id: github
           server-username: GITHUB_ACTOR
@@ -52,18 +52,18 @@ jobs:
         with:
           python-version: '3.x'
 
-      - uses: actions/setup-dotnet@v6
-        if: matrix.platform == 'windows'
-        with:
-          dotnet-version: '8.0.x'
-      - name: Install WiX for jpackage
+      - name: Install WiX 3 for JDK 21 jpackage
         if: matrix.platform == 'windows'
         shell: pwsh
         run: |
-          dotnet tool install --global wix --version 5.0.2
-          "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
-          & "$env:USERPROFILE\.dotnet\tools\wix.exe" extension add --global WixToolset.UI.wixext/5.0.2
-          & "$env:USERPROFILE\.dotnet\tools\wix.exe" extension add --global WixToolset.Util.wixext/5.0.2
+          $archive = Join-Path $env:RUNNER_TEMP 'wix314.zip'
+          Invoke-WebRequest https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip -OutFile $archive
+          if ((Get-FileHash $archive -Algorithm SHA256).Hash.ToLower() -ne '6ac824e1642d6f7277d0ed7ea09411a508f6116ba6fae0aa5f2c7daa2ff43d31') {
+            throw 'WiX archive checksum mismatch'
+          }
+          $tools = Join-Path $env:RUNNER_TEMP 'wix314'
+          Expand-Archive $archive -DestinationPath $tools
+          $tools >> $env:GITHUB_PATH
 
       - name: Build JAR and native installer
         shell: bash
@@ -110,7 +110,7 @@ jobs:
       - uses: actions/setup-java@v6
         with:
           distribution: zulu
-          java-version: '25'
+          java-version: '21'
           cache: maven
           server-id: github
           server-username: GITHUB_ACTOR
@@ -173,7 +173,7 @@ jobs:
       - uses: actions/setup-java@v6
         with:
           distribution: zulu
-          java-version: '25'
+          java-version: '21'
           cache: maven
           server-id: github
           server-username: GITHUB_ACTOR
