@@ -1,289 +1,235 @@
-/*
- * Copyright (c) 2003 Sun Microsystems, Inc. All  Rights Reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * -Redistributions of source code must retain the above copyright
- *  notice, this list of conditions and the following disclaimer.
- *
- * -Redistribution in binary form must reproduct the above copyright
- *  notice, this list of conditions and the following disclaimer in
- *  the documentation and/or other materials provided with the distribution.
- *
- * Neither the name of Sun Microsystems, Inc. or the names of contributors
- * may be used to endorse or promote products derived from this software
- * without specific prior written permission.
- *
- * This software is provided "AS IS," without a warranty of any kind. ALL
- * EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING
- * ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
- * OR NON-INFRINGEMENT, ARE HEREBY EXCLUDED. SUN AND ITS LICENSORS SHALL NOT
- * BE LIABLE FOR ANY DAMAGES OR LIABILITIES SUFFERED BY LICENSEE AS A RESULT
- * OF OR RELATING TO USE, MODIFICATION OR DISTRIBUTION OF THE SOFTWARE OR ITS
- * DERIVATIVES. IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
- * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
- * INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER CAUSED AND REGARDLESS OF THE THEORY
- * OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE SOFTWARE, EVEN
- * IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- *
- * You acknowledge that Software is not designed, licensed or intended for
- * use in the design, construction, operation or maintenance of any nuclear
- * facility.
- */
-
-/*
- * @(#)MemoryMonitor.java	1.32 03/01/23
- */
-
 package de.applejuicenet.client.gui.memorymonitor;
+
+import de.applejuicenet.client.gui.controller.GuiText;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
+import java.awt.event.HierarchyEvent;
+import java.awt.geom.Path2D;
+import java.util.Locale;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/memorymonitor/MemoryMonitor.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
- *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>              modifizierte, gekuerzte Sun-Source</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r <aj@tkl-soft.de>
- *
+ * Zeigt den Heap-Verbrauch der JavaGUI-JVM (nicht des Cores) als Verlauf.
+ * Abtastung und Zeichnen laufen ausschließlich auf dem EDT; der Timer läuft nur,
+ * solange die Komponente sichtbar ist.
  */
-
 public class MemoryMonitor
-    extends JPanel
-    implements Runnable {
+    extends JPanel {
 
-	private Thread thread;
-    private long sleepAmount = 1000;
-    private int w, h;
-    private BufferedImage bimg;
-    private Graphics2D big;
-    private Font font = new Font("Times New Roman", Font.PLAIN, 11);
-    private Runtime runtime = Runtime.getRuntime();
-    private int columnInc;
-    private int pts[];
-    private int ptNum;
-    private int ascent, descent;
-    private Rectangle graphOutlineRect = new Rectangle();
-    private Rectangle2D mfRect = new Rectangle2D.Float();
-    private Rectangle2D muRect = new Rectangle2D.Float();
-    private Line2D graphLine = new Line2D.Float();
-    private Color graphColor = new Color(46, 139, 87);
-    private Color mfColor = new Color(0, 100, 0);
-    private String usedStr;
-    private String maxMem;
+    private static final int SAMPLE_INTERVAL_MS = 1000;
+    private static final int HISTORY_SIZE = 120;
+    private static final double MB = 1024.0 * 1024.0;
 
-    public void startMemoryMonitor() {
-        start();
-    }
+    private final Runtime runtime = Runtime.getRuntime();
+    private final long[] used = new long[HISTORY_SIZE];
+    private final long[] allocated = new long[HISTORY_SIZE];
+    private int count;
+    private int head;
 
-    public void stopMemoryMonitor() {
-        stop();
-    }
+    private final Timer timer = new Timer(SAMPLE_INTERVAL_MS, e -> sample());
+    private final JLabel usedLabel = valueLabel();
+    private final JLabel allocatedLabel = valueLabel();
+    private final JLabel maxLabel = valueLabel();
+    private final JLabel usedCaption = captionLabel();
+    private final JLabel allocatedCaption = captionLabel();
+    private final JLabel maxCaption = captionLabel();
+    private final Graph graph = new Graph();
 
     public MemoryMonitor() {
-        setBackground(Color.black);
-        addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                if (thread == null) {
-                    start();
-                }
-                else {
-                    stop();
+        super(new BorderLayout(0, 10));
+        setBorder(BorderFactory.createEmptyBorder(12, 14, 8, 14));
+        timer.setInitialDelay(0);
+
+        JPanel header = new JPanel(new GridLayout(1, 3, 12, 0));
+        header.setOpaque(false);
+        header.add(block(usedCaption, usedLabel));
+        header.add(block(allocatedCaption, allocatedLabel));
+        header.add(block(maxCaption, maxLabel));
+        add(header, BorderLayout.NORTH);
+        add(graph, BorderLayout.CENTER);
+
+        GuiText.onLanguageChange(this, this::refreshTexts);
+        refreshTexts();
+        sample();
+
+        addHierarchyListener(e -> {
+            if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
+                if (isShowing()) {
+                    timer.start();
+                } else {
+                    timer.stop();
                 }
             }
         });
-        maxMem = String.valueOf( (int) (runtime.maxMemory() / 1024));
     }
 
-    public Dimension getMinimumSize() {
-        return getPreferredSize();
+    public void startMemoryMonitor() {
+        if (isShowing()) {
+            timer.start();
+        }
     }
 
-    public Dimension getMaximumSize() {
-        return getPreferredSize();
+    public void stopMemoryMonitor() {
+        timer.stop();
     }
 
-    public Dimension getPreferredSize() {
-        return new Dimension(135, 80);
+    private void sample() {
+        long total = runtime.totalMemory();
+        long inUse = total - runtime.freeMemory();
+        int slot = (head + count) % HISTORY_SIZE;
+        if (count == HISTORY_SIZE) {
+            head = (head + 1) % HISTORY_SIZE;
+        } else {
+            count++;
+        }
+        used[slot] = inUse;
+        allocated[slot] = total;
+        usedLabel.setText(format(inUse));
+        allocatedLabel.setText(format(total));
+        maxLabel.setText(format(runtime.maxMemory()));
+        graph.repaint();
     }
 
-    public void paint(Graphics g) {
-
-        if (big == null) {
-            return;
-        }
-
-        big.setBackground(getBackground());
-        big.clearRect(0, 0, w, h);
-
-        float freeMemory = (float) runtime.freeMemory();
-        float totalMemory = (float) runtime.totalMemory();
-
-        // .. Draw allocated and used strings ..
-        big.setColor(Color.green);
-        big.drawString(String.valueOf( (int) totalMemory / 1024) + "K / " +
-                       maxMem + "K allocated", 4.0f, (float) ascent + 0.5f);
-        usedStr = String.valueOf( ( (int) (totalMemory - freeMemory)) / 1024)
-            + "K used";
-        big.drawString(usedStr, 4, h - descent);
-
-        // Calculate remaining size
-        float ssH = ascent + descent;
-        float remainingHeight = (h - (ssH * 2) - 0.5f);
-        float blockHeight = remainingHeight / 10;
-        float blockWidth = 20.0f;
-
-        // .. Memory Free ..
-        big.setColor(mfColor);
-        int MemUsage = (int) ( (freeMemory / totalMemory) * 10);
-        int i = 0;
-        for (; i < MemUsage; i++) {
-            mfRect.setRect(5, ssH + i * blockHeight,
-                           blockWidth, blockHeight - 1);
-            big.fill(mfRect);
-        }
-
-        // .. Memory Used ..
-        big.setColor(Color.green);
-        for (; i < 10; i++) {
-            muRect.setRect(5, ssH + i * blockHeight,
-                           blockWidth, blockHeight - 1);
-            big.fill(muRect);
-        }
-
-        // .. Draw History Graph ..
-        big.setColor(graphColor);
-        int graphX = 30;
-        int graphY = (int) ssH;
-        int graphW = w - graphX - 5;
-        int graphH = (int) remainingHeight;
-        graphOutlineRect.setRect(graphX, graphY, graphW, graphH);
-        big.draw(graphOutlineRect);
-
-        int graphRow = graphH / 10;
-
-        // .. Draw row ..
-        for (int j = graphY; j <= graphH + graphY; j += graphRow) {
-            graphLine.setLine(graphX, j, graphX + graphW, j);
-            big.draw(graphLine);
-        }
-
-        // .. Draw animated column movement ..
-        int graphColumn = graphW / 15;
-
-        if (columnInc == 0) {
-            columnInc = graphColumn;
-        }
-
-        for (int j = graphX + columnInc; j < graphW + graphX; j += graphColumn) {
-            graphLine.setLine(j, graphY, j, graphY + graphH);
-            big.draw(graphLine);
-        }
-
-        --columnInc;
-
-        if (pts == null) {
-            pts = new int[graphW];
-            ptNum = 0;
-        }
-        else if (pts.length != graphW) {
-            int tmp[] = null;
-            if (ptNum < graphW) {
-                tmp = new int[ptNum];
-                System.arraycopy(pts, 0, tmp, 0, tmp.length);
-            }
-            else {
-                tmp = new int[graphW];
-                System.arraycopy(pts, pts.length - tmp.length, tmp, 0,
-                                 tmp.length);
-                ptNum = tmp.length - 2;
-            }
-            pts = new int[graphW];
-            System.arraycopy(tmp, 0, pts, 0, tmp.length);
-        }
-        else {
-            big.setColor(Color.yellow);
-            pts[ptNum] = (int) (graphY + graphH * (freeMemory / totalMemory));
-            for (int j = graphX + graphW - ptNum, k = 0; k < ptNum; k++, j++) {
-                if (k != 0) {
-                    if (pts[k] != pts[k - 1]) {
-                        big.drawLine(j - 1, pts[k - 1], j, pts[k]);
-                    }
-                    else {
-                        big.fillRect(j, pts[k], 1, 1);
-                    }
-                }
-            }
-            if (ptNum + 2 == pts.length) {
-                // throw out oldest point
-                for (int j = 1; j < ptNum; j++) {
-                    pts[j - 1] = pts[j];
-                }
-                --ptNum;
-            }
-            else {
-                ptNum++;
-            }
-        }
-        g.drawImage(bimg, 0, 0, this);
+    private void refreshTexts() {
+        usedCaption.setText(GuiText.text("javagui.memory.used"));
+        allocatedCaption.setText(GuiText.text("javagui.memory.allocated"));
+        maxCaption.setText(GuiText.text("javagui.memory.max"));
+        usedLabel.setText(format(runtime.totalMemory() - runtime.freeMemory()));
+        allocatedLabel.setText(format(runtime.totalMemory()));
+        maxLabel.setText(format(runtime.maxMemory()));
+        graph.repaint();
     }
 
-    private void start() {
-        thread = new Thread(this);
-        thread.setPriority(Thread.MIN_PRIORITY);
-        thread.setName("MemoryMonitor");
-        thread.start();
+    private static String format(long bytes) {
+        return String.format(GuiText.locale() == null ? Locale.getDefault() : GuiText.locale(),
+                             "%,.1f MB", bytes / MB);
     }
 
-    private synchronized void stop() {
-        thread = null;
-        notify();
+    private static JLabel valueLabel() {
+        JLabel label = new JLabel(" ");
+        label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize2D() + 3f));
+        return label;
     }
 
-    public void run() {
+    private static JLabel captionLabel() {
+        JLabel label = new JLabel(" ");
+        label.setForeground(UIManager.getColor("Label.disabledForeground"));
+        label.setFont(label.getFont().deriveFont(label.getFont().getSize2D() - 1f));
+        return label;
+    }
 
-        Thread me = Thread.currentThread();
+    private static JPanel block(JLabel caption, JLabel value) {
+        JPanel p = new JPanel();
+        p.setOpaque(false);
+        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+        p.add(caption);
+        p.add(Box.createVerticalStrut(2));
+        p.add(value);
+        return p;
+    }
 
-        while (thread == me && !isShowing() || getSize().width == 0) {
+    private final class Graph
+        extends JComponent {
+
+        Graph() {
+            setPreferredSize(new Dimension(420, 200));
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
             try {
-                Thread.sleep(500);
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                paintGraph(g2);
+            } finally {
+                g2.dispose();
             }
-            catch (InterruptedException e) {
+        }
+
+        private void paintGraph(Graphics2D g2) {
+            Color fg = UIManager.getColor("Label.foreground");
+            if (fg == null) {
+                fg = Color.GRAY;
+            }
+            Color accent = UIManager.getColor("Component.accentColor");
+            if (accent == null) {
+                accent = UIManager.getColor("Button.default.background");
+            }
+            if (accent == null) {
+                accent = new Color(46, 139, 87);
+            }
+            Color grid = new Color(fg.getRed(), fg.getGreen(), fg.getBlue(), 40);
+            Color text = new Color(fg.getRed(), fg.getGreen(), fg.getBlue(), 150);
+
+            g2.setFont(getFont().deriveFont(getFont().getSize2D() - 1f));
+            FontMetrics fm = g2.getFontMetrics();
+            long scale = 1;
+            for (int i = 0; i < count; i++) {
+                scale = Math.max(scale, allocated[(head + i) % HISTORY_SIZE]);
+            }
+            scale = Math.max(scale, 1);
+
+            int axisW = fm.stringWidth(format(scale)) + 8;
+            int x0 = axisW;
+            int y0 = 4;
+            int w = getWidth() - x0 - 2;
+            int h = getHeight() - y0 - fm.getHeight() - 6;
+            if (w < 20 || h < 20) {
                 return;
             }
-        }
 
-        while (thread == me && isShowing()) {
-            Dimension d = getSize();
-            if (d.width != w || d.height != h) {
-                w = d.width;
-                h = d.height;
-                bimg = (BufferedImage) createImage(w, h);
-                big = bimg.createGraphics();
-                big.setFont(font);
-                FontMetrics fm = big.getFontMetrics(font);
-                ascent = fm.getAscent();
-                descent = fm.getDescent();
+            g2.setStroke(new BasicStroke(1f));
+            for (int i = 0; i <= 4; i++) {
+                int y = y0 + Math.round(h * i / 4f);
+                g2.setColor(grid);
+                g2.drawLine(x0, y, x0 + w, y);
+                g2.setColor(text);
+                String label = format(scale - scale * i / 4);
+                g2.drawString(label, axisW - 6 - fm.stringWidth(label), y + fm.getAscent() / 2 - 1);
             }
-            repaint();
-            try {
-                Thread.sleep(sleepAmount);
+            g2.setColor(text);
+            String left = GuiText.text("javagui.memory.timespan");
+            g2.drawString(left, x0, y0 + h + fm.getAscent() + 4);
+            String right = GuiText.text("javagui.memory.now");
+            g2.drawString(right, x0 + w - fm.stringWidth(right), y0 + h + fm.getAscent() + 4);
+
+            if (count < 2) {
+                return;
             }
-            catch (InterruptedException e) {
-                break;
+            float step = w / (float) (HISTORY_SIZE - 1);
+            float startX = x0 + w - step * (count - 1);
+
+            g2.setColor(new Color(fg.getRed(), fg.getGreen(), fg.getBlue(), 90));
+            g2.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f,
+                                         new float[] {4f, 4f}, 0f));
+            Path2D.Float allocLine = new Path2D.Float();
+            Path2D.Float usedLine = new Path2D.Float();
+            for (int i = 0; i < count; i++) {
+                int idx = (head + i) % HISTORY_SIZE;
+                float x = startX + step * i;
+                float ya = y0 + h - h * (allocated[idx] / (float) scale);
+                float yu = y0 + h - h * (used[idx] / (float) scale);
+                if (i == 0) {
+                    allocLine.moveTo(x, ya);
+                    usedLine.moveTo(x, yu);
+                } else {
+                    allocLine.lineTo(x, ya);
+                    usedLine.lineTo(x, yu);
+                }
             }
+            g2.draw(allocLine);
+
+            Path2D.Float area = new Path2D.Float(usedLine);
+            area.lineTo(startX + step * (count - 1), y0 + h);
+            area.lineTo(startX, y0 + h);
+            area.closePath();
+            g2.setColor(new Color(accent.getRed(), accent.getGreen(), accent.getBlue(), 60));
+            g2.fill(area);
+            g2.setColor(accent);
+            g2.setStroke(new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            g2.draw(usedLine);
         }
-        thread = null;
     }
 }

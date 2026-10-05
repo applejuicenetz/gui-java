@@ -1,25 +1,20 @@
 package de.applejuicenet.client.gui.memorymonitor;
 
 import de.applejuicenet.client.gui.controller.GuiText;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/memorymonitor/MemoryMonitorDialog.java,v 1.2 2004/11/22 16:25:26 maj0r Exp $
- *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r [aj@tkl-soft.de]
- *
+ * Nicht-modaler Dialog „JavaGUI Memory Monitor“. Zeigt den RAM-Verbrauch der JavaGUI.
  */
-
 public class MemoryMonitorDialog
     extends JDialog {
-	private MemoryMonitor memoryMonitorPanel;
+
+    private MemoryMonitor memoryMonitorPanel;
+    private final JLabel note = new JLabel();
 
     public MemoryMonitorDialog(Dialog parent) {
         super(parent, false);
@@ -32,22 +27,42 @@ public class MemoryMonitorDialog
     }
 
     private void init() {
-        setTitle(GuiText.text("javagui.memory.title"));
-        GuiText.onLanguageChange(getRootPane(), () -> setTitle(GuiText.text("javagui.memory.title")));
         memoryMonitorPanel = new MemoryMonitor();
+        note.setForeground(UIManager.getColor("Label.disabledForeground"));
+        note.setFont(note.getFont().deriveFont(note.getFont().getSize2D() - 1f));
+        note.setBorder(BorderFactory.createEmptyBorder(6, 14, 10, 14));
+
+        JPanel root = new JPanel(new BorderLayout());
+        root.add(memoryMonitorPanel, BorderLayout.CENTER);
+        root.add(note, BorderLayout.SOUTH);
+        setContentPane(root);
+
+        refreshTexts();
+        GuiText.onLanguageChange(getRootPane(), this::refreshTexts);
+
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 memoryMonitorPanel.stopMemoryMonitor();
             }
         });
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(memoryMonitorPanel, BorderLayout.CENTER);
-        pack();
-        setSize(new Dimension(200, 200));
+        setDefaultCloseOperation(HIDE_ON_CLOSE);
+        setMinimumSize(new Dimension(420, 300));
+        setSize(new Dimension(560, 380));
     }
 
+    private void refreshTexts() {
+        setTitle(GuiText.text("javagui.memory.title"));
+        note.setText(GuiText.text("javagui.memory.note"));
+    }
+
+    @Override
     public void setVisible(boolean display) {
         super.setVisible(display);
-        memoryMonitorPanel.startMemoryMonitor();
+        if (display) {
+            memoryMonitorPanel.startMemoryMonitor();
+        } else {
+            memoryMonitorPanel.stopMemoryMonitor();
+        }
     }
 }

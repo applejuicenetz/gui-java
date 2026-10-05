@@ -18,6 +18,12 @@
     und englische Texte und übernehmen Sprachwechsel auch in offenen Ansichten
   - Statusmeldungen, Tooltips und Zahlenformatierung der Plugins folgen der Sprache
   - Weitere Dialogtexte, Download-Benachrichtigungen und AJL-Dateifilter übersetzt
+- [red171] JavaGUI Memory Monitor:
+  - Umbenannt von „aj Memory Monitor“; Hinweis erklärt, dass der RAM-Verbrauch
+    der JavaGUI angezeigt wird, nicht der des Cores
+  - Fenster öffnet in sinnvoller Größe und ist vergrößerbar
+  - Neue Darstellung mit Belegt, Zugewiesen, Maximal und Verlauf der letzten 2 Minuten
+  - Folgt Theme und Sprache; läuft nur, solange das Fenster sichtbar ist
 - [red171] Neues Plugin „Share-Treemap“:
   - Größenkarte des Shares mit Ordner-Zoom und Anzeige von Pfaden und Dateigrößen
   - Farben unterscheiden Videos, Audio, Archive (RAR, ZIP und 7z) und sonstige Dateien
