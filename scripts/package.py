@@ -36,7 +36,7 @@ def validate_classpath(directory):
 def prepare():
     jar = ROOT / 'modules/AJCoreGUI/target/AJCoreGUI.jar'
     if not jar.is_file():
-        raise RuntimeError('First run mvn clean package with JDK 25')
+        raise RuntimeError('First run mvn clean package with JDK 21')
     if INPUT.exists():
         shutil.rmtree(INPUT)
     shutil.copytree(ROOT / 'resources', INPUT)
@@ -150,7 +150,7 @@ def native(args):
         raise RuntimeError('jpackage requires a native build host for each OS')
     jpackage = shutil.which('jpackage')
     if not jpackage or not subprocess.check_output([jpackage, '--version'], text=True).strip().startswith('21'):
-        raise RuntimeError('jpackage from JDK 25 required')
+        raise RuntimeError('jpackage from JDK 21 required')
     java = shutil.which('java')
     settings = subprocess.run([java, '-XshowSettings:properties', '-version'],
                               capture_output=True, text=True, check=True)
