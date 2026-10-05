@@ -20,10 +20,10 @@ Dieses GUI ist das grafisches Interface (Graphical User Interface) für den appl
 
 Ein aktuelles Changelog befindet sich [hier](CHANGELOG.md)
 
-Die Release-Pipeline baut mit Java 21 vier native `jpackage`-Installer (macOS DMG,
+Die Release-Pipeline baut mit Java 25 vier native `jpackage`-Installer (macOS DMG,
 Windows EXE jeweils für amd64/aarch64) und zwei Linux-Flatpaks. Alle sechs OS-Pakete
 enthalten die Laufzeit. `AJCoreGUI.zip` bleibt als plattformneutrales Paket verfügbar
-und benötigt installiertes Java 21. Installer registrieren `ajfsp`-/`web+ajfsp`-Links und AJL-Dateien.
+und benötigt installiertes Java 25. Installer registrieren `ajfsp`-/`web+ajfsp`-Links und AJL-Dateien.
 Build-Anleitung: [AGENTS.md](AGENTS.md).
 
 ## Versteckte Parameter

@@ -52,7 +52,7 @@ public class TrayLoader implements AutoCloseable {
         dialog.addWindowStateListener(windowStateListener);
         ImageIcon icon = IconManager.getInstance().getIcon("applejuice");
         String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
-        if (useNativeTray(osName, System.getProperty("sun.arch.data.model", "")) &&
+        if (osName.contains("linux") &&
                 createNativeTray(title, icon, popup)) return true;
         if (!SystemTray.isSupported()) {
             close();
@@ -79,10 +79,6 @@ public class TrayLoader implements AutoCloseable {
             close();
             return false;
         }
-    }
-
-    static boolean useNativeTray(String osName, String dataModel) {
-        return osName.toLowerCase(Locale.ROOT).contains("linux") && "64".equals(dataModel);
     }
 
     private void showTrayPopup(MouseEvent event) {

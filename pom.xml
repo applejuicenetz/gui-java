@@ -5,8 +5,7 @@
     <artifactId>AJClientGUI</artifactId>
     <version>0.86.3</version>
     <properties>
-        <maven.compiler.release>21</maven.compiler.release>
-        <maven.compiler.enablePreview>true</maven.compiler.enablePreview>
+        <maven.compiler.release>25</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <packaging>pom</packaging>
@@ -70,9 +69,6 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.6.0</version>
-                <configuration>
-                    <argLine>--enable-preview --enable-native-access=ALL-UNNAMED</argLine>
-                </configuration>
             </plugin>
         </plugins>
     </build>

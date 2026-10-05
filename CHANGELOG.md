@@ -52,8 +52,6 @@
 - [red171] SpeedGraph:
   - Zeitbasierter, begrenzter Verlauf und Zeichenlogik ersetzen alte
     pixelabhängige Speicherung und Timer
-- [red171] Code und Bibliotheken:
-  - Build, CI und Paketierung wechseln von Java 25 auf Java 21 (Zulu)
 
 ## 0.86.3
 

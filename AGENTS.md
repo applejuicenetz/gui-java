@@ -43,7 +43,7 @@ mvn versions:set \
 
 ## Pakete bauen
 
-JDK 21 (inklusive `jpackage`) und Python 3 installieren. Maven verwendet `--release 21`.
+JDK 25 (inklusive `jpackage`) und Python 3 installieren. Maven verwendet `--release 25`.
 
 ```bash
 mvn clean package
@@ -51,7 +51,7 @@ python scripts/package.py prepare
 ```
 
 `target/AJCoreGUI.zip` enthält JAR, Bibliotheken, Plugins und Ressourcen und benötigt
-Java 21 auf dem Zielsystem. Native Pakete enthalten die Java-21-Laufzeit:
+Java 25 auf dem Zielsystem. Native Pakete enthalten die Java-25-Laufzeit:
 
 ```bash
 # Auf macOS (Architektur passend zum installierten JDK wählen):
@@ -63,7 +63,7 @@ python scripts/package.py native --platform linux --arch aarch64 --type app-imag
 ```
 
 Die Release-Pipeline baut DMG und EXE jeweils für amd64 und aarch64 sowie zwei
-Linux-Flatpaks mit OpenJDK 21. Jeder Build läuft auf passendem OS und passender
+Linux-Flatpaks mit OpenJDK 25. Jeder Build läuft auf passendem OS und passender
 Architektur. Alle sechs Pakete plus `AJCoreGUI.zip` bleiben bei manueller Ausführung
 als Actions-Artefakt verfügbar; Tags veröffentlichen dieselben Dateien als Release.
 Tag (optional mit `v` davor) muss zur Maven-Version passen.
@@ -85,7 +85,7 @@ Info-Link sowie Copyright. WiX registriert `ajfsp`, `web+ajfsp` und `.ajl` unter
 `appleJuiceNETZ.URI.JavaGUI`, `appleJuiceNETZ.EXT.JavaGUI`, `Capabilities` und
 `RegisteredApplications`; der Befehl lautet `"[INSTALLDIR]AJCoreGUI.exe" "%1"`.
 Deinstallation entfernt die vom Installer angelegten Registry-Werte. Das WiX-Template
-stammt direkt aus dem verwendeten JDK 21 und wird vor dem Installer-Build um diese
+stammt direkt aus dem verwendeten JDK 25 und wird vor dem Installer-Build um diese
 Registrierung ergänzt.
 macOS registriert `ajfsp` und `web+ajfsp` über `CFBundleURLTypes`, Flatpak über Desktop-MIME-Typen.
 AJL-Dateizuordnungen bleiben erhalten. Laufende GUI nimmt weitere Links über den

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare portable ZIP and native Java 21 installers (run after mvn clean package)."""
+"""Prepare portable ZIP and native Java 25 installers (run after mvn clean package)."""
 import argparse
 import os
 from pathlib import Path
@@ -36,16 +36,16 @@ def validate_classpath(directory):
 def prepare():
     jar = ROOT / 'modules/AJCoreGUI/target/AJCoreGUI.jar'
     if not jar.is_file():
-        raise RuntimeError('First run mvn clean package with JDK 21')
+        raise RuntimeError('First run mvn clean package with JDK 25')
     if INPUT.exists():
         shutil.rmtree(INPUT)
     shutil.copytree(ROOT / 'resources', INPUT)
     shutil.copy2(jar, INPUT / jar.name)
     validate_classpath(INPUT)
     (INPUT / 'README.txt').write_text(
-        'appleJuice JavaGUI\nRequires Java 21 for this portable ZIP.\n'
-        'Start: java --enable-preview --enable-native-access=ALL-UNNAMED -jar AJCoreGUI.jar\n'
-        'Native installers and Flatpak bundles include Java 21.\n', encoding='utf-8')
+        'appleJuice JavaGUI\nRequires Java 25 for this portable ZIP.\n'
+        'Start: java -jar AJCoreGUI.jar\n'
+        'Native installers and Flatpak bundles include Java 25.\n', encoding='utf-8')
     with zipfile.ZipFile(TARGET / f'{NAME}.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
         for file in sorted(INPUT.rglob('*')):
             if file.is_file():
@@ -149,8 +149,8 @@ def native(args):
     if not sys.platform.startswith(expected):
         raise RuntimeError('jpackage requires a native build host for each OS')
     jpackage = shutil.which('jpackage')
-    if not jpackage or not subprocess.check_output([jpackage, '--version'], text=True).strip().startswith('21'):
-        raise RuntimeError('jpackage from JDK 21 required')
+    if not jpackage or not subprocess.check_output([jpackage, '--version'], text=True).strip().startswith('25'):
+        raise RuntimeError('jpackage from JDK 25 required')
     java = shutil.which('java')
     settings = subprocess.run([java, '-XshowSettings:properties', '-version'],
                               capture_output=True, text=True, check=True)
@@ -178,7 +178,6 @@ def native(args):
         '--description', 'appleJuice JavaGUI', '--input', str(INPUT),
         '--main-jar', f'{NAME}.jar', '--main-class', MAIN,
         '--add-modules', 'java.desktop,java.management,java.naming,java.net.http,java.sql,java.xml,jdk.crypto.ec,jdk.unsupported,jdk.localedata',
-        '--java-options', '--enable-preview',
         '--java-options', '--enable-native-access=ALL-UNNAMED',
         '--dest', str(output),
     ]
