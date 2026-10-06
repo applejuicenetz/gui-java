@@ -10,7 +10,14 @@ import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 import java.util.Properties;
 
@@ -104,7 +111,7 @@ public class PropertyHandler {
         String obj = (String) props.get(identifier);
 
         try {
-            return new Integer(Integer.parseInt(obj));
+            return Integer.parseInt(obj);
         } catch (NumberFormatException nfE) {
             return defaultValue;
         }
@@ -113,42 +120,65 @@ public class PropertyHandler {
     public void reload() throws IllegalArgumentException {
         try {
             props = new Properties();
-            FileInputStream inputStream = null;
+            Properties loaded = new Properties();
 
-            try {
-                inputStream = new FileInputStream(path);
-            } catch (FileNotFoundException e) {
-                throw new IllegalArgumentException("PropertyDatei konnte nicht gefunden werden.");
-
+            try (InputStream inputStream = Files.newInputStream(Path.of(path))) {
+                loaded.load(inputStream);
+            } catch (NoSuchFileException e) {
+                throw new IllegalArgumentException("PropertyDatei konnte nicht gefunden werden.", e);
+            } catch (IOException | IllegalArgumentException e) {
+                throw new IllegalArgumentException("Ungueltige PropertyDatei.", e);
             }
 
-            props = new Properties();
-            try {
-                props.load(inputStream);
-                inputStream.close();
-            } catch (IOException e2) {
-                throw new IllegalArgumentException("Ungueltige PropertyDatei.");
-            }
+            props = loaded;
         } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
+    /**
+     * Schreibt in eine Temp-Datei im Zielverzeichnis und ersetzt die Zieldatei erst danach.
+     * Bei einem Fehler bleibt die letzte gueltige Datei erhalten.
+     */
     public void save() throws IllegalArgumentException {
+        Path target = Path.of(path).toAbsolutePath();
+        Path directory = target.getParent();
+        Path temp = null;
+
         try {
-            File aFile = new File(path);
-
-            try {
-                aFile.createNewFile();
-                FileOutputStream outputStream = new FileOutputStream(aFile);
-
+            Files.createDirectories(directory);
+            temp = Files.createTempFile(directory, target.getFileName().toString(), ".tmp");
+            try (OutputStream outputStream = Files.newOutputStream(temp)) {
                 props.store(outputStream, beschreibung);
-                outputStream.close();
-            } catch (IOException e) {
-                throw new IllegalArgumentException("PropertyDatei konnte nicht gespeichert werden.");
             }
-        } catch (Exception e) {
+            copyPermissions(target, temp);
+            try {
+                Files.move(temp, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+            } catch (AtomicMoveNotSupportedException e) {
+                Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING);
+            }
+            temp = null;
+        } catch (IOException e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            throw new IllegalArgumentException("PropertyDatei konnte nicht gespeichert werden.", e);
+        } finally {
+            if (temp != null) {
+                try {
+                    Files.deleteIfExists(temp);
+                } catch (IOException e) {
+                    logger.warn("Temporaere Datei {} nicht geloescht", temp, e);
+                }
+            }
+        }
+    }
+
+    private static void copyPermissions(Path from, Path to) {
+        try {
+            if (Files.exists(from)) {
+                Files.setPosixFilePermissions(to, Files.getPosixFilePermissions(from));
+            }
+        } catch (UnsupportedOperationException | IOException e) {
+            // Dateisystem ohne POSIX-Rechte: Standardrechte der Temp-Datei bleiben
         }
     }
 

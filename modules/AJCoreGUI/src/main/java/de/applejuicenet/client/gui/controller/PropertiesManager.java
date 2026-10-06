@@ -121,10 +121,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             }
             propertyHandler.save();
         } catch (IllegalArgumentException e) {
-            AppleJuiceDialog.rewriteProperties = true;
+            // Letzte gueltige Datei bleibt erhalten; kein Zuruecksetzen auf Standardwerte
             logger.error(e.getMessage(), e);
-
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
         }
     }
 
@@ -492,7 +490,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         propertyHandler.put("options_loadplugins", settings.shouldLoadPluginsOnStartup());
         propertyHandler.put("options_enableToolTip", settings.isToolTipEnabled());
         propertyHandler.put("options_download_uebersicht", settings.isDownloadUebersicht());
-        propertyHandler.save();
+        saveFile();
         informSettingsListener(settings);
     }
 
