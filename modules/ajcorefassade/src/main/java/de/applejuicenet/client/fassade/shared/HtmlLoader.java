@@ -80,7 +80,7 @@ public abstract class HtmlLoader
                return StringConstants.OK;
             }
 
-            DataInputStream in        = new DataInputStream(socket.getInputStream());
+            DataInputStream in        = new DataInputStream(new BufferedInputStream(socket.getInputStream(), 8192));
             String          inputLine = readLn(in);
 
             if(method == HtmlLoader.GET)
@@ -187,12 +187,12 @@ public abstract class HtmlLoader
 
    private static String readLn(DataInputStream in) throws IOException
    {
-      StringBuilder line   = new StringBuilder();
-      byte[]        toRead = new byte[1];
+      StringBuilder line = new StringBuilder();
+      int           next;
 
-      while(in.read(toRead) != -1 && (char) toRead[0] != '\n')
+      while((next = in.read()) != -1 && next != '\n')
       {
-         line.append((char) toRead[0]);
+         line.append((char) next);
       }
 
       return line.toString().trim();
