@@ -59,12 +59,27 @@
   - Verlauf bleibt bei Größenänderungen erhalten und zeigt Lücken bei
     Verbindungsabbrüchen statt falscher Nullwerte
   - Hintergrund folgt dem GUI-Theme; vorhandene Linienfarben bleiben erhalten
+- [red171] Stabilität und Töne:
+  - Einstellungen werden atomar gespeichert; ein Schreibfehler setzt sie nicht mehr zurück
+  - Tabellen sortieren schneller, Gleichstände behalten ihre Reihenfolge
+  - Teillisten zeigen nach schnellem Wechsel der Auswahl nicht mehr die vorherige Datei
+  - Töne laden im Hintergrund und geben das Audiogerät wieder frei
+  - Soundpacks einheitlich auf 16 Bit / 48 kHz umgestellt
+  - Links öffnen über den Standardbrowser des Systems
 
 ### Technische Änderungen
 
 - [red171] Code und Bibliotheken:
   - Modul `tklcontrols` entfernt; Eingabefelder, Labels und Buttons sind normale Swing-Komponenten
   - Ungültige Eingaben nutzen den FlatLaf-Fehlerrahmen
+  - Ungenutzter Code entfernt (MobileProxy, alter SwingWorker, SecurerXMLHolder u. a.)
+  - Wrapper-Konstruktoren, `URLEncoder`, MD5-Helfer und Plugin-Klassennamen auf aktuelle Java-API
+  - `hashCode` für Upload, Server und Quellen; `Server.equals(null)` korrigiert
+- [red171] Core-Verbindung:
+  - Antworten mit zu kurzem Body, ungültiger Länge oder unvollständigem ZIP führen zu einem Fehler
+  - Header werden gepuffert gelesen
+  - XML-Parser lehnen DOCTYPE und externe Entitäten ab
+  - Kurze Core-Aufrufe der GUI laufen auf virtuellen Threads; Fehler werden auf dem EDT behandelt
 - [red171] SpeedGraph:
   - Zeitbasierter, begrenzter Verlauf und Zeichenlogik ersetzen alte
     pixelabhängige Speicherung und Timer
