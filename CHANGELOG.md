@@ -4,28 +4,14 @@
 
 ### Sichtbare Änderungen
 
-- [red171] Downloads:
-  - Ist nur ein Download aktiv, lädt die Partliste sofort ohne manuellen Klick
-  - Partlisten von Download und Quelle aktualisieren jede Sekunde, solange die Ansicht sichtbar ist
-  - Download-Quellen sind standardmäßig nach Nickname sortiert
 - [red171] Optionen:
   - Zwei Bereiche: „Core-Einstellungen“ (gehen an den Core) und „JavaGUI-Einstellungen“ (nur lokal)
   - Neu: „Tabellenbreiten merken“, „IP in Statusanzeige maskieren“, Upload/Download wahlweise in kb/s oder MB/s
-  - Entfernt: Hintergrundfarben, Menüpunkt „VLC“ und Option „Programm“
-  - Öffnen per Cmd+, (macOS) bzw. Strg+, (Windows/Linux)
-- [red171] Einstellungen und Core:
-  - Unlesbare Einstellungen werden nur nach Rückfrage und Sicherung (`ajgui.properties.bak`) zurückgesetzt
-  - Einstellungen werden atomar gespeichert; ein ungültiger Wert beendet die GUI nicht mehr
-  - Fehlerhafte Core-Updates lassen den letzten gültigen Transferzustand erhalten
-  - „Suchen“ und „Verbinden“ lassen die Oberfläche bei langsamem Core nicht mehr hängen
-  - Der Verbindungswizard liest seine Vorgaben aus der `presets.json`
 - [red171] „Mein Share“: Dateiliste als `ajfsp`-Links oder AJL kopieren, A-Z/Z-A-Sortierung, HTML-Export entfernt
 - [red171] Bedienung:
   - „Öffnen mit Standardprogramm“ ist bei Remote-Core ausgegraut
   - Ungültige Eingaben werden mit rotem Rahmen markiert
-  - „Update prüfen“ meldet auch „keine neuere Version“ und Fehler
-  - Texte und Sprachwechsel in Plugins und Dialogen vervollständigt
-  - Töne laden im Hintergrund; Soundpacks einheitlich auf 16 Bit / 48 kHz
+  - Diverse Layout-Korrekturen
 - [red171] Plugins:
   - Neu: „Share-Treemap“ mit Ordner-Zoom, Dateitypfarben und Upload-Heatmap
   - JavaGUI Memory Monitor: neue Darstellung mit Verlauf der letzten 2 Minuten
@@ -35,10 +21,8 @@
 
 ### Technische Änderungen
 
-- [red171] Modul `tklcontrols` entfernt; normale Swing-Komponenten mit FlatLaf-Fehlerrahmen
 - [red171] Ungenutzten Code und veraltete Java-API-Aufrufe entfernt
-- [red171] Core-Verbindung: geprüfte Antworten, XML-Parser ohne DOCTYPE und externe Entitäten,
-  kurze Aufrufe auf virtuellen Threads, haengende Abrufe blockieren nichts mehr
+- [red171] Core-Verbindung: geprüfte Antworten, kurze Aufrufe auf virtuellen Threads, haengende Abrufe blockieren nichts mehr
 - [red171] Tabellen sortieren schneller und stabil
 
 ## 0.86.3
