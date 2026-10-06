@@ -421,7 +421,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
     }
 
     protected void uebernehmeLink() {
-        if (linkPane.getTxtDownloadLink().isInvalid()) {
+        if (linkPane.isLinkInvalid()) {
             return;
         }
 

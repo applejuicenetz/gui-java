@@ -4,7 +4,6 @@
 
 package de.applejuicenet.client.gui.wizard;
 
-import de.tklsoft.gui.controls.TKLComboBox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +22,7 @@ public class Schritt4Panel extends WizardPanel
 {
    private JTextArea label1         = new JTextArea();
    private JTextArea label2         = new JTextArea();
-   private TKLComboBox verbindungsart = new TKLComboBox();
+   private JComboBox verbindungsart = new JComboBox();
 
    public Schritt4Panel()
    {
@@ -52,8 +51,6 @@ public class Schritt4Panel extends WizardPanel
          verbindungsart.setSelectedIndex(0);
       }
 
-      verbindungsart.ignoreInvalidRules(false);
-
       setLayout(new GridBagLayout());
       GridBagConstraints constraints = new GridBagConstraints();
 
@@ -79,8 +76,6 @@ public class Schritt4Panel extends WizardPanel
       constraints.weighty = 1;
       constraints.gridy   = 3;
       add(new JLabel(), constraints);
-
-      verbindungsart.confirmNewValue();
    }
 
    public ConnectionKind getVerbindungsart()

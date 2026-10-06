@@ -11,7 +11,6 @@ import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
-import de.tklsoft.gui.controls.TKLTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +35,7 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
 {
    private SearchResultTabbedPane resultPanel        = new SearchResultTabbedPane();
    private JButton              btnStartStopSearch = new JButton();
-   private TKLTextField           suchbegriff        = new TKLTextField();
+   private JTextField           suchbegriff        = new JTextField();
    private JLabel               suchen             = new JLabel();
    private JLabel               bearbeitung        = new JLabel();
    private JMenuItem              einfuegen;
@@ -62,7 +61,7 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
       return btnStartStopSearch;
    }
 
-   public TKLTextField getSuchbegriffTxt()
+   public JTextField getSuchbegriffTxt()
    {
       return suchbegriff;
    }
@@ -150,7 +149,6 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
                }
             }
          });
-      suchbegriff.disableDirtyComponent(true);
    }
 
    private void showLinkMenu(int x, int y)

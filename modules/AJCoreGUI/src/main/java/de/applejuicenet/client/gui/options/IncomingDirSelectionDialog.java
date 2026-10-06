@@ -7,7 +7,6 @@ package de.applejuicenet.client.gui.options;
 import de.applejuicenet.client.gui.DialogLocation;
 
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.tklsoft.gui.controls.TKLComboBox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +26,7 @@ public class IncomingDirSelectionDialog extends JDialog
 {
    private String[]    selectionValues;
    private JButton   schliessen        = new JButton();
-   private TKLComboBox incomingDirs      = new TKLComboBox();
+   private JComboBox incomingDirs      = new JComboBox();
    private boolean     somethingSelected = false;
 
    public IncomingDirSelectionDialog(JFrame parentDialog, String[] selectionValues, String selected)
@@ -92,8 +91,6 @@ public class IncomingDirSelectionDialog extends JDialog
       {
          incomingDirs.setSelectedItem(selected);
       }
-
-      incomingDirs.confirmNewValue();
       JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
       panel1.add(label1);
@@ -105,6 +102,7 @@ public class IncomingDirSelectionDialog extends JDialog
       getContentPane().add(panel1, BorderLayout.NORTH);
       getContentPane().add(southPanel, BorderLayout.SOUTH);
       pack();
+      setResizable(false);
       DialogLocation.center(this);
    }
 

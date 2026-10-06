@@ -10,7 +10,6 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
-import de.tklsoft.gui.controls.TKLTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +36,8 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
    private JLabel                        label1;
    private JLabel                        label3;
    private JLabel                        label4;
-   private TKLTextField                  host                          = new TKLTextField();
-   private TKLTextField                  port                          = new TKLTextField();
+   private JTextField                  host                          = new JTextField();
+   private JTextField                  port                          = new JTextField();
    private JPasswordField                passwortNeu                   = new JPasswordField();
    private ConnectionSettings            remote;
    private boolean                       showPort                      = false;
@@ -157,9 +156,6 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
       {
          label3.setText(languageSelector.getFirstAttrbuteByTagName("einstform.pwsheet.caption"));
       }
-
-      host.confirmNewValue();
-      port.confirmNewValue();
    }
 
    public void setFocusOnPassword()

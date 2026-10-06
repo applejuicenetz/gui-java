@@ -5,9 +5,6 @@
 package de.applejuicenet.client.gui.wizard;
 
 import de.applejuicenet.client.fassade.shared.AJSettings;
-import de.tklsoft.gui.controls.InvalidRule;
-import de.tklsoft.gui.controls.ModifyableComponent;
-import de.tklsoft.gui.controls.TKLTextField;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +24,7 @@ import java.awt.event.KeyEvent;
 public class Schritt3Panel extends WizardPanel
 {
    private JTextArea  erlaeuterung = new JTextArea();
-   private TKLTextField nickname = new TKLTextField();
+   private JTextField nickname = new JTextField();
    private WizardDialog parent;
 
    public Schritt3Panel(WizardDialog parent, AJSettings settings)
@@ -55,20 +52,11 @@ public class Schritt3Panel extends WizardPanel
       erlaeuterung.setEditable(false);
       nickname.setColumns(20);
 
-      InvalidRule rule = new InvalidRule()
-      {
-         public boolean isInvalid(ModifyableComponent component)
-         {
-            return (nickname.getText().toLowerCase().startsWith("nonick") || nickname.getText().length() == 0) ? true : false;
-         }
-      };
-
-      nickname.addInvalidRule(rule);
-
       nickname.addKeyListener(new KeyAdapter()
          {
             public void keyReleased(KeyEvent e)
             {
+               markNickname();
                if(isValidNickname())
                {
                   parent.setWeiterEnabled(true);
@@ -79,7 +67,6 @@ public class Schritt3Panel extends WizardPanel
                }
             }
          });
-      nickname.ignoreInvalidRules(false);
 
       setLayout(new GridBagLayout());
       GridBagConstraints constraints = new GridBagConstraints();
@@ -105,12 +92,19 @@ public class Schritt3Panel extends WizardPanel
       constraints.weighty = 1;
       add(new JLabel(), constraints);
 
-      nickname.confirmNewValue();
+      markNickname();
    }
 
    public boolean isValidNickname()
    {
-      return !nickname.isInvalid();
+      String text = nickname.getText();
+
+      return !(text.toLowerCase().startsWith("nonick") || text.length() == 0);
+   }
+
+   private void markNickname()
+   {
+      nickname.putClientProperty("JComponent.outline", isValidNickname() ? null : "error");
    }
 
    public void fireLanguageChanged()

@@ -10,7 +10,6 @@ import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.tklsoft.gui.controls.TKLComboBox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +33,7 @@ public class RenameDownloadDialog extends JDialog
 {
    private Download    download;
    private JButton     schliessen        = new JButton();
-   private TKLComboBox possibleNames     = new TKLComboBox();
+   private JComboBox possibleNames     = new JComboBox();
    private boolean     somethingSelected = false;
 
    public RenameDownloadDialog(JFrame parentDialog, Download selectedDownload)
@@ -102,7 +101,6 @@ public class RenameDownloadDialog extends JDialog
          });
       possibleNames.getEditor().getEditorComponent().addKeyListener(disposeKeyAdapter);
       possibleNames.addKeyListener(disposeKeyAdapter);
-      possibleNames.confirmNewValue();
       JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
       panel1.add(label1);
@@ -114,6 +112,7 @@ public class RenameDownloadDialog extends JDialog
       getContentPane().add(panel1, BorderLayout.NORTH);
       getContentPane().add(southPanel, BorderLayout.SOUTH);
       pack();
+      setResizable(false);
       DialogLocation.center(this);
 
       addKeyListener(disposeKeyAdapter);

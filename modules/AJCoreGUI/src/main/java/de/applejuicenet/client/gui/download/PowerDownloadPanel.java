@@ -17,7 +17,6 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.PolicyJarClassLoader;
-import de.tklsoft.gui.controls.TKLTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,9 +52,9 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
     private JLabel btnPdlUp;
     private JLabel btnPdlDown;
     private float ratioWert = 2.2f;
-    public TKLTextField ratio = new TKLTextField("2.2");
-    private TKLTextField autoAb = new TKLTextField();
-    private TKLTextField autoBis = new TKLTextField();
+    public JTextField ratio = new JTextField("2.2");
+    private JTextField autoAb = new JTextField();
+    private JTextField autoBis = new JTextField();
     private JButton btnPdl = new JButton();
     private JButton btnAutoPdl = new JButton();
     private JLabel powerdownload = new JLabel();
@@ -89,9 +88,6 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
     }
 
     private void init() throws Exception {
-        ratio.disableDirtyComponent(true);
-        autoAb.disableDirtyComponent(true);
-        autoBis.disableDirtyComponent(true);
         setLayout(new BorderLayout());
         LanguageSelector.getInstance().addLanguageListener(this);
         backPanel.setLayout(new GridBagLayout());

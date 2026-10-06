@@ -15,7 +15,6 @@ import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.download.table.*;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.tablecellrenderer.*;
-import de.tklsoft.gui.controls.TKLTextField;
 import org.slf4j.Logger;
 
 import javax.swing.*;
@@ -136,7 +135,7 @@ public class DownloadPanel extends TklPanel {
         return powerDownloadPanel.btnAktiv;
     }
 
-    public TKLTextField getRatioField() {
+    public JTextField getRatioField() {
         return powerDownloadPanel.ratio;
     }
 

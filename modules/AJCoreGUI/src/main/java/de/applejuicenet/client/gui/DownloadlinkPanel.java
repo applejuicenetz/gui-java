@@ -7,10 +7,6 @@ package de.applejuicenet.client.gui;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.tklsoft.gui.controls.InvalidRule;
-import de.tklsoft.gui.controls.StatusHolder.STATUSFLAG;
-import de.tklsoft.gui.controls.TKLComboBox;
-import de.tklsoft.gui.controls.TKLTextField;
 
 import javax.swing.*;
 import java.awt.GridBagConstraints;
@@ -24,10 +20,11 @@ import java.io.File;
 public class DownloadlinkPanel extends JPanel implements LanguageListener
 {
    private JLabel       lblLink          = new JLabel();
-   private TKLTextField txtDownloadLink  = new TKLTextField();
+   private JTextField txtDownloadLink  = new JTextField();
    private JButton      btnStartDownload = new JButton();
-   private TKLComboBox  cmbTargetDir     = new TKLComboBox();
+   private JComboBox  cmbTargetDir     = new JComboBox();
    private JLabel       lblTargetDir     = new JLabel();
+   private java.util.function.Predicate<String> linkRule;
 
    public DownloadlinkPanel()
    {
@@ -43,8 +40,8 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
       };
 
       txtDownloadLink.addKeyListener(keyListener);
-      InvalidRule downloadloadlinkRule = component -> {
-         String text = ((TKLTextField) component).getText().replace("%7C", "|").trim().toLowerCase();
+      linkRule = raw -> {
+         String text = raw.replace("%7C", "|").trim().toLowerCase();
 
          if(text.startsWith("web+ajfsp://"))
          {
@@ -94,14 +91,14 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
          return false;
       };
 
-      txtDownloadLink.ignoreStatus(STATUSFLAG.MODIFIED, true);
-      txtDownloadLink.addInvalidRule(downloadloadlinkRule);
-      txtDownloadLink.ignoreInvalidRules(false);
+      txtDownloadLink.getDocument().addDocumentListener(new javax.swing.event.DocumentListener()
+      {
+         public void insertUpdate(javax.swing.event.DocumentEvent e) { markInvalid(); }
+         public void removeUpdate(javax.swing.event.DocumentEvent e) { markInvalid(); }
+         public void changedUpdate(javax.swing.event.DocumentEvent e) { markInvalid(); }
+      });
 
-      cmbTargetDir.ignoreStatus(STATUSFLAG.MODIFIED, true);
-      InvalidRule targetDirRule = component -> {
-         Object obj = ((TKLComboBox) component).getSelectedItem();
-
+      java.util.function.Predicate<Object> targetDirRule = obj -> {
          if(obj == null)
          {
             return false;
@@ -113,7 +110,8 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
                  subdir.contains("..") || subdir.contains(":");
       };
 
-      cmbTargetDir.addInvalidRule(targetDirRule);
+      cmbTargetDir.addItemListener(e -> cmbTargetDir.putClientProperty("JComponent.outline",
+         targetDirRule.test(cmbTargetDir.getSelectedItem()) ? "error" : null));
       setLayout(new GridBagLayout());
       GridBagConstraints constraints = new GridBagConstraints();
 
@@ -128,7 +126,17 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
       fireLanguageChanged();
    }
 
-   public TKLTextField getTxtDownloadLink()
+   private void markInvalid()
+   {
+      txtDownloadLink.putClientProperty("JComponent.outline", isLinkInvalid() ? "error" : null);
+   }
+
+   public boolean isLinkInvalid()
+   {
+      return linkRule.test(txtDownloadLink.getText());
+   }
+
+   public JTextField getTxtDownloadLink()
    {
       return txtDownloadLink;
    }
@@ -138,7 +146,7 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
       return btnStartDownload;
    }
 
-   public TKLComboBox getCmbTargetDir()
+   public JComboBox getCmbTargetDir()
    {
       return cmbTargetDir;
    }

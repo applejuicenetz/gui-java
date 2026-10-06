@@ -18,8 +18,6 @@ import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.NumberInputVerifier;
-import de.tklsoft.gui.controls.TKLComboBox;
-import de.tklsoft.gui.controls.TKLTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,12 +47,12 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
     private JLabel label6 = new JLabel();
     private JLabel openTemp;
     private JLabel openIncoming;
-    private TKLTextField temp = new TKLTextField();
-    private TKLTextField incoming = new TKLTextField();
-    private TKLTextField port = new TKLTextField();
-    private TKLTextField xmlPort = new TKLTextField();
-    private TKLTextField nick = new TKLTextField();
-    private TKLTextField browser = new TKLTextField();
+    private JTextField temp = new JTextField();
+    private JTextField incoming = new JTextField();
+    private JTextField port = new JTextField();
+    private JTextField xmlPort = new JTextField();
+    private JTextField nick = new JTextField();
+    private JTextField browser = new JTextField();
     private JLabel hint1;
     private JLabel hint2;
     private JLabel hint3;
@@ -63,7 +61,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
     private JLabel hint6;
     private JDialog parent;
     private AJSettings ajSettings;
-    private TKLComboBox cmbLog;
+    private JComboBox cmbLog;
     private JCheckBox updateNotification = new JCheckBox();
     private JCheckBox loadPlugins = new JCheckBox();
     private ConnectionSettings remote;
@@ -125,7 +123,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         levelItems[3] = new LevelItem("DEBUG", "Debug");
         levelItems[4] = new LevelItem("OFF", "Off");
         menuText = languageSelector.getFirstAttrbuteByTagName("einstform.standardsheet.caption");
-        cmbLog = new TKLComboBox(levelItems);
+        cmbLog = new JComboBox(levelItems);
         cmbLog.addItemListener(e -> dirty = true);
 
         int index;
@@ -278,13 +276,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         panel6.add(panel11, constraints);
 
         add(panel6, BorderLayout.NORTH);
-
-        temp.confirmNewValue();
-        incoming.confirmNewValue();
-        port.confirmNewValue();
-        xmlPort.confirmNewValue();
-        nick.confirmNewValue();
-        cmbLog.confirmNewValue();
     }
 
     public boolean isXmlPortDirty() {
@@ -402,11 +393,9 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
 
                 if (source == openTemp) {
                     temp.setText(path);
-                    temp.fireCheckRules();
                     ajSettings.setTempDir(path);
                 } else {
                     incoming.setText(path);
-                    incoming.fireCheckRules();
                     ajSettings.setIncomingDir(path);
                 }
             }

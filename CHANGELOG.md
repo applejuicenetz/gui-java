@@ -18,6 +18,8 @@
   - Neue Option „IP in Statusanzeige maskieren“ (Standard an); Tooltip zeigt die volle IP
   - „Öffnen mit Standardprogramm“ ist bei Remote-Core ausgegraut und erklärt warum
   - Optionen lassen sich per Cmd+, (macOS) bzw. Strg+, (Windows/Linux) öffnen
+  - Ungültige Eingaben (Download-Link, Nickname im Assistenten, Zielverzeichnis) werden mit rotem
+    Rahmen markiert; die blaue „geändert“-Markierung der Eingabefelder entfällt
   - Neues Info-Symbol für „Über“ im Iconset „modern“
   - Log Viewer, SpeedGraph, Version Checker und Share-Treemap zeigen deutsche
     und englische Texte und übernehmen Sprachwechsel auch in offenen Ansichten

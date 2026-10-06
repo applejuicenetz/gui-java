@@ -19,7 +19,6 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.download.DownloadPropertyChangeListener;
 import de.applejuicenet.client.gui.search.table.SearchEntryIconRenderer;
 import de.applejuicenet.client.shared.SoundPlayer;
-import de.tklsoft.gui.controls.TKLTextField;
 
 import javax.swing.*;
 import java.awt.*;
@@ -93,7 +92,7 @@ public class SearchController extends GuiController
 
    private void startStop()
    {
-      TKLTextField suchbegriff = searchPanel.getSuchbegriffTxt();
+      JTextField suchbegriff = searchPanel.getSuchbegriffTxt();
       String       suchText = suchbegriff.getText();
 
       if(suchText.length() != 0)

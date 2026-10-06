@@ -16,7 +16,6 @@ import de.applejuicenet.client.gui.share.table.ShareTableModel;
 import de.applejuicenet.client.gui.share.tree.DirectoryTree;
 import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeCellRenderer;
 import de.applejuicenet.client.shared.IconManager;
-import de.tklsoft.gui.controls.TKLComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +46,7 @@ public class SharePanel extends TklPanel {
     private JButton refresh = new JButton();
     private JButton prioritaetSetzen = new JButton();
     private JButton prioritaetAufheben = new JButton();
-    private TKLComboBox cmbPrio = new TKLComboBox();
+    private JComboBox cmbPrio = new JComboBox();
     private AJSettings ajSettings;
     private ShareTable shareTable;
     private ShareTableModel shareModel;
@@ -144,7 +143,7 @@ public class SharePanel extends TklPanel {
         return dateien;
     }
 
-    public TKLComboBox getCmbPrioritaet() {
+    public JComboBox getCmbPrioritaet() {
         return cmbPrio;
     }
 
@@ -271,8 +270,6 @@ public class SharePanel extends TklPanel {
         splitPane.setRightComponent(panelCenter);
         splitPane.setBorder(null);
         add(splitPane, BorderLayout.CENTER);
-
-        cmbPrio.disableDirtyComponent(true);
     }
 
     public int[] getColumnWidths() {

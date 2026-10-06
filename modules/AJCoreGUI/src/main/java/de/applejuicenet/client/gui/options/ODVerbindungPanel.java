@@ -10,7 +10,6 @@ import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
-import de.tklsoft.gui.controls.TKLTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,12 +41,12 @@ public class ODVerbindungPanel extends JPanel implements OptionsRegister {
     private JLabel label6;
     private JLabel kbSlot;
     private JCheckBox automaticConnect;
-    private TKLTextField maxSourcesPerFile = new TKLTextField();
-    private TKLTextField maxVerbindungen = new TKLTextField();
-    private TKLTextField maxUpload = new TKLTextField();
-    private TKLTextField maxDownload = new TKLTextField();
+    private JTextField maxSourcesPerFile = new JTextField();
+    private JTextField maxVerbindungen = new JTextField();
+    private JTextField maxUpload = new JTextField();
+    private JTextField maxDownload = new JTextField();
     private JSlider kbSlider;
-    private TKLTextField maxVerbindungenProTurn = new TKLTextField();
+    private JTextField maxVerbindungenProTurn = new JTextField();
     private AJSettings ajSettings;
     private Icon menuIcon;
     private String menuText;
@@ -234,12 +233,6 @@ public class ODVerbindungPanel extends JPanel implements OptionsRegister {
         add(panel1, BorderLayout.NORTH);
 
         reloadSettings();
-
-        maxSourcesPerFile.confirmNewValue();
-        maxVerbindungen.confirmNewValue();
-        maxUpload.confirmNewValue();
-        maxDownload.confirmNewValue();
-        maxVerbindungenProTurn.confirmNewValue();
     }
 
     public Icon getIcon() {

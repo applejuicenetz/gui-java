@@ -14,7 +14,6 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.Settings;
-import de.tklsoft.gui.controls.TKLTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +47,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
     private Icon menuIcon;
     private String menuText;
     private boolean dirty = false;
-    private TKLTextField openProgram = new TKLTextField();
+    private JTextField openProgram = new JTextField();
     private JLabel program = new JLabel("VLC ");
     private Border emptyBorder = BorderFactory.createEmptyBorder(1, 1, 1, 1);
 
@@ -136,7 +135,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
 
         openProgram.setEditable(false);
         openProgram.setText(om.getOpenProgram());
-        openProgram.ignoreInvalidRules(false);
         Icon icon2 = im.getIcon("folderopen");
         Icon icon3 = im.getIcon("vlc");
 
@@ -173,7 +171,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
                     if (browserFile.isFile()) {
                         openProgram.setText(browserFile.getPath());
                         dirty = true;
-                        openProgram.fireCheckRules();
                     }
                 }
             }

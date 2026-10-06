@@ -80,6 +80,7 @@ public class NewServerDialog extends JDialog {
         panel1.add(ok);
         getContentPane().add(panel1, BorderLayout.SOUTH);
         pack();
+        setResizable(false);
         port.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_ENTER) {

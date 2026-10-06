@@ -202,6 +202,7 @@ public class QuickConnectionSettingsDialog extends JDialog
             }
          });
       pack();
+      setResizable(false);
       DialogLocation.center(this);
       remotePanel.setFocusOnPassword();
    }

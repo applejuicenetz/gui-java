@@ -101,6 +101,7 @@ public class OptionsDialog extends JDialog
       getContentPane().add(panel, BorderLayout.SOUTH);
       getContentPane().add(new JScrollPane(menuList), BorderLayout.WEST);
       pack();
+      setResizable(false);
 
    }
 
