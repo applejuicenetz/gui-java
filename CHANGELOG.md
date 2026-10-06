@@ -62,6 +62,9 @@
 
 ### Technische Änderungen
 
+- [red171] Code und Bibliotheken:
+  - Modul `tklcontrols` entfernt; Eingabefelder, Labels und Buttons sind normale Swing-Komponenten
+  - Ungültige Eingaben nutzen den FlatLaf-Fehlerrahmen
 - [red171] SpeedGraph:
   - Zeitbasierter, begrenzter Verlauf und Zeichenlogik ersetzen alte
     pixelabhängige Speicherung und Timer

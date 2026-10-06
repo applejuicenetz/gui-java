@@ -12,7 +12,6 @@
 
     <modules>
         <module>modules/ajcorefassade</module>
-        <module>modules/tklcontrols</module>
         <module>modules/AJCoreGUI</module>
         <module>modules/logviewer</module>
         <module>modules/versionchecker</module>
