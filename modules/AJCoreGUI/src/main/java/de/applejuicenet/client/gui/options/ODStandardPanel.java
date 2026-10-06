@@ -4,16 +4,12 @@
 
 package de.applejuicenet.client.gui.options;
 
-import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.gui.DialogLocation;
 
-import ch.qos.logback.classic.Level;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.controller.OptionsManager;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
@@ -57,13 +53,9 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
     private JLabel hint2;
     private JLabel hint3;
     private JLabel hint4;
-    private JLabel hint5;
     private JLabel hint6;
     private JDialog parent;
     private AJSettings ajSettings;
-    private JComboBox cmbLog;
-    private JCheckBox updateNotification = new JCheckBox();
-    private JCheckBox loadPlugins = new JCheckBox();
     private ConnectionSettings remote;
     private Icon menuIcon;
     private String menuText;
@@ -84,20 +76,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         return dirty;
     }
 
-    public String getLogLevel() {
-        return cmbLog.getSelectedItem().toString();
-    }
-
-    public boolean getUpdateInfo() {
-        return updateNotification.isSelected();
-    }
-
-    public boolean shouldLoadPluginsOnStartup() {
-        return loadPlugins.isSelected();
-    }
-
     private void init() {
-        OptionsManager optionsManager = OptionsManagerImpl.getInstance();
         IconManager im = IconManager.getInstance();
 
         menuIcon = im.getIcon("opt_standard");
@@ -109,47 +88,8 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         xmlPort.addFocusListener(new XmlPortFocusListener());
         nick.addFocusListener(new NickFocusListener());
 
-        JPanel panel8 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-
-        panel8.add(GuiText.label("javagui.options.logging"));
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        Level logLevel = optionsManager.getLogLevel();
-
-        LevelItem[] levelItems = new LevelItem[5]; // {"Info", "Warn", "Error", "Debug", "Off"};
-
-        levelItems[0] = new LevelItem("INFO", "Info");
-        levelItems[1] = new LevelItem("WARN", "Warn");
-        levelItems[2] = new LevelItem("ERROR", "Error");
-        levelItems[3] = new LevelItem("DEBUG", "Debug");
-        levelItems[4] = new LevelItem("OFF", "Off");
         menuText = languageSelector.getFirstAttrbuteByTagName("einstform.standardsheet.caption");
-        cmbLog = new JComboBox(levelItems);
-        cmbLog.addItemListener(e -> dirty = true);
-
-        int index;
-
-        if(logLevel == Level.INFO) {
-            index = 0;
-        }else  if (logLevel == Level.WARN) {
-            index = 1;
-        }else  if (logLevel == Level.ERROR) {
-            index = 2;
-        }else  if (logLevel == Level.DEBUG) {
-            index = 3;
-        }else  if (logLevel == Level.OFF) {
-            index = 4;
-        }else{
-            index = 0;
-        }
-
-        cmbLog.setSelectedIndex(index);
-
-        panel8.add(cmbLog);
-
-        updateNotification.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.updateinfotext"));
-        updateNotification.setSelected(optionsManager.getUpdateInfo());
-        updateNotification.addItemListener(e -> dirty = true);
-
         setLayout(new BorderLayout());
         port.setHorizontalAlignment(JLabel.RIGHT);
         xmlPort.setHorizontalAlignment(JLabel.RIGHT);
@@ -161,9 +101,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         label3.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Label3.caption"));
         label4.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Label8.caption"));
         label6.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.xmlport"));
-        loadPlugins.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.ladeplugins"));
-
-        loadPlugins.setSelected(optionsManager.shouldLoadPluginsOnStartup());
 
         ImageIcon icon = im.getIcon("hint");
 
@@ -171,13 +108,11 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         hint2 = new HintLabel(icon);
         hint3 = new HintLabel(icon);
         hint4 = new HintLabel(icon);
-        hint5 = new HintLabel(icon);
         hint6 = new HintLabel(icon);
         hint1.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.ttipp_temp"));
         hint2.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.ttipp_port"));
         hint3.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.ttipp_nick"));
         hint4.setToolTipText(languageSelector.getFirstAttrbuteByTagName("einstform.Label1.caption"));
-        hint5.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.options.logging.ttip"));
         hint6.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.ttipp_xmlport"));
 
         Icon icon2 = im.getIcon("folderopen");
@@ -189,8 +124,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         openIncoming = new JLabel(icon2);
         openIncoming.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         openIncoming.addMouseListener(dcMouseAdapter);
-
-        loadPlugins.addChangeListener(e -> dirty = true);
 
         GridBagConstraints constraints = new GridBagConstraints();
 
@@ -206,11 +139,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         JPanel panel4 = new JPanel(new GridBagLayout());
         JPanel panel7 = new JPanel(new GridBagLayout());
         JPanel panel10 = new JPanel(new GridBagLayout());
-        JPanel panel9 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JPanel panel11 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-
-        panel9.add(updateNotification);
-        panel11.add(loadPlugins);
 
         constraints.insets.right = 5;
         constraints.insets.left = 4;
@@ -261,19 +189,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         constraints.gridy = 4;
         panel6.add(hint3, constraints);
 
-        constraints.gridy = 6;
-        constraints.gridx = 0;
-        constraints.gridwidth = 1;
-        panel6.add(panel8, constraints);
-        constraints.gridx = 1;
-        panel6.add(hint5, constraints);
-        constraints.gridy = 7;
-        constraints.gridx = 0;
-        constraints.gridwidth = 5;
-        panel6.add(panel9, constraints);
-        constraints.gridy = 8;
-        constraints.gridx = 0;
-        panel6.add(panel11, constraints);
 
         add(panel6, BorderLayout.NORTH);
     }
@@ -405,24 +320,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
             JLabel source = (JLabel) e.getSource();
 
             source.setBorder(null);
-        }
-    }
-
-    static class LevelItem {
-        private final String level;
-        private final String bezeichnung;
-
-        public LevelItem(String level, String bezeichnung) {
-            this.level = level;
-            this.bezeichnung = bezeichnung;
-        }
-
-        public String getLevel() {
-            return level;
-        }
-
-        public String toString() {
-            return bezeichnung;
         }
     }
 }

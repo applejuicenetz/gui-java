@@ -38,7 +38,14 @@ public class OptionsDialog extends JDialog
    private JButton            abbrechen;
    private AJSettings         ajSettings;
    private ConnectionSettings remote;
-   private JList              menuList;
+   private JList<Object>          menuList;
+   private ODStandardPanel    standardPanel;
+   private ODVerbindungPanel  verbindungPanel;
+   private ODConnectionPanel  connectionPanel;
+   private ODAllgemeinPanel   allgemeinPanel;
+   private ODProxyPanel       proxyPanel;
+   private ODAnsichtPanel     ansichtPanel;
+   private ODPluginPanel      pluginPanel;
    private OptionsRegister[]  optionPanels;
    private CardLayout         registerLayout = new CardLayout();
    private JPanel             registerPanel  = new JPanel(registerLayout);
@@ -65,26 +72,67 @@ public class OptionsDialog extends JDialog
       remote = OptionsManagerImpl.getInstance().getRemoteSettings();
 
       setTitle(languageSelector.getFirstAttrbuteByTagName("einstform.caption"));
-      optionPanels = new OptionsRegister[]
-                     {
-                        new ODStandardPanel(this, ajSettings, remote), new ODVerbindungPanel(this, ajSettings),
-                        new ODConnectionPanel(remote, null), new ODProxyPanel(), new ODAnsichtPanel(), new ODPluginPanel(this)
-                     };
+      standardPanel   = new ODStandardPanel(this, ajSettings, remote);
+      verbindungPanel = new ODVerbindungPanel(this, ajSettings);
+      connectionPanel = new ODConnectionPanel(remote, null);
+      allgemeinPanel  = new ODAllgemeinPanel();
+      proxyPanel      = new ODProxyPanel();
+      ansichtPanel    = new ODAnsichtPanel();
+      pluginPanel     = new ODPluginPanel(this);
 
-      menuList = new JList(optionPanels);
+      // Abschnitt 1: Einstellungen, die an den Core gehen
+      OptionsRegister[] coreSection = {standardPanel, verbindungPanel, connectionPanel};
+      // Abschnitt 2: Einstellungen, die nur das JavaGUI betreffen
+      OptionsRegister[] guiSection = {allgemeinPanel, ansichtPanel, proxyPanel, pluginPanel};
+
+      DefaultListModel<Object> model = new DefaultListModel<>();
+
+      model.addElement(new SectionHeader(languageSelector.getFirstAttrbuteByTagName("javagui.options.section.core")));
+      for(OptionsRegister r : coreSection)
+      {
+         model.addElement(r);
+      }
+
+      model.addElement(new SectionHeader(languageSelector.getFirstAttrbuteByTagName("javagui.options.section.gui")));
+      for(OptionsRegister r : guiSection)
+      {
+         model.addElement(r);
+      }
+
+      optionPanels = new OptionsRegister[coreSection.length + guiSection.length];
+      System.arraycopy(coreSection, 0, optionPanels, 0, coreSection.length);
+      System.arraycopy(guiSection, 0, optionPanels, coreSection.length, guiSection.length);
+
+      menuList = new JList<>(model);
       menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       menuList.setCellRenderer(new MenuListCellRenderer());
-      for(int i = 0; i < optionPanels.length; i++)
+      for(OptionsRegister r : optionPanels)
       {
-         registerPanel.add(optionPanels[i].getMenuText(), (JPanel) optionPanels[i]);
+         registerPanel.add(r.getMenuText(), (JPanel) r);
       }
 
       menuList.addListSelectionListener(listSelectionEvent -> {
          Object selected = menuList.getSelectedValue();
 
-         registerLayout.show(registerPanel, ((OptionsRegister) selected).getMenuText());
+         if(selected instanceof OptionsRegister)
+         {
+            registerLayout.show(registerPanel, ((OptionsRegister) selected).getMenuText());
+         }
       });
-      menuList.setSelectedValue(optionPanels[0], true);
+      // Ueberschriften nicht auswaehlbar
+      menuList.setSelectionModel(new DefaultListSelectionModel()
+         {
+            @Override
+            public void setSelectionInterval(int index0, int index1)
+            {
+               if(index0 >= 0 && model.get(index0) instanceof OptionsRegister)
+               {
+                  super.setSelectionInterval(index0, index1);
+               }
+            }
+         });
+      menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      menuList.setSelectedValue(standardPanel, true);
       speichern = new JButton(languageSelector.getFirstAttrbuteByTagName("einstform.Button1.caption"));
       abbrechen = new JButton(languageSelector.getFirstAttrbuteByTagName("einstform.Button2.caption"));
       abbrechen.addActionListener(e -> dispose());
@@ -112,26 +160,35 @@ public class OptionsDialog extends JDialog
          OptionsManager om             = OptionsManagerImpl.getInstance();
          boolean        etwasGeaendert = false;
 
-         if(((ODAnsichtPanel) optionPanels[4]).isDirty())
+         // JavaGUI-Einstellungen
+         if(ansichtPanel.isDirty())
          {
-            etwasGeaendert = ((ODAnsichtPanel) optionPanels[4]).save();
+            ansichtPanel.save();
             etwasGeaendert = true;
          }
 
-         if(((ODStandardPanel) optionPanels[0]).isDirty() || ((ODVerbindungPanel) optionPanels[1]).isDirty())
+         if(allgemeinPanel.isDirty())
+         {
+            om.loadPluginsOnStartup(allgemeinPanel.shouldLoadPluginsOnStartup());
+            om.setUpdateInfo(allgemeinPanel.getUpdateInfo());
+            om.setLogLevel(allgemeinPanel.getLogLevel());
+            etwasGeaendert = true;
+         }
+
+         if(proxyPanel.isDirty())
+         {
+            ProxyManagerImpl.getInstance().saveProxySettings(proxyPanel.getProxySettings());
+            etwasGeaendert = true;
+         }
+
+         // Core-Einstellungen
+         if(standardPanel.isDirty() || verbindungPanel.isDirty())
          {
             om.saveAJSettings(ajSettings);
-            om.loadPluginsOnStartup(((ODStandardPanel) optionPanels[0]).shouldLoadPluginsOnStartup());
-            om.setUpdateInfo(((ODStandardPanel) optionPanels[0]).getUpdateInfo());
-            if(((ODStandardPanel) optionPanels[0]).isDirty())
-            {
-               om.setLogLevel(((ODStandardPanel) optionPanels[0]).getLogLevel());
-            }
-
             etwasGeaendert = true;
          }
 
-         if(((ODConnectionPanel) optionPanels[2]).isDirty() || ((ODStandardPanel) optionPanels[0]).isXmlPortDirty())
+         if(connectionPanel.isDirty() || standardPanel.isXmlPortDirty())
          {
             try
             {
@@ -146,12 +203,6 @@ public class OptionsDialog extends JDialog
 
                JOptionPane.showMessageDialog(parent, nachricht, titel, JOptionPane.OK_OPTION);
             }
-         }
-
-         if(((ODProxyPanel) optionPanels[3]).isDirty())
-         {
-            ProxyManagerImpl.getInstance().saveProxySettings(((ODProxyPanel) optionPanels[3]).getProxySettings());
-            etwasGeaendert = true;
          }
 
          if(etwasGeaendert)
@@ -175,34 +226,40 @@ public class OptionsDialog extends JDialog
       }
    }
 
-   class MenuListCellRenderer extends JLabel implements ListCellRenderer
+   record SectionHeader(String text)
    {
-      public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+   }
+
+   class MenuListCellRenderer implements ListCellRenderer<Object>
+   {
+      private final JLabel label = new JLabel();
+
+      public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
       {
-         setText(((OptionsRegister) value).getMenuText() + "   ");
-         setIcon(((OptionsRegister) value).getIcon());
-         if(isSelected)
+         label.setOpaque(true);
+         label.setFont(list.getFont());
+         label.setEnabled(list.isEnabled());
+         if(value instanceof SectionHeader header)
          {
-            setBackground(list.getSelectionBackground());
-            setForeground(list.getSelectionForeground());
+            label.setText(header.text());
+            label.setIcon(null);
+            label.setFont(list.getFont().deriveFont(Font.BOLD));
+            label.setBackground(UIManager.getColor("Panel.background"));
+            label.setForeground(UIManager.getColor("Label.disabledForeground"));
+            label.setBorder(BorderFactory.createCompoundBorder(
+                  BorderFactory.createMatteBorder(0, 0, 1, 0, UIManager.getColor("Separator.foreground")),
+                  BorderFactory.createEmptyBorder(6, 4, 2, 4)));
+            return label;
          }
-         else
-         {
-            setBackground(list.getBackground());
-            setForeground(list.getForeground());
-         }
 
-         setEnabled(list.isEnabled());
-         setFont(list.getFont());
-         setOpaque(true);
-         return this;
-      }
+         OptionsRegister r = (OptionsRegister) value;
 
-      public Dimension getPreferredSize()
-      {
-         Dimension size = super.getPreferredSize();
-
-         return new Dimension(size.width, size.height * 2);
+         label.setText(r.getMenuText() + "   ");
+         label.setIcon(r.getIcon());
+         label.setBorder(BorderFactory.createEmptyBorder(4, 12, 4, 0));
+         label.setBackground(isSelected ? list.getSelectionBackground() : list.getBackground());
+         label.setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());
+         return label;
       }
    }
 }
