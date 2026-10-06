@@ -24,6 +24,10 @@ public class DownloadTableDownloadFilenameCellRenderer extends DownloadTableFile
                                                   int column)
    {
       Download download = (Download) value;
+
+      // DefaultTableCellRenderer merkt sich setForeground dauerhaft; vor jedem Rendern zuruecksetzen
+      setForeground(null);
+
       JLabel   label = (JLabel) super.getTableCellRendererComponent(table, download.getFilename(), isSelected, hasFocus, row, column);
 
       if(download.getStatus() == Download.FERTIG)
