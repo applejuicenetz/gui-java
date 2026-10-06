@@ -149,6 +149,7 @@ public class ServerTableModel extends AbstractTableModel implements SortableTabl
    public boolean setTable(Map<String, Server> changedContent)
    {
       boolean changed = changedContent.size() > 0;
+      servers.replaceAll(old -> changedContent.getOrDefault(Integer.toString(old.getId()), old));
 
       //alte Server entfernen
       String            suchKey  = null;

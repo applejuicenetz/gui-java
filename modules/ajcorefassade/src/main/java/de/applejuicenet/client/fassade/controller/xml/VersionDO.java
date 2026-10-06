@@ -36,6 +36,11 @@ class VersionDO extends Version
       this.betriebsSystem = betriebsSystem;
    }
 
+   VersionDO snapshot()
+   {
+      return new VersionDO(versionNr, betriebsSystem);
+   }
+
    public VersionDO()
    {
    }

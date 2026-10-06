@@ -52,6 +52,7 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
    public boolean setUploads(Map<Integer, Upload> uploadMap)
    {
       boolean change = false;
+      uploads.replaceAll(old -> uploadMap.getOrDefault(old.getId(), old));
 
       for(Upload curUpload : uploadMap.values())
       {

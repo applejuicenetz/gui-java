@@ -19,10 +19,15 @@ public class SearchTableModel extends AbstractTableModel implements SortableTabl
    final static String[]                                     COL_NAMES   = {"Dateiname", "Groesze", "Anzahl"};
    @SuppressWarnings("unchecked")
    public static final Class[]                               CLASS_TYPES = {SearchEntry.class, Long.class, Integer.class};
-   private final Search                                      search;
+   private Search                                            search;
    private TableSorter<SearchEntry>                          sorter;
 
    public SearchTableModel(Search search)
+   {
+      this.search = search;
+   }
+
+   public void setSearchSnapshot(Search search)
    {
       this.search = search;
    }

@@ -83,6 +83,8 @@ public class ModifiedXMLHolder extends DefaultHandler
    private boolean                            speedChanged                   = false;
    private boolean                            informationChanged             = false;
    private boolean                            networkInfoChanged             = false;
+   // Guards parsing and detached snapshots; never held during network I/O.
+   private final Object                       stateLock                      = new Object();
    private final Object                       pollingLock                    = new Object();
    private boolean                            downloadPolling                = false;
    private boolean                            uploadPolling                  = false;
@@ -128,22 +130,42 @@ public class ModifiedXMLHolder extends DefaultHandler
 
    public Map<Integer, Server> getServer()
    {
-      return serverMap;
+      synchronized(stateLock)
+      {
+         Map<Integer, Server> snapshot = new HashMap<>();
+         serverMap.forEach((key, value) -> snapshot.put(key, ((ServerDO) value).snapshot()));
+         return snapshot;
+      }
    }
 
    public Map<Integer, Upload> getUploads()
    {
-      return uploadMap;
+      synchronized(stateLock)
+      {
+         Map<Integer, Upload> snapshot = new HashMap<>();
+         uploadMap.forEach((key, value) -> snapshot.put(key, ((UploadDO) value).snapshot()));
+         return snapshot;
+      }
    }
 
    public Map<Integer, Download> getDownloads()
    {
-      return downloadMap;
+      synchronized(stateLock)
+      {
+         Map<Integer, Download> snapshot = new HashMap<>();
+         downloadMap.forEach((key, value) -> snapshot.put(key, ((DownloadDO) value).snapshot()));
+         return snapshot;
+      }
    }
 
    public Map<Integer, Search> getSearchs()
    {
-      return searchMap;
+      synchronized(stateLock)
+      {
+         Map<Integer, Search> snapshot = new HashMap<>();
+         searchMap.forEach((key, value) -> snapshot.put(key, ((SearchDO) value).snapshot()));
+         return snapshot;
+      }
    }
 
    public NetworkInfo getNetworkInfo()
@@ -1133,6 +1155,8 @@ public class ModifiedXMLHolder extends DefaultHandler
          checkForValidSession();
          String xmlString = getXMLString(filter);
 
+         synchronized(stateLock)
+         {
          downloadEvents.clear();
          if(filter.indexOf("down;") != -1)
          {
@@ -1161,6 +1185,7 @@ public class ModifiedXMLHolder extends DefaultHandler
 
          }
 
+         }
          if(downloadEvents.size() > 0)
          {
             downloadPropertyChangeInformer.propertyChanged(new DownloadDataPropertyChangeEvent(downloadEvents));
@@ -1204,6 +1229,8 @@ public class ModifiedXMLHolder extends DefaultHandler
    {
       Vector<DataPropertyChangeEvent> removedEvents = new Vector<DataPropertyChangeEvent>();
 
+      synchronized(stateLock)
+      {
       for(Download curDownload : downloadMap.values())
       {
          removedEvents.add(new DownloadDataPropertyChangeEvent(downloadMap, DownloadDataPropertyChangeEvent.DOWNLOAD_REMOVED,
@@ -1225,6 +1252,7 @@ public class ModifiedXMLHolder extends DefaultHandler
       uploadChanged         = true;
       serverChanged         = true;
       searchChanged         = true;
+      }
       if(removedEvents.size() > 0)
       {
          downloadPropertyChangeInformer.propertyChanged(new DownloadDataPropertyChangeEvent(removedEvents));

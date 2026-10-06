@@ -25,8 +25,22 @@ import de.applejuicenet.client.fassade.entity.DownloadSource;
  * @author Maj0r [aj@tkl-soft.de]
  *
  */
-class DownloadSourceDO extends DownloadSource
+class DownloadSourceDO extends DownloadSource implements Cloneable
 {
+   DownloadSourceDO snapshot()
+   {
+      try
+      {
+         DownloadSourceDO copy = (DownloadSourceDO) super.clone();
+         copy.version = version == null ? null : version.snapshot();
+         return copy;
+      }
+      catch(CloneNotSupportedException ex)
+      {
+         throw new AssertionError(ex);
+      }
+   }
+
    private final int id;
    private int       status;
    private int       directstate;

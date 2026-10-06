@@ -53,6 +53,31 @@ class SearchDO extends Search
       creationTime = System.currentTimeMillis();
    }
 
+   SearchDO snapshot()
+   {
+      SearchDO copy = new SearchDO(id);
+      copy.suchText = suchText;
+      copy.offeneSuchen = offeneSuchen;
+      copy.gefundenDateien = gefundenDateien;
+      copy.durchsuchteClients = durchsuchteClients;
+      copy.creationTime = creationTime;
+      copy.running = running;
+      copy.filter = new HashSet<>(filter);
+      for(SearchEntry entry : entries)
+      {
+         SearchEntryDO original = (SearchEntryDO) entry;
+         SearchEntryDO copiedEntry = copy.new SearchEntryDO(original.id, original.searchId,
+                                                           original.checksumme, original.groesse);
+         for(FileNameDO name : original.fileNames)
+         {
+            copiedEntry.addFileName(copiedEntry.new FileNameDO(name.dateiName, name.haeufigkeit));
+         }
+         copy.addSearchEntry(copiedEntry);
+      }
+      copy.changed = changed;
+      return copy;
+   }
+
    public long getCreationTime()
    {
       return creationTime;

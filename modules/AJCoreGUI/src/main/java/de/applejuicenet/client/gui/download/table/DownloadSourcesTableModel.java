@@ -154,7 +154,9 @@ public class DownloadSourcesTableModel extends AbstractTableModel implements Lan
          change = true;
       }
 
+      curDownload = theDownload;
       Map<Integer, DownloadSource> sourcesMap = theDownload.getSourcesMap();
+      sources.replaceAll(old -> sourcesMap.getOrDefault(old.getId(), old));
 
       for(DownloadSource curDownloadSource : sourcesMap.values())
       {

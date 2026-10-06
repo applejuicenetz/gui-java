@@ -210,6 +210,7 @@ public class SearchController extends GuiController
                            else
                            {
                               aSearch = theContent.get(curKey);
+                              searchIds.get(curKey).setSearchSnapshot(aSearch);
                               if(aSearch.isChanged() && panelSelected)
                               {
                                  SearchResultPanel curSelectedsearchResultPanel = (SearchResultPanel) searchPanel.getSearchResultTabbedPane()

@@ -133,6 +133,7 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
    public boolean setDownloads(Map<Integer, Download> downloadMap)
    {
       boolean change = false;
+      downloads.replaceAll(old -> downloadMap.getOrDefault(old.getId(), old));
 
       for(Download curDownload : downloadMap.values())
       {

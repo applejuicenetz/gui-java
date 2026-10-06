@@ -30,7 +30,7 @@ import java.util.Map;
  * @author Maj0r [aj@tkl-soft.de]
  *
  */
-class DownloadDO implements Download
+class DownloadDO implements Download, Cloneable
 {
    private static DecimalFormat         formatter           = new DecimalFormat("###,##0.00");
    private final int                    id;
@@ -47,6 +47,21 @@ class DownloadDO implements Download
    private long                         oldReady = -1;
    private String                       speedAsString;
    private Map<Integer, DownloadSource> sourcen = new HashMap<Integer, DownloadSource>();
+
+   DownloadDO snapshot()
+   {
+      try
+      {
+         DownloadDO copy = (DownloadDO) super.clone();
+         copy.sourcen = new HashMap<>();
+         sourcen.forEach((key, value) -> copy.sourcen.put(key, ((DownloadSourceDO) value).snapshot()));
+         return copy;
+      }
+      catch(CloneNotSupportedException ex)
+      {
+         throw new AssertionError(ex);
+      }
+   }
 
    public DownloadDO(int id)
    {

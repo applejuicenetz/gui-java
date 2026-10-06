@@ -24,8 +24,22 @@ import de.applejuicenet.client.fassade.entity.Upload;
  * @author Maj0r <aj@tkl-soft.de>
  *
  */
-class UploadDO extends Upload
+class UploadDO extends Upload implements Cloneable
 {
+   UploadDO snapshot()
+   {
+      try
+      {
+         UploadDO copy = (UploadDO) super.clone();
+         copy.version = version == null ? null : version.snapshot();
+         return copy;
+      }
+      catch(CloneNotSupportedException ex)
+      {
+         throw new AssertionError(ex);
+      }
+   }
+
    private final int uploadID;
    private String    dateiName;
    private int       shareFileID;

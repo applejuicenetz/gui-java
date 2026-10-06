@@ -293,6 +293,18 @@ public class SearchResultPanel extends JPanel {
         columns = tableColumns;
     }
 
+    public void setSearchSnapshot(Search snapshot) {
+        search = snapshot;
+        FileType[] types = FileType.values();
+        search.clearFilter();
+        for (int i = 0; i < filterButtons.length; i++) {
+            if (!filterButtons[i].isSelected()) {
+                search.addFilter(types[i]);
+            }
+        }
+        searchResultTableModel.setSearchSnapshot(snapshot);
+    }
+
     public void updateSearchContent() {
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(new Runnable() {

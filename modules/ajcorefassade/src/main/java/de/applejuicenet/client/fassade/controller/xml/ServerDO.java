@@ -25,8 +25,20 @@ import de.applejuicenet.client.fassade.entity.Server;
  * @author Maj0r [aj@tkl-soft.de]
  *
  */
-class ServerDO extends Server
+class ServerDO extends Server implements Cloneable
 {
+   ServerDO snapshot()
+   {
+      try
+      {
+         return (ServerDO) super.clone();
+      }
+      catch(CloneNotSupportedException ex)
+      {
+         throw new AssertionError(ex);
+      }
+   }
+
    private final int id;
    private String    host;
    private String    name;
