@@ -248,37 +248,35 @@ public class SearchResultPanel extends JPanel {
     }
 
     private void processLink(final String link) {
-        new Thread() {
-            public void run() {
-                try {
-                    final String result = AppleJuiceClient.getAjFassade().processLink(link, "");
+        Thread.ofVirtual().name("ProcessLink").start(() -> {
+            try {
+                final String result = AppleJuiceClient.getAjFassade().processLink(link, "");
 
-                    SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
-                    if (result.indexOf("ok") != 0) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                String message = null;
+                SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
+                if (result.indexOf("ok") != 0) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            String message = null;
 
-                                if (result.indexOf("already downloaded") != -1) {
-                                    message = alreadyLoaded.replaceAll("%s", link);
-                                } else if (result.indexOf("incorrect link") != -1) {
-                                    message = invalidLink.replaceAll("%s", link);
-                                } else if (result.indexOf("failure") != -1) {
-                                    message = linkFailure;
-                                }
-
-                                if (message != null) {
-                                    JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), message, dialogTitel,
-                                            JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
-                                }
+                            if (result.indexOf("already downloaded") != -1) {
+                                message = alreadyLoaded.replaceAll("%s", link);
+                            } else if (result.indexOf("incorrect link") != -1) {
+                                message = invalidLink.replaceAll("%s", link);
+                            } else if (result.indexOf("failure") != -1) {
+                                message = linkFailure;
                             }
-                        });
-                    }
-                } catch (IllegalArgumentException e) {
-                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+
+                            if (message != null) {
+                                JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), message, dialogTitel,
+                                        JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        }
+                    });
                 }
+            } catch (IllegalArgumentException e) {
+                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
             }
-        }.start();
+        });
     }
 
     public static void setTexte(String[] texte, String[] tableColumns) {

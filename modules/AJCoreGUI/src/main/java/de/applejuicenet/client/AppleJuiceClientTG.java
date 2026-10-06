@@ -29,8 +29,21 @@ public class AppleJuiceClientTG extends ThreadGroup {
     }
 
     public void uncaughtException(Thread t, Throwable e) {
-        Logger logger = LoggerFactory.getLogger(getClass());
-        if (e.getClass() == ClassCastException.class && e.getMessage().equals("java.awt.TrayIcon cannot be cast to java.awt.Component")) {
+        handle(e);
+    }
+
+    /**
+     * Gemeinsame Fehlerbehandlung fuer Threads dieser Gruppe und fuer virtuelle Threads, die nicht in
+     * einer ThreadGroup laufen. Dialoge und Beenden laufen auf dem EDT.
+     */
+    static void handle(Throwable e) {
+        if (!java.awt.EventQueue.isDispatchThread()) {
+            java.awt.EventQueue.invokeLater(() -> handle(e));
+            return;
+        }
+
+        Logger logger = LoggerFactory.getLogger(AppleJuiceClientTG.class);
+        if (e.getClass() == ClassCastException.class && "java.awt.TrayIcon cannot be cast to java.awt.Component".equals(e.getMessage())) {
 
             /*
              * "insignificantly error in java6 -> ignoring"

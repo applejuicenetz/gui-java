@@ -17,39 +17,36 @@ public class VersionChecker {
     private static final Logger logger = LoggerFactory.getLogger(VersionChecker.class);
 
     public static void check() {
-        Thread versionWorker = new Thread("VersionChecker") {
-            public void run() {
-                logger.debug("VersionWorkerThread gestartet.");
+        Thread.ofVirtual().name("VersionChecker").start(() -> {
+            logger.debug("VersionWorkerThread gestartet.");
 
-                try {
-                    String updateServer = OptionsManagerImpl.getInstance().getUpdateServerURL();
-                    logger.debug(String.format("GET %s", updateServer));
-                    String downloadData = WebsiteContentLoader.getWebsiteContent(updateServer);
+            try {
+                String updateServer = OptionsManagerImpl.getInstance().getUpdateServerURL();
+                logger.debug(String.format("GET %s", updateServer));
+                String downloadData = WebsiteContentLoader.getWebsiteContent(updateServer);
 
-                    if (downloadData.length() > 0) {
-                        JsonObject jsonObject = Json.parse(downloadData).asObject();
-                        String aktuellsteVersion = jsonObject.get("tag_name").asString();
+                if (downloadData.length() > 0) {
+                    JsonObject jsonObject = Json.parse(downloadData).asObject();
+                    String aktuellsteVersion = jsonObject.get("tag_name").asString();
 
-                        logger.info("aktuelle Version " + AppleJuiceDialog.getVersion() + " | letzte veröffentlichte Version: " + aktuellsteVersion);
+                    logger.info("aktuelle Version " + AppleJuiceDialog.getVersion() + " | letzte veröffentlichte Version: " + aktuellsteVersion);
 
-                        if (AppleJuiceDialog.getVersion() != null && compareVersion(aktuellsteVersion, AppleJuiceDialog.getVersion()) == 1) {
-                            String releaseLink = jsonObject.get("html_url").asString();
-                            SwingUtilities.invokeLater(() -> {
-                                UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(AppleJuiceDialog.getApp(), aktuellsteVersion, releaseLink);
-                                updateInformationDialog.setVisible(true);
-                            });
-                        }
-
+                    if (AppleJuiceDialog.getVersion() != null && compareVersion(aktuellsteVersion, AppleJuiceDialog.getVersion()) == 1) {
+                        String releaseLink = jsonObject.get("html_url").asString();
+                        SwingUtilities.invokeLater(() -> {
+                            UpdateInformationDialog updateInformationDialog = new UpdateInformationDialog(AppleJuiceDialog.getApp(), aktuellsteVersion, releaseLink);
+                            updateInformationDialog.setVisible(true);
+                        });
                     }
-                } catch (Exception e) {
-                    logger.info("Aktualisierungsinformationen konnten nicht geladen werden.", e);
+
                 }
-
-                logger.debug("VersionWorkerThread beendet.");
+            } catch (Exception e) {
+                logger.info("Aktualisierungsinformationen konnten nicht geladen werden.", e);
             }
-        };
 
-        versionWorker.start();
+            logger.debug("VersionWorkerThread beendet.");
+        });
+
     }
 
     public static int compareVersion(String A, String B) {

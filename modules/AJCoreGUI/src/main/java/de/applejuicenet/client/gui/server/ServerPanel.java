@@ -237,15 +237,13 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                 if (newServerDialog.isLegal()) {
                     final String link = newServerDialog.getLink();
 
-                    new Thread() {
-                        public void run() {
-                            try {
-                                AppleJuiceClient.getAjFassade().processLink(link, "");
-                            } catch (IllegalArgumentException e) {
-                                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                            }
+                    Thread.ofVirtual().name("AddServer").start(() -> {
+                        try {
+                            AppleJuiceClient.getAjFassade().processLink(link, "");
+                        } catch (IllegalArgumentException e) {
+                            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                         }
-                    }.start();
+                    });
                 }
             }
         };
@@ -265,27 +263,23 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         constraints.gridy = 0;
 
         sucheServer.addActionListener(ae -> {
-            Thread worker = new Thread() {
-                public void run() {
-                    String ServerListURL = OptionsManagerImpl.getInstance().getServerListURL();
-                    ApplejuiceFassade af = AppleJuiceClient.getAjFassade();
-                    String[] server = af.getNetworkKnownServers(ServerListURL);
+            Thread.ofVirtual().name("SearchServers").start(() -> {
+                String ServerListURL = OptionsManagerImpl.getInstance().getServerListURL();
+                ApplejuiceFassade af = AppleJuiceClient.getAjFassade();
+                String[] server = af.getNetworkKnownServers(ServerListURL);
 
-                    if (server == null || server.length == 0) {
-                        return;
-                    }
+                if (server == null || server.length == 0) {
+                    return;
+                }
 
-                    for (int i = 0; i < server.length; i++) {
-                        try {
-                            af.processLink(server[i], "");
-                        } catch (IllegalArgumentException e) {
-                            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                        }
+                for (int i = 0; i < server.length; i++) {
+                    try {
+                        af.processLink(server[i], "");
+                    } catch (IllegalArgumentException e) {
+                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                     }
                 }
-            };
-
-            worker.start();
+            });
         });
         panel1.add(sucheServer, constraints);
         constraints.gridx = 1;

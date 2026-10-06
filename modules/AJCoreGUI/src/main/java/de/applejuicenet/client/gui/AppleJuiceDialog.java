@@ -445,36 +445,33 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         final String targetDir = tmp;
 
         if (link.length() != 0) {
-            Thread linkThread = new Thread() {
-                public void run() {
-                    try {
-                        final String result = AppleJuiceClient.getAjFassade().processLink(link, targetDir);
+            Thread.ofVirtual().name("ProcessLink").start(() -> {
+                try {
+                    final String result = AppleJuiceClient.getAjFassade().processLink(link, targetDir);
 
-                        SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
-                        if (result.indexOf("ok") != 0) {
-                            SwingUtilities.invokeLater(() -> {
-                                String message = null;
+                    SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
+                    if (result.indexOf("ok") != 0) {
+                        SwingUtilities.invokeLater(() -> {
+                            String message = null;
 
-                                if (result.contains("already downloaded")) {
-                                    message = alreadyLoaded.replaceAll("%s", link);
-                                } else if (result.contains("incorrect link")) {
-                                    message = invalidLink.replaceAll("%s", link);
-                                } else if (result.contains("failure")) {
-                                    message = linkFailure;
-                                }
+                            if (result.contains("already downloaded")) {
+                                message = alreadyLoaded.replaceAll("%s", link);
+                            } else if (result.contains("incorrect link")) {
+                                message = invalidLink.replaceAll("%s", link);
+                            } else if (result.contains("failure")) {
+                                message = linkFailure;
+                            }
 
-                                if (message != null) {
-                                    JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), message, dialogTitel, JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
-                                }
-                            });
-                        }
-                    } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                            if (message != null) {
+                                JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), message, dialogTitel, JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        });
                     }
+                } catch (IllegalArgumentException e) {
+                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                 }
-            };
+            });
 
-            linkThread.start();
         }
     }
 
@@ -824,7 +821,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
 
                 final String targetDir = directory;
 
-                new Thread(() -> importAjl(file, targetDir)).start();
+                Thread.ofVirtual().name("AJL-Import").start(() -> importAjl(file, targetDir));
             }
         }
     }

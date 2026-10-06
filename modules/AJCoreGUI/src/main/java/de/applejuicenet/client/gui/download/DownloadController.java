@@ -377,12 +377,7 @@ public class DownloadController extends GuiController {
     }
 
     private void clearReadyDownloads() {
-        new Thread() {
-            @Override
-            public void run() {
-                AppleJuiceClient.getAjFassade().cleanDownloadList();
-            }
-        }.start();
+        Thread.ofVirtual().name("CleanDownloadList").start(() -> AppleJuiceClient.getAjFassade().cleanDownloadList());
         downloadPanel.getPowerDownloadPanel().getBtnPdl().setEnabled(false);
         downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
         downloadPanel.getDownloadTable().getSelectionModel().clearSelection();
@@ -547,15 +542,13 @@ public class DownloadController extends GuiController {
             }
 
             if (pausieren.size() > 0) {
-                new Thread() {
-                    public void run() {
-                        try {
-                            AppleJuiceClient.getAjFassade().pauseDownload(pausieren);
-                        } catch (IllegalArgumentException e) {
-                            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                        }
+                Thread.ofVirtual().name("PauseDownload").start(() -> {
+                    try {
+                        AppleJuiceClient.getAjFassade().pauseDownload(pausieren);
+                    } catch (IllegalArgumentException e) {
+                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                     }
-                }.start();
+                });
             }
         }
     }
@@ -574,15 +567,13 @@ public class DownloadController extends GuiController {
             }
 
             if (fortsetzen.size() > 0) {
-                new Thread() {
-                    public void run() {
-                        try {
-                            AppleJuiceClient.getAjFassade().resumeDownload(fortsetzen);
-                        } catch (IllegalArgumentException e) {
-                            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                        }
+                Thread.ofVirtual().name("ResumeDownload").start(() -> {
+                    try {
+                        AppleJuiceClient.getAjFassade().resumeDownload(fortsetzen);
+                    } catch (IllegalArgumentException e) {
+                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                     }
-                }.start();
+                });
             }
         }
     }
@@ -759,16 +750,14 @@ public class DownloadController extends GuiController {
                 Collections.addAll(abbrechen, selectedDownloads);
 
                 if (abbrechen.size() > 0) {
-                    new Thread() {
-                        public void run() {
-                            try {
-                                AppleJuiceClient.getAjFassade().cancelDownload(abbrechen);
-                                SoundPlayer.getInstance().playSound(SoundPlayer.ABGEBROCHEN);
-                            } catch (IllegalArgumentException e) {
-                                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                            }
+                    Thread.ofVirtual().name("CancelDownload").start(() -> {
+                        try {
+                            AppleJuiceClient.getAjFassade().cancelDownload(abbrechen);
+                            SoundPlayer.getInstance().playSound(SoundPlayer.ABGEBROCHEN);
+                        } catch (IllegalArgumentException e) {
+                            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                         }
-                    }.start();
+                    });
                 }
             }
         }
