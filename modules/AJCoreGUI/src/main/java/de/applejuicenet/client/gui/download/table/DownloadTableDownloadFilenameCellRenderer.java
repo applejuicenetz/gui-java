@@ -29,10 +29,12 @@ public class DownloadTableDownloadFilenameCellRenderer extends DownloadTableFile
       if(download.getStatus() == Download.FERTIG)
       {
          setBackground(FERTIG_FARBE);
+         label.setForeground(Color.BLACK);
       }
       else if(download.getStatus() == Download.ABBRECHEN || download.getStatus() == Download.ABGEGROCHEN)
       {
          setBackground(Color.RED);
+         label.setForeground(Color.BLACK);
       }
       else
       {
