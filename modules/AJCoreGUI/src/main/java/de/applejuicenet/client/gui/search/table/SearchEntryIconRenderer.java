@@ -33,6 +33,7 @@ public class SearchEntryIconRenderer extends DefaultTableCellRenderer
       if(wirdBereitsGeladen)
       {
          label.setBackground(Color.GREEN);
+         label.setForeground(Color.BLACK);
       }
       else
       {
