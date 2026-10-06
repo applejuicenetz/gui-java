@@ -577,7 +577,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             aPropertyHandler.put("options_download_sort_column", "0");
             aPropertyHandler.put("options_download_sort_order", "1");
 
-            aPropertyHandler.put("options_download_sources_sort_column", "0");
+            aPropertyHandler.put("options_download_sources_sort_column", "2");
             aPropertyHandler.put("options_download_sources_sort_order", "1");
 
             aPropertyHandler.put("options_upload_sort_column", "0");
@@ -672,7 +672,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             downloadSort[1] = propertyHandler.getAsInt("options_download_sort_order", 1);
 
             downloadSourcesSort = new int[2];
-            downloadSourcesSort[0] = propertyHandler.getAsInt("options_download_sources_sort_column", 0);
+            downloadSourcesSort[0] = propertyHandler.getAsInt("options_download_sources_sort_column", 2);
             downloadSourcesSort[1] = propertyHandler.getAsInt("options_download_sources_sort_order", 1);
 
             uploadSort = new int[2];

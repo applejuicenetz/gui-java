@@ -741,7 +741,7 @@ public class DownloadController extends GuiController {
                 TableColumn[] columnsDownload = downloadPanel.getDownloadTableColumns();
                 TableColumn[] columnsDownloadSources = downloadPanel.getDownloadSourcesTableColumns();
                 int[] sortDownloads = null;
-                int[] sortDownloadSources = null;
+                int[] sortDownloadSources = {2, 1};
 
                 if (pm.isLegal()) {
                     boolean[] visibilies = pm.getDownloadColumnVisibilities();
