@@ -419,6 +419,14 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         propertyHandler.put("options_columns_remember_widths", remember);
     }
 
+    public boolean isSpeedUnitMb(String field) {
+        return propertyHandler.getAsBoolean("options_speed_unit_mb_" + field, false);
+    }
+
+    public void setSpeedUnitMb(String field, boolean mb) {
+        propertyHandler.put("options_speed_unit_mb_" + field, mb);
+    }
+
     public Level getLogLevel() {
         try {
             String temp = propertyHandler.get("options_logging_level", "INFO");

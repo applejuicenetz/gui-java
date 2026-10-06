@@ -193,6 +193,14 @@ public class OptionsManagerImpl implements OptionsManager{
         propertiesManager.rememberColumnWidths(remember);
     }
 
+    public boolean isSpeedUnitMb(String field) {
+        return propertiesManager.isSpeedUnitMb(field);
+    }
+
+    public void setSpeedUnitMb(String field, boolean mb) {
+        propertiesManager.setSpeedUnitMb(field, mb);
+    }
+
     public ConnectionSettings[] getConnectionsSet() {
         return propertiesManager.getConnectionsSet();
     }

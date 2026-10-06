@@ -43,8 +43,8 @@ public class ODVerbindungPanel extends JPanel implements OptionsRegister {
     private JCheckBox automaticConnect;
     private JTextField maxSourcesPerFile = new JTextField();
     private JTextField maxVerbindungen = new JTextField();
-    private JTextField maxUpload = new JTextField();
-    private JTextField maxDownload = new JTextField();
+    private SpeedInputField maxUpload = new SpeedInputField("upload");
+    private SpeedInputField maxDownload = new SpeedInputField("download");
     private JSlider kbSlider;
     private JTextField maxVerbindungenProTurn = new JTextField();
     private AJSettings ajSettings;
@@ -92,12 +92,8 @@ public class ODVerbindungPanel extends JPanel implements OptionsRegister {
         maxVerbindungen.setDocument(new NumberInputVerifier());
         maxVerbindungen.setHorizontalAlignment(JLabel.RIGHT);
         maxVerbindungen.addFocusListener(new MaxVerbindungenFocusListener());
-        maxUpload.setDocument(new NumberInputVerifier());
-        maxUpload.setHorizontalAlignment(JLabel.RIGHT);
-        maxUpload.addFocusListener(new MaxUploadFocusListener());
-        maxDownload.setDocument(new NumberInputVerifier());
-        maxDownload.setHorizontalAlignment(JLabel.RIGHT);
-        maxDownload.addFocusListener(new MaxDownloadFocusListener());
+        maxUpload.addFocusLostListener(this::maxUploadChanged);
+        maxDownload.addFocusLostListener(this::maxDownloadChanged);
         maxSourcesPerFile.setDocument(new NumberInputVerifier());
         maxSourcesPerFile.setHorizontalAlignment(JLabel.RIGHT);
         maxSourcesPerFile.addFocusListener(new MaxSourcesPerFileFocusListener());
@@ -108,9 +104,9 @@ public class ODVerbindungPanel extends JPanel implements OptionsRegister {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
 
         label1 = new JLabel(languageSelector.getFirstAttrbuteByTagName("einstform.Label4.caption"));
-        label2 = new JLabel(languageSelector.getFirstAttrbuteByTagName("einstform.Label5.caption"));
+        label2 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.verbindung.maxupload"));
         label3 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.verbindung.label3"));
-        label4 = new JLabel(languageSelector.getFirstAttrbuteByTagName("einstform.Label13.caption"));
+        label4 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.verbindung.maxdownload"));
         label5 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.verbindung.label5"));
         label6 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.verbindung.label6"));
         menuText = languageSelector.getFirstAttrbuteByTagName("einstform.connectionsheet.caption");
@@ -269,8 +265,8 @@ public class ODVerbindungPanel extends JPanel implements OptionsRegister {
       ajSettings.setTempDir(ajSettings2.getTempDir());
       ajSettings.setXMLPort(ajSettings2.getXMLPort());
       */
-        maxUpload.setText(Long.toString(ajSettings2.getMaxUploadInKB()));
-        maxDownload.setText(Long.toString(ajSettings2.getMaxDownloadInKB()));
+        maxUpload.setKb(ajSettings2.getMaxUploadInKB());
+        maxDownload.setKb(ajSettings2.getMaxDownloadInKB());
         maxVerbindungen.setText(Long.toString(ajSettings2.getMaxConnections()));
         kbSlider.setValue(ajSettings2.getSpeedPerSlot());
         kbSlot.setText(Integer.toString(kbSlider.getValue()) + " kb/s");
@@ -311,27 +307,23 @@ public class ODVerbindungPanel extends JPanel implements OptionsRegister {
     }
 
 
-    class MaxDownloadFocusListener extends FocusAdapter {
-        public void focusLost(FocusEvent e) {
-            if (Long.parseLong(maxDownload.getText()) != ajSettings.getMaxDownloadInKB()) {
-                dirty = true;
-                ajSettings.setMaxDownload(Long.parseLong(maxDownload.getText()) * 1024);
-            }
+    private void maxDownloadChanged() {
+        long kb = maxDownload.getKb();
+
+        if (kb != ajSettings.getMaxDownloadInKB()) {
+            dirty = true;
+            ajSettings.setMaxDownload(kb * 1024);
         }
     }
 
+    private void maxUploadChanged() {
+        long kb = maxUpload.getKb();
 
-    class MaxUploadFocusListener extends FocusAdapter {
-        public void focusLost(FocusEvent e) {
-            int untereGrenze = (int) Math.pow(Double.parseDouble(maxUpload.getText()), 0.2);
-            int obereGrenze = (int) Math.pow(Double.parseDouble(maxUpload.getText()), 0.6);
-
-            kbSlider.setMinimum(untereGrenze);
-            kbSlider.setMaximum(obereGrenze);
-            if (Long.parseLong(maxUpload.getText()) != ajSettings.getMaxUploadInKB()) {
-                dirty = true;
-                ajSettings.setMaxUpload(Long.parseLong(maxUpload.getText()) * 1024);
-            }
+        kbSlider.setMinimum((int) Math.pow((double) kb, 0.2));
+        kbSlider.setMaximum((int) Math.pow((double) kb, 0.6));
+        if (kb != ajSettings.getMaxUploadInKB()) {
+            dirty = true;
+            ajSettings.setMaxUpload(kb * 1024);
         }
     }
 

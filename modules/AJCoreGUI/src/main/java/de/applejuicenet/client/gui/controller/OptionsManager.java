@@ -101,6 +101,10 @@ public interface OptionsManager
 
    void rememberColumnWidths(boolean remember);
 
+   boolean isSpeedUnitMb(String field);
+
+   void setSpeedUnitMb(String field, boolean mb);
+
    ConnectionSettings[] getConnectionsSet();
 
    void setConnectionsSet(ConnectionSettings[] set);
