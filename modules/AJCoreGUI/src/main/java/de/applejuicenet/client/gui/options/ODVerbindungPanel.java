@@ -11,7 +11,6 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.tklsoft.gui.controls.TKLButton;
-import de.tklsoft.gui.controls.TKLCheckBox;
 import de.tklsoft.gui.controls.TKLTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +42,7 @@ public class ODVerbindungPanel extends JPanel implements OptionsRegister {
     private JLabel label5;
     private JLabel label6;
     private JLabel kbSlot;
-    private TKLCheckBox automaticConnect;
+    private JCheckBox automaticConnect;
     private TKLTextField maxSourcesPerFile = new TKLTextField();
     private TKLTextField maxVerbindungen = new TKLTextField();
     private TKLTextField maxUpload = new TKLTextField();
@@ -136,7 +135,7 @@ public class ODVerbindungPanel extends JPanel implements OptionsRegister {
                 ajSettings.setSpeedPerSlot(slider.getValue());
             }
         });
-        automaticConnect = new TKLCheckBox(languageSelector.getFirstAttrbuteByTagName("einstform.autoconn.caption"));
+        automaticConnect = new JCheckBox(languageSelector.getFirstAttrbuteByTagName("einstform.autoconn.caption"));
         automaticConnect.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 dirty = true;
@@ -242,7 +241,6 @@ public class ODVerbindungPanel extends JPanel implements OptionsRegister {
         maxUpload.confirmNewValue();
         maxDownload.confirmNewValue();
         maxVerbindungenProTurn.confirmNewValue();
-        automaticConnect.confirmNewValue();
     }
 
     public Icon getIcon() {

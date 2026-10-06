@@ -18,7 +18,6 @@ import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.NumberInputVerifier;
-import de.tklsoft.gui.controls.TKLCheckBox;
 import de.tklsoft.gui.controls.TKLComboBox;
 import de.tklsoft.gui.controls.TKLTextField;
 import org.slf4j.Logger;
@@ -65,8 +64,8 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
     private JDialog parent;
     private AJSettings ajSettings;
     private TKLComboBox cmbLog;
-    private TKLCheckBox updateNotification = new TKLCheckBox();
-    private TKLCheckBox loadPlugins = new TKLCheckBox();
+    private JCheckBox updateNotification = new JCheckBox();
+    private JCheckBox loadPlugins = new JCheckBox();
     private ConnectionSettings remote;
     private Icon menuIcon;
     private String menuText;
@@ -286,8 +285,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         xmlPort.confirmNewValue();
         nick.confirmNewValue();
         cmbLog.confirmNewValue();
-        updateNotification.confirmNewValue();
-        loadPlugins.confirmNewValue();
     }
 
     public boolean isXmlPortDirty() {

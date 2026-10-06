@@ -70,11 +70,25 @@ public class ModifyableComponentBorder
         if (this.status == StatusHolder.STATUSFLAG.NORMAL) {
             this.notDirtyBorder.paintBorder(c, g, x, y, width, height);
         } else if (this.status == StatusHolder.STATUSFLAG.MODIFIED) {
-            this.drawBorder(this.modifiedColor, g, x, y, this.borderWidth == -1 ? width : this.borderWidth, height);
+            this.drawModifiedBorder(c, g, x, y, width, height);
         } else {
             this.drawBorder(this.currentColor, g, x, y, this.borderWidth == -1 ? width : this.borderWidth, height);
             invalidIcon.paintIcon(c, g, width - invalidIcon.getIconWidth() - this.insets.right - 2, this.insets.top + 2);
         }
+    }
+
+    private void drawModifiedBorder(Component c, Graphics g, int x, int y, int width, int height) {
+        if (this.borderWidth == -1) {
+            this.drawBorder(this.modifiedColor, g, x, y, width, height);
+            return;
+        }
+        // fixed width: frame only the square indicator, vertically centered
+        int size = Math.min(this.borderWidth, height);
+        Icon icon = c instanceof AbstractButton ? UIManager.getIcon("CheckBox.icon") : null;
+        if (icon != null) {
+            size = Math.min(Math.max(icon.getIconWidth(), icon.getIconHeight()), height);
+        }
+        this.drawBorder(this.modifiedColor, g, x, y + (height - size) / 2, size, size);
     }
 
     private void drawBorder(Color color, Graphics g, int x, int y, int width, int height) {

@@ -10,7 +10,6 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
-import de.tklsoft.gui.controls.TKLCheckBox;
 import de.tklsoft.gui.controls.TKLTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +38,7 @@ public class ODProxyPanel extends JPanel implements OptionsRegister {
     private TKLTextField port = new TKLTextField();
     private TKLTextField user = new TKLTextField();
     private JPasswordField passwort = new JPasswordField();
-    private TKLCheckBox use = new TKLCheckBox();
+    private JCheckBox use = new JCheckBox();
     private ProxySettings proxySettings;
     private Logger logger;
     private Icon menuIcon;
@@ -134,7 +133,6 @@ public class ODProxyPanel extends JPanel implements OptionsRegister {
         host.confirmNewValue();
         port.confirmNewValue();
         user.confirmNewValue();
-        use.confirmNewValue();
     }
 
     public ProxySettings getProxySettings() {
