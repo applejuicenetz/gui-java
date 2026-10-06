@@ -1,8 +1,5 @@
 package de.tklsoft.gui.controls;
 
-import de.tklsoft.gui.layout.Synchronizable;
-import de.tklsoft.gui.layout.Synchronizer;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -11,16 +8,14 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 
-public class TKLComboBox extends JComboBox implements ModifyableComponent, Synchronizable {
+public class TKLComboBox extends JComboBox implements ModifyableComponent {
 
-   private Synchronizer synchronizer;
    private StatusHolder statusHolder;
    private Object oldValue;
 
 
    public TKLComboBox(Object[] data) {
       super(data);
-      this.synchronizer = null;
       this.oldValue = null;
       this.init();
    }
@@ -107,18 +102,6 @@ public class TKLComboBox extends JComboBox implements ModifyableComponent, Synch
 
    public boolean isInvalid() {
       return this.statusHolder.isInvalid();
-   }
-
-   public void setSynchronizer(Synchronizer synchronizer) {
-      this.synchronizer = synchronizer;
-   }
-
-   public Dimension getPreferredSize() {
-      return this.synchronizer == null?super.getPreferredSize():this.synchronizer.getSize(this);
-   }
-
-   public Dimension getNormalSize() {
-      return super.getPreferredSize();
    }
 
    public Object getOldValue() {

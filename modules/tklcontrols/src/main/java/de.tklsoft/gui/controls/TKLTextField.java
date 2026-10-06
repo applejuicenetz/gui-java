@@ -1,17 +1,13 @@
 package de.tklsoft.gui.controls;
 
-import de.tklsoft.gui.layout.Synchronizable;
-import de.tklsoft.gui.layout.Synchronizer;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 
-public class TKLTextField extends JTextField implements ModifyableComponent, Synchronizable {
+public class TKLTextField extends JTextField implements ModifyableComponent {
 
-   private Synchronizer synchronizer = null;
    private StatusHolder statusHolder;
    private String oldValue = "";
 
@@ -81,18 +77,6 @@ public class TKLTextField extends JTextField implements ModifyableComponent, Syn
 
    public boolean isInvalid() {
       return this.statusHolder.isInvalid();
-   }
-
-   public void setSynchronizer(Synchronizer synchronizer) {
-      this.synchronizer = synchronizer;
-   }
-
-   public Dimension getPreferredSize() {
-      return this.synchronizer == null?super.getPreferredSize():this.synchronizer.getSize(this);
-   }
-
-   public Dimension getNormalSize() {
-      return super.getPreferredSize();
    }
 
    public Object getOldValue() {
