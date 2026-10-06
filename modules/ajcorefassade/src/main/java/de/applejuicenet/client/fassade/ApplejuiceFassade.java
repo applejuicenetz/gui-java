@@ -663,6 +663,11 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
                 "/function/canceldownload?password=" + coreHolder.getCorePassword() + parameters, false);
     }
 
+    public void stopShareCheck() {
+        HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.POST,
+                "/function/stopsharecheck?password=" + coreHolder.getCorePassword(), false);
+    }
+
     public void cleanDownloadList() {
         HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.POST,
                 "/function/cleandownloadlist?password=" + coreHolder.getCorePassword(), false);

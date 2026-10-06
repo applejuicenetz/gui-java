@@ -44,6 +44,7 @@ public class SharePanel extends TklPanel {
     private JButton neueListe = new JButton();
     private JButton neuLaden = new JButton();
     private JButton refresh = new JButton();
+    private JButton stopShareCheck = new JButton();
     private JButton prioritaetSetzen = new JButton();
     private JButton prioritaetAufheben = new JButton();
     private JComboBox cmbPrio = new JComboBox();
@@ -92,6 +93,10 @@ public class SharePanel extends TklPanel {
 
     public JButton getBtnRefresh() {
         return refresh;
+    }
+
+    public JButton getBtnStopShareCheck() {
+        return stopShareCheck;
     }
 
     public JButton getBtnNeueListe() {
@@ -183,6 +188,7 @@ public class SharePanel extends TklPanel {
         prioritaetSetzen.setEnabled(false);
         neuLaden.setEnabled(false);
         refresh.setEnabled(false);
+        stopShareCheck.setEnabled(false);
 
         popup2.add(itemCopyToClipboard);
         popup2.add(itemCopyToClipboardWithSources);
@@ -255,7 +261,11 @@ public class SharePanel extends TklPanel {
         JPanel panelWest = new JPanel(new BorderLayout());
 
         panelWest.add(aScrollPane, BorderLayout.CENTER);
-        panelWest.add(refresh, BorderLayout.SOUTH);
+        JPanel shareCheckButtons = new JPanel(new GridLayout(2, 1));
+
+        shareCheckButtons.add(refresh);
+        shareCheckButtons.add(stopShareCheck);
+        panelWest.add(shareCheckButtons, BorderLayout.SOUTH);
         JSplitPane splitPane = new JSplitPane();
 
         splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);

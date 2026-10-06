@@ -59,6 +59,8 @@ public class ShareController extends GuiController
    private static final int       PRIORITAET_AUFHEBEN            = 0;
    private static final int       PRIORITAET_SETZEN              = 1;
    private static final int       REFRESH                        = 2;
+   private static final int       STOP_SHARECHECK                = 99;
+   private static final String    STOP_SHARECHECK_MIN_EXCLUSIVE  = "0.35.185.93";
    private static final int       SHARE_ERNEUERN                 = 3;
    private static final int       NOT_SHARED                     = 4;
    private static final int       SHARE_WITHOUT_SUB              = 5;
@@ -113,6 +115,7 @@ public class ShareController extends GuiController
       sharePanel.getBtnPrioritaetAufheben().addActionListener(new GuiControllerActionListener(this, PRIORITAET_AUFHEBEN));
       sharePanel.getBtnPrioritaetSetzen().addActionListener(new GuiControllerActionListener(this, PRIORITAET_SETZEN));
       sharePanel.getBtnRefresh().addActionListener(new GuiControllerActionListener(this, REFRESH));
+      sharePanel.getBtnStopShareCheck().addActionListener(new GuiControllerActionListener(this, STOP_SHARECHECK));
       sharePanel.getBtnNeuLaden().addActionListener(new GuiControllerActionListener(this, SHARE_ERNEUERN));
       sharePanel.getMnuNotShared().addActionListener(new GuiControllerActionListener(this, NOT_SHARED));
       sharePanel.getMnuSharedWithoutSub().addActionListener(new GuiControllerActionListener(this, SHARE_WITHOUT_SUB));
@@ -170,6 +173,12 @@ public class ShareController extends GuiController
          case REFRESH:
          {
             refresh();
+            break;
+         }
+
+         case STOP_SHARECHECK:
+         {
+            stopShareCheck();
             break;
          }
 
@@ -470,6 +479,40 @@ public class ShareController extends GuiController
       }.execute();
    }
 
+   private boolean isStopShareCheckSupported()
+   {
+      try
+      {
+         de.applejuicenet.client.fassade.entity.Version version = AppleJuiceClient.getAjFassade().getCoreVersion();
+
+         return version != null && version.compareTo(STOP_SHARECHECK_MIN_EXCLUSIVE) > 0;
+      }
+      catch(Exception e)
+      {
+         return false;
+      }
+   }
+
+   private void stopShareCheck()
+   {
+      new javax.swing.SwingWorker<Void, Void>()
+      {
+         protected Void doInBackground()
+         {
+            try
+            {
+               AppleJuiceClient.getAjFassade().stopShareCheck();
+            }
+            catch(Exception e)
+            {
+               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            }
+
+            return null;
+         }
+      }.execute();
+   }
+
    private void refresh()
    {
       sharePanel.getBtnRefresh().setEnabled(false);
@@ -638,6 +681,7 @@ public class ShareController extends GuiController
                      sharePanel.getBtnPrioritaetSetzen().setEnabled(true);
                      sharePanel.getBtnNeuLaden().setEnabled(true);
                      sharePanel.getBtnRefresh().setEnabled(true);
+                     sharePanel.getBtnStopShareCheck().setEnabled(isStopShareCheckSupported());
                      if(treeInitialisiert)
                      {
                         shareNeuLaden();
@@ -708,6 +752,8 @@ public class ShareController extends GuiController
             : languageSelector.getFirstAttrbuteByTagName("javagui.remotecore.hint"));
       sharePanel.getBtnRefresh().setText(languageSelector.getFirstAttrbuteByTagName("mainform.startsharecheck.caption"));
       sharePanel.getBtnRefresh().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.startsharecheck.hint"));
+      sharePanel.getBtnStopShareCheck().setText(languageSelector.getFirstAttrbuteByTagName("mainform.stopsharecheck.caption"));
+      sharePanel.getBtnStopShareCheck().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.stopsharecheck.hint"));
       sharePanel.getBtnNeueListe().setText(languageSelector.getFirstAttrbuteByTagName("mainform.newfilelist.caption"));
       sharePanel.getMnuCreateFileList().setText(languageSelector.getFirstAttrbuteByTagName("mainform.createfilelist.caption"));
       sharePanel.getBtnNeueListe().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.newfilelist.hint"));
