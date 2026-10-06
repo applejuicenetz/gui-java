@@ -36,8 +36,8 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -378,18 +378,7 @@ public class ShareController extends GuiController
             }
          }
 
-         String encodedFilename = "";
-
-         try
-         {
-            encodedFilename = URLEncoder.encode(tempFilename.toString(), "ISO-8859-1");
-         }
-         catch(UnsupportedEncodingException ex)
-         {
-            ;
-
-            //gibbet, also nix zu behandeln...
-         }
+         String encodedFilename = URLEncoder.encode(tempFilename.toString(), StandardCharsets.ISO_8859_1);
 
          toCopy.append("[URL=ajfsp://file|");
          toCopy.append(encodedFilename + "|" + share.getCheckSum() + "|" + share.getSize());

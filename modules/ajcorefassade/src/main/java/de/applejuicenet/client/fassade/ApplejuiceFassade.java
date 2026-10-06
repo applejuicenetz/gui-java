@@ -26,8 +26,8 @@ import de.applejuicenet.client.fassade.shared.StringConstants;
 import de.applejuicenet.client.fassade.tools.MD5Encoder;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ApplejuiceFassade implements CoreConnectionSettingsListener {
@@ -433,23 +433,19 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
     public void saveAJSettings(AJSettings ajSettings) {
         StringBuilder parameters = new StringBuilder();
 
-        try {
-            parameters.append("Nickname=" + URLEncoder.encode(ajSettings.getNick(), "UTF-8"));
-            parameters.append("&XMLPort=" + Long.toString(ajSettings.getXMLPort()));
-            parameters.append("&Port=" + Long.toString(ajSettings.getPort()));
-            parameters.append("&MaxUpload=" + Long.toString(ajSettings.getMaxUpload()));
-            parameters.append("&MaxDownload=" + Long.toString(ajSettings.getMaxDownload()));
-            parameters.append("&Speedperslot=" + Integer.toString(ajSettings.getSpeedPerSlot()));
-            parameters.append("&Incomingdirectory=" + URLEncoder.encode(ajSettings.getIncomingDir(), "UTF-8"));
-            parameters.append("&Temporarydirectory=" + URLEncoder.encode(ajSettings.getTempDir(), "UTF-8"));
-            parameters.append("&maxconnections=" + URLEncoder.encode(Long.toString(ajSettings.getMaxConnections()), "UTF-8"));
-            parameters.append("&maxsourcesperfile=" + URLEncoder.encode(Long.toString(ajSettings.getMaxSourcesPerFile()), "UTF-8"));
-            parameters.append("&autoconnect=" + URLEncoder.encode(Boolean.toString(ajSettings.isAutoConnect()), "UTF-8"));
-            parameters.append("&maxnewconnectionsperturn=" +
-                    URLEncoder.encode(Long.toString(ajSettings.getMaxNewConnectionsPerTurn()), "UTF-8"));
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        }
+        parameters.append("Nickname=" + URLEncoder.encode(ajSettings.getNick(), StandardCharsets.UTF_8));
+        parameters.append("&XMLPort=" + Long.toString(ajSettings.getXMLPort()));
+        parameters.append("&Port=" + Long.toString(ajSettings.getPort()));
+        parameters.append("&MaxUpload=" + Long.toString(ajSettings.getMaxUpload()));
+        parameters.append("&MaxDownload=" + Long.toString(ajSettings.getMaxDownload()));
+        parameters.append("&Speedperslot=" + Integer.toString(ajSettings.getSpeedPerSlot()));
+        parameters.append("&Incomingdirectory=" + URLEncoder.encode(ajSettings.getIncomingDir(), StandardCharsets.UTF_8));
+        parameters.append("&Temporarydirectory=" + URLEncoder.encode(ajSettings.getTempDir(), StandardCharsets.UTF_8));
+        parameters.append("&maxconnections=" + URLEncoder.encode(Long.toString(ajSettings.getMaxConnections()), StandardCharsets.UTF_8));
+        parameters.append("&maxsourcesperfile=" + URLEncoder.encode(Long.toString(ajSettings.getMaxSourcesPerFile()), StandardCharsets.UTF_8));
+        parameters.append("&autoconnect=" + URLEncoder.encode(Boolean.toString(ajSettings.isAutoConnect()), StandardCharsets.UTF_8));
+        parameters.append("&maxnewconnectionsperturn=" +
+                URLEncoder.encode(Long.toString(ajSettings.getMaxNewConnectionsPerTurn()), StandardCharsets.UTF_8));
 
         HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
                 "/function/setsettings?password=" + coreHolder.getCorePassword() + "&" + parameters.toString(),
@@ -582,21 +578,15 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
 
         String encodedName = newFilename;
 
-        try {
-            StringBuffer tempLink = new StringBuffer(encodedName);
+        StringBuffer tempLink = new StringBuffer(encodedName);
 
-            for (int i = 0; i < tempLink.length(); i++) {
-                if (tempLink.charAt(i) == ' ') {
-                    tempLink.setCharAt(i, '.');
-                }
+        for (int i = 0; i < tempLink.length(); i++) {
+            if (tempLink.charAt(i) == ' ') {
+                tempLink.setCharAt(i, '.');
             }
-
-            encodedName = URLEncoder.encode(tempLink.toString(), "ISO-8859-1");
-        } catch (UnsupportedEncodingException ex) {
-            ;
-
-            // gibbet, also nix zu behandeln...
         }
+
+        encodedName = URLEncoder.encode(tempLink.toString(), StandardCharsets.ISO_8859_1);
 
         HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.POST,
                 "/function/renamedownload?password=" + coreHolder.getCorePassword() + "&id=" + download.getId() +
@@ -809,21 +799,15 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
         subdir = processSubdir(subdir);
         String encodedLink = link;
 
-        try {
-            StringBuffer tempLink = new StringBuffer(link);
+        StringBuffer tempLink = new StringBuffer(link);
 
-            for (int i = 0; i < tempLink.length(); i++) {
-                if (tempLink.charAt(i) == ' ') {
-                    tempLink.setCharAt(i, '.');
-                }
+        for (int i = 0; i < tempLink.length(); i++) {
+            if (tempLink.charAt(i) == ' ') {
+                tempLink.setCharAt(i, '.');
             }
-
-            encodedLink = URLEncoder.encode(tempLink.toString(), "ISO-8859-1");
-        } catch (UnsupportedEncodingException ex) {
-            ;
-
-            //gibbet nicht, also nix zu behandeln...
         }
+
+        encodedLink = URLEncoder.encode(tempLink.toString(), StandardCharsets.ISO_8859_1);
 
         return HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
                 "/function/processlink?password=" + coreHolder.getCorePassword() + "&link=" +
@@ -919,14 +903,10 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
         int i = 1;
 
         for (ShareEntry curShareEntry : shareDirs) {
-            try {
-                parameters.append(StringConstants.AND_SHAREDDIRECTORY);
-                parameters.append(i);
-                parameters.append(StringConstants.GLEICH);
-                parameters.append(URLEncoder.encode(curShareEntry.getDir(), StringConstants.UTF_8));
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
+            parameters.append(StringConstants.AND_SHAREDDIRECTORY);
+            parameters.append(i);
+            parameters.append(StringConstants.GLEICH);
+            parameters.append(URLEncoder.encode(curShareEntry.getDir(), StandardCharsets.UTF_8));
 
             parameters.append(StringConstants.AND_SHARESUB);
             parameters.append(i);
@@ -936,14 +916,10 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
         }
 
         for (String curPath : paths) {
-            try {
-                parameters.append(StringConstants.AND_SHAREDDIRECTORY);
-                parameters.append(i);
-                parameters.append(StringConstants.GLEICH);
-                parameters.append(URLEncoder.encode(curPath, StringConstants.UTF_8));
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
+            parameters.append(StringConstants.AND_SHAREDDIRECTORY);
+            parameters.append(i);
+            parameters.append(StringConstants.GLEICH);
+            parameters.append(URLEncoder.encode(curPath, StandardCharsets.UTF_8));
 
             parameters.append(StringConstants.AND_SHARESUB);
             parameters.append(i);
@@ -987,11 +963,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
         int i = 1;
 
         for (ShareEntry curShareEntry : newShare) {
-            try {
-                parameters += "&sharedirectory" + i + "=" + URLEncoder.encode(curShareEntry.getDir(), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
+            parameters += "&sharedirectory" + i + "=" + URLEncoder.encode(curShareEntry.getDir(), StandardCharsets.UTF_8);
 
             parameters += "&sharesub" + i + "=" + (curShareEntry.getShareMode() == SHAREMODE.SUBDIRECTORY ? "true" : "false");
             i++;

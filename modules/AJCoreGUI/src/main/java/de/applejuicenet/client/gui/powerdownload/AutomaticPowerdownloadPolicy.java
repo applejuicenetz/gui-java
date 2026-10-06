@@ -127,7 +127,7 @@ public abstract class AutomaticPowerdownloadPolicy extends Thread {
                 }
 
                 applejuiceFassade.pauseDownload(dos);
-                applejuiceFassade.setPowerDownload(dos, new Integer(0));
+                applejuiceFassade.setPowerDownload(dos, Integer.valueOf(0));
             }
         } catch (Exception ex) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);

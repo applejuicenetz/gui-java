@@ -15,8 +15,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 
 /**
@@ -144,18 +144,7 @@ public class RenameDownloadDialog extends JDialog
             }
          }
 
-         try
-         {
-            neuerName = URLEncoder.encode(tempLink.toString(), "ISO-8859-1");
-         }
-         catch(UnsupportedEncodingException ex)
-         {
-            ;
-
-            //gibbet nicht, also nix zu behandeln...
-         }
-
-         return neuerName;
+         return URLEncoder.encode(tempLink.toString(), StandardCharsets.ISO_8859_1);
       }
       else
       {

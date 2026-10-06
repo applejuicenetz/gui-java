@@ -276,7 +276,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
                     String tmp = verfuegbar.replaceFirst("%s", decimalFormat.format(partList.getProzentVerfuegbar()));
 
                     actualDLDateiName.setText(dateiNameText + " - " + tmp);
-                    actualDlOverviewTable.setPartList(partList, new Integer(download.getId()));
+                    actualDlOverviewTable.setPartList(partList, Integer.valueOf(download.getId()));
                 }
 
                 return true;
@@ -300,7 +300,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
             if (partList != null && !isInterrupted()) {
                 actualDLDateiName.setText(tmp + " - " +
                         verfuegbar.replaceFirst("%s", decimalFormat.format(partList.getProzentVerfuegbar())));
-                actualDlOverviewTable.setPartList(partList, new Integer(downloadSoure.getId()));
+                actualDlOverviewTable.setPartList(partList, Integer.valueOf(downloadSoure.getId()));
             }
 
             return false;

@@ -436,7 +436,7 @@ public class DownloadController extends GuiController {
                     }
                 }
 
-                AppleJuiceClient.getAjFassade().setPowerDownload(temp, new Integer(powerDownload));
+                AppleJuiceClient.getAjFassade().setPowerDownload(temp, Integer.valueOf(powerDownload));
                 if (downloadPanel.getBtnPowerDownloadAktiv().isSelected()) {
                     SoundPlayer.getInstance().playSound(SoundPlayer.POWER);
                 }
@@ -644,7 +644,7 @@ public class DownloadController extends GuiController {
 
             if (programToExecute.length() != 0) {
                 for (Download curDownload : selectedDownloads) {
-                    Integer shareId = new Integer(curDownload.getShareId());
+                    Integer shareId = Integer.valueOf(curDownload.getShareId());
 
                     try {
                         Share share = (Share) AppleJuiceClient.getAjFassade().getObjectById(shareId);

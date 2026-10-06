@@ -216,7 +216,7 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
 
    public Integer getPort()
    {
-      return new Integer(port.getText());
+      return Integer.valueOf(port.getText());
    }
 
    class PortFocusListener extends FocusAdapter

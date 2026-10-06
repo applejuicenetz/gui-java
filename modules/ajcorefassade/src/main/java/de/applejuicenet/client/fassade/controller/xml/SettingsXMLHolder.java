@@ -75,7 +75,7 @@ public class SettingsXMLHolder extends WebXMLParser
       long maxSourcesPerFile = Long.parseLong(nodes.item(0).getFirstChild().getNodeValue());
 
       nodes = document.getElementsByTagName(StringConstants.AUTOCONNECT);
-      boolean autoConnect = new Boolean(nodes.item(0).getFirstChild().getNodeValue()).booleanValue();
+      boolean autoConnect = Boolean.parseBoolean(nodes.item(0).getFirstChild().getNodeValue());
 
       nodes = document.getElementsByTagName(StringConstants.SPEEDPERSLOT);
       int speedPerSlot = Integer.parseInt(nodes.item(0).getFirstChild().getNodeValue());

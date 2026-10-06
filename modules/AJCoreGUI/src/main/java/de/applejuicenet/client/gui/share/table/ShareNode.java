@@ -290,7 +290,7 @@ public class ShareNode implements Node
       {
          try
          {
-            AppleJuiceClient.getAjFassade().setPrioritaet(share, new Integer(prio));
+            AppleJuiceClient.getAjFassade().setPrioritaet(share, Integer.valueOf(prio));
          }
          catch(IllegalArgumentException e)
          {

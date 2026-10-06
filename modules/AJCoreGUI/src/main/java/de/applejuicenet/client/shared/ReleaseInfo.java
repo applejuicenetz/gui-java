@@ -52,11 +52,7 @@ public class ReleaseInfo {
     }
 
     private static String encodeValue(String value) {
-        try {
-            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex.getCause());
-        }
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 
 }

@@ -113,7 +113,7 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
 
     private void setPowerDownload(List<Download> downloads2Start)
             throws IllegalArgumentException {
-        applejuiceFassade.setPowerDownload(downloads2Start, new Integer(
+        applejuiceFassade.setPowerDownload(downloads2Start, Integer.valueOf(
                 pwdlValue));
         informedPowerdownload = pwdlValue;
     }
@@ -208,14 +208,14 @@ public class StandardAutomaticPwdlPolicy extends AutomaticPowerdownloadPolicy {
         private Double prozentGeladen;
         private Long groesse;
         private Integer id;
-        private Integer quellenAnzahl = new Integer(0);
+        private Integer quellenAnzahl = Integer.valueOf(0);
 
         public Sortierkriterium(Double prozentGeladen, Long groesse,
                 Integer id, DownloadSource[] quellen) {
             this.prozentGeladen = prozentGeladen;
             this.groesse = groesse;
             this.id = id;
-            this.quellenAnzahl = new Integer(quellen.length);
+            this.quellenAnzahl = Integer.valueOf(quellen.length);
         }
 
         public Sortierkriterium(Download current) {

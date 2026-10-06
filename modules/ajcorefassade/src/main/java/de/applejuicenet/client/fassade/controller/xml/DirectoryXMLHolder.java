@@ -6,6 +6,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Vector;
 
@@ -47,7 +48,7 @@ public class DirectoryXMLHolder extends WebXMLParser {
 			if (directory.length() == 0) {
 				reload("", false);
 			} else {
-				reload("directory=" + URLEncoder.encode(directory, "UTF-8"),
+				reload("directory=" + URLEncoder.encode(directory, StandardCharsets.UTF_8),
 						false);
 			}
 			Element e = null;

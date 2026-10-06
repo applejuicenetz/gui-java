@@ -202,7 +202,7 @@ public class SharePanel extends TklPanel {
 
         cmbPrio.setEditable(false);
         for (int i = 1; i < 251; i++) {
-            cmbPrio.addItem(new Integer(i));
+            cmbPrio.addItem(Integer.valueOf(i));
         }
 
         sharedwsub = new JMenuItem();

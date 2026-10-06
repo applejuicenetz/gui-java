@@ -667,7 +667,7 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
                     temp = temp.substring(0, pos + 2);
                 }
 
-                double pwdl = new Double(temp).doubleValue();
+                double pwdl = Double.parseDouble(temp);
 
                 if (pwdl < 2.2 || pwdl > 50) {
                     ratio.setText("2.2");
