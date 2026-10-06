@@ -432,31 +432,12 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
                 settings = new Settings();
             }
 
-            Color downloadFertigHintergrundColor = null;
-            Color quelleHintergrundColor = null;
-            boolean farbenAktiv;
             boolean downloadUebersicht;
             boolean loadPlugins;
             boolean enableToolTip;
-            String temp;
-
-            farbenAktiv = propertyHandler.get("options_farben_aktiv", "true").equals("true");
-            temp = propertyHandler.get("options_farben_hintergrund_downloadFertig", "-13382656");
-            if (temp.length() != 0) {
-                downloadFertigHintergrundColor = new Color(parseIntOr(temp, -13382656));
-            }
-
-            temp = propertyHandler.get("options_farben_hintergrund_quelle", "-205");
-            if (temp.length() != 0) {
-                quelleHintergrundColor = new Color(parseIntOr(temp, -205));
-            }
-
             downloadUebersicht = propertyHandler.getAsBoolean("options_download_uebersicht", true);
             loadPlugins = propertyHandler.getAsBoolean("options_loadplugins", true);
             enableToolTip = propertyHandler.getAsBoolean("options_enableToolTip", true);
-            settings.setFarbenAktiv(farbenAktiv);
-            settings.setDownloadFertigHintergrundColor(downloadFertigHintergrundColor);
-            settings.setQuelleHintergrundColor(quelleHintergrundColor);
             settings.loadPluginsOnStartup(loadPlugins);
             settings.enableToolTipEnabled(enableToolTip);
             settings.setDownloadUebersicht(downloadUebersicht);
@@ -468,9 +449,6 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     }
 
     public void saveSettings(Settings settings) {
-        propertyHandler.put("options_farben_aktiv", settings.isFarbenAktiv());
-        propertyHandler.put("options_farben_hintergrund_downloadFertig", settings.getDownloadFertigHintergrundColor().getRGB());
-        propertyHandler.put("options_farben_hintergrund_quelle", settings.getQuelleHintergrundColor().getRGB());
         propertyHandler.put("options_loadplugins", settings.shouldLoadPluginsOnStartup());
         propertyHandler.put("options_enableToolTip", settings.isToolTipEnabled());
         propertyHandler.put("options_download_uebersicht", settings.isDownloadUebersicht());
@@ -584,10 +562,6 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
             aPropertyHandler.put("options_logging_level", "INFO");
             aPropertyHandler.put("options_download_uebersicht", true);
-            aPropertyHandler.put("options_farben_aktiv", true);
-
-            aPropertyHandler.put("options_farben_hintergrund_downloadFertig", -13382656);
-            aPropertyHandler.put("options_farben_hintergrund_quelle", -205);
 
             aPropertyHandler.put("options_lookandfeels_default_name", "JGoodies Plastic");
             aPropertyHandler.put("options_location_height", "");

@@ -55,17 +55,6 @@ public class PropertiesManagerRobustnessTest {
     }
 
     @Test(timeout = 20000)
-    public void invalidColorFallsBackToDefaultWithoutExiting() throws Exception {
-        File file = write("options_farben_hintergrund_quelle=nichtsZahl\noptions_farben_aktiv=false\n");
-        PropertiesManager manager = manager(file);
-        Settings settings = manager.getSettings();
-        assertNotNull(settings);
-        assertFalse(settings.isFarbenAktiv());
-        assertEquals(new java.awt.Color(-205), settings.getQuelleHintergrundColor());
-        assertFalse(AppleJuiceDialog.rewriteProperties);
-    }
-
-    @Test(timeout = 20000)
     public void otherSettingsSurviveOneBadValue() throws Exception {
         File file = write("options_remote_port=kaputt\noptions_sprache=deutsch\noptions_sound=false\n"
                 + "options_columns_download_column1_width=222\n");

@@ -7,7 +7,8 @@
 - [red171] Unlesbare Einstellungen werden nur nach Rückfrage und Sicherung zurückgesetzt.
 - [red171] Fehlerhafte Core-Updates lassen den letzten gültigen Transferzustand erhalten.
 - [red171] Der Verbindungswizard liest seine Vorgaben aus der `presets.json` (Datei aus dem config-wizard-Repository) statt aus der `wizard.xml`.
-- [red171] Optionen in zwei Bereiche geteilt: „Core-Einstellungen“ (gehen an den Core) und „JavaGUI-Einstellungen“ (nur lokal); Logging, Updatebenachrichtigung und Plugins beim Start stehen jetzt unter „Allgemein“.
+- [red171] Optionen in zwei Bereiche geteilt: „Core-Einstellungen“ (gehen an den Core) und „JavaGUI-Einstellungen“ (nur lokal); „Allgemein“ fasst Ansicht, Start und Protokollierung in gruppierten Bereichen zusammen.
+- [red171] Optionen: Einstellungen für Hintergrundfarben entfernt; fertige Downloads sind immer grün, die Quellenfarbe hatte keine Wirkung.
 - [red171] Optionen → Verbindungen: Upload und Download lassen sich wahlweise in kb/s oder MB/s eingeben.
 
 - [red171] „Mein Share“ – Dateiliste:

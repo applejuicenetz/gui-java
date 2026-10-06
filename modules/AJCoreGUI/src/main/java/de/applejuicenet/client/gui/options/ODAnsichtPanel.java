@@ -6,6 +6,7 @@ package de.applejuicenet.client.gui.options;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.DialogLocation;
+import de.applejuicenet.client.gui.controller.GuiText;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -13,17 +14,13 @@ import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
-import de.applejuicenet.client.shared.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 
 /**
@@ -36,23 +33,20 @@ import java.io.File;
  * @author Maj0r <aj@tkl-soft.de>
  */
 public class ODAnsichtPanel extends JPanel implements OptionsRegister {
-    private JLabel farbeFertigerDownload = new JLabel("      ");
-    private JLabel farbeQuelle = new JLabel("      ");
-    private Settings settings;
-    private JCheckBox cmbAktiv = new JCheckBox();
     private JCheckBox cmbStartscreenZeigen = new JCheckBox();
     private JCheckBox cmbTabellenbreiten = new JCheckBox();
     private JCheckBox cmbIpMaskieren = new JCheckBox();
+    private JCheckBox updateNotification = new JCheckBox();
+    private JCheckBox loadPlugins = new JCheckBox();
+    private JComboBox<LevelItem> cmbLog;
     private final Logger logger;
     private Icon menuIcon;
     private String menuText;
     private boolean dirty = false;
-    private Border emptyBorder = BorderFactory.createEmptyBorder(1, 1, 1, 1);
 
     public ODAnsichtPanel() {
         logger = LoggerFactory.getLogger(getClass());
         try {
-            settings = Settings.getSettings();
             init();
         } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
@@ -63,8 +57,8 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         IconManager im = IconManager.getInstance();
 
-        menuIcon = im.getIcon("opt_ansicht");
-        cmbAktiv.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.aktiv"));
+        menuIcon = im.getIcon("opt_standard");
+        menuText = languageSelector.getFirstAttrbuteByTagName("javagui.options.allgemein.caption");
         cmbStartscreenZeigen.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.zeigestartscreen"));
 
         cmbTabellenbreiten.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.tabellenbreitenmerken"));
@@ -72,14 +66,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
         cmbIpMaskieren.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.ipmaskieren"));
 
         setLayout(new BorderLayout());
-        farbeFertigerDownload.setOpaque(true);
-        farbeFertigerDownload.setBorder(emptyBorder);
-        farbeFertigerDownload.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        farbeFertigerDownload.addMouseListener(new ColorChooserMouseAdapter());
-        farbeQuelle.setOpaque(true);
-        farbeQuelle.setBorder(emptyBorder);
-        farbeQuelle.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        farbeQuelle.addMouseListener(new ColorChooserMouseAdapter());
         OptionsManager om = OptionsManagerImpl.getInstance();
 
         cmbStartscreenZeigen.setSelected(om.shouldShowConnectionDialogOnStartup());
@@ -100,15 +86,29 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
                 dirty = true;
             }
         });
-        cmbAktiv.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent ce) {
-                dirty = true;
-                settings.setFarbenAktiv(cmbAktiv.isSelected());
+
+        updateNotification.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.updateinfotext"));
+        updateNotification.setSelected(om.getUpdateInfo());
+        updateNotification.addItemListener(e -> dirty = true);
+        loadPlugins.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.ladeplugins"));
+        loadPlugins.setSelected(om.shouldLoadPluginsOnStartup());
+        loadPlugins.addItemListener(e -> dirty = true);
+
+        LevelItem[] levelItems = {
+            new LevelItem("INFO", "Info"), new LevelItem("WARN", "Warn"), new LevelItem("ERROR", "Error"),
+            new LevelItem("DEBUG", "Debug"), new LevelItem("OFF", "Off")
+        };
+        cmbLog = new JComboBox<>(levelItems);
+        String currentLevel = om.getLogLevel().toString();
+        for (int i = 0; i < levelItems.length; i++) {
+            if (levelItems[i].getLevel().equals(currentLevel)) {
+                cmbLog.setSelectedIndex(i);
             }
-        });
+        }
+        cmbLog.addItemListener(e -> dirty = true);
 
         ImageIcon icon = im.getIcon("hint");
-        JLabel hint1 = new JLabel(icon) {
+        JLabel hint3 = new JLabel(icon) {
             public JToolTip createToolTip() {
                 MultiLineToolTip tip = new MultiLineToolTip();
 
@@ -116,74 +116,38 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
                 return tip;
             }
         };
+        hint3.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.options.logging.ttip"));
 
-        JLabel hint2 = new JLabel(icon) {
-            public JToolTip createToolTip() {
-                MultiLineToolTip tip = new MultiLineToolTip();
+        JPanel logRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        logRow.add(GuiText.label("javagui.options.logging"));
+        logRow.add(Box.createHorizontalStrut(5));
+        logRow.add(cmbLog);
+        logRow.add(Box.createHorizontalStrut(5));
+        logRow.add(hint3);
 
-                tip.setComponent(this);
-                return tip;
-            }
-        };
+        JPanel box = new JPanel();
+        box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
+        box.add(group("javagui.options.group.start", cmbStartscreenZeigen, loadPlugins, updateNotification));
+        box.add(group("javagui.options.group.anzeige", cmbTabellenbreiten, cmbIpMaskieren));
+        box.add(group("javagui.options.group.logging", logRow));
 
-        String tooltipp = languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.ttipp_farbewaehlen");
-
-        hint1.setToolTipText(tooltipp);
-        hint2.setToolTipText(tooltipp);
-
-        GridBagConstraints constraints = new GridBagConstraints();
-
-        constraints.anchor = GridBagConstraints.WEST;
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.insets.bottom = 5;
-
-        JPanel panel1 = new JPanel();
-
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        panel1.setLayout(new GridBagLayout());
-        panel1.setBorder(BorderFactory.createTitledBorder(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.hintergrundfarben")));
-        panel1.add(cmbAktiv, constraints);
-        constraints.gridy = 1;
-        constraints.insets.left = 5;
-        constraints.insets.right = 5;
-        panel1.add(new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.fertigerdownload")), constraints);
-        constraints.gridy = 2;
-        panel1.add(new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.quelle")), constraints);
-        menuText = languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.caption");
-        constraints.gridx = 1;
-        constraints.gridy = 1;
-        panel1.add(farbeFertigerDownload, constraints);
-        constraints.gridy = 2;
-        panel1.add(farbeQuelle, constraints);
-        constraints.gridx = 2;
-        constraints.gridy = 1;
-        panel1.add(hint1, constraints);
-        constraints.gridy = 2;
-        panel1.add(hint2, constraints);
-        JPanel panel2 = new JPanel(new BorderLayout());
-
-        panel2.add(panel1, BorderLayout.NORTH);
-        JPanel panel3 = new JPanel(new GridBagLayout());
-
-        constraints.insets.bottom = 0;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.weightx = 1;
-        constraints.weighty = 0;
-        panel3.add(cmbStartscreenZeigen, constraints);
-        constraints.gridy = 1;
-        panel3.add(cmbTabellenbreiten, constraints);
-        constraints.gridy = 2;
-        panel3.add(cmbIpMaskieren, constraints);
-        panel2.add(panel3, BorderLayout.SOUTH);
-
-        add(panel2, BorderLayout.WEST);
+        add(box, BorderLayout.NORTH);
 
         reloadSettings();
 
+    }
+
+    private static JPanel group(String titleKey, JComponent... components) {
+        JPanel panel = new JPanel();
+
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createTitledBorder(LanguageSelector.getInstance().getFirstAttrbuteByTagName(titleKey)));
+        panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        for (JComponent c : components) {
+            c.setAlignmentX(Component.LEFT_ALIGNMENT);
+            panel.add(c);
+        }
+        return panel;
     }
 
     public boolean save() {
@@ -207,7 +171,20 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
                 bRet = true;
             }
 
-            if (settings.save()) {
+            if (om.shouldLoadPluginsOnStartup() != loadPlugins.isSelected()) {
+                om.loadPluginsOnStartup(loadPlugins.isSelected());
+                bRet = true;
+            }
+
+            if (om.getUpdateInfo() != updateNotification.isSelected()) {
+                om.setUpdateInfo(updateNotification.isSelected());
+                bRet = true;
+            }
+
+            String level = ((LevelItem) cmbLog.getSelectedItem()).getLevel();
+
+            if (!om.getLogLevel().toString().equals(level)) {
+                om.setLogLevel(level);
                 bRet = true;
             }
 
@@ -236,40 +213,25 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
     }
 
     public void reloadSettings() {
-        settings = Settings.getSettings();
-        farbeQuelle.setBackground(settings.getQuelleHintergrundColor());
-        farbeFertigerDownload.setBackground(settings.getDownloadFertigHintergrundColor());
-        cmbAktiv.setSelected(settings.isFarbenAktiv());
+        // nothing to do...
     }
 
-    class ColorChooserMouseAdapter extends MouseAdapter {
-        public void mouseEntered(MouseEvent e) {
-            JLabel source = (JLabel) e.getSource();
+    static class LevelItem {
+        private final String level;
+        private final String bezeichnung;
 
-            source.setBorder(BorderFactory.createLineBorder(Color.black));
+        LevelItem(String level, String bezeichnung) {
+            this.level = level;
+            this.bezeichnung = bezeichnung;
         }
 
-        public void mouseClicked(MouseEvent e) {
-            LanguageSelector languageSelector = LanguageSelector.getInstance();
-            JLabel source = (JLabel) e.getSource();
-            Color newColor = JColorChooser.showDialog(null,
-                    languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.hintergrundfarbewaehlen"),
-                    source.getBackground());
-
-            if (newColor != null && newColor.getRGB() != source.getBackground().getRGB()) {
-                source.setBackground(newColor);
-                if (source == farbeQuelle) {
-                    settings.setQuelleHintergrundColor(newColor);
-                } else {
-                    settings.setDownloadFertigHintergrundColor(newColor);
-                }
-            }
+        String getLevel() {
+            return level;
         }
 
-        public void mouseExited(MouseEvent e) {
-            JLabel source = (JLabel) e.getSource();
-
-            source.setBorder(emptyBorder);
+        @Override
+        public String toString() {
+            return bezeichnung;
         }
     }
 }

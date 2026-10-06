@@ -5,8 +5,6 @@ package de.applejuicenet.client.shared;
 
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 
-import java.awt.*;
-
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Settings.java,v 1.13 2009/02/01 14:45:03 maj0r Exp $
  *
@@ -20,31 +18,12 @@ import java.awt.*;
 public class Settings
 {
    private boolean dirty;
-   private Color   downloadFertigHintergrundColor = Color.GREEN;
-   private Color   quelleHintergrundColor         = new Color(255, 255, 150);
-   private boolean farbenAktiv                    = true;
    private boolean downloadUebersicht             = true;
    private boolean loadPlugins                    = true;
    private boolean enableToolTip                  = true;
 
-   public Settings(Boolean farbenAktiv, Color downloadFertigHintergrundColor, Color quelleHintergrundColor,
-                   Boolean downloadUebersicht, Boolean loadPlugins, Boolean enableToolTip)
+   public Settings(Boolean downloadUebersicht, Boolean loadPlugins, Boolean enableToolTip)
    {
-      if(farbenAktiv != null)
-      {
-         this.farbenAktiv = farbenAktiv.booleanValue();
-      }
-
-      if(downloadFertigHintergrundColor != null)
-      {
-         this.downloadFertigHintergrundColor = downloadFertigHintergrundColor;
-      }
-
-      if(quelleHintergrundColor != null)
-      {
-         this.quelleHintergrundColor = quelleHintergrundColor;
-      }
-
       if(downloadUebersicht != null)
       {
          this.downloadUebersicht = downloadUebersicht.booleanValue();
@@ -82,28 +61,9 @@ public class Settings
       return false;
    }
 
-   public Color getDownloadFertigHintergrundColor()
-   {
-      return downloadFertigHintergrundColor;
-   }
-
-   public void setDownloadFertigHintergrundColor(Color downloadFertigHintergrundColor)
-   {
-      if(this.downloadFertigHintergrundColor.getRGB() != downloadFertigHintergrundColor.getRGB())
-      {
-         dirty                               = true;
-         this.downloadFertigHintergrundColor = downloadFertigHintergrundColor;
-      }
-   }
-
    public boolean isDownloadUebersicht()
    {
       return downloadUebersicht;
-   }
-
-   public Color getQuelleHintergrundColor()
-   {
-      return quelleHintergrundColor;
    }
 
    public void setDownloadUebersicht(boolean downloadUebersicht)
@@ -112,29 +72,6 @@ public class Settings
       {
          dirty                   = true;
          this.downloadUebersicht = downloadUebersicht;
-      }
-   }
-
-   public void setQuelleHintergrundColor(Color quelleHintergrundColor)
-   {
-      if(this.quelleHintergrundColor.getRGB() != quelleHintergrundColor.getRGB())
-      {
-         dirty                       = true;
-         this.quelleHintergrundColor = quelleHintergrundColor;
-      }
-   }
-
-   public boolean isFarbenAktiv()
-   {
-      return farbenAktiv;
-   }
-
-   public void setFarbenAktiv(boolean farbenAktiv)
-   {
-      if(this.farbenAktiv != farbenAktiv)
-      {
-         dirty            = true;
-         this.farbenAktiv = farbenAktiv;
       }
    }
 

@@ -5,23 +5,18 @@
 package de.applejuicenet.client.gui.download.table;
 
 import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.fassade.listener.DataUpdateListener;
-import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
-import de.applejuicenet.client.shared.Settings;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class DownloadTableDownloadFilenameCellRenderer extends DownloadTableFilenameCellRenderer implements DataUpdateListener
+public class DownloadTableDownloadFilenameCellRenderer extends DownloadTableFilenameCellRenderer
 {
-   private Settings settings;
+   private static final Color FERTIG_FARBE = new Color(51, 255, 0);
 
    public DownloadTableDownloadFilenameCellRenderer()
    {
       super();
       setOpaque(true);
-      settings = Settings.getSettings();
-      OptionsManagerImpl.getInstance().addSettingsListener(this);
    }
 
    @Override
@@ -31,12 +26,11 @@ public class DownloadTableDownloadFilenameCellRenderer extends DownloadTableFile
       Download download = (Download) value;
       JLabel   label = (JLabel) super.getTableCellRendererComponent(table, download.getFilename(), isSelected, hasFocus, row, column);
 
-      if(settings.isFarbenAktiv() && download.getStatus() == Download.FERTIG)
+      if(download.getStatus() == Download.FERTIG)
       {
-         setBackground(settings.getDownloadFertigHintergrundColor());
+         setBackground(FERTIG_FARBE);
       }
-      else if(settings.isFarbenAktiv() &&
-                 (download.getStatus() == Download.ABBRECHEN || download.getStatus() == Download.ABGEGROCHEN))
+      else if(download.getStatus() == Download.ABBRECHEN || download.getStatus() == Download.ABGEGROCHEN)
       {
          setBackground(Color.RED);
       }
@@ -46,13 +40,5 @@ public class DownloadTableDownloadFilenameCellRenderer extends DownloadTableFile
       }
 
       return label;
-   }
-
-   public void fireContentChanged(DATALISTENER_TYPE type, Object content)
-   {
-      if(type == DATALISTENER_TYPE.SETTINGS_CHANGED)
-      {
-         settings = (Settings) content;
-      }
    }
 }

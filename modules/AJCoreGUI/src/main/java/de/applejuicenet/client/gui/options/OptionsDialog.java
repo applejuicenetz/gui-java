@@ -42,7 +42,6 @@ public class OptionsDialog extends JDialog
    private ODStandardPanel    standardPanel;
    private ODVerbindungPanel  verbindungPanel;
    private ODConnectionPanel  connectionPanel;
-   private ODAllgemeinPanel   allgemeinPanel;
    private ODProxyPanel       proxyPanel;
    private ODAnsichtPanel     ansichtPanel;
    private ODPluginPanel      pluginPanel;
@@ -75,7 +74,6 @@ public class OptionsDialog extends JDialog
       standardPanel   = new ODStandardPanel(this, ajSettings, remote);
       verbindungPanel = new ODVerbindungPanel(this, ajSettings);
       connectionPanel = new ODConnectionPanel(remote, null);
-      allgemeinPanel  = new ODAllgemeinPanel();
       proxyPanel      = new ODProxyPanel();
       ansichtPanel    = new ODAnsichtPanel();
       pluginPanel     = new ODPluginPanel(this);
@@ -83,7 +81,7 @@ public class OptionsDialog extends JDialog
       // Abschnitt 1: Einstellungen, die an den Core gehen
       OptionsRegister[] coreSection = {standardPanel, verbindungPanel, connectionPanel};
       // Abschnitt 2: Einstellungen, die nur das JavaGUI betreffen
-      OptionsRegister[] guiSection = {allgemeinPanel, ansichtPanel, proxyPanel, pluginPanel};
+      OptionsRegister[] guiSection = {ansichtPanel, proxyPanel, pluginPanel};
 
       DefaultListModel<Object> model = new DefaultListModel<>();
 
@@ -164,14 +162,6 @@ public class OptionsDialog extends JDialog
          if(ansichtPanel.isDirty())
          {
             ansichtPanel.save();
-            etwasGeaendert = true;
-         }
-
-         if(allgemeinPanel.isDirty())
-         {
-            om.loadPluginsOnStartup(allgemeinPanel.shouldLoadPluginsOnStartup());
-            om.setUpdateInfo(allgemeinPanel.getUpdateInfo());
-            om.setLogLevel(allgemeinPanel.getLogLevel());
             etwasGeaendert = true;
          }
 
