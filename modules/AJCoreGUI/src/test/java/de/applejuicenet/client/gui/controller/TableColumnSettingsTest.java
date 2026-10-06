@@ -89,7 +89,7 @@ public class TableColumnSettingsTest {
     }
 
     @Test
-    public void compactTablesNeitherReadNorSaveColumnWidths() throws Exception {
+    public void compactTablesDoNotReadOrSaveWidthsUnlessRemembered() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             JFrame frame = new JFrame();
             try {
@@ -102,7 +102,6 @@ public class TableColumnSettingsTest {
                 frame.add(new JScrollPane(table));
                 frame.setSize(800, 400);
                 frame.setVisible(true);
-                resizeColumn(table, 1, 250);
                 table.getColumnModel().getColumn(1).setPreferredWidth(260);
                 table.getColumnModel().moveColumn(1, 2);
                 assertTrue(written.stringPropertyNames().stream().noneMatch(key -> key.endsWith("_width")));
@@ -114,24 +113,52 @@ public class TableColumnSettingsTest {
     }
 
     @Test
-    public void compactTablesReadAndSaveColumnWidthsWhenRemembered() throws Exception {
+    public void compactTablesReadSavedWidthsWhenRemembered() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
+            JTable table = table();
+            TableColumnSettings.install(table, columns(table), key -> "column1_width".equals(key) ? 123 : -1,
+                    (key, value) -> { }, true, () -> true, () -> { });
+            assertEquals(123, table.getColumnModel().getColumn(1).getPreferredWidth());
+        });
+    }
+
+    @Test
+    public void manualResizeActivatesRememberingSavesAllWidthsAndStopsAutoFit() throws Exception {
+        AtomicReference<JTable> tableReference = new AtomicReference<>();
+        String[] values = {"file.bin", "1 KB/s"};
+        Properties written = new Properties();
+        boolean[] remembered = new boolean[1];
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = new JTable(new javax.swing.table.AbstractTableModel() {
+                @Override public int getRowCount() { return 2; }
+                @Override public int getColumnCount() { return 2; }
+                @Override public Object getValueAt(int row, int column) { return values[column]; }
+            });
+            table.setSize(1200, 300);
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            TableColumnSettings.install(table, columns(table), key -> -1,
+                    (key, value) -> written.setProperty(key, Integer.toString(value)), true,
+                    () -> remembered[0], () -> remembered[0] = true);
+            tableReference.set(table);
+        });
+        SwingUtilities.invokeAndWait(() -> {
+            JTable table = tableReference.get();
             JFrame frame = new JFrame();
+            frame.add(new JScrollPane(table));
+            frame.setSize(1200, 400);
+            frame.setVisible(true);
             try {
-                JTable table = table();
-                Properties written = new Properties();
-                TableColumnSettings.install(table, columns(table), key -> "column1_width".equals(key) ? 123 : -1,
-                        (key, value) -> written.setProperty(key, Integer.toString(value)), true, () -> true);
-                assertEquals(123, table.getColumnModel().getColumn(1).getPreferredWidth());
-                frame.add(new JScrollPane(table));
-                frame.setSize(800, 400);
-                frame.setVisible(true);
-                resizeColumn(table, 1, 250);
-                assertTrue(written.containsKey("column1_width"));
+                resizeColumn(table, 1, 400);
+                assertTrue(remembered[0]);
+                assertEquals("400", written.getProperty("column1_width"));
+                assertTrue(written.containsKey("column0_width"));
+                values[1] = "Much longer speed value than before";
+                TableColumnSettings.refreshCompact(table);
             } finally {
                 frame.dispose();
             }
         });
+        SwingUtilities.invokeAndWait(() -> assertEquals(400, tableReference.get().getColumnModel().getColumn(1).getWidth()));
     }
 
     @Test

@@ -47,7 +47,7 @@ public final class TableColumnSettings {
         install(table, columns,
                 key -> manager.getTableColumnSetting("options_columns_" + view + "_" + key),
                 (key, value) -> manager.setTableColumnSetting("options_columns_" + view + "_" + key, value), compact,
-                manager::shouldRememberColumnWidths);
+                manager::shouldRememberColumnWidths, () -> manager.rememberColumnWidths(true));
     }
 
     static void install(JTable table, TableColumn[] columns, ToIntFunction<String> read,
@@ -57,11 +57,12 @@ public final class TableColumnSettings {
 
     static void install(JTable table, TableColumn[] columns, ToIntFunction<String> read,
                         ObjIntConsumer<String> write, boolean compact) {
-        install(table, columns, read, write, compact, () -> false);
+        install(table, columns, read, write, compact, () -> false, () -> { });
     }
 
     static void install(JTable table, TableColumn[] columns, ToIntFunction<String> read,
-                        ObjIntConsumer<String> write, boolean compact, BooleanSupplier rememberWidths) {
+                        ObjIntConsumer<String> write, boolean compact, BooleanSupplier rememberWidths,
+                        Runnable rememberOnManualResize) {
         boolean remember = rememberWidths.getAsBoolean();
         TableColumnModel model = table.getColumnModel();
         List<TableColumn> visible = new ArrayList<>();
@@ -88,11 +89,21 @@ public final class TableColumnSettings {
         }
         for (TableColumn column : columns) {
             column.addPropertyChangeListener(event -> {
-                if (!table.isShowing() || autoFitting[0] || compact && !rememberWidths.getAsBoolean()) {
+                if (!table.isShowing() || autoFitting[0]) {
                     return;
                 }
                 if ("width".equals(event.getPropertyName()) && table.getTableHeader() != null
                         && table.getTableHeader().getResizingColumn() == column) {
+                    if (compact) {
+                        if (!rememberWidths.getAsBoolean()) {
+                            rememberOnManualResize.run();
+                        }
+                        unsaved.clear();
+                        for (TableColumn other : columns) {
+                            write.accept(key(other, "width"), other.getWidth());
+                        }
+                        return;
+                    }
                     unsaved.remove(column);
                     write.accept(key(column, "width"), column.getWidth());
                 } else if (!compact && "preferredWidth".equals(event.getPropertyName())) {
