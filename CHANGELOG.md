@@ -86,6 +86,7 @@
   - XML-Parser lehnen DOCTYPE und externe Entitäten ab
   - Kurze Core-Aufrufe der GUI laufen auf virtuellen Threads; Fehler werden auf dem EDT behandelt
   - Ein haengender Core-Abruf (Link, Erreichbarkeit, Share-Liste) blockiert keine anderen Abrufe mehr
+  - Plugin- und Policy-JARs werden nach dem Einlesen wieder geschlossen
 - [red171] SpeedGraph:
   - Zeitbasierter, begrenzter Verlauf und Zeichenlogik ersetzen alte
     pixelabhängige Speicherung und Timer

@@ -18,8 +18,8 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PolicyJarClassLoader.java,v 1.7 2009/01/12 09:02:56 maj0r Exp $
@@ -72,48 +72,35 @@ public class PolicyJarClassLoader extends URLClassLoader {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private List<String> loadClassBytesFromJar(File jar)
             throws Exception {
         if (!jar.isFile()) {
             return null;
         }
 
-        JarFile jf = new JarFile(jar);
-        String entryName;
         List<String> classes = new ArrayList<String>();
-        ZipEntry entry;
-        InputStream is;
-        int l;
-        byte[] buf;
-        int read;
-        int incr;
-        String name;
 
-        for (Enumeration e = jf.entries(); e.hasMoreElements(); ) {
-            entry = (ZipEntry) e.nextElement();
+        // Die Klassen werden vollstaendig eingelesen und definiert; die Datei wird danach nicht mehr geoeffnet gehalten
+        try (JarFile jf = new JarFile(jar)) {
+            for (Enumeration<JarEntry> e = jf.entries(); e.hasMoreElements(); ) {
+                JarEntry entry = e.nextElement();
+                String entryName = entry.getName();
 
-            entryName = entry.getName();
-            if (entryName.indexOf(".class") == -1) {
-                continue;
+                if (entryName.indexOf(".class") == -1) {
+                    continue;
+                }
+
+                byte[] buf;
+
+                try (InputStream is = jf.getInputStream(entry)) {
+                    buf = is.readAllBytes();
+                }
+
+                String name = stripClassSuffix(entryName.replace('/', '.'));
+
+                defineClass(name, buf, 0, buf.length);
+                classes.add(name);
             }
-
-            is = jf.getInputStream(entry);
-            l = (int) entry.getSize();
-            buf = new byte[l];
-            read = 0;
-
-            while (read < l) {
-                incr = is.read(buf, read, l - read);
-
-                read += incr;
-            }
-
-            name = entryName.replace('/', '.');
-
-            name = stripClassSuffix(name);
-            defineClass(name, buf, 0, buf.length);
-            classes.add(name);
         }
 
         return classes;

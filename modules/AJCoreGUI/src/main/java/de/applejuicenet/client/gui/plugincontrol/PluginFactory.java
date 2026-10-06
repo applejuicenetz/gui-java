@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public abstract class PluginFactory {
@@ -64,10 +63,13 @@ public abstract class PluginFactory {
 
             for (Map.Entry<String, File> pluginFile : tempListe.entrySet()) {
                 try {
-                    ZipFile jf = new ZipFile(pluginFile.getValue());
-                    ZipEntry entry = jf.getEntry("plugin.properties");
+                    boolean isPlugin;
 
-                    if (entry == null) {
+                    try (ZipFile jf = new ZipFile(pluginFile.getValue())) {
+                        isPlugin = jf.getEntry("plugin.properties") != null;
+                    }
+
+                    if (!isPlugin) {
                         continue;
                     }
 

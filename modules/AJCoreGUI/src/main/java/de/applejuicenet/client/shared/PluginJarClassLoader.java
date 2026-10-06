@@ -14,6 +14,7 @@ import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.SecureClassLoader;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -69,13 +70,19 @@ public class PluginJarClassLoader extends SecureClassLoader {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void loadClassBytesFromJar(File jar) throws Exception {
         if (!jar.isFile()) {
             return;
         }
 
-        JarFile jf = new JarFile(jar);
+        // Alle Klassen und Ressourcen werden hier vollstaendig eingelesen; danach wird die Datei nicht mehr gebraucht
+        try (JarFile jf = new JarFile(jar)) {
+            loadClassBytes(jar, jf);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadClassBytes(File jar, JarFile jf) throws Exception {
         String entryName;
         HashMap<String, byte[]> lazyLoad = new HashMap<>();
 
@@ -108,10 +115,8 @@ public class PluginJarClassLoader extends SecureClassLoader {
             byte[] buf = readEntry(jf, entry);
 
             if (entryName.equals("plugin.properties")) {
-                InputStream iS = jf.getInputStream(entry);
-
                 pluginProperties = new Properties();
-                pluginProperties.load(new InputStreamReader(iS, StandardCharsets.UTF_8));
+                pluginProperties.load(new InputStreamReader(new ByteArrayInputStream(buf), StandardCharsets.UTF_8));
             } else if (entryName.indexOf("icon.gif") != -1) {
                 pluginIcon = new ImageIcon(buf);
                 availableIcons.put(entryName.substring(0, entryName.length() - 4), pluginIcon);
@@ -122,23 +127,22 @@ public class PluginJarClassLoader extends SecureClassLoader {
                 availableIcons.put(entryName.substring(0, entryName.length() - 4), icon);
                 availableIcons2File.put(entryName, jar);
             } else if (entryName.startsWith("language_") && entryName.endsWith(".properties")) {
-                InputStream iS = jf.getInputStream(entry);
-
                 Properties curLanguageProperties = new Properties();
 
-                curLanguageProperties.load(new InputStreamReader(iS, StandardCharsets.UTF_8));
+                curLanguageProperties.load(new InputStreamReader(new ByteArrayInputStream(buf), StandardCharsets.UTF_8));
 
                 String sprache = curLanguageProperties.getProperty("language");
 
                 languageFiles.put(sprache, curLanguageProperties);
             } else if (entryName.endsWith(".jar")) {
                 File aFile = File.createTempFile("ajg", null);
-                FileOutputStream os = new FileOutputStream(aFile);
 
-                os.write(buf);
-                os.close();
-                loadClassBytesFromJar(aFile);
-                aFile.delete();
+                try {
+                    Files.write(aFile.toPath(), buf);
+                    loadClassBytesFromJar(aFile);
+                } finally {
+                    aFile.delete();
+                }
             } else {
                 String name = entryName.replace('/', '.');
 
@@ -168,18 +172,9 @@ public class PluginJarClassLoader extends SecureClassLoader {
 
     private byte[] readEntry(JarFile jf, ZipEntry entry)
             throws IOException {
-        InputStream is = jf.getInputStream(entry);
-        int l = (int) entry.getSize();
-        byte[] buf = new byte[l];
-        int read = 0;
-
-        while (read < l) {
-            int incr = is.read(buf, read, l - read);
-
-            read += incr;
+        try (InputStream is = jf.getInputStream(entry)) {
+            return is.readAllBytes();
         }
-
-        return buf;
     }
 
     @SuppressWarnings("unchecked")
