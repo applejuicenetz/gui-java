@@ -7,3 +7,6 @@ dependency-reduced-pom.xml
 *.exc
 
 pom.xml.versionsBackup
+
+# lokale Arbeitsnotizen
+PLAN.md
