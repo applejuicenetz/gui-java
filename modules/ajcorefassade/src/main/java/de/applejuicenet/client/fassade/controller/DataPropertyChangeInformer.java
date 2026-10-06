@@ -3,12 +3,12 @@ package de.applejuicenet.client.fassade.controller;
 import de.applejuicenet.client.fassade.event.DataPropertyChangeEvent;
 import de.applejuicenet.client.fassade.listener.DataPropertyChangeListener;
 
-import java.util.HashSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.Set;
 
 public final class DataPropertyChangeInformer {
-	private Set<DataPropertyChangeListener> listener = 
-		new HashSet<DataPropertyChangeListener>();
+	private final Set<DataPropertyChangeListener> listener =
+		new CopyOnWriteArraySet<DataPropertyChangeListener>();
 
 	public void addDataPropertyChangeListener(
 			DataPropertyChangeListener dataPropertyChangeListener) {
