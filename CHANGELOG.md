@@ -4,102 +4,42 @@
 
 ### Sichtbare Änderungen
 
-- [red171] Unlesbare Einstellungen werden nur nach Rückfrage und Sicherung zurückgesetzt.
-- [red171] Fehlerhafte Core-Updates lassen den letzten gültigen Transferzustand erhalten.
-- [red171] Der Verbindungswizard liest seine Vorgaben aus der `presets.json` (Datei aus dem config-wizard-Repository) statt aus der `wizard.xml`.
-- [red171] Optionen in zwei Bereiche geteilt: „Core-Einstellungen“ (gehen an den Core) und „JavaGUI-Einstellungen“ (nur lokal); „Allgemein“ fasst Ansicht, Start und Protokollierung in gruppierten Bereichen zusammen.
-- [red171] Optionen: Einstellungen für Hintergrundfarben entfernt; fertige Downloads sind immer grün, die Quellenfarbe hatte keine Wirkung.
-- [red171] Optionen → Verbindungen: Upload und Download lassen sich wahlweise in kb/s oder MB/s eingeben.
-
-- [red171] „Mein Share“ – Dateiliste:
-  - Alle Dateien als `ajfsp`-Links oder AJL-Inhalt in die Zwischenablage kopieren
-  - Sortierknopf wechselt zwischen A-Z und Z-A; Kopieren und AJL-Dateiexport
-    übernehmen die gewählte Reihenfolge
-  - Export- und Kopierbuttons zeigen Tooltips und verschieben beim Hover kein Layout
-  - Rechtsklick zeigt „Aus Liste entfernen“, behält Mehrfachauswahl und verursacht
-    auf leeren Tabellenflächen keinen Fehler
-  - HTML-Dateiexport entfernt
-- [red171] Bedienung und Darstellung:
-  - Option „Tabellenbreiten merken“ unter Ansicht; sie schaltet sich beim Ziehen einer Spaltenbreite
-    selbst ein, speichert die Breiten pro Ansicht und beendet die automatische Anpassung
-  - Neue Option „IP in Statusanzeige maskieren“ (Standard an); Tooltip zeigt die volle IP
-  - „Öffnen mit Standardprogramm“ ist bei Remote-Core ausgegraut und erklärt warum
-  - Menüpunkt „VLC“ und Option „Programm“ unter Ansicht entfernt; „Öffnen mit Standardprogramm“ bleibt
-  - Optionen lassen sich per Cmd+, (macOS) bzw. Strg+, (Windows/Linux) öffnen
-  - Ungültige Eingaben (Download-Link, Nickname im Assistenten, Zielverzeichnis) werden mit rotem
-    Rahmen markiert; die blaue „geändert“-Markierung der Eingabefelder entfällt
-  - Neues Info-Symbol für „Über“ im Iconset „modern“
-  - Log Viewer, SpeedGraph, Version Checker und Share-Treemap zeigen deutsche
-    und englische Texte und übernehmen Sprachwechsel auch in offenen Ansichten
-  - Statusmeldungen, Tooltips und Zahlenformatierung der Plugins folgen der Sprache
-  - Weitere Dialogtexte, Download-Benachrichtigungen und AJL-Dateifilter übersetzt
-- [red171] JavaGUI Memory Monitor:
-  - Umbenannt von „aj Memory Monitor“; Hinweis erklärt, dass der RAM-Verbrauch
-    der JavaGUI angezeigt wird, nicht der des Cores
-  - Fenster öffnet in sinnvoller Größe und ist vergrößerbar
-  - Neue Darstellung mit Belegt, Zugewiesen, Maximal und Verlauf der letzten 2 Minuten
-  - Folgt Theme und Sprache; läuft nur, solange das Fenster sichtbar ist
-- [red171] Neues Plugin „Share-Treemap“:
-  - Größenkarte des Shares mit Ordner-Zoom und Anzeige von Pfaden und Dateigrößen
-  - Farben unterscheiden Videos, Audio, Archive (RAR, ZIP und 7z) und sonstige Dateien
-  - Heatmap zeigt beobachtete Upload-Aktivität bei aktivem Plugin-Tab und wird
-    beim Ende der Core-Verbindung zurückgesetzt
-  - Datei-Kontextmenü kopiert den `ajfsp`-Link; unterstützt auch Remote-Core
-- [red171] Log Viewer:
-  - Logs erscheinen als filterbare Tabelle mit Zeit, Stufe, Quelle und Meldung
-  - Fehler und Warnungen sind farbig hervorgehoben; der erste Fehler wird mit
-    Stacktrace automatisch angezeigt
-  - Suche und Filter nach Stufe; Dateiliste zeigt Datum und Größe
-  - Beim Öffnen bleiben die 20 neuesten Logdateien erhalten, ältere werden
-    ohne Rückfrage gelöscht; das laufende Log bleibt immer erhalten
-- [red171] Version Checker:
-  - Neue Übersicht mit Kontaktanzahl, Core-Versionen und häufigster Version
-  - Filterbare, sortierbare Versionstabelle mit Anteilen und Betriebssystem-Verteilung
-  - Statistik lässt sich zurücksetzen und zählt Upload- und Quellen-IDs getrennt,
-    ohne sie als eindeutige Nutzer auszugeben
-  - Anzeige folgt dem GUI-Theme; Core-Verbindungsende setzt die Statistik zurück
-- [red171] SpeedGraph:
-  - Neue Anzeige mit aktuellen Download- und Uploadraten, Messwert-Durchschnitt
-    und Spitzenwerten
-  - Automatische Einheiten mit Auswahl zwischen binären Bytes, dezimalen Bytes
-    und Bits pro Sekunde
-  - Zeiträume von einer Minute bis einer Stunde, Tooltips und optionale Limitlinien
-  - Verlauf bleibt bei Größenänderungen erhalten und zeigt Lücken bei
-    Verbindungsabbrüchen statt falscher Nullwerte
-  - Hintergrund folgt dem GUI-Theme; vorhandene Linienfarben bleiben erhalten
-- [red171] Stabilität und Töne:
-  - Einstellungen werden atomar gespeichert; ein Schreibfehler setzt sie nicht mehr zurück
-  - Ein einzelner ungültiger Einstellungswert beendet die GUI nicht mehr und setzt keine Einstellungen zurück;
-    vor einem Zurücksetzen entsteht `ajgui.properties.bak`
-  - Tabellen sortieren schneller, Gleichstände behalten ihre Reihenfolge
-  - Teillisten zeigen nach schnellem Wechsel der Auswahl nicht mehr die vorherige Datei
-  - Automatische Powerdownloads aktualisieren beim Ende ihre Bedienelemente auf dem UI-Thread;
-    verspätete Rückmeldungen alter Policies ändern keine neu gestartete Policy
-  - Töne laden im Hintergrund und geben das Audiogerät wieder frei
+- [red171] Downloads:
+  - Ist nur ein Download aktiv, lädt die Partliste sofort ohne manuellen Klick
+  - Partlisten von Download und Quelle aktualisieren jede Sekunde, solange die Ansicht sichtbar ist
+  - Download-Quellen sind standardmäßig nach Nickname sortiert
+- [red171] Optionen:
+  - Zwei Bereiche: „Core-Einstellungen“ (gehen an den Core) und „JavaGUI-Einstellungen“ (nur lokal)
+  - Neu: „Tabellenbreiten merken“, „IP in Statusanzeige maskieren“, Upload/Download wahlweise in kb/s oder MB/s
+  - Entfernt: Hintergrundfarben, Menüpunkt „VLC“ und Option „Programm“
+  - Öffnen per Cmd+, (macOS) bzw. Strg+, (Windows/Linux)
+- [red171] Einstellungen und Core:
+  - Unlesbare Einstellungen werden nur nach Rückfrage und Sicherung (`ajgui.properties.bak`) zurückgesetzt
+  - Einstellungen werden atomar gespeichert; ein ungültiger Wert beendet die GUI nicht mehr
+  - Fehlerhafte Core-Updates lassen den letzten gültigen Transferzustand erhalten
   - „Suchen“ und „Verbinden“ lassen die Oberfläche bei langsamem Core nicht mehr hängen
-  - Soundpacks einheitlich auf 16 Bit / 48 kHz umgestellt
-  - Links öffnen über den Standardbrowser des Systems
-  - „Update prüfen“ meldet auch „keine neuere Version“ oder einen Fehler, jeweils mit Link zum Repository;
-    die Prüfung beim Start bleibt still
+  - Der Verbindungswizard liest seine Vorgaben aus der `presets.json`
+- [red171] „Mein Share“: Dateiliste als `ajfsp`-Links oder AJL kopieren, A-Z/Z-A-Sortierung, HTML-Export entfernt
+- [red171] Bedienung:
+  - „Öffnen mit Standardprogramm“ ist bei Remote-Core ausgegraut
+  - Ungültige Eingaben werden mit rotem Rahmen markiert
+  - „Update prüfen“ meldet auch „keine neuere Version“ und Fehler
+  - Texte und Sprachwechsel in Plugins und Dialogen vervollständigt
+  - Töne laden im Hintergrund; Soundpacks einheitlich auf 16 Bit / 48 kHz
+- [red171] Plugins:
+  - Neu: „Share-Treemap“ mit Ordner-Zoom, Dateitypfarben und Upload-Heatmap
+  - JavaGUI Memory Monitor: neue Darstellung mit Verlauf der letzten 2 Minuten
+  - Log Viewer: filterbare Tabelle, farbige Fehler, die 20 neuesten Logdateien bleiben erhalten
+  - Version Checker: Übersicht und Tabelle mit Versionen und Betriebssystemen, Statistik rücksetzbar
+  - SpeedGraph: aktuelle Raten, Spitzenwerte, wählbare Einheiten und Zeiträume, Lücken bei Verbindungsabbruch
 
 ### Technische Änderungen
 
-- [red171] Code und Bibliotheken:
-  - Modul `tklcontrols` entfernt; Eingabefelder, Labels und Buttons sind normale Swing-Komponenten
-  - Ungültige Eingaben nutzen den FlatLaf-Fehlerrahmen
-  - Ungenutzter Code entfernt (MobileProxy, alter SwingWorker, SecurerXMLHolder u. a.)
-  - Wrapper-Konstruktoren, `URLEncoder`, MD5-Helfer und Plugin-Klassennamen auf aktuelle Java-API
-  - `hashCode` für Upload, Server und Quellen; `Server.equals(null)` korrigiert
-- [red171] Core-Verbindung:
-  - Antworten mit zu kurzem Body, ungültiger Länge oder unvollständigem ZIP führen zu einem Fehler
-  - Header werden gepuffert gelesen
-  - XML-Parser lehnen DOCTYPE und externe Entitäten ab
-  - Kurze Core-Aufrufe der GUI laufen auf virtuellen Threads; Fehler werden auf dem EDT behandelt
-  - Ein haengender Core-Abruf (Link, Erreichbarkeit, Share-Liste) blockiert keine anderen Abrufe mehr
-  - Plugin- und Policy-JARs werden nach dem Einlesen wieder geschlossen
-- [red171] SpeedGraph:
-  - Zeitbasierter, begrenzter Verlauf und Zeichenlogik ersetzen alte
-    pixelabhängige Speicherung und Timer
+- [red171] Modul `tklcontrols` entfernt; normale Swing-Komponenten mit FlatLaf-Fehlerrahmen
+- [red171] Ungenutzten Code und veraltete Java-API-Aufrufe entfernt
+- [red171] Core-Verbindung: geprüfte Antworten, XML-Parser ohne DOCTYPE und externe Entitäten,
+  kurze Aufrufe auf virtuellen Threads, haengende Abrufe blockieren nichts mehr
+- [red171] Tabellen sortieren schneller und stabil
 
 ## 0.86.3
 
