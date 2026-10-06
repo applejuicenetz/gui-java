@@ -42,6 +42,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
     private JLabel label1 = new JLabel();
     private final Logger logger;
     private JCheckBox holeListe = new JCheckBox();
+    private static final long PARTLIST_REFRESH_MS = 1000;
     private PartListWorkerThread partListWorkerThread = null;
     private DownloadPanel downloadPanel;
     private String verfuegbar;
@@ -168,6 +169,11 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
         }
     }
 
+    /** Liefert die aktuell angezeigte Source oder null, wenn die Partliste einen Download oder nichts zeigt. */
+    public DownloadSource getCurrentSource() {
+        return lastPartlistObject instanceof DownloadSource source ? source : null;
+    }
+
     public void setDownloadSource(DownloadSource downloadSource) {
         lastPartlistObject = downloadSource;
         if (!holeListe.isSelected()) {
@@ -227,6 +233,16 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
 
                 boolean shortPause = false;
 
+                if (!actualDlOverviewTable.isShowing()) {
+                    try {
+                        sleep(PARTLIST_REFRESH_MS);
+                        continue;
+                    } catch (InterruptedException iE) {
+                        interrupt();
+                        break;
+                    }
+                }
+
                 if (current instanceof Download download) {
                     if (download.getStatus() == Download.PAUSIERT ||
                             download.getStatus() == Download.SUCHEN_LADEN) {
@@ -241,7 +257,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
 
                 if (shortPause) {
                     try {
-                        sleep(5000);
+                        sleep(PARTLIST_REFRESH_MS);
                         firstRun = false;
                         continue;
                     } catch (InterruptedException iE) {
@@ -325,7 +341,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
                         partList, Integer.valueOf(downloadSoure.getId()));
             }
 
-            return false;
+            return true;
         }
 
         public void setDownload(Download download) {

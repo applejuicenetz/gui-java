@@ -72,6 +72,8 @@ public class DownloadController extends GuiController {
     private boolean firstUpdate = true;
     private boolean isFirstDownloadPropertyChanged = true;
     private volatile boolean selected = false;
+    private int autoPartListId = -1;
+    private boolean autoPartListEligible;
     private String alreadyLoaded;
     private String invalidLink;
     private String linkFailure;
@@ -126,6 +128,7 @@ public class DownloadController extends GuiController {
                     int selected = downloadPanel.getDownloadTable().getSelectedRow();
 
                     if (selected == -1) {
+                        downloadPartListWatcher.setDownloadNode((Download) null);
                         return;
                     }
 
@@ -372,6 +375,8 @@ public class DownloadController extends GuiController {
         downloadPanel.getPowerDownloadPanel().getBtnPdl().setEnabled(false);
         downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
         downloadPanel.getDownloadTable().getSelectionModel().clearSelection();
+        autoPartListId = -1;
+        downloadPartListWatcher.setDownloadNode((Download) null);
     }
 
     private void downloadSourceClicked(DownloadSource downloadSource) {
@@ -839,6 +844,7 @@ public class DownloadController extends GuiController {
 
     public void componentLostSelection() {
         selected = false;
+        autoPartListId = -1;
         updateDownloadPolling();
         downloadPartListWatcher.setDownloadNode((Download) null);
     }
@@ -850,7 +856,11 @@ public class DownloadController extends GuiController {
             return;
         }
         Download download = downloadPanel.getDownloadTableModel().getRow(0);
-        if (newlySelected || downloadPanel.getDownloadSourcesTableModel().getDownload() != download) {
+        boolean partListEligible = download.getStatus() == Download.SUCHEN_LADEN || download.getStatus() == Download.PAUSIERT;
+        boolean partListStale = autoPartListId != download.getId() || autoPartListEligible != partListEligible;
+        if (newlySelected || partListStale || downloadPanel.getDownloadSourcesTableModel().getDownload() != download) {
+            autoPartListId = download.getId();
+            autoPartListEligible = partListEligible;
             downloadClicked(download);
             if (downloadPanel.getDownloadSourcesTableModel().setDownload(download)) {
                 downloadPanel.getDownloadSourcesTableModel().forceResort();
@@ -968,6 +978,27 @@ public class DownloadController extends GuiController {
         }
         if (selected) {
             selectSingleDownload();
+            stopPartListIfSourceGone();
         }
+    }
+
+    private void stopPartListIfSourceGone() {
+        DownloadSource current = downloadPanel.getDownloadOverviewPanel().getCurrentSource();
+
+        if (current == null) {
+            return;
+        }
+        Download parent = downloadPanel.getDownloadSourcesTableModel().getDownload();
+
+        if (parent == null || (parent.getStatus() != Download.SUCHEN_LADEN && parent.getStatus() != Download.PAUSIERT)) {
+            downloadPartListWatcher.setDownloadNode((Download) null);
+            return;
+        }
+        for (DownloadSource source : downloadPanel.getDownloadSourcesTableModel().getContent()) {
+            if (source.getId() == current.getId()) {
+                return;
+            }
+        }
+        downloadPartListWatcher.setDownloadNode((Download) null);
     }
 }
