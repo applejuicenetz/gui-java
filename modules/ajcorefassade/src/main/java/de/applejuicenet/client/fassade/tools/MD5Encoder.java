@@ -1,26 +1,22 @@
 package de.applejuicenet.client.fassade.tools;
 
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 
+/**
+ * MD5 als Kleinbuchstaben-Hex. Das ist das Passwortformat des Core-Protokolls,
+ * kein frei austauschbarer Algorithmus.
+ */
 public abstract class MD5Encoder {
 
 	public static final String getMD5(String text) {
-		byte[] intext = text.getBytes();
-		MessageDigest md5 = null;
 		try {
-			md5 = MessageDigest.getInstance("MD5");
+			// Standardzeichensatz wie bisher (seit Java 18 UTF-8), damit gespeicherte Hashes gleich bleiben
+			return HexFormat.of().formatHex(MessageDigest.getInstance("MD5").digest(text.getBytes(Charset.defaultCharset())));
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
-		byte[] md5rslt = md5.digest(intext);
-		StringBuffer verifyMsg = new StringBuffer();
-		for (int i = 0; i < md5rslt.length; i++) {
-			int hexChar = 0xFF & md5rslt[i];
-			String hexString = Integer.toHexString(hexChar);
-			hexString = (hexString.length() == 1) ? "0" + hexString : hexString;
-			verifyMsg.append(hexString);
-		}
-		return verifyMsg.toString();
 	}
 }

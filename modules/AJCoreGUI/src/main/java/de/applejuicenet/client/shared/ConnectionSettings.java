@@ -1,7 +1,6 @@
 package de.applejuicenet.client.shared;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import de.applejuicenet.client.fassade.tools.MD5Encoder;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/ConnectionSettings.java,v 1.8 2004/10/11 18:18:51 maj0r Exp $
@@ -70,25 +69,7 @@ public class ConnectionSettings {
     }
 
     private String getMD5(String text) {
-        byte[] intext = text.getBytes();
-        MessageDigest md5 = null;
-        try {
-            md5 = MessageDigest.getInstance("MD5");
-        }
-        catch (NoSuchAlgorithmException e) {
-            ;
-            //Gibbet nicht...
-        }
-        byte[] md5rslt = md5.digest(intext);
-
-        StringBuffer verifyMsg = new StringBuffer();
-        for (int i = 0; i < md5rslt.length; i++) {
-            int hexChar = 0xFF & md5rslt[i];
-            String hexString = Integer.toHexString(hexChar);
-            hexString = (hexString.length() == 1) ? "0" + hexString : hexString;
-            verifyMsg.append(hexString);
-        }
-        return verifyMsg.toString();
+        return MD5Encoder.getMD5(text);
     }
 
     public int getXmlPort() {
