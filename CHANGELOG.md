@@ -6,6 +6,7 @@
 
 - [red171] Unlesbare Einstellungen werden nur nach Rückfrage und Sicherung zurückgesetzt.
 - [red171] Fehlerhafte Core-Updates lassen den letzten gültigen Transferzustand erhalten.
+- [red171] Der Verbindungswizard liest seine Vorgaben aus der `presets.json` (Datei aus dem config-wizard-Repository) statt aus der `wizard.xml`.
 
 - [red171] „Mein Share“ – Dateiliste:
   - Alle Dateien als `ajfsp`-Links oder AJL-Inhalt in die Zwischenablage kopieren

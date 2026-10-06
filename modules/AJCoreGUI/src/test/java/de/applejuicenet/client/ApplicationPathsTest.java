@@ -16,7 +16,7 @@ public class ApplicationPathsTest {
     public void osLaunchFromDifferentDirectoryFindsBundledResources() throws Exception {
         Path installed = files.newFolder("GUI mit Leerzeichen und Grüße").toPath();
         Path jar = Files.createFile(installed.resolve("AJCoreGUI.jar"));
-        Files.createFile(installed.resolve("wizard.xml"));
+        Files.createFile(installed.resolve("presets.json"));
         Path cwd = files.newFolder("Browser").toPath();
         assertEquals(installed, ApplicationPaths.resourceDirectory(jar, cwd,
                 new String[]{"ajfsp://file|Grüße.bin|hash|5368709120/"}));

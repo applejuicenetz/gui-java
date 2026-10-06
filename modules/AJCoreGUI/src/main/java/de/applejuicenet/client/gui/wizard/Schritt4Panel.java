@@ -39,7 +39,7 @@ public class Schritt4Panel extends WizardPanel
       label2.setLineWrap(true);
       label2.setEditable(false);
 
-      ConnectionKind[] connections = ConnectionXML.getConnections();
+      ConnectionKind[] connections = ConnectionPresets.getConnections();
 
       if(connections != null)
       {

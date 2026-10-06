@@ -1,0 +1,148 @@
+[
+    {
+        "group": "Fiber",
+        "items": [
+            {
+                "name": "Fiber 1.000",
+                "download": 1000000,
+                "upload": 50000,
+                "ram": 4096
+            },
+            {
+                "name": "Fiber 500",
+                "download": 500000,
+                "upload": 25000,
+                "ram": 4096
+            },
+            {
+                "name": "Fiber 250",
+                "download": 250000,
+                "upload": 10000,
+                "ram": 4096
+            }
+        ]
+    },
+    {
+        "group": "Cable",
+        "items": [
+            {
+                "name": "Cable 1.000",
+                "download": 1000000,
+                "upload": 50000,
+                "ram": 4096
+            },
+            {
+                "name": "Cable 500",
+                "download": 500000,
+                "upload": 50000,
+                "ram": 4096
+            },
+            {
+                "name": "Cable 400",
+                "download": 400000,
+                "upload": 25000,
+                "ram": 4096
+            },
+            {
+                "name": "Cable 200",
+                "download": 200000,
+                "upload": 25000,
+                "ram": 4096
+            },
+            {
+                "name": "Cable 100",
+                "download": 100000,
+                "upload": 12000,
+                "ram": 2048
+            },
+            {
+                "name": "Cable 50",
+                "download": 50000,
+                "upload": 2000,
+                "ram": 1024
+            },
+            {
+                "name": "Cable 25",
+                "download": 25000,
+                "upload": 1000,
+                "ram": 512
+            }
+        ]
+    },
+    {
+        "group": "VDSL",
+        "items": [
+            {
+                "name": "VDSL 250.000",
+                "download": 250000,
+                "upload": 40000,
+                "ram": 4096
+            },
+            {
+                "name": "VDSL 100.000",
+                "download": 100000,
+                "upload": 20000,
+                "ram": 2048
+            },
+            {
+                "name": "VDSL 50.000",
+                "download": 50000,
+                "upload": 9000,
+                "ram": 1024
+            },
+            {
+                "name": "VDSL 25.000",
+                "download": 25000,
+                "upload": 4000,
+                "ram": 512
+            }
+        ]
+    },
+    {
+        "group": "DSL",
+        "items": [
+            {
+                "name": "DSL 16.000",
+                "download": 16000,
+                "upload": 1000,
+                "ram": 384
+            },
+            {
+                "name": "DSL 6.000",
+                "download": 6000,
+                "upload": 768,
+                "ram": 256
+            },
+            {
+                "name": "DSL 3.000",
+                "download": 3000,
+                "upload": 384,
+                "ram": 192
+            },
+            {
+                "name": "DSL 2.000",
+                "download": 2000,
+                "upload": 192,
+                "ram": 128
+            },
+            {
+                "name": "DSL 1.000",
+                "download": 1000,
+                "upload": 128,
+                "ram": 128
+            },
+            {
+                "name": "DSL 768",
+                "download": 768,
+                "upload": 128,
+                "ram": 128
+            },
+            {
+                "name": "DSL 384",
+                "download": 384,
+                "upload": 128,
+                "ram": 128
+            }
+        ]
+    }
+]

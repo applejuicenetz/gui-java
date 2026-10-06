@@ -27,7 +27,7 @@ final class ApplicationPaths {
             }
         }
         Path directory = location.getParent();
-        if (Files.isRegularFile(location) && directory != null && Files.isRegularFile(directory.resolve("wizard.xml"))) {
+        if (Files.isRegularFile(location) && directory != null && Files.isRegularFile(directory.resolve("presets.json"))) {
             return directory;
         }
         return workingDirectory;
