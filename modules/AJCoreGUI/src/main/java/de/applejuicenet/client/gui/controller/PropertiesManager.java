@@ -389,6 +389,14 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         propertyHandler.put("options_dialogzeigen", show);
     }
 
+    public boolean shouldRememberColumnWidths() {
+        return propertyHandler.getAsBoolean("options_columns_remember_widths", false);
+    }
+
+    public void rememberColumnWidths(boolean remember) {
+        propertyHandler.put("options_columns_remember_widths", remember);
+    }
+
     public Level getLogLevel() {
         try {
             String temp = propertyHandler.get("options_logging_level", "INFO");

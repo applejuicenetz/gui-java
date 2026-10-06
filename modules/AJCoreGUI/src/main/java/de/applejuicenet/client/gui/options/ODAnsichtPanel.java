@@ -13,7 +13,6 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.Settings;
-import de.tklsoft.gui.controls.TKLCheckBox;
 import de.tklsoft.gui.controls.TKLLabel;
 import de.tklsoft.gui.controls.TKLTextField;
 import org.slf4j.Logger;
@@ -41,9 +40,9 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
     private TKLLabel farbeFertigerDownload = new TKLLabel("      ");
     private TKLLabel farbeQuelle = new TKLLabel("      ");
     private Settings settings;
-    private TKLCheckBox cmbAktiv = new TKLCheckBox();
-    private TKLCheckBox enableToolTip = new TKLCheckBox();
-    private TKLCheckBox cmbStartscreenZeigen = new TKLCheckBox();
+    private JCheckBox cmbAktiv = new JCheckBox();
+    private JCheckBox cmbStartscreenZeigen = new JCheckBox();
+    private JCheckBox cmbTabellenbreiten = new JCheckBox();
     private final Logger logger;
     private Icon menuIcon;
     private String menuText;
@@ -69,7 +68,8 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
         menuIcon = im.getIcon("opt_ansicht");
         cmbAktiv.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.aktiv"));
         cmbStartscreenZeigen.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.zeigestartscreen"));
-        enableToolTip.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.zeigetooltipps"));
+
+        cmbTabellenbreiten.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.tabellenbreitenmerken"));
 
         setLayout(new BorderLayout());
         farbeFertigerDownload.setOpaque(true);
@@ -88,16 +88,16 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
                 dirty = true;
             }
         });
+        cmbTabellenbreiten.setSelected(om.shouldRememberColumnWidths());
+        cmbTabellenbreiten.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent ce) {
+                dirty = true;
+            }
+        });
         cmbAktiv.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent ce) {
                 dirty = true;
                 settings.setFarbenAktiv(cmbAktiv.isSelected());
-            }
-        });
-        enableToolTip.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                dirty = true;
-                settings.enableToolTipEnabled(enableToolTip.isSelected());
             }
         });
 
@@ -232,16 +232,13 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
         constraints.gridy = 1;
         panel3.add(cmbStartscreenZeigen, constraints);
         constraints.gridy = 2;
-        panel3.add(enableToolTip, constraints);
+        panel3.add(cmbTabellenbreiten, constraints);
         panel2.add(panel3, BorderLayout.SOUTH);
 
         add(panel2, BorderLayout.WEST);
 
         reloadSettings();
 
-        cmbAktiv.confirmNewValue();
-        enableToolTip.confirmNewValue();
-        cmbStartscreenZeigen.confirmNewValue();
     }
 
     public boolean save() {
@@ -251,6 +248,11 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
 
             if (om.shouldShowConnectionDialogOnStartup() != shouldShowStartcreen()) {
                 om.showConnectionDialogOnStartup(shouldShowStartcreen());
+                bRet = true;
+            }
+
+            if (om.shouldRememberColumnWidths() != cmbTabellenbreiten.isSelected()) {
+                om.rememberColumnWidths(cmbTabellenbreiten.isSelected());
                 bRet = true;
             }
 
@@ -296,7 +298,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
         farbeQuelle.setBackground(settings.getQuelleHintergrundColor());
         farbeFertigerDownload.setBackground(settings.getDownloadFertigHintergrundColor());
         cmbAktiv.setSelected(settings.isFarbenAktiv());
-        enableToolTip.setSelected(settings.isToolTipEnabled());
     }
 
     class ColorChooserMouseAdapter extends MouseAdapter {

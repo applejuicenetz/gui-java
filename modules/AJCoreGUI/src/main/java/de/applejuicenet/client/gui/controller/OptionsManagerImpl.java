@@ -177,6 +177,14 @@ public class OptionsManagerImpl implements OptionsManager{
         propertiesManager.showConnectionDialogOnStartup(show);
     }
 
+    public boolean shouldRememberColumnWidths() {
+        return propertiesManager.shouldRememberColumnWidths();
+    }
+
+    public void rememberColumnWidths(boolean remember) {
+        propertiesManager.rememberColumnWidths(remember);
+    }
+
     public ConnectionSettings[] getConnectionsSet() {
         return propertiesManager.getConnectionsSet();
     }

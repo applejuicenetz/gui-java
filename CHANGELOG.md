@@ -13,6 +13,8 @@
     auf leeren Tabellenflächen keinen Fehler
   - HTML-Dateiexport entfernt
 - [red171] Bedienung und Darstellung:
+  - Neue Option „Tabellenbreiten merken“ unter Ansicht speichert Spaltenbreiten pro Ansicht
+  - Optionen lassen sich per Cmd+, (macOS) bzw. Strg+, (Windows/Linux) öffnen
   - Neues Info-Symbol für „Über“ im Iconset „modern“
   - Log Viewer, SpeedGraph, Version Checker und Share-Treemap zeigen deutsche
     und englische Texte und übernehmen Sprachwechsel auch in offenen Ansichten

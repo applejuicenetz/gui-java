@@ -93,6 +93,10 @@ public interface OptionsManager
 
    void showConnectionDialogOnStartup(boolean show);
 
+   boolean shouldRememberColumnWidths();
+
+   void rememberColumnWidths(boolean remember);
+
    ConnectionSettings[] getConnectionsSet();
 
    void setConnectionsSet(ConnectionSettings[] set);

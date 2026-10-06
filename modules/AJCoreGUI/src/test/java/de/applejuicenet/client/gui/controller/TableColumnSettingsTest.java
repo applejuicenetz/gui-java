@@ -114,6 +114,27 @@ public class TableColumnSettingsTest {
     }
 
     @Test
+    public void compactTablesReadAndSaveColumnWidthsWhenRemembered() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            JFrame frame = new JFrame();
+            try {
+                JTable table = table();
+                Properties written = new Properties();
+                TableColumnSettings.install(table, columns(table), key -> "column1_width".equals(key) ? 123 : -1,
+                        (key, value) -> written.setProperty(key, Integer.toString(value)), true, () -> true);
+                assertEquals(123, table.getColumnModel().getColumn(1).getPreferredWidth());
+                frame.add(new JScrollPane(table));
+                frame.setSize(800, 400);
+                frame.setVisible(true);
+                resizeColumn(table, 1, 250);
+                assertTrue(written.containsKey("column1_width"));
+            } finally {
+                frame.dispose();
+            }
+        });
+    }
+
+    @Test
     public void compactColumnsIgnoreSavedWidthsAndFitAllRowsAfterReordering() throws Exception {
         AtomicReference<JTable> tableReference = new AtomicReference<>();
         SwingUtilities.invokeAndWait(() -> {

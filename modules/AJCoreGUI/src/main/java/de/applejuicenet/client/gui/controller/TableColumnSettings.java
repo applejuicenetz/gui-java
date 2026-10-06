@@ -13,6 +13,7 @@ import javax.swing.table.TableColumnModel;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.ObjIntConsumer;
 import java.util.function.ToIntFunction;
 
@@ -45,7 +46,8 @@ public final class TableColumnSettings {
         PropertiesManager manager = PropertiesManager.getInstance();
         install(table, columns,
                 key -> manager.getTableColumnSetting("options_columns_" + view + "_" + key),
-                (key, value) -> manager.setTableColumnSetting("options_columns_" + view + "_" + key, value), compact);
+                (key, value) -> manager.setTableColumnSetting("options_columns_" + view + "_" + key, value), compact,
+                manager::shouldRememberColumnWidths);
     }
 
     static void install(JTable table, TableColumn[] columns, ToIntFunction<String> read,
@@ -55,6 +57,12 @@ public final class TableColumnSettings {
 
     static void install(JTable table, TableColumn[] columns, ToIntFunction<String> read,
                         ObjIntConsumer<String> write, boolean compact) {
+        install(table, columns, read, write, compact, () -> false);
+    }
+
+    static void install(JTable table, TableColumn[] columns, ToIntFunction<String> read,
+                        ObjIntConsumer<String> write, boolean compact, BooleanSupplier rememberWidths) {
+        boolean remember = rememberWidths.getAsBoolean();
         TableColumnModel model = table.getColumnModel();
         List<TableColumn> visible = new ArrayList<>();
         for (int index = 0; index < model.getColumnCount(); index++) {
@@ -62,8 +70,8 @@ public final class TableColumnSettings {
         }
         List<TableColumn> unsaved = new ArrayList<>();
         for (TableColumn column : columns) {
-            int width = compact ? -1 : read.applyAsInt(key(column, "width"));
-            if (width > 0 && !compact) {
+            int width = !compact || remember ? read.applyAsInt(key(column, "width")) : -1;
+            if (width > 0) {
                 column.setPreferredWidth(width);
                 column.setWidth(width);
             } else {
@@ -80,16 +88,14 @@ public final class TableColumnSettings {
         }
         for (TableColumn column : columns) {
             column.addPropertyChangeListener(event -> {
-                if (compact || !table.isShowing() || autoFitting[0]) {
+                if (!table.isShowing() || autoFitting[0] || compact && !rememberWidths.getAsBoolean()) {
                     return;
                 }
                 if ("width".equals(event.getPropertyName()) && table.getTableHeader() != null
                         && table.getTableHeader().getResizingColumn() == column) {
-                    if (!compact) {
-                        unsaved.remove(column);
-                    }
+                    unsaved.remove(column);
                     write.accept(key(column, "width"), column.getWidth());
-                } else if ("preferredWidth".equals(event.getPropertyName())) {
+                } else if (!compact && "preferredWidth".equals(event.getPropertyName())) {
                     write.accept(key(column, "width"), column.getPreferredWidth());
                 }
             });
