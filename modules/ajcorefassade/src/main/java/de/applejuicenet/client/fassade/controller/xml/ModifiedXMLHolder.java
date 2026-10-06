@@ -1231,20 +1231,6 @@ public class ModifiedXMLHolder extends DefaultHandler
       }
    }
 
-   private boolean secureSession()
-   {
-      try
-      {
-
-         //         return securerHolder.secure(sessionKontext, information);
-         return true;
-      }
-      catch(Exception ex)
-      {
-         return false;
-      }
-   }
-
    public boolean isSearchChanged()
    {
       return searchChanged;
@@ -1278,41 +1264,5 @@ public class ModifiedXMLHolder extends DefaultHandler
    public boolean isNetworkInfoChanged()
    {
       return networkInfoChanged;
-   }
-
-   private class Securer extends Thread
-   {
-      private boolean ok = true;
-
-      public Securer()
-      {
-         setName("SessionLifeThread");
-         setDaemon(true);
-      }
-
-      public void run()
-      {
-         while(true)
-         {
-            try
-            {
-               sleep(10000);
-               if(!secureSession())
-               {
-                  ok = false;
-                  break;
-               }
-            }
-            catch(InterruptedException ex)
-            {
-               break;
-            }
-         }
-      }
-
-      public boolean isOK()
-      {
-         return ok;
-      }
    }
 }
