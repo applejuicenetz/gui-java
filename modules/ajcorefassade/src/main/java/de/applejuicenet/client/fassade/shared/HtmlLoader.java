@@ -13,12 +13,16 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.zip.DataFormatException;
 
 public abstract class HtmlLoader
 {
    public static final int POST = 0;
    public static final int GET = 1;
    private static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 10000;
+   private static final int MAX_BODY_BYTES = 256 * 1024 * 1024;
    private static final int DEFAULT_READ_TIMEOUT_MILLIS = 60000;
 
    public static String getHtmlXMLContent(String host, Integer port, int method, String command, boolean withResult)
@@ -104,54 +108,49 @@ public abstract class HtmlLoader
                   }
                }
 
-               long laenge = Long.parseLong(inputLine.substring(inputLine.indexOf(StringConstants.SPACE) + 1));
+               long laenge;
 
+               try
+               {
+                  laenge = Long.parseLong(inputLine.substring(inputLine.indexOf(StringConstants.SPACE) + 1).trim());
+               }
+               catch(NumberFormatException nfe)
+               {
+                  throw new WebSiteNotFoundException(WebSiteNotFoundException.INPUT_ERROR, nfe);
+               }
+
+               if(laenge < 0 || laenge > MAX_BODY_BYTES)
+               {
+                  throw new WebSiteNotFoundException(WebSiteNotFoundException.INPUT_ERROR,
+                                                     new IOException("Ungueltige Antwortlaenge: " + laenge));
+               }
+
+               in.readNBytes(1);
                if(command.indexOf(StringConstants.MODE_ZIP) != -1)
                {
-                  DataInputStream in_data = new DataInputStream(socket.getInputStream());
-
-                  in_data.skip(1);
-                  ByteArrayOutputStream baoS   = new ByteArrayOutputStream();
-                  byte[]                toRead = new byte[2048];
-                  int                   read;
-
-                  while((read = in_data.read(toRead)) > 0)
+                  try
                   {
-                     baoS.write(toRead, 0, read);
-                  }
+                     byte[] data = ZLibUtils.inflate(in, MAX_BODY_BYTES);
 
-                  urlContent.append(ZLibUtils.uncompress(baoS.toByteArray()));
-                  baoS.close();
+                     urlContent.append(new String(data, StandardCharsets.ISO_8859_1));
+                  }
+                  catch(DataFormatException dfe)
+                  {
+                     throw new WebSiteNotFoundException(WebSiteNotFoundException.INPUT_ERROR, dfe);
+                  }
                }
                else
                {
-                  in.skip(1);
-                  byte[] toRead  = null;
-                  int    gelesen = 0;
+                  byte[] body = in.readNBytes((int) laenge);
 
-                  while(laenge > 0)
+                  if(body.length < laenge)
                   {
-                     if(laenge > Integer.MAX_VALUE)
-                     {
-                        toRead = new byte[Integer.MAX_VALUE];
-                     }
-                     else
-                     {
-                        toRead = new byte[(int) laenge];
-                     }
-
-                     gelesen = in.read(toRead);
-                     if(gelesen < toRead.length)
-                     {
-                        urlContent.append(new String(toRead, 0, gelesen));
-                        laenge -= gelesen;
-                     }
-                     else
-                     {
-                        urlContent.append(new String(toRead));
-                        laenge -= toRead.length;
-                     }
+                     throw new WebSiteNotFoundException(WebSiteNotFoundException.INPUT_ERROR,
+                                                        new EOFException("Antwort nach " + body.length + " von " + laenge +
+                                                                         " Bytes beendet"));
                   }
+
+                  urlContent.append(new String(body, Charset.defaultCharset()));
                }
             }
             else

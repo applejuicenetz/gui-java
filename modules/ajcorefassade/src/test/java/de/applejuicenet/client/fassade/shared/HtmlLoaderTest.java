@@ -116,6 +116,57 @@ public class HtmlLoaderTest {
     }
 
     @Test(timeout = 10000)
+    public void truncatedPlainBodyFailsInsteadOfReturningPartialContent() throws Exception {
+        try (CoreResponse core = new CoreResponse("HTTP/1.1 200 OK\nContent-Length: 20\n\n<applejuice/>", true)) {
+            WebSiteNotFoundException error = assertThrows(WebSiteNotFoundException.class,
+                    () -> request(core, HtmlLoader.GET, true));
+            assertTrue(error.getCause() instanceof java.io.EOFException);
+            core.awaitClientClose();
+        }
+    }
+
+    @Test(timeout = 10000)
+    public void rejectsInvalidContentLength() throws Exception {
+        for (String length : new String[] {"-5", "abc", "99999999999"}) {
+            try (CoreResponse core = new CoreResponse("HTTP/1.1 200 OK\nContent-Length: " + length + "\n\nxx")) {
+                assertThrows(WebSiteNotFoundException.class, () -> request(core, HtmlLoader.GET, true));
+            }
+        }
+    }
+
+    @Test(timeout = 10000)
+    public void plainBodySplitOverSeveralPacketsIsComplete() throws Exception {
+        String body = "<applejuice>" + "x".repeat(100000) + "</applejuice>";
+        try (CoreResponse core = new CoreResponse("HTTP/1.1 200 OK\nContent-Length: " + body.length() + "\n\n" + body)) {
+            assertEquals(body, request(core, HtmlLoader.GET, true));
+            core.awaitClientClose();
+        }
+    }
+
+    @Test(timeout = 10000)
+    public void zipBodyIsInflated() throws Exception {
+        String body = "<applejuice>" + "abc".repeat(5000) + "</applejuice>";
+        byte[] zipped = ZLibUtils.compress(body);
+        try (CoreResponse core = new CoreResponse(("HTTP/1.1 200 OK\nContent-Length: " + zipped.length + "\n\n").getBytes(StandardCharsets.US_ASCII), zipped)) {
+            assertEquals(body, HtmlLoader.getHtmlXMLContent("127.0.0.1", core.port(), HtmlLoader.GET,
+                    COMMAND + "&mode=zip", true, CONNECT_TIMEOUT_MILLIS, READ_TIMEOUT_MILLIS));
+            core.awaitClientClose();
+        }
+    }
+
+    @Test(timeout = 10000)
+    public void truncatedZipBodyFails() throws Exception {
+        byte[] zipped = ZLibUtils.compress("<applejuice>" + "abc".repeat(5000) + "</applejuice>");
+        byte[] cut = java.util.Arrays.copyOf(zipped, zipped.length / 2);
+        try (CoreResponse core = new CoreResponse(("HTTP/1.1 200 OK\nContent-Length: " + zipped.length + "\n\n").getBytes(StandardCharsets.US_ASCII), cut, true)) {
+            WebSiteNotFoundException error = assertThrows(WebSiteNotFoundException.class,
+                    () -> HtmlLoader.getHtmlXMLContent("127.0.0.1", core.port(), HtmlLoader.GET,
+                            COMMAND + "&mode=zip", true, CONNECT_TIMEOUT_MILLIS, READ_TIMEOUT_MILLIS));
+            assertTrue(String.valueOf(error.getCause()), error.getCause() instanceof java.util.zip.DataFormatException);
+        }
+    }
+
+    @Test(timeout = 10000)
     public void connectionIsClosedAfterSuccessfulPost() throws Exception {
         try (CoreResponse core = new CoreResponse("HTTP/1.1 200 OK\n")) {
             assertEquals(StringConstants.HTTP_1_1_200_OK, request(core, HtmlLoader.POST, true));
@@ -190,6 +241,18 @@ public class HtmlLoaderTest {
         private volatile Socket client;
 
         CoreResponse(String response) throws IOException {
+            this(response, false);
+        }
+
+        CoreResponse(String response, boolean endOfResponse) throws IOException {
+            this(response.getBytes(StandardCharsets.US_ASCII), new byte[0], endOfResponse);
+        }
+
+        CoreResponse(byte[] header, byte[] body) throws IOException {
+            this(header, body, false);
+        }
+
+        CoreResponse(byte[] header, byte[] body, boolean endOfResponse) throws IOException {
             server = new ServerSocket(0, 50, InetAddress.getByName("127.0.0.1"));
             server.setSoTimeout(5000);
             task = executor.submit(() -> {
@@ -200,9 +263,13 @@ public class HtmlLoaderTest {
                     String line;
                     while ((line = reader.readLine()) != null && !line.isEmpty()) {
                     }
-                    if (!response.isEmpty()) {
-                        socket.getOutputStream().write(response.getBytes(StandardCharsets.US_ASCII));
+                    if (header.length > 0) {
+                        socket.getOutputStream().write(header);
+                        socket.getOutputStream().write(body);
                         socket.getOutputStream().flush();
+                        if (endOfResponse) {
+                            socket.shutdownOutput();
+                        }
                     }
                     requestReceived.countDown();
                     try {
