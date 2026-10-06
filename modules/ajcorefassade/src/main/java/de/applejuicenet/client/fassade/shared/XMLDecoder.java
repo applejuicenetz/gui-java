@@ -12,11 +12,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
@@ -71,11 +69,9 @@ public abstract class XMLDecoder
 
    protected void reload(File xmlFile)
    {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
       try
       {
-         DocumentBuilder builder = factory.newDocumentBuilder();
+         DocumentBuilder builder = SecureXml.newDocumentBuilder();
 
          document = builder.parse(new InputSource(new InputStreamReader(new FileInputStream(xmlFile), "UTF-8")));
          this.filePath = xmlFile.getPath();
@@ -209,7 +205,7 @@ public abstract class XMLDecoder
                   e.setAttribute(attributePath[attributePathSize - 1], newValue);
                   try
                   {
-                     Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                     Transformer transformer = SecureXml.newTransformerFactory().newTransformer();
 
                      transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
                      transformer.setOutputProperty(OutputKeys.INDENT, "yes");

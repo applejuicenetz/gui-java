@@ -3,13 +3,11 @@ package de.applejuicenet.client.fassade.controller.xml;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
+import de.applejuicenet.client.fassade.shared.SecureXml;
 import de.applejuicenet.client.fassade.shared.XMLDecoder;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -45,18 +43,7 @@ public abstract class WebXMLParser extends XMLDecoder {
 
 	private String zipMode = "";
 
-	private static DocumentBuilder builder;
-
 	private CoreConnectionSettingsHolder coreHolder;
-
-	static {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		try {
-			builder = factory.newDocumentBuilder();
-		} catch (ParserConfigurationException ex) {
-			;
-		}
-	}
 
 	public WebXMLParser(CoreConnectionSettingsHolder coreHolder,
 			String xmlCommand, String parameters) {
@@ -118,7 +105,7 @@ public abstract class WebXMLParser extends XMLDecoder {
 			}
 		}
 		try {
-			document = builder
+			document = SecureXml.newDocumentBuilder()
 					.parse(new InputSource(new StringReader(xmlData)));
 			if (useTimestamp) {
 				timestamp = Long.parseLong(getFirstAttrbuteByTagName(
