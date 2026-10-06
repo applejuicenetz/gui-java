@@ -26,8 +26,22 @@ import de.applejuicenet.client.fassade.entity.Server;
  * @author Maj0r <aj@tkl-soft.de>
  *
  */
-class InformationDO extends Information
+class InformationDO extends Information implements Cloneable
 {
+   InformationDO snapshot()
+   {
+      try
+      {
+         InformationDO copy = (InformationDO) super.clone();
+         copy.server = server == null ? null : ((ServerDO) server).snapshot();
+         return copy;
+      }
+      catch(CloneNotSupportedException ex)
+      {
+         throw new AssertionError(ex);
+      }
+   }
+
    private int    verbindungsStatus = NICHT_VERBUNDEN;
    private int    id;
    private long   sessionUpload;

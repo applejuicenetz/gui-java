@@ -22,7 +22,15 @@ package de.applejuicenet.client.fassade.shared;
  *
  * @author Maj0r [aj@tkl-soft.de]
  */
-public class NetworkInfo {
+public class NetworkInfo implements Cloneable {
+    public NetworkInfo snapshot() {
+        try {
+            return (NetworkInfo) super.clone();
+        } catch (CloneNotSupportedException ex) {
+            throw new AssertionError(ex);
+        }
+    }
+
     private long ajUserGesamt;
     private long ajAnzahlDateien;
     private String ajGesamtShare;

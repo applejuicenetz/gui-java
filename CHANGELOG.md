@@ -5,6 +5,7 @@
 ### Sichtbare Änderungen
 
 - [red171] Unlesbare Einstellungen werden nur nach Rückfrage und Sicherung zurückgesetzt.
+- [red171] Fehlerhafte Core-Updates lassen den letzten gültigen Transferzustand erhalten.
 
 - [red171] „Mein Share“ – Dateiliste:
   - Alle Dateien als `ajfsp`-Links oder AJL-Inhalt in die Zwischenablage kopieren

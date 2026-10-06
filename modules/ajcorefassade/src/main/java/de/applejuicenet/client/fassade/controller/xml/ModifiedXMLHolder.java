@@ -50,6 +50,7 @@ public class ModifiedXMLHolder extends DefaultHandler
 {
    private final CoreConnectionSettingsHolder coreHolder;
    private Map<Integer, Download>             sourcenZuDownloads             = new HashMap<Integer, Download>();
+   private Map<Integer, Share>                parsingShares;
    private XMLReader                          xr                             = null;
    private Map<Integer, Server>               serverMap                      = new HashMap<Integer, Server>();
    private Map<Integer, Download>             downloadMap                    = new HashMap<Integer, Download>();
@@ -515,7 +516,7 @@ public class ModifiedXMLHolder extends DefaultHandler
 
       checkUploadMap((UploadDO) uploadDO, attributes);
       attributes.clear();
-      Share shareDO = ajFassade.getShare(false).get(uploadDO.getShareFileID());
+      Share shareDO = (parsingShares == null ? ajFassade.getShare(false) : parsingShares).get(uploadDO.getShareFileID());
 
       if(shareDO != null)
       {
@@ -1146,6 +1147,96 @@ public class ModifiedXMLHolder extends DefaultHandler
       }
    }
 
+   private void applyDiff(String xmlString) throws Exception
+   {
+      // Resolve lazy share loading before taking the state lock.
+      Map<Integer, Share> shares = ajFassade == null ? Map.of() : ajFassade.getShare(false);
+      synchronized(stateLock)
+      {
+         Map<Integer, Download> oldDownloads = downloadMap;
+         Map<Integer, Upload> oldUploads = uploadMap;
+         Map<Integer, Server> oldServers = serverMap;
+         Map<Integer, Search> oldSearches = searchMap;
+         Map<Integer, Download> oldSources = sourcenZuDownloads;
+         InformationDO oldInformation = information;
+         NetworkInfo oldNetwork = netInfo;
+         long oldTimestamp = timestamp;
+         int oldConnected = connectedWithServerId;
+         int oldConnecting = tryConnectToServer;
+         int oldSearchCount = Search.currentSearchCount;
+         boolean[] oldChanged = {searchChanged, downloadChanged, uploadChanged, serverChanged,
+                                 speedChanged, informationChanged, networkInfoChanged, downloadSourceEvent};
+         Set<SearchEntryDO> oldEntries = searchEntriesToDo;
+         Set<DownloadSource> oldPendingSources = downloadSourcesToDo;
+         SearchEntryDO oldEntry = tmpSearchEntry;
+         Vector<DataPropertyChangeEvent> oldEvents = downloadEvents;
+         downloadMap = getDownloads();
+         uploadMap = getUploads();
+         serverMap = getServer();
+         searchMap = getSearchs();
+         sourcenZuDownloads = new HashMap<>();
+         oldSources.forEach((key, value) -> sourcenZuDownloads.put(key, downloadMap.get(value.getId())));
+         information = oldInformation == null ? null : oldInformation.snapshot();
+         netInfo = oldNetwork == null ? null : oldNetwork.snapshot();
+         searchEntriesToDo = new HashSet<>();
+         downloadSourcesToDo = new HashSet<>();
+         tmpSearchEntry = null;
+         downloadEvents = new Vector<>();
+         parsingShares = shares;
+         try
+         {
+            if(filter.indexOf("down;") != -1)
+            {
+               downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadMap,
+                       DownloadDataPropertyChangeEvent.DOWNLOADMAP_CHECKED, null, null));
+            }
+            downloadSourceEvent = false;
+            for(Search search : searchMap.values())
+            {
+               search.setChanged(false);
+            }
+            xr.parse(new InputSource(new StringReader(xmlString)));
+            parseRest();
+            if(downloadSourceEvent)
+            {
+               downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadMap,
+                       DownloadDataPropertyChangeEvent.A_SOURCE_CHANGED, null, null));
+            }
+         }
+         catch(Exception ex)
+         {
+            downloadMap = oldDownloads;
+            uploadMap = oldUploads;
+            serverMap = oldServers;
+            searchMap = oldSearches;
+            sourcenZuDownloads = oldSources;
+            information = oldInformation;
+            netInfo = oldNetwork;
+            timestamp = oldTimestamp;
+            connectedWithServerId = oldConnected;
+            tryConnectToServer = oldConnecting;
+            Search.currentSearchCount = oldSearchCount;
+            searchChanged = oldChanged[0];
+            downloadChanged = oldChanged[1];
+            uploadChanged = oldChanged[2];
+            serverChanged = oldChanged[3];
+            speedChanged = oldChanged[4];
+            informationChanged = oldChanged[5];
+            networkInfoChanged = oldChanged[6];
+            downloadSourceEvent = oldChanged[7];
+            searchEntriesToDo = oldEntries;
+            downloadSourcesToDo = oldPendingSources;
+            tmpSearchEntry = oldEntry;
+            downloadEvents = oldEvents;
+            throw ex;
+         }
+         finally
+         {
+            parsingShares = null;
+         }
+      }
+   }
+
    private void doReload()
    {
       boolean reloadSession = false;
@@ -1155,36 +1246,17 @@ public class ModifiedXMLHolder extends DefaultHandler
          checkForValidSession();
          String xmlString = getXMLString(filter);
 
-         synchronized(stateLock)
+         try
          {
-         downloadEvents.clear();
-         if(filter.indexOf("down;") != -1)
-         {
-            downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadMap,
-                                                                   DownloadDataPropertyChangeEvent.DOWNLOADMAP_CHECKED, null, null));
+            applyDiff(xmlString);
          }
-
-         downloadSourceEvent = false;
-         for(Search curSearch : searchMap.values())
+         catch(Exception ex)
          {
-            curSearch.setChanged(false);
+            throw new RuntimeException("modified.xml konnte nicht angewendet werden", ex);
          }
-
-         xr.parse(new InputSource(new StringReader(xmlString)));
-         parseRest();
-
          if(checkCount < 2)
          {
             checkCount++;
-         }
-
-         if(downloadSourceEvent)
-         {
-            downloadEvents.add(new DownloadDataPropertyChangeEvent(downloadMap, DownloadDataPropertyChangeEvent.A_SOURCE_CHANGED,
-                                                                   null, null));
-
-         }
-
          }
          if(downloadEvents.size() > 0)
          {
