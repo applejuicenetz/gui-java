@@ -113,7 +113,7 @@ public abstract class PluginFactory {
     private static PluginConnector loadPlugin(String which) {
         try {
             Class<?> pluginClass = Class.forName(which);
-            TestLoader testLoader = (TestLoader) pluginClass.newInstance();
+            TestLoader testLoader = (TestLoader) pluginClass.getDeclaredConstructor().newInstance();
 
             return testLoader.getPlugin();
         } catch (Throwable e) {

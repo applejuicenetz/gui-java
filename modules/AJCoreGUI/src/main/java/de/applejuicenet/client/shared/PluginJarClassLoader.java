@@ -89,7 +89,7 @@ public class PluginJarClassLoader extends SecureClassLoader {
 
             String name = entryName.replace('/', '.');
 
-            name = name.replaceAll(".class", "");
+            name = stripClassSuffix(name);
             byte[] buf = readEntry(jf, entry);
 
             lazyLoad.put(name, buf);
@@ -142,7 +142,7 @@ public class PluginJarClassLoader extends SecureClassLoader {
             } else {
                 String name = entryName.replace('/', '.');
 
-                name = name.replaceAll(".class", "");
+                name = stripClassSuffix(name);
                 defineMyClass(buf, name, jf);
                 String key = name + "$";
 
@@ -233,5 +233,9 @@ public class PluginJarClassLoader extends SecureClassLoader {
         }
 
         return url;
+    }
+
+    private static String stripClassSuffix(String name) {
+        return name.endsWith(".class") ? name.substring(0, name.length() - ".class".length()) : name;
     }
 }

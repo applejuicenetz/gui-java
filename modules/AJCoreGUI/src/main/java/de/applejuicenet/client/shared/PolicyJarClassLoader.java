@@ -111,11 +111,15 @@ public class PolicyJarClassLoader extends URLClassLoader {
 
             name = entryName.replace('/', '.');
 
-            name = name.replaceAll(".class", "");
+            name = stripClassSuffix(name);
             defineClass(name, buf, 0, buf.length);
             classes.add(name);
         }
 
         return classes;
+    }
+
+    private static String stripClassSuffix(String name) {
+        return name.endsWith(".class") ? name.substring(0, name.length() - ".class".length()) : name;
     }
 }
