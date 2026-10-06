@@ -104,10 +104,40 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
     private final ArrayList<LookAFeel> lookAndFeels = new ArrayList<>();
 
+    private final java.util.function.BooleanSupplier confirmReset;
+
     private PropertiesManager(String propertiesPath) {
+        this(propertiesPath, PropertiesManager::confirmPropertiesReset);
+    }
+
+    private PropertiesManager(String propertiesPath, java.util.function.BooleanSupplier confirmReset) {
         PropertiesManager.path = propertiesPath;
+        this.confirmReset = confirmReset;
         logger = LoggerFactory.getLogger(getClass());
         init();
+    }
+
+    private static boolean confirmPropertiesReset() {
+        java.util.concurrent.FutureTask<Boolean> dialog = new java.util.concurrent.FutureTask<>(() ->
+                JOptionPane.showConfirmDialog(null,
+                        "ajgui.properties kann nicht gelesen werden.\n"
+                        + "Einstellungen sichern und auf Standardwerte zurücksetzen?\n"
+                        + "Bei Nein wird der Start abgebrochen; die Datei bleibt unverändert.",
+                        "appleJuice JavaGUI", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
+                        == JOptionPane.YES_OPTION);
+        if (SwingUtilities.isEventDispatchThread()) {
+            dialog.run();
+        } else {
+            SwingUtilities.invokeLater(dialog);
+        }
+        try {
+            return dialog.get();
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Einstellungsreset abgebrochen", ex);
+        } catch (java.util.concurrent.ExecutionException ex) {
+            throw new IllegalStateException("Einstellungsdialog fehlgeschlagen", ex.getCause());
+        }
     }
 
     static PropertiesManager getInstance() {
@@ -545,20 +575,27 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             if (Files.isRegularFile(file)) {
                 Path backup = file.resolveSibling(file.getFileName() + ".bak");
 
-                Files.copy(file, backup, StandardCopyOption.REPLACE_EXISTING);
+                for (int suffix = 1; Files.exists(backup); suffix++) {
+                    backup = file.resolveSibling(file.getFileName() + ".bak." + suffix);
+                }
+                Files.copy(file, backup);
             }
         } catch (IOException e) {
-            LoggerFactory.getLogger(PropertiesManager.class).warn("Sicherung der Einstellungen fehlgeschlagen: {}", file, e);
+            throw new IllegalStateException("Sicherung fehlgeschlagen; Einstellungen bleiben unverändert", e);
         }
     }
 
     public static void restoreProperties() {
+        restoreProperties(Path.of(AppleJuiceClient.getPropertiesPath()));
+    }
+
+    private static void restoreProperties(Path file) {
         PropertyHandler aPropertyHandler = null;
 
-        backupBeforeRestore(Path.of(AppleJuiceClient.getPropertiesPath()));
+        backupBeforeRestore(file);
 
         try {
-            aPropertyHandler = new PropertyHandler(AppleJuiceClient.getPropertiesPath(), "appleJuice-Java-GUI Propertyfile", false);
+            aPropertyHandler = new PropertyHandler(file.toString(), "appleJuice-Java-GUI Propertyfile", false);
             aPropertyHandler.put("options_dialogzeigen", true);
             aPropertyHandler.put("options_firststart", true);
             aPropertyHandler.put("options_sound", true);
@@ -786,15 +823,12 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         } catch (Exception e) {
             logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
-            if (firstReadError) {
-                PropertiesManager.restoreProperties();
-                AppleJuiceDialog.showInformation(PROPERTIES_ERROR);
-                firstReadError = false;
-                init();
-            } else {
-                AppleJuiceDialog.rewriteProperties = true;
-                AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
+            if (!firstReadError || !confirmReset.getAsBoolean()) {
+                throw new IllegalStateException("Einstellungen nicht geladen; Datei bleibt unverändert", e);
             }
+            firstReadError = false;
+            restoreProperties(Path.of(path));
+            init();
         }
     }
 

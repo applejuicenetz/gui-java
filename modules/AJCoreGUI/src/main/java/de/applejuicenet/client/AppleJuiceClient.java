@@ -90,6 +90,9 @@ public class AppleJuiceClient {
         try {
             Level logLevel = OptionsManagerImpl.getInstance().getLogLevel();
             AppleJuiceClient.setLogLevel(logLevel);
+        } catch (IllegalStateException e) {
+            logger.error("Start wegen nicht geladener Einstellungen abgebrochen");
+            return;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

@@ -46,7 +46,7 @@ public class PropertyHandler {
                 props = new Properties();
             }
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            throw new IllegalArgumentException("Einstellungen konnten nicht geladen werden", e);
         }
     }
 
@@ -119,8 +119,11 @@ public class PropertyHandler {
 
     public void reload() throws IllegalArgumentException {
         try {
-            props = new Properties();
             Properties loaded = new Properties();
+            if (Files.notExists(Path.of(path))) {
+                props = loaded;
+                return;
+            }
 
             try (InputStream inputStream = Files.newInputStream(Path.of(path))) {
                 loaded.load(inputStream);
@@ -132,7 +135,7 @@ public class PropertyHandler {
 
             props = loaded;
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            throw new IllegalArgumentException("Einstellungen konnten nicht geladen werden", e);
         }
     }
 

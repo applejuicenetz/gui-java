@@ -4,6 +4,8 @@
 
 ### Sichtbare Änderungen
 
+- [red171] Unlesbare Einstellungen werden nur nach Rückfrage und Sicherung zurückgesetzt.
+
 - [red171] „Mein Share“ – Dateiliste:
   - Alle Dateien als `ajfsp`-Links oder AJL-Inhalt in die Zwischenablage kopieren
   - Sortierknopf wechselt zwischen A-Z und Z-A; Kopieren und AJL-Dateiexport
