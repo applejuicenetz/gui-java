@@ -1,12 +1,12 @@
 package de.applejuicenet.client.fassade.entity;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public abstract class Server implements IdOwner{
 
-	private static SimpleDateFormat formatter = new SimpleDateFormat(
-	"dd.MM.yyyy HH:mm:ss");
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
 	public abstract String getName();
 
@@ -32,14 +32,23 @@ public abstract class Server implements IdOwner{
 		if (getTimeLastSeen() == 0) {
 			return "";
 		} else {
-			return formatter.format(new Date(getTimeLastSeen()));
+			return formatter.format(Instant.ofEpochMilli(getTimeLastSeen()).atZone(ZoneId.systemDefault()));
 		}
 	}
 
+	@Override
 	public final boolean equals(Object obj) {
-		if (obj.getClass() != getClass()) {
+		if (obj == this) {
+			return true;
+		}
+		if (obj == null || obj.getClass() != getClass()) {
 			return false;
 		}
 		return (getId() == ((Server) obj).getId());
+	}
+
+	@Override
+	public final int hashCode() {
+		return Integer.hashCode(getId());
 	}
 }

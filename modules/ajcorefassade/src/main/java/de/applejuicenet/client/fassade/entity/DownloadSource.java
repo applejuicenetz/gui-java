@@ -190,4 +190,10 @@ public abstract class DownloadSource implements IdOwner
 
       return getId() == ((DownloadSource) obj).getId();
    }
+
+   @Override
+   public final int hashCode()
+   {
+      return Integer.hashCode(getId());
+   }
 }

@@ -103,4 +103,10 @@ public abstract class Upload implements IdOwner
 
       return getId() == ((Upload) obj).getId();
    }
+
+   @Override
+   public final int hashCode()
+   {
+      return Integer.hashCode(getId());
+   }
 }
