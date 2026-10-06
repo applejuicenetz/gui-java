@@ -61,6 +61,8 @@
   - Hintergrund folgt dem GUI-Theme; vorhandene Linienfarben bleiben erhalten
 - [red171] Stabilität und Töne:
   - Einstellungen werden atomar gespeichert; ein Schreibfehler setzt sie nicht mehr zurück
+  - Ein einzelner ungültiger Einstellungswert beendet die GUI nicht mehr und setzt keine Einstellungen zurück;
+    vor einem Zurücksetzen entsteht `ajgui.properties.bak`
   - Tabellen sortieren schneller, Gleichstände behalten ihre Reihenfolge
   - Teillisten zeigen nach schnellem Wechsel der Auswahl nicht mehr die vorherige Datei
   - Töne laden im Hintergrund und geben das Audiogerät wieder frei

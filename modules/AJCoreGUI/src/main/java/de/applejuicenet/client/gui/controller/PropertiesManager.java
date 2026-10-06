@@ -29,6 +29,10 @@ import ch.qos.logback.classic.Level;
 import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -177,11 +181,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             }
             return language;
         } catch (Exception e) {
-            AppleJuiceDialog.rewriteProperties = true;
-            logger.error(PROPERTIES_ERROR_MESSAGE, e);
-
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
-            return null;
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getSprache nutzt den Standardwert", e);
+            return "english";
         }
     }
 
@@ -236,10 +237,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
                 lookAndFeels.add(new LookAFeel("Darcula", "com.formdev.flatlaf.FlatDarculaLaf"));
 
             } catch (Exception e) {
-                AppleJuiceDialog.rewriteProperties = true;
-                logger.error(PROPERTIES_ERROR_MESSAGE, e);
-
-                AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
+                logger.warn("Themes konnten nicht vollstaendig geladen werden", e);
             }
         }
 
@@ -276,10 +274,13 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         propertyHandler.put("options_program_file", path);
         String temp = getOpenProgram();
 
-        if (temp.compareTo(path) != 0) {
-            AppleJuiceDialog.rewriteProperties = true;
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
+        if (!normalizeOpenProgram(path).equals(temp)) {
+            logger.warn("Programm zum Oeffnen wurde nicht uebernommen: {}", path);
         }
+    }
+
+    private static String normalizeOpenProgram(String stored) {
+        return "-1".equals(stored) ? "" : stored;
     }
 
     public String getOpenProgram() {
@@ -294,10 +295,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
                 return temp;
             }
         } catch (Exception e) {
-            AppleJuiceDialog.rewriteProperties = true;
-            logger.error(PROPERTIES_ERROR_MESSAGE, e);
-
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getOpenProgram nutzt den Standardwert", e);
             return "";
         }
     }
@@ -306,11 +304,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         try {
             return propertyHandler.getAsBoolean("options_firststart", true);
         } catch (Exception e) {
-            AppleJuiceDialog.rewriteProperties = true;
-            logger.error(PROPERTIES_ERROR_MESSAGE, e);
-
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
-            return false;
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": isErsterStart nutzt den Standardwert", e);
+            return true;
         }
     }
 
@@ -322,11 +317,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         try {
             return propertyHandler.getAsBoolean("options_loadplugins", true);
         } catch (Exception e) {
-            AppleJuiceDialog.rewriteProperties = true;
-            logger.error(PROPERTIES_ERROR_MESSAGE, e);
-
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
-            return false;
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": shouldLoadPluginsOnStartup nutzt den Standardwert", e);
+            return true;
         }
     }
 
@@ -355,11 +347,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         try {
             return propertyHandler.getAsBoolean("options_sound", true);
         } catch (Exception e) {
-            AppleJuiceDialog.rewriteProperties = true;
-            logger.error(PROPERTIES_ERROR_MESSAGE, e);
-
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
-            return false;
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": isSoundEnabled nutzt den Standardwert", e);
+            return true;
         }
     }
 
@@ -375,11 +364,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         try {
             return propertyHandler.getAsBoolean("options_dialogzeigen", true);
         } catch (Exception e) {
-            AppleJuiceDialog.rewriteProperties = true;
-            logger.error(PROPERTIES_ERROR_MESSAGE, e);
-
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
-            return false;
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": shouldShowConnectionDialogOnStartup nutzt den Standardwert", e);
+            return true;
         }
     }
 
@@ -426,11 +412,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
             return result;
         } catch (Exception e) {
-            AppleJuiceDialog.rewriteProperties = true;
-            logger.error(PROPERTIES_ERROR_MESSAGE, e);
-
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
-            return null;
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getLogLevel nutzt den Standardwert", e);
+            return Level.INFO;
         }
     }
 
@@ -456,12 +439,12 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             farbenAktiv = propertyHandler.get("options_farben_aktiv", "true").equals("true");
             temp = propertyHandler.get("options_farben_hintergrund_downloadFertig", "-13382656");
             if (temp.length() != 0) {
-                downloadFertigHintergrundColor = new Color(Integer.parseInt(temp));
+                downloadFertigHintergrundColor = new Color(parseIntOr(temp, -13382656));
             }
 
             temp = propertyHandler.get("options_farben_hintergrund_quelle", "-205");
             if (temp.length() != 0) {
-                quelleHintergrundColor = new Color(Integer.parseInt(temp));
+                quelleHintergrundColor = new Color(parseIntOr(temp, -205));
             }
 
             downloadUebersicht = propertyHandler.getAsBoolean("options_download_uebersicht", true);
@@ -475,11 +458,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             settings.setDownloadUebersicht(downloadUebersicht);
             return settings;
         } catch (Exception e) {
-            AppleJuiceDialog.rewriteProperties = true;
-            logger.error(PROPERTIES_ERROR_MESSAGE, e);
-
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
-            return null;
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getSettings nutzt vorhandene Werte", e);
+            return settings != null ? settings : new Settings();
         }
     }
 
@@ -506,7 +486,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
             host = propertyHandler.get("options_remote_host", "localhost");
             passwort = propertyHandler.get("options_remote_passwort", "");
-            xmlPort = Integer.parseInt(propertyHandler.get("options_remote_port", "9851"));
+            xmlPort = parseIntOr(propertyHandler.get("options_remote_port", "9851"), 9851);
             connectionSettings.setHost(host);
             if (passwort.length() == 0) {
                 connectionSettings.setOldPassword("");
@@ -517,11 +497,8 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             connectionSettings.setXmlPort(xmlPort);
             return connectionSettings;
         } catch (Exception e) {
-            AppleJuiceDialog.rewriteProperties = true;
-            logger.error(PROPERTIES_ERROR_MESSAGE, e);
-
-            AppleJuiceDialog.closeWithErrormessage(PROPERTIES_ERROR, false);
-            return null;
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getRemoteSettings nutzt vorhandene Werte", e);
+            return connectionSettings != null ? connectionSettings : new ConnectionSettings();
         }
     }
 
@@ -553,8 +530,32 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         return false;
     }
 
+    private static int parseIntOr(String value, int fallback) {
+        try {
+            return Integer.parseInt(value.trim());
+        } catch (NumberFormatException e) {
+            LoggerFactory.getLogger(PropertiesManager.class).warn("Ungueltiger Zahlenwert in den Einstellungen, Standard {} wird genutzt", fallback);
+            return fallback;
+        }
+    }
+
+    /** Sichert die vorhandene Datei, bevor sie auf Standardwerte zurueckgesetzt wird. */
+    static void backupBeforeRestore(Path file) {
+        try {
+            if (Files.isRegularFile(file)) {
+                Path backup = file.resolveSibling(file.getFileName() + ".bak");
+
+                Files.copy(file, backup, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException e) {
+            LoggerFactory.getLogger(PropertiesManager.class).warn("Sicherung der Einstellungen fehlgeschlagen: {}", file, e);
+        }
+    }
+
     public static void restoreProperties() {
         PropertyHandler aPropertyHandler = null;
+
+        backupBeforeRestore(Path.of(AppleJuiceClient.getPropertiesPath()));
 
         try {
             aPropertyHandler = new PropertyHandler(AppleJuiceClient.getPropertiesPath(), "appleJuice-Java-GUI Propertyfile", false);
