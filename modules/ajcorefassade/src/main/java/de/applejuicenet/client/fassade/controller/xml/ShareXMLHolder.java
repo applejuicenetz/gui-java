@@ -40,7 +40,7 @@ import java.util.Map;
 public class ShareXMLHolder extends DefaultHandler
 {
    private final CoreConnectionSettingsHolder coreHolder;
-   private Map<Integer, Share>                shareMap;
+   private volatile Map<Integer, Share>       shareMap;
    private Map<Integer, Share>                parsedShares;
    private String                             xmlCommand;
    private XMLReader                          xr = null;
@@ -157,30 +157,44 @@ public class ShareXMLHolder extends DefaultHandler
       }
    }
 
-   public synchronized void update()
+   /**
+    * Holt share.xml und ersetzt den Bestand erst nach erfolgreichem Parsen. Der Netzabruf laeuft ausserhalb der
+    * Sperre, damit ein haengender Core keine anderen Aufrufer blockiert; nur Parsen und Veroeffentlichen
+    * (parsedShares ist Parserzustand) sind gegenseitig ausgeschlossen.
+    */
+   public void update()
    {
       try
       {
          String xmlString = getXMLString();
 
-         parsedShares = new HashMap<Integer, Share>();
-         xr.parse(new InputSource(new StringReader(xmlString)));
-         // share.xml is a complete snapshot: deleted files must disappear.
-         shareMap = parsedShares;
+         synchronized(this)
+         {
+            try
+            {
+               parsedShares = new HashMap<Integer, Share>();
+               xr.parse(new InputSource(new StringReader(xmlString)));
+               // share.xml is a complete snapshot: deleted files must disappear.
+               shareMap = parsedShares;
+            }
+            finally
+            {
+               parsedShares = null;
+            }
+         }
       }
       catch(Exception e)
       {
          throw new RuntimeException(e);
       }
-      finally
-      {
-         parsedShares = null;
-      }
    }
 
-   public synchronized Map<Integer, Share> getShare()
+   public Map<Integer, Share> getShare()
    {
       update();
-      return shareMap;
+      synchronized(this)
+      {
+         return shareMap;
+      }
    }
 }

@@ -85,6 +85,7 @@
   - Header werden gepuffert gelesen
   - XML-Parser lehnen DOCTYPE und externe Entitäten ab
   - Kurze Core-Aufrufe der GUI laufen auf virtuellen Threads; Fehler werden auf dem EDT behandelt
+  - Ein haengender Core-Abruf (Link, Erreichbarkeit, Share-Liste) blockiert keine anderen Abrufe mehr
 - [red171] SpeedGraph:
   - Zeitbasierter, begrenzter Verlauf und Zeichenlogik ersetzen alte
     pixelabhängige Speicherung und Timer

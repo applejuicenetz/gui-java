@@ -9,14 +9,15 @@ import de.applejuicenet.client.fassade.listener.CoreConnectionSettingsListener;
 import de.applejuicenet.client.fassade.listener.CoreConnectionSettingsListener.ITEM;
 import de.applejuicenet.client.fassade.tools.MD5Encoder;
 
-import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 public final class CoreConnectionSettingsHolder
 {
-   private String                                  coreHost;
-   private String                                  corePassword;
-   private Integer                                 corePort;
-   private HashSet<CoreConnectionSettingsListener> listener = new HashSet<CoreConnectionSettingsListener>();
+   private volatile String                         coreHost;
+   private volatile String                         corePassword;
+   private volatile Integer                        corePort;
+   private final Set<CoreConnectionSettingsListener> listener = new CopyOnWriteArraySet<CoreConnectionSettingsListener>();
 
    public CoreConnectionSettingsHolder(String coreHost, Integer corePort, String corePassword, boolean passwordIsPlaintext)
                                 throws IllegalArgumentException

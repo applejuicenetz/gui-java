@@ -785,7 +785,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
         return subdir;
     }
 
-    public synchronized String processLink(String link, String subdir)
+    public String processLink(String link, String subdir)
             throws IllegalArgumentException {
         if (link == null || link.length() == 0) {
             throw new IllegalArgumentException("invalid link");
@@ -854,7 +854,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
     /**
      * 0 = connection 1 = wrong password 2 = no connection
      */
-    public synchronized int isCoreAvailable() {
+    public int isCoreAvailable() {
         try {
             String result = HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
                     StringConstants.GET_INFORMATION_URL + coreHolder.getCorePassword());
