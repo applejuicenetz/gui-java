@@ -66,6 +66,8 @@
   - Töne laden im Hintergrund und geben das Audiogerät wieder frei
   - Soundpacks einheitlich auf 16 Bit / 48 kHz umgestellt
   - Links öffnen über den Standardbrowser des Systems
+  - „Update prüfen“ meldet auch „keine neuere Version“ oder einen Fehler, jeweils mit Link zum Repository;
+    die Prüfung beim Start bleibt still
 
 ### Technische Änderungen
 

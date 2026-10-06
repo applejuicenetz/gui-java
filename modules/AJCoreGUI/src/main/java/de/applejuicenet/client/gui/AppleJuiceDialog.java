@@ -1092,7 +1092,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
     }
 
     private void checkAndDisplayUpdate() {
-        VersionChecker.check();
+        UpdateChecker.check(false);
     }
 
     public void informWrongPassword() {

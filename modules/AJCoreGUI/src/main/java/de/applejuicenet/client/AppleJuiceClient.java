@@ -13,7 +13,7 @@ import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
-import de.applejuicenet.client.gui.VersionChecker;
+import de.applejuicenet.client.gui.UpdateChecker;
 import de.applejuicenet.client.gui.components.listener.KeyStates;
 import de.applejuicenet.client.gui.connect.ConnectFrame;
 import de.applejuicenet.client.gui.connect.QuickConnectionSettingsDialog;
@@ -361,7 +361,7 @@ public class AppleJuiceClient {
                 boolean UpdateInfo = OptionsManagerImpl.getInstance().getUpdateInfo();
 
                 if (UpdateInfo) {
-                    VersionChecker.check();
+                    UpdateChecker.check();
                 }
             });
 

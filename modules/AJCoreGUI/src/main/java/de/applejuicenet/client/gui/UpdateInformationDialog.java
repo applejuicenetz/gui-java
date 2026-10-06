@@ -24,32 +24,56 @@ import java.net.URI;
  * @author Maj0r <aj@tkl-soft.de>
  */
 public class UpdateInformationDialog extends JDialog {
-    private String aktuellsteVersion;
     private final JButton schliessen = new JButton();
-    private String releaseLink = "";
+    private final String titel;
+    private final String nachricht;
+    private final String linkBeschriftung;
+    private final String releaseLink;
     private final Logger logger;
 
     public UpdateInformationDialog(JFrame parentFrame, String aktuellsteVersion, String releaseLink) {
+        this(parentFrame, LanguageSelector.getInstance().getFirstAttrbuteByTagName("javagui.startup.newversiontitel"),
+                LanguageSelector.getInstance().getFirstAttrbuteByTagName("javagui.startup.newversionnachricht")
+                        .replaceFirst("%s", aktuellsteVersion),
+                LanguageSelector.getInstance().getFirstAttrbuteByTagName("javagui.startup.newversion"), releaseLink);
+    }
+
+    private UpdateInformationDialog(JFrame parentFrame, String titel, String nachricht, String linkBeschriftung,
+                                    String link) {
         super(parentFrame, true);
         logger = LoggerFactory.getLogger(getClass());
+        this.titel = titel;
+        this.nachricht = nachricht;
+        this.linkBeschriftung = linkBeschriftung;
+        this.releaseLink = link;
         try {
-            this.aktuellsteVersion = aktuellsteVersion;
-            this.releaseLink = releaseLink;
             init();
         } catch (Exception e) {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
         }
     }
 
+    /** Hinweis "keine neuere Version" mit Link auf das Repository. */
+    public static UpdateInformationDialog noNewVersion(JFrame parentFrame) {
+        LanguageSelector ls = LanguageSelector.getInstance();
+
+        return new UpdateInformationDialog(parentFrame, ls.getFirstAttrbuteByTagName("mainform.checkupdate.caption"),
+                ls.getFirstAttrbuteByTagName("javagui.checkupdate.keineNeueVersion"), "GitHub",
+                UpdateChecker.REPOSITORY_URL);
+    }
+
+    /** Hinweis "Pruefung fehlgeschlagen" (kein Netz, ungueltige Antwort, unbekannte eigene Version) mit Repository-Link. */
+    public static UpdateInformationDialog checkFailed(JFrame parentFrame) {
+        LanguageSelector ls = LanguageSelector.getInstance();
+
+        return new UpdateInformationDialog(parentFrame, ls.getFirstAttrbuteByTagName("mainform.checkupdate.caption"),
+                ls.getFirstAttrbuteByTagName("javagui.checkupdate.fehler"), "GitHub", UpdateChecker.REPOSITORY_URL);
+    }
+
     private void init() {
         LanguageSelector ls = LanguageSelector.getInstance();
 
         schliessen.addActionListener(ae -> UpdateInformationDialog.this.dispose());
-
-        String titel = ls.getFirstAttrbuteByTagName("javagui.startup.newversiontitel");
-        String nachricht = ls.getFirstAttrbuteByTagName("javagui.startup.newversionnachricht");
-
-        nachricht = nachricht.replaceFirst("%s", aktuellsteVersion);
         schliessen.setText(ls.getFirstAttrbuteByTagName("javagui.options.plugins.schliessen"));
         setTitle(titel);
         JPanel panel1 = new JPanel(new GridBagLayout());
@@ -69,7 +93,7 @@ public class UpdateInformationDialog extends JDialog {
         constraints.gridy = 1;
         JLabel label1 = new JLabel();
 
-        label1.setText(ls.getFirstAttrbuteByTagName("javagui.startup.newversion") + ": ");
+        label1.setText(linkBeschriftung + ": ");
         JLabel linkWin = new JLabel("<html><font><u>" + releaseLink + "</u></font></html>");
 
         panel1.add(label1, constraints);
