@@ -4,6 +4,9 @@
 
 package de.applejuicenet.client.gui.components.table;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -54,40 +57,44 @@ public class TableSorter<T>
       List<T> content = model.getContent();
       int     n = content.size();
 
-      for(int i = 0; i < n - 1; i++)
+      if(n < 2)
       {
-         int k = i;
+         return;
+      }
 
-         for(int j = i + 1; j < n; j++)
-         {
-            if(isAscent)
-            {
-               if(compare(column, j, k) < 0)
-               {
-                  k = j;
-               }
-            }
-            else
-            {
-               if(compare(column, j, k) > 0)
-               {
-                  k = j;
-               }
-            }
-         }
+      // Sortierschluessel einmal je Zeile holen; Sortierung ist stabil (TimSort).
+      Object[] keys = new Object[n];
 
-         T tmp = content.get(i);
+      for(int i = 0; i < n; i++)
+      {
+         keys[i] = model.getValueForSortAt(i, column);
+      }
 
-         content.set(i, content.get(k));
-         content.set(k, tmp);
+      Integer[] order = new Integer[n];
+
+      for(int i = 0; i < n; i++)
+      {
+         order[i] = i;
+      }
+
+      Comparator<Integer> byKey = (r1, r2) -> compareValues(keys[r1], keys[r2]);
+
+      Arrays.sort(order, isAscent ? byKey : byKey.reversed());
+      List<T> snapshot = new ArrayList<T>(content);
+
+      for(int i = 0; i < n; i++)
+      {
+         content.set(i, snapshot.get(order[i]));
       }
    }
 
    public int compare(int column, int row1, int row2)
    {
-      Object o1 = model.getValueForSortAt(row1, column);
-      Object o2 = model.getValueForSortAt(row2, column);
+      return compareValues(model.getValueForSortAt(row1, column), model.getValueForSortAt(row2, column));
+   }
 
+   private int compareValues(Object o1, Object o2)
+   {
       if(o1 == null && o2 == null)
       {
          return 0;
@@ -132,21 +139,7 @@ public class TableSorter<T>
          return Long.compare(o1.longValue(), o2.longValue());
       }
 
-      double n1 = o1.doubleValue();
-      double n2 = o2.doubleValue();
-
-      if(n1 < n2)
-      {
-         return -1;
-      }
-      else if(n1 > n2)
-      {
-         return 1;
-      }
-      else
-      {
-         return 0;
-      }
+      return Double.compare(o1.doubleValue(), o2.doubleValue());
    }
 
    public int compare(Date o1, Date o2)
