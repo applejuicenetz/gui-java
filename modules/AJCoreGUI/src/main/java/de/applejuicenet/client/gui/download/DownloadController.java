@@ -848,6 +848,9 @@ public class DownloadController extends GuiController {
                 downloadPanel.getDownloadTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                 downloadPanel.getDownloadSourceTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                 columnsDownload[9].setMaxWidth(280);
+                int statusMinWidth = com.formdev.flatlaf.util.UIScale.scale(190);
+                columnsDownload[1].setMinWidth(statusMinWidth);
+                columnsDownloadSources[1].setMinWidth(statusMinWidth);
                 TableColumnSettings.installCompact(downloadPanel.getDownloadTable(), "download", columnsDownload);
                 TableColumnSettings.installCompact(downloadPanel.getDownloadSourceTable(), "downloadsources", columnsDownloadSources);
                 int loc = (int) ((downloadPanel.getSplitPane().getHeight() - downloadPanel.getSplitPane().getDividerSize() -
