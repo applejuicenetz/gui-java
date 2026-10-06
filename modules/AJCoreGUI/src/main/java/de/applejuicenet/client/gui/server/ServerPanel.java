@@ -173,12 +173,15 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                     }
                 }
 
-                try {
-                    AppleJuiceClient.getAjFassade().connectToServer(server);
-                    SoundPlayer.getInstance().playSound(SoundPlayer.VERBINDEN);
-                } catch (IllegalArgumentException e) {
-                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                }
+                // Core-Aufruf blockiert bei langsamem Core: nicht auf dem EDT
+                Thread.ofVirtual().name("ConnectToServer").start(() -> {
+                    try {
+                        af.connectToServer(server);
+                        SoundPlayer.getInstance().playSound(SoundPlayer.VERBINDEN);
+                    } catch (IllegalArgumentException e) {
+                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                    }
+                });
             }
         });
 

@@ -66,6 +66,7 @@
   - Tabellen sortieren schneller, Gleichstände behalten ihre Reihenfolge
   - Teillisten zeigen nach schnellem Wechsel der Auswahl nicht mehr die vorherige Datei
   - Töne laden im Hintergrund und geben das Audiogerät wieder frei
+  - „Suchen“ und „Verbinden“ lassen die Oberfläche bei langsamem Core nicht mehr hängen
   - Soundpacks einheitlich auf 16 Bit / 48 kHz umgestellt
   - Links öffnen über den Standardbrowser des Systems
   - „Update prüfen“ meldet auch „keine neuere Version“ oder einen Fehler, jeweils mit Link zum Repository;

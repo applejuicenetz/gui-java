@@ -97,18 +97,23 @@ public class SearchController extends GuiController
 
       if(suchText.length() != 0)
       {
-         try
+         suchbegriff.setSelectionStart(0);
+         suchbegriff.setSelectionEnd(suchText.length());
+
+         // Core-Aufrufe (Anteilsliste holen, Suche starten) blockieren bei langsamem Core: nicht auf dem EDT
+         Thread.ofVirtual().name("StartSearch").start(() ->
          {
-            startFirstSearch();
-            AppleJuiceClient.getAjFassade().startSearch(suchText);
-            suchbegriff.setSelectionStart(0);
-            suchbegriff.setSelectionEnd(suchText.length());
-            SoundPlayer.getInstance().playSound(SoundPlayer.SUCHEN);
-         }
-         catch(IllegalArgumentException e)
-         {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE,e);
-         }
+            try
+            {
+               startFirstSearch();
+               AppleJuiceClient.getAjFassade().startSearch(suchText);
+               SoundPlayer.getInstance().playSound(SoundPlayer.SUCHEN);
+            }
+            catch(IllegalArgumentException e)
+            {
+               logger.error(ApplejuiceFassade.ERROR_MESSAGE,e);
+            }
+         });
       }
    }
 
@@ -142,7 +147,7 @@ public class SearchController extends GuiController
       searchPanel.getMnuEinfuegen().setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.einfuegen"));
    }
 
-   protected void startFirstSearch()
+   protected synchronized void startFirstSearch()
    {
       if(!firstSearch)
       {

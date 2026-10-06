@@ -11,11 +11,13 @@ import de.applejuicenet.client.shared.IconManager;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SearchEntryIconRenderer extends DefaultTableCellRenderer
 {
-   private static HashSet<String> md5Sums = new HashSet<String>();
+   // Wird vom Renderer (EDT) gelesen und vom Core-Thread gefuellt
+   private static final Set<String> md5Sums = ConcurrentHashMap.newKeySet();
 
    @Override
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
@@ -26,7 +28,7 @@ public class SearchEntryIconRenderer extends DefaultTableCellRenderer
       JLabel      label    = (JLabel) super.getTableCellRendererComponent(table, filename, isSelected, hasFocus, row, column);
 
       label.setOpaque(true);
-      boolean wirdBereitsGeladen = md5Sums.contains(entry.getChecksumme());
+      boolean wirdBereitsGeladen = entry.getChecksumme() != null && md5Sums.contains(entry.getChecksumme());
 
       if(wirdBereitsGeladen)
       {
@@ -67,11 +69,17 @@ public class SearchEntryIconRenderer extends DefaultTableCellRenderer
 
    public static void addMd5Sum(String md5sum)
    {
-      md5Sums.add(md5sum);
+      if(md5sum != null)
+      {
+         md5Sums.add(md5sum);
+      }
    }
 
    public static void removeMd5Sum(String md5sum)
    {
-      md5Sums.remove(md5sum);
+      if(md5sum != null)
+      {
+         md5Sums.remove(md5sum);
+      }
    }
 }

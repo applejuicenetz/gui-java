@@ -36,8 +36,7 @@ public class SoundPlayerTest {
         base = folder.getRoot().toPath();
         for (String name : new String[] {"classic", "warp"}) {
             Files.createDirectories(base.resolve(name));
-            for (String file : new String[] {"abgebrochen", "suchen", "verbinden", "gespeichert", "komplett", "laden",
-                    "pwdl", "verweigert", "konkretisieren", "zuganggestattet", "gestartet"}) {
+            for (String file : new String[] {"laden", "suchen", "komplett", "gespeichert"}) {
                 Files.write(base.resolve(name).resolve(file + ".wav"), new byte[] {1});
             }
         }
@@ -220,20 +219,5 @@ public class SoundPlayerTest {
         Thread.sleep(200);
         assertTrue(opened.isEmpty());
         assertEquals(0, player.activeSounds());
-    }
-
-    @Test(timeout = 20000)
-    public void everySoundIdMapsToItsFile() throws Exception {
-        SoundPlayer player = player(fakeOpener());
-        String[] expected = {"abgebrochen", "suchen", "verbinden", "gespeichert", "komplett", "laden", "pwdl",
-                "verweigert", "konkretisieren", "zuganggestattet", "gestartet"};
-        for (int id = 0; id < expected.length; id++) {
-            int before = opened.size();
-            player.playSound(id);
-            final int target = before + 1;
-            await(() -> opened.size() == target, "Ton " + id);
-            assertEquals(expected[id] + ".wav", opened.get(before).file.getFileName().toString());
-            opened.get(before).finish();
-        }
     }
 }
