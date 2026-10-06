@@ -14,6 +14,8 @@
   - HTML-Dateiexport entfernt
 - [red171] Bedienung und Darstellung:
   - Neue Option „Tabellenbreiten merken“ unter Ansicht speichert Spaltenbreiten pro Ansicht
+  - Neue Option „IP in Statusanzeige maskieren“ (Standard an); Tooltip zeigt die volle IP
+  - „Öffnen mit Standardprogramm“ ist bei Remote-Core ausgegraut und erklärt warum
   - Optionen lassen sich per Cmd+, (macOS) bzw. Strg+, (Windows/Linux) öffnen
   - Neues Info-Symbol für „Über“ im Iconset „modern“
   - Log Viewer, SpeedGraph, Version Checker und Share-Treemap zeigen deutsche

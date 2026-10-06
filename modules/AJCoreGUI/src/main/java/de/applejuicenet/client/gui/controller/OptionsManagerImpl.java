@@ -177,6 +177,14 @@ public class OptionsManagerImpl implements OptionsManager{
         propertiesManager.showConnectionDialogOnStartup(show);
     }
 
+    public boolean shouldMaskIpInStatusbar() {
+        return propertiesManager.shouldMaskIpInStatusbar();
+    }
+
+    public void maskIpInStatusbar(boolean mask) {
+        propertiesManager.maskIpInStatusbar(mask);
+    }
+
     public boolean shouldRememberColumnWidths() {
         return propertiesManager.shouldRememberColumnWidths();
     }

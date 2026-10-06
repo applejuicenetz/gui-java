@@ -732,6 +732,19 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         }
     }
 
+    public void updateExternalIp() {
+        if (information == null) {
+            return;
+        }
+        String ip = information.getExterneIP();
+
+        if (ip != null && OptionsManagerImpl.getInstance().shouldMaskIpInStatusbar()) {
+            ip = ip.replaceFirst("^(\\d{1,3}\\.\\d{1,3})\\.\\d{1,3}\\.\\d{1,3}$", "$1.xxx.xxx");
+        }
+        statusbar[4].setText(ip);
+        statusbar[4].setToolTipText(ip != null && !ip.equals(information.getExterneIP()) ? information.getExterneIP() : null);
+    }
+
     private void showOptionsDialog() {
         OptionsDialog od = new OptionsDialog(getApp());
         DialogLocation.center(od);
@@ -900,7 +913,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
 
                     statusbar[2].setText(information.getUpDownAsString());
                     statusbar[3].setText(information.getUpDownSessionAsString());
-                    statusbar[4].setText(information.getExterneIP());
+                    updateExternalIp();
                     statusbar[5].setText(information.getCreditsAsString());
                     updateFirewall();
                 } catch (Exception e) {

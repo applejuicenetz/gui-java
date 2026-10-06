@@ -93,6 +93,10 @@ public interface OptionsManager
 
    void showConnectionDialogOnStartup(boolean show);
 
+   boolean shouldMaskIpInStatusbar();
+
+   void maskIpInStatusbar(boolean mask);
+
    boolean shouldRememberColumnWidths();
 
    void rememberColumnWidths(boolean remember);

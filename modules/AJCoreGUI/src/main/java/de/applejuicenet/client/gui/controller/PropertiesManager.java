@@ -389,6 +389,14 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         propertyHandler.put("options_dialogzeigen", show);
     }
 
+    public boolean shouldMaskIpInStatusbar() {
+        return propertyHandler.getAsBoolean("options_mask_ip_statusbar", true);
+    }
+
+    public void maskIpInStatusbar(boolean mask) {
+        propertyHandler.put("options_mask_ip_statusbar", mask);
+    }
+
     public boolean shouldRememberColumnWidths() {
         return propertyHandler.getAsBoolean("options_columns_remember_widths", false);
     }

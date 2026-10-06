@@ -4,6 +4,7 @@
 
 package de.applejuicenet.client.gui.options;
 
+import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.DialogLocation;
 
 import de.applejuicenet.client.fassade.ApplejuiceFassade;
@@ -42,6 +43,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
     private JCheckBox cmbAktiv = new JCheckBox();
     private JCheckBox cmbStartscreenZeigen = new JCheckBox();
     private JCheckBox cmbTabellenbreiten = new JCheckBox();
+    private JCheckBox cmbIpMaskieren = new JCheckBox();
     private final Logger logger;
     private Icon menuIcon;
     private String menuText;
@@ -70,6 +72,8 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
 
         cmbTabellenbreiten.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.tabellenbreitenmerken"));
 
+        cmbIpMaskieren.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.ipmaskieren"));
+
         setLayout(new BorderLayout());
         farbeFertigerDownload.setOpaque(true);
         farbeFertigerDownload.setBorder(emptyBorder);
@@ -83,6 +87,12 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
 
         cmbStartscreenZeigen.setSelected(om.shouldShowConnectionDialogOnStartup());
         cmbStartscreenZeigen.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent ce) {
+                dirty = true;
+            }
+        });
+        cmbIpMaskieren.setSelected(om.shouldMaskIpInStatusbar());
+        cmbIpMaskieren.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent ce) {
                 dirty = true;
             }
@@ -232,6 +242,8 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
         panel3.add(cmbStartscreenZeigen, constraints);
         constraints.gridy = 2;
         panel3.add(cmbTabellenbreiten, constraints);
+        constraints.gridy = 3;
+        panel3.add(cmbIpMaskieren, constraints);
         panel2.add(panel3, BorderLayout.SOUTH);
 
         add(panel2, BorderLayout.WEST);
@@ -247,6 +259,12 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
 
             if (om.shouldShowConnectionDialogOnStartup() != shouldShowStartcreen()) {
                 om.showConnectionDialogOnStartup(shouldShowStartcreen());
+                bRet = true;
+            }
+
+            if (om.shouldMaskIpInStatusbar() != cmbIpMaskieren.isSelected()) {
+                om.maskIpInStatusbar(cmbIpMaskieren.isSelected());
+                AppleJuiceDialog.getApp().updateExternalIp();
                 bRet = true;
             }
 
