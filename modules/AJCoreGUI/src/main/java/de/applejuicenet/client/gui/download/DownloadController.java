@@ -120,7 +120,7 @@ public class DownloadController extends GuiController {
             }
         } else {
             downloadPanel.getMnuOpenWithProgram().setEnabled(false);
-            downloadPanel.getMnuOpenWithDefaultProgram().setVisible(false);
+            downloadPanel.getMnuOpenWithDefaultProgram().setEnabled(false);
         }
 
         downloadPanel.getDownloadTable().addMouseListener(new MouseAdapter() {
@@ -973,6 +973,10 @@ public class DownloadController extends GuiController {
         downloadPanel.getMnuOpenWithProgram().setText("VLC");
         downloadPanel.getMnuOpenWithDefaultProgram()
                 .setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.startemitstandard"));
+        String remoteHint = AppleJuiceClient.getAjFassade().isLocalhost() ? null
+                : languageSelector.getFirstAttrbuteByTagName("javagui.remotecore.hint");
+        downloadPanel.getMnuOpenWithProgram().setToolTipText(remoteHint);
+        downloadPanel.getMnuOpenWithDefaultProgram().setToolTipText(remoteHint);
         alreadyLoaded = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.bereitsgeladen");
         invalidLink = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.falscherlink");
         linkFailure = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.sonstigerlinkfehlerlang");

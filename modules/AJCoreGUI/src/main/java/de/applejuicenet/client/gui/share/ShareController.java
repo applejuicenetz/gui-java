@@ -150,6 +150,7 @@ public class ShareController extends GuiController
       else
       {
          sharePanel.getMnuOpenWithProgram().setVisible(false);
+         sharePanel.getMnuOpenWithStandardProgram().setEnabled(false);
       }
    }
 
@@ -750,6 +751,8 @@ public class ShareController extends GuiController
       sharePanel.getMnuOpenWithProgram().setText("VLC");
       sharePanel.getMnuOpenWithStandardProgram()
       .setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.startemitstandard"));
+      sharePanel.getMnuOpenWithStandardProgram().setToolTipText(AppleJuiceClient.getAjFassade().isLocalhost() ? null
+            : languageSelector.getFirstAttrbuteByTagName("javagui.remotecore.hint"));
       sharePanel.getBtnRefresh().setText(languageSelector.getFirstAttrbuteByTagName("mainform.startsharecheck.caption"));
       sharePanel.getBtnRefresh().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.startsharecheck.hint"));
       sharePanel.getBtnNeueListe().setText(languageSelector.getFirstAttrbuteByTagName("mainform.newfilelist.caption"));
