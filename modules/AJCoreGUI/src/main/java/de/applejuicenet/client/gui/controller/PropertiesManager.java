@@ -296,40 +296,6 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         propertyHandler.put("options_lookandfeels_default_name", lookAFeel.getName());
     }
 
-    public void setOpenProgram(String path) {
-        if (path == null || path.length() == 0) {
-            path = "-1";
-        }
-
-        propertyHandler.put("options_program_file", path);
-        String temp = getOpenProgram();
-
-        if (!normalizeOpenProgram(path).equals(temp)) {
-            logger.warn("Programm zum Oeffnen wurde nicht uebernommen: {}", path);
-        }
-    }
-
-    private static String normalizeOpenProgram(String stored) {
-        return "-1".equals(stored) ? "" : stored;
-    }
-
-    public String getOpenProgram() {
-        try {
-            String temp = propertyHandler.get("options_program_file", "-1");
-
-            if (temp.compareTo("-1") == 0) {
-                return "";
-            } else if (temp.length() == 0) {
-                return null;
-            } else {
-                return temp;
-            }
-        } catch (Exception e) {
-            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getOpenProgram nutzt den Standardwert", e);
-            return "";
-        }
-    }
-
     public boolean isErsterStart() {
         try {
             return propertyHandler.getAsBoolean("options_firststart", true);
@@ -689,7 +655,6 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             }
 
             aPropertyHandler.put("options_browser_file", "");
-            aPropertyHandler.put("options_program_file", -1);
             aPropertyHandler.put("options_proxy_host", "");
             aPropertyHandler.put("options_proxy_port", "");
             aPropertyHandler.put("options_proxy_use", false);

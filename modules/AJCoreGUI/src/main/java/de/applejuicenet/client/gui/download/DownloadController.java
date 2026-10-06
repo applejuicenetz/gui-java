@@ -49,7 +49,6 @@ public class DownloadController extends GuiController {
     private static final int ABBRECHEN = 0;
     private static final int COPY_TO_CLIPBOARD = 1;
     private static final int COPY_TO_CLIPBOARD_WITH_SOURCES = 2;
-    private static final int OPEN_WITH_PROGRAM = 3;
     private static final int OPEN_WITH_DEFAULT_PROGRAM = 16;
     private static final int PAUSE = 4;
     private static final int FORTSETZEN = 5;
@@ -110,8 +109,6 @@ public class DownloadController extends GuiController {
         downloadPanel.getMnuReleaseInfo().addActionListener(new GuiControllerActionListener(this, RELEASE_INFO));
         downloadPanel.getBtnPowerDownload().addActionListener(new GuiControllerActionListener(this, START_POWERDOWNLOAD));
         if (AppleJuiceClient.getAjFassade().isLocalhost()) {
-            downloadPanel.getMnuOpenWithProgram().addActionListener(new GuiControllerActionListener(this, OPEN_WITH_PROGRAM));
-            downloadPanel.getMnuOpenWithProgram().setVisible(true);
             if (DesktopTools.isAdvancedSupported()) {
                 downloadPanel.getMnuOpenWithDefaultProgram()
                         .addActionListener(new GuiControllerActionListener(this, OPEN_WITH_DEFAULT_PROGRAM));
@@ -119,7 +116,6 @@ public class DownloadController extends GuiController {
                 downloadPanel.getMnuOpenWithDefaultProgram().setVisible(false);
             }
         } else {
-            downloadPanel.getMnuOpenWithProgram().setEnabled(false);
             downloadPanel.getMnuOpenWithDefaultProgram().setEnabled(false);
         }
 
@@ -249,11 +245,6 @@ public class DownloadController extends GuiController {
 
             case COPY_TO_CLIPBOARD_WITH_SOURCES: {
                 copyDownloadLinkToClipboardWithSources();
-                break;
-            }
-
-            case OPEN_WITH_PROGRAM: {
-                openWithProgram();
                 break;
             }
 
@@ -627,37 +618,6 @@ public class DownloadController extends GuiController {
         }
     }
 
-    private void openWithProgram() {
-        Download[] selectedDownloads = getSelectedDownloads();
-
-        if (selectedDownloads != null && selectedDownloads.length == 1) {
-            String programToExecute = OptionsManagerImpl.getInstance().getOpenProgram();
-
-            if (programToExecute.length() != 0) {
-                for (Download curDownload : selectedDownloads) {
-                    Integer shareId = Integer.valueOf(curDownload.getShareId());
-
-                    try {
-                        Share share = (Share) AppleJuiceClient.getAjFassade().getObjectById(shareId);
-
-                        if (share != null) {
-                            String filename = share.getFilename();
-
-                            try {
-                                Runtime.getRuntime().exec(new String[]{programToExecute, filename});
-                            } catch (Exception ex) {
-
-                                //nix zu tun
-                            }
-                        }
-                    } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-                    }
-                }
-            }
-        }
-    }
-
     private void openWithDefaultProgram() {
         Download[] selectedDownloads = getSelectedDownloads();
 
@@ -959,12 +919,10 @@ public class DownloadController extends GuiController {
         downloadPanel.getMnuCopyToClipboard().setText(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption"));
         downloadPanel.getMnuCopyToClipboardWithSources()
                 .setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.getlinkwithsources"));
-        downloadPanel.getMnuOpenWithProgram().setText("VLC");
         downloadPanel.getMnuOpenWithDefaultProgram()
                 .setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.startemitstandard"));
         String remoteHint = AppleJuiceClient.getAjFassade().isLocalhost() ? null
                 : languageSelector.getFirstAttrbuteByTagName("javagui.remotecore.hint");
-        downloadPanel.getMnuOpenWithProgram().setToolTipText(remoteHint);
         downloadPanel.getMnuOpenWithDefaultProgram().setToolTipText(remoteHint);
         alreadyLoaded = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.bereitsgeladen");
         invalidLink = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.falscherlink");

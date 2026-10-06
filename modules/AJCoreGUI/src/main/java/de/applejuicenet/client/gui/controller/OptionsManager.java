@@ -108,8 +108,4 @@ public interface OptionsManager
    ConnectionSettings[] getConnectionsSet();
 
    void setConnectionsSet(ConnectionSettings[] set);
-
-   void setOpenProgram(String path);
-
-   String getOpenProgram();
 }

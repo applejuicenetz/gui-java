@@ -67,7 +67,6 @@ public class ShareController extends GuiController
    private static final int       COPY_TO_CLIPBOARD_WITH_SOURCES = 8;
    private static final int       COPY_TO_CLIPBOARD_AS_UBB_CODE  = 9;
    private static final int       NEUE_LISTE                     = 10;
-   private static final int       OPEN_WITH_PROGRAM              = 11;
    private static final int       OPEN_WITH_STANDARD_PROGRAM     = 12;
    private static final int       RELEASE_INFO                   = 13;
    private static final int       DATEILISTE_AUS_ORDNER           = 14;
@@ -139,17 +138,14 @@ public class ShareController extends GuiController
          {
             sharePanel.getMnuOpenWithStandardProgram()
             .addActionListener(new GuiControllerActionListener(this, OPEN_WITH_STANDARD_PROGRAM));
-            sharePanel.getMnuOpenWithProgram().setVisible(false);
          }
          else
          {
             sharePanel.getMnuOpenWithStandardProgram().setVisible(false);
-            sharePanel.getMnuOpenWithProgram().addActionListener(new GuiControllerActionListener(this, OPEN_WITH_PROGRAM));
          }
       }
       else
       {
-         sharePanel.getMnuOpenWithProgram().setVisible(false);
          sharePanel.getMnuOpenWithStandardProgram().setEnabled(false);
       }
    }
@@ -235,12 +231,6 @@ public class ShareController extends GuiController
             break;
          }
 
-         case OPEN_WITH_PROGRAM:
-         {
-            mitProgrammOeffnen();
-            break;
-         }
-
          case OPEN_WITH_STANDARD_PROGRAM:
          {
             mitStandardProgrammOeffnen();
@@ -280,31 +270,6 @@ public class ShareController extends GuiController
          String filename = share.getFilename();
 
          DesktopTools.open(new File(filename));
-      }
-   }
-
-   private void mitProgrammOeffnen()
-   {
-      Object[] obj = sharePanel.getShareTable().getSelectedItems();
-
-      if(((ShareNode) obj[0]).isLeaf())
-      {
-         Share  share            = ((ShareNode) obj[0]).getShare();
-         String filename         = share.getFilename();
-         String programToExecute = OptionsManagerImpl.getInstance().getOpenProgram();
-
-         if(programToExecute.length() != 0)
-         {
-            try
-            {
-               Runtime.getRuntime().exec(new String[] {programToExecute, filename});
-            }
-            catch(Exception ex)
-            {
-
-               //nix zu tun
-            }
-         }
       }
    }
 
@@ -737,7 +702,6 @@ public class ShareController extends GuiController
       .setText(languageSelector.getFirstAttrbuteByTagName("javagui.shareform.linkalsubbcode"));
       sharePanel.getMnuCopyToClipboardWithSources()
       .setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.getlinkwithsources"));
-      sharePanel.getMnuOpenWithProgram().setText("VLC");
       sharePanel.getMnuOpenWithStandardProgram()
       .setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.startemitstandard"));
       sharePanel.getMnuOpenWithStandardProgram().setToolTipText(AppleJuiceClient.getAjFassade().isLocalhost() ? null

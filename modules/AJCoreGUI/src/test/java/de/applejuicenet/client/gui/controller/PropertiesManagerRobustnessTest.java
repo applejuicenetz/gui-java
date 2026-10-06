@@ -66,20 +66,6 @@ public class PropertiesManagerRobustnessTest {
     }
 
     @Test(timeout = 20000)
-    public void clearingTheOpenProgramDoesNotExitTheApplication() throws Exception {
-        File file = write("options_program_file=/usr/bin/vlc\n");
-        PropertiesManager manager = manager(file);
-        assertEquals("/usr/bin/vlc", manager.getOpenProgram());
-        manager.setOpenProgram("");
-        assertEquals("", manager.getOpenProgram());
-        manager.setOpenProgram(null);
-        assertEquals("", manager.getOpenProgram());
-        manager.setOpenProgram("/usr/bin/mpv");
-        assertEquals("/usr/bin/mpv", manager.getOpenProgram());
-        assertFalse(AppleJuiceDialog.rewriteProperties);
-    }
-
-    @Test(timeout = 20000)
     public void otherSettingsSurviveOneBadValue() throws Exception {
         File file = write("options_remote_port=kaputt\noptions_sprache=deutsch\noptions_sound=false\n"
                 + "options_columns_download_column1_width=222\n");

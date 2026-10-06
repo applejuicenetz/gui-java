@@ -61,7 +61,6 @@ public class SharePanel extends TklPanel {
     private JMenuItem itemCopyToClipboard = new JMenuItem();
     private JMenuItem itemCopyToClipboardWithSources = new JMenuItem();
     private JMenuItem itemCopyToClipboardAsUBBCode = new JMenuItem();
-    private JMenuItem itemOpenWithProgram = new JMenuItem();
     private JMenuItem itemOpenWithStandardProgramm = new JMenuItem();
     private Logger logger;
 
@@ -127,10 +126,6 @@ public class SharePanel extends TklPanel {
         return itemCopyToClipboardAsUBBCode;
     }
 
-    public JMenuItem getMnuOpenWithProgram() {
-        return itemOpenWithProgram;
-    }
-
     public ShareTable getShareTable() {
         return shareTable;
     }
@@ -194,9 +189,7 @@ public class SharePanel extends TklPanel {
         popup2.add(itemCopyToClipboardAsUBBCode);
         popup2.add(new JSeparator());
         popup2.add(itemReleaseInfo);
-        popup2.add(itemOpenWithProgram);
         popup2.add(itemOpenWithStandardProgramm);
-        itemOpenWithProgram.setIcon(im.getIcon("vlc"));
         folderTree.setModel(new DefaultTreeModel(new WaitNode()));
         folderTree.setCellRenderer(new ShareSelectionTreeCellRenderer());
 

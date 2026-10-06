@@ -23,6 +23,7 @@
     selbst ein, speichert die Breiten pro Ansicht und beendet die automatische Anpassung
   - Neue Option „IP in Statusanzeige maskieren“ (Standard an); Tooltip zeigt die volle IP
   - „Öffnen mit Standardprogramm“ ist bei Remote-Core ausgegraut und erklärt warum
+  - Menüpunkt „VLC“ und Option „Programm“ unter Ansicht entfernt; „Öffnen mit Standardprogramm“ bleibt
   - Optionen lassen sich per Cmd+, (macOS) bzw. Strg+, (Windows/Linux) öffnen
   - Ungültige Eingaben (Download-Link, Nickname im Assistenten, Zielverzeichnis) werden mit rotem
     Rahmen markiert; die blaue „geändert“-Markierung der Eingabefelder entfällt

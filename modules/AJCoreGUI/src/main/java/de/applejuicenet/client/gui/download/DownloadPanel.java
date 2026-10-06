@@ -59,7 +59,6 @@ public class DownloadPanel extends TklPanel {
     private JMenuItem itemReleaseInfo = new JMenuItem();
     private JMenuItem itemCopyToClipboard = new JMenuItem();
     private JMenuItem itemCopyToClipboardWithSources = new JMenuItem();
-    private JMenuItem itemOpenWithProgram = new JMenuItem();
     private JMenuItem itemOpenWithDefaultProgram = new JMenuItem();
     private JSplitPane splitPane;
     private Logger logger;
@@ -167,10 +166,6 @@ public class DownloadPanel extends TklPanel {
         return itemReleaseInfo;
     }
 
-    public JMenuItem getMnuOpenWithProgram() {
-        return itemOpenWithProgram;
-    }
-
     public JMenuItem getMnuOpenWithDefaultProgram() {
         return itemOpenWithDefaultProgram;
     }
@@ -230,8 +225,6 @@ public class DownloadPanel extends TklPanel {
         popup.add(itemCopyToClipboardWithSources);
         popup.add(new JSeparator());
         popup.add(itemReleaseInfo);
-        popup.add(itemOpenWithProgram);
-        itemOpenWithProgram.setIcon(im.getIcon("vlc"));
         popup.add(itemOpenWithDefaultProgram);
 
         GridBagConstraints constraints = new GridBagConstraints();

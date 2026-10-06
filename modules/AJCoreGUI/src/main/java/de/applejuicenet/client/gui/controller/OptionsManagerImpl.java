@@ -153,13 +153,6 @@ public class OptionsManagerImpl implements OptionsManager{
         propertiesManager.setLinkListenerPort(port);
     }
 
-	public void setOpenProgram(String path) {
-        propertiesManager.setOpenProgram(path);
-	}
-
-	public String getOpenProgram() {
-        return propertiesManager.getOpenProgram();
-	}
 
 	public void loadPluginsOnStartup(boolean loadPluginsOnStartup) {
         propertiesManager.loadPluginsOnStartup(loadPluginsOnStartup);

@@ -47,8 +47,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
     private Icon menuIcon;
     private String menuText;
     private boolean dirty = false;
-    private JTextField openProgram = new JTextField();
-    private JLabel program = new JLabel("VLC ");
     private Border emptyBorder = BorderFactory.createEmptyBorder(1, 1, 1, 1);
 
     public ODAnsichtPanel() {
@@ -133,55 +131,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
         hint1.setToolTipText(tooltipp);
         hint2.setToolTipText(tooltipp);
 
-        openProgram.setEditable(false);
-        openProgram.setText(om.getOpenProgram());
-        Icon icon2 = im.getIcon("folderopen");
-        Icon icon3 = im.getIcon("vlc");
-
-        program.setIcon(icon3);
-        JLabel selectProgram = new JLabel(icon2);
-
-        selectProgram.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        selectProgram.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                JLabel source = (JLabel) e.getSource();
-
-                source.setBorder(BorderFactory.createLineBorder(Color.black));
-            }
-
-            public void mouseClicked(MouseEvent e) {
-                JLabel source = (JLabel) e.getSource();
-                JFileChooser fileChooser = new JFileChooser();
-
-                fileChooser.setDialogType(JFileChooser.FILES_ONLY);
-                fileChooser.setDialogTitle(program.getText());
-                if (openProgram.getText().length() != 0) {
-                    File tmpFile = new File(openProgram.getText());
-
-                    if (tmpFile.isFile()) {
-                        fileChooser.setCurrentDirectory(tmpFile);
-                    }
-                }
-
-                int returnVal = fileChooser.showOpenDialog(DialogLocation.getReference(source));
-
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    File browserFile = fileChooser.getSelectedFile();
-
-                    if (browserFile.isFile()) {
-                        openProgram.setText(browserFile.getPath());
-                        dirty = true;
-                    }
-                }
-            }
-
-            public void mouseExited(MouseEvent e) {
-                JLabel source = (JLabel) e.getSource();
-
-                source.setBorder(null);
-            }
-        });
-
         GridBagConstraints constraints = new GridBagConstraints();
 
         constraints.anchor = GridBagConstraints.WEST;
@@ -189,16 +138,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.insets.bottom = 5;
-
-        JPanel panel4 = new JPanel(new GridBagLayout());
-
-        panel4.add(program, constraints);
-        constraints.gridx = 1;
-        constraints.weightx = 1;
-        panel4.add(openProgram, constraints);
-        constraints.weightx = 0;
-        constraints.gridx = 2;
-        panel4.add(selectProgram, constraints);
 
         JPanel panel1 = new JPanel();
 
@@ -234,12 +173,10 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
         constraints.gridy = 0;
         constraints.weightx = 1;
         constraints.weighty = 0;
-        panel3.add(panel4, constraints);
-        constraints.gridy = 1;
         panel3.add(cmbStartscreenZeigen, constraints);
-        constraints.gridy = 2;
+        constraints.gridy = 1;
         panel3.add(cmbTabellenbreiten, constraints);
-        constraints.gridy = 3;
+        constraints.gridy = 2;
         panel3.add(cmbIpMaskieren, constraints);
         panel2.add(panel3, BorderLayout.SOUTH);
 
@@ -270,11 +207,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
                 bRet = true;
             }
 
-            if (!om.getOpenProgram().equals(getProgramPfad())) {
-                om.setOpenProgram(getProgramPfad());
-                bRet = true;
-            }
-
             if (settings.save()) {
                 bRet = true;
             }
@@ -301,10 +233,6 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
 
     public String getMenuText() {
         return menuText;
-    }
-
-    public String getProgramPfad() {
-        return openProgram.getText();
     }
 
     public void reloadSettings() {
