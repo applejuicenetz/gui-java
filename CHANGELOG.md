@@ -65,6 +65,8 @@
     vor einem Zurücksetzen entsteht `ajgui.properties.bak`
   - Tabellen sortieren schneller, Gleichstände behalten ihre Reihenfolge
   - Teillisten zeigen nach schnellem Wechsel der Auswahl nicht mehr die vorherige Datei
+  - Automatische Powerdownloads aktualisieren beim Ende ihre Bedienelemente auf dem UI-Thread;
+    verspätete Rückmeldungen alter Policies ändern keine neu gestartete Policy
   - Töne laden im Hintergrund und geben das Audiogerät wieder frei
   - „Suchen“ und „Verbinden“ lassen die Oberfläche bei langsamem Core nicht mehr hängen
   - Soundpacks einheitlich auf 16 Bit / 48 kHz umgestellt

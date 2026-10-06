@@ -59,9 +59,10 @@ public abstract class AutomaticPowerdownloadPolicy extends Thread {
             logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
         }
 
-        if (parentToInformEnde != null) {
-            parentToInformEnde.autoPwdlFinished();
-            parentToInformEnde = null;
+        PowerDownloadPanel parent = parentToInformEnde;
+        parentToInformEnde = null;
+        if (parent != null) {
+            javax.swing.SwingUtilities.invokeLater(() -> parent.autoPwdlFinished(this));
         }
 
         if (threads != null) {

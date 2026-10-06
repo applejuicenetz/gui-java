@@ -462,6 +462,12 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
         }
     }
 
+    public void autoPwdlFinished(AutomaticPowerdownloadPolicy completedPolicy) {
+        if (completedPolicy != null && autoPwdlThread == completedPolicy) {
+            autoPwdlFinished();
+        }
+    }
+
     public void autoPwdlFinished() {
         autoPwdlEinstellungen.setVisible(false);
         autoPwdlThread = null;
