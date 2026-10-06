@@ -606,6 +606,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
 
             optionenMenu = new JMenu();
             menuItemOptionen.addActionListener(e -> showOptionsDialog());
+            menuItemOptionen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_COMMA,
+                    Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
             menuItemDateiliste.addActionListener(e -> dateiListeImportieren());
             menuItemCheckUpdate.addActionListener(e -> checkAndDisplayUpdate());
             menuItemCoreBeenden.addActionListener(e -> {
