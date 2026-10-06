@@ -19,16 +19,14 @@ public class DesktopTool
       }
    }
 
-   public void browse(URI uri)
+   public boolean isBrowseSupported()
    {
-      try
-      {
-         Desktop.getDesktop().browse(uri);
-      }
-      catch(IOException e)
-      {
-         e.printStackTrace();
-      }
+      return Desktop.getDesktop().isSupported(Desktop.Action.BROWSE);
+   }
+
+   public void browse(URI uri) throws IOException
+   {
+      Desktop.getDesktop().browse(uri);
    }
 
    public void open(File toOpen)

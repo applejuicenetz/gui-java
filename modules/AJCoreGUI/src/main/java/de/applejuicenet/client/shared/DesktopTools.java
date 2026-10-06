@@ -24,19 +24,32 @@ public class DesktopTools {
     }
 
     public static void browse(URI uri) {
-        if (null != desktopToolIF && !System.getProperty("os.name").toLowerCase().contains("linux")) {
-            desktopToolIF.browse(uri);
-        } else {
+        Thread.ofVirtual().name("DesktopBrowse").start(() -> {
             try {
-                Runtime.getRuntime().exec(new String[]{"xdg-open", uri.toURL().toString()});
+                browseBlocking(uri);
             } catch (Exception ex) {
-                LanguageSelector ls = LanguageSelector.getInstance();
-                String nachricht = ls.getFirstAttrbuteByTagName("javagui.startup.updatefehlernachricht");
-                String titel = ls.getFirstAttrbuteByTagName("mainform.caption");
-
-                JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), nachricht, titel, JOptionPane.INFORMATION_MESSAGE);
+                SwingUtilities.invokeLater(DesktopTools::showBrowseError);
             }
+        });
+    }
+
+    private static void browseBlocking(URI uri) throws Exception {
+        if (desktopToolIF.isBrowseSupported()) {
+            desktopToolIF.browse(uri);
+        } else if (System.getProperty("os.name").toLowerCase().contains("linux")) {
+            // Desktop.browse fehlt z.B. ohne GTK in der Flatpak-Laufzeit
+            new ProcessBuilder("xdg-open", uri.toString()).inheritIO().start();
+        } else {
+            throw new UnsupportedOperationException("browse not supported");
         }
+    }
+
+    private static void showBrowseError() {
+        LanguageSelector ls = LanguageSelector.getInstance();
+        String nachricht = ls.getFirstAttrbuteByTagName("javagui.startup.updatefehlernachricht");
+        String titel = ls.getFirstAttrbuteByTagName("mainform.caption");
+
+        JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), nachricht, titel, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void open(File toOpen) {
