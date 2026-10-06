@@ -82,18 +82,4 @@ public class JarLoaderResourceTest {
         }
         assertTrue("Dateihandles gewachsen: " + handlesBefore + " -> " + handlesAfter, handlesAfter - handlesBefore < 20);
     }
-
-    @Test
-    public void policyLoaderClosesTheJar() throws Exception {
-        org.junit.Assume.assumeTrue("nur mit /proc", Files.isDirectory(Path.of("/proc/self/fd")));
-        File jar = jarWith("policy.jar", "readme.txt", "kein Klassenfile\n");
-        long before = openHandlesOn(jar);
-        for (int i = 0; i < 20; i++) {
-            URL url = jar.toURI().toURL();
-            try (PolicyJarClassLoader loader = new PolicyJarClassLoader(url)) {
-                assertNull(loader.getPolicy(jar.getAbsolutePath()) == null ? null : "unerwartet");
-            }
-        }
-        assertEquals("JAR-Handle nach dem Laden noch offen", before, openHandlesOn(jar));
-    }
 }

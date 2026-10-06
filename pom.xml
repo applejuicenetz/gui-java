@@ -15,7 +15,6 @@
         <module>modules/AJCoreGUI</module>
         <module>modules/logviewer</module>
         <module>modules/versionchecker</module>
-        <module>modules/standardpwdlpolicy</module>
         <module>modules/speedgraph</module>
         <module>modules/sharetreemap</module>
     </modules>
@@ -48,12 +47,6 @@
                         </fileset>
                         <fileset>
                             <directory>${basedir}/resources/plugins/</directory>
-                            <includes>
-                                <include>*.jar</include>
-                            </includes>
-                        </fileset>
-                        <fileset>
-                            <directory>${basedir}/resources/pwdlpolicies/</directory>
                             <includes>
                                 <include>*.jar</include>
                             </includes>

@@ -2,7 +2,7 @@ package de.applejuicenet.client.gui.powerdownload;
 
 import de.applejuicenet.client.gui.DialogLocation;
 
-import de.applejuicenet.client.gui.powerdownload.StandardAutomaticPwdlPolicy.Reihenfolge;
+import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownload.Reihenfolge;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberAndSpecialCharsInputVerifier;
 import de.applejuicenet.client.shared.NumberInputVerifier;
@@ -23,6 +23,7 @@ public class EinstellungenDialog extends JDialog implements ActionListener {
     private int powerDownload = 12;
     private int anzahlDownloads = 2;
     private int sleeptime = 30;
+    private boolean confirmed;
     private JTextField tfPwdlWert = new JTextField();
     private JTextField tfPwdlCount = new JTextField();
     private JTextField tfSleeptime = new JTextField();
@@ -31,11 +32,6 @@ public class EinstellungenDialog extends JDialog implements ActionListener {
     private DefaultListModel listSortingModel = new DefaultListModel();
     private JLabel btnUp;
     private JLabel btnDown;
-
-    public static void main(String args[]) {
-        EinstellungenDialog e = new EinstellungenDialog(null);
-        e.setVisible(true);
-    }
 
     public EinstellungenDialog(Frame parent, int powerDownload,
             int anzahlDownloads, int sleeptime) {
@@ -115,6 +111,8 @@ public class EinstellungenDialog extends JDialog implements ActionListener {
 
         listSorting.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tfSleeptime.setText(Integer.toString(sleeptime));
+        tfPwdlWert.setText(Double.toString((powerDownload + 10) / 10.0));
+        tfPwdlCount.setText(Integer.toString(anzahlDownloads));
 
         initListeners();
         pack();
@@ -155,6 +153,7 @@ public class EinstellungenDialog extends JDialog implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (checkInput()) {
+            confirmed = true;
             dispose();
         }
     }
@@ -163,7 +162,15 @@ public class EinstellungenDialog extends JDialog implements ActionListener {
         boolean returnValue = true;
         String result = tfPwdlWert.getText();
         result = result.replace(',', '.');
-        double wert = Double.parseDouble(result) - 1;
+        double wert;
+
+        try {
+            wert = Double.parseDouble(result) - 1;
+        } catch (NumberFormatException e) {
+            tfPwdlWert.setText(Double.toString((powerDownload + 10) / 10.0));
+            return false;
+        }
+
         wert = ((double) Math.round(wert * 100.0)) / 100.0;
         int tempValue = (int) ((wert) * 10);
         if (tempValue < 12 || tempValue > 490) {
@@ -204,7 +211,14 @@ public class EinstellungenDialog extends JDialog implements ActionListener {
         return sleeptime * 1000;
     }
 
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
     public void setVisible(boolean visible) {
+        if (visible) {
+            confirmed = false;
+        }
         DialogLocation.center(this);
         super.setVisible(visible);
     }

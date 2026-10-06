@@ -109,7 +109,7 @@ public class PowerDownloadPanelLayoutTest {
 
     private static void addHintAndArrowIcons(PowerDownloadPanel panel) throws Exception {
         ImageIcon icon = new ImageIcon(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB));
-        for (String name : new String[] {"btnHint", "btnHint2", "btnHint3", "btnPdlUp", "btnPdlDown"}) {
+        for (String name : new String[] {"btnHint", "btnHint2", "btnPdlUp", "btnPdlDown"}) {
             Field field = PowerDownloadPanel.class.getDeclaredField(name);
             field.setAccessible(true);
             ((JLabel) field.get(panel)).setIcon(icon);

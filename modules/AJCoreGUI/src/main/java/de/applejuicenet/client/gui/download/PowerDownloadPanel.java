@@ -12,21 +12,17 @@ import de.applejuicenet.client.fassade.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
-import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownloadPolicy;
+import de.applejuicenet.client.gui.powerdownload.AutomaticPowerdownload;
+import de.applejuicenet.client.gui.powerdownload.EinstellungenDialog;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.MultiLineToolTip;
 import de.applejuicenet.client.shared.NumberInputVerifier;
-import de.applejuicenet.client.shared.PolicyJarClassLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -48,7 +44,6 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
     private JRadioButton btnAutoAktiv = new JRadioButton();
     private JLabel btnHint;
     private JLabel btnHint2;
-    private JLabel btnHint3;
     private JLabel btnPdlUp;
     private JLabel btnPdlDown;
     private float ratioWert = 2.2f;
@@ -66,12 +61,12 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
     private JLabel label11 = new JLabel();
     private Logger logger;
     private RatioFocusAdapter ratioFocusAdapter;
-    private JComboBox pwdlPolicies = new JComboBox();
+    private EinstellungenDialog autoPwdlDialog;
     private JButton autoPwdlEinstellungen = new JButton();
     private int standardAutomaticPwdlAb = 200;
     private int standardAutomaticPwdlBis = 30;
     private DownloadController downloadController;
-    private volatile AutomaticPowerdownloadPolicy autoPwdlThread;
+    private volatile AutomaticPowerdownload autoPwdlThread;
     private Information lastInformation;
     private JPanel backPanel = new JPanel();
     private JScrollPane scrollPane;
@@ -241,14 +236,6 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
         };
         btnHint2.setOpaque(true);
         btnHint2.setBackground(BLUE_BACKGROUND);
-        btnHint3 = new JLabel(icon) {
-            public JToolTip createToolTip() {
-                MultiLineToolTip tip = new MultiLineToolTip();
-
-                tip.setComponent(this);
-                return tip;
-            }
-        };
         tempPanel2.add(btnHint2, BorderLayout.EAST);
         constraints.insets.left = 0;
         constraints.insets.right = 0;
@@ -263,31 +250,6 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
         buttonGroup2.add(btnAutoInaktiv);
         buttonGroup2.add(btnAutoAktiv);
         btnAutoInaktiv.setSelected(true);
-        pwdlPolicies.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                AutomaticPowerdownloadPolicy policy = (AutomaticPowerdownloadPolicy) pwdlPolicies.getSelectedItem();
-                StringBuffer text = new StringBuffer(policy.getDescription());
-                int i = 0;
-
-                while (i < text.length()) {
-                    if (text.charAt(i) == '.') {
-                        text.insert(i + 1, '|');
-                        i++;
-                    }
-
-                    i++;
-                }
-
-                text.insert(0, policy.toString() + "|" + "Autor: " + policy.getAuthor() + "|" + "Beschreibung:|");
-                btnHint3.setToolTipText(text.toString());
-            }
-        });
-        fillPwdlPolicies();
-        JPanel panel1 = new JPanel(new FlowLayout());
-
-        panel1.add(pwdlPolicies);
-        panel1.add(btnHint3);
-        backPanel.add(panel1, constraints);
         constraints.insets.left = 0;
         constraints.insets.right = 0;
         JPanel panel2 = new JPanel(new GridBagLayout());
@@ -386,20 +348,20 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
 
     private void alterAutoPwdl() {
         if (btnAutoAktiv.isSelected()) {
-            if (pwdlPolicies.isEnabled()) {
-                pwdlPolicies.setEnabled(false);
+            if (autoPwdlThread == null && autoAb.isEnabled()) {
+                if (!openAutoPwdlSettings()) {
+                    btnAutoInaktiv.setSelected(true);
+                    return;
+                }
                 autoAb.setEnabled(false);
                 autoBis.setEnabled(false);
                 btnPdl.setEnabled(false);
-                AutomaticPowerdownloadPolicy selectedPolicy = (AutomaticPowerdownloadPolicy) pwdlPolicies.getSelectedItem();
-
-                manageAutoPwdl(selectedPolicy);
+                startAutoPwdl();
                 downloadController.updateDownloadPolling();
                 AppleJuiceDialog.getApp().informAutomaticPwdlEnabled(true);
             }
         } else {
-            if (!pwdlPolicies.isEnabled()) {
-                pwdlPolicies.setEnabled(true);
+            if (!autoAb.isEnabled()) {
                 autoAb.setEnabled(true);
                 autoBis.setEnabled(true);
                 if (autoPwdlThread != null) {
@@ -412,36 +374,22 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
     }
 
     public boolean isAutomaticPwdlActive() {
-        return (!pwdlPolicies.isEnabled() && autoPwdlThread != null);
+        return (!autoAb.isEnabled() && autoPwdlThread != null);
     }
 
-    @SuppressWarnings("unchecked")
-    private void manageAutoPwdl(final AutomaticPowerdownloadPolicy selectedPolicy) {
-        if (autoPwdlThread != null) {
-            autoPwdlThread.interrupt();
-            autoPwdlThread = null;
-        }
+    private void startAutoPwdl() {
+        AutomaticPowerdownload pwdl = new AutomaticPowerdownload(AppleJuiceClient.getAjFassade());
 
-        AutomaticPowerdownloadPolicy policy = null;
-
-        try {
-            Constructor con = selectedPolicy.getClass().getConstructor(new Class[]{ApplejuiceFassade.class});
-
-            policy = (AutomaticPowerdownloadPolicy) con.newInstance(new Object[]{AppleJuiceClient.getAjFassade()});
-        } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-        }
-
-        autoPwdlThread = policy;
-        autoPwdlThread.setParentToInform(this);
-        checkForPause(autoPwdlThread);
-        autoPwdlThread.start();
-        autoPwdlEinstellungen.setVisible(autoPwdlThread.hasPropertiesDialog());
+        applyAutoPwdlSettings(pwdl);
+        pwdl.setParentToInform(this);
+        autoPwdlThread = pwdl;
+        checkForPause(pwdl);
+        pwdl.start();
+        autoPwdlEinstellungen.setVisible(true);
     }
 
-    private void checkForPause(AutomaticPowerdownloadPolicy pwdlThread) {
+    private void checkForPause(AutomaticPowerdownload pwdlThread) {
         long eingegebenBis = Integer.parseInt(autoBis.getText()) * 1048576L;
-        long eingegebenAb = Integer.parseInt(autoAb.getText()) * 1048576L;
 
         if (lastInformation == null) {
             lastInformation = AppleJuiceClient.getAjFassade().getInformation();
@@ -452,18 +400,31 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
         }
     }
 
+    /** Oeffnet den modalen Einstellungsdialog; false, wenn er nicht bestaetigt wurde. */
+    private boolean openAutoPwdlSettings() {
+        if (autoPwdlDialog == null) {
+            autoPwdlDialog = new EinstellungenDialog(AppleJuiceDialog.getApp());
+        }
+
+        autoPwdlDialog.setVisible(true);
+        return autoPwdlDialog.isConfirmed();
+    }
+
+    private void applyAutoPwdlSettings(AutomaticPowerdownload pwdl) {
+        pwdl.applySettings(autoPwdlDialog.getAnzahlDownloads(), autoPwdlDialog.getPowerDownload(),
+                autoPwdlDialog.getSleeptime(), autoPwdlDialog.getReihenfolge());
+    }
+
     private void oeffneAutomPwdlEinstellungen() {
-        if (autoPwdlThread != null && autoPwdlThread.hasPropertiesDialog()) {
-            try {
-                autoPwdlThread.showPropertiesDialog(AppleJuiceDialog.getApp());
-            } catch (Exception ex) {
-                logger.error(ex.getMessage(), ex);
-            }
+        AutomaticPowerdownload pwdl = autoPwdlThread;
+
+        if (pwdl != null && openAutoPwdlSettings()) {
+            applyAutoPwdlSettings(pwdl);
         }
     }
 
-    public void autoPwdlFinished(AutomaticPowerdownloadPolicy completedPolicy) {
-        if (completedPolicy != null && autoPwdlThread == completedPolicy) {
+    public void autoPwdlFinished(AutomaticPowerdownload completedPwdl) {
+        if (completedPwdl != null && autoPwdlThread == completedPwdl) {
             autoPwdlFinished();
         }
     }
@@ -493,60 +454,6 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
         Dimension minimum = super.getMinimumSize();
         minimum.width = getPreferredSize().width;
         return minimum;
-    }
-
-    private void fillPwdlPolicies() {
-        AutomaticPowerdownloadPolicy[] policies = loadPolicies();
-
-        for (int i = 0; i < policies.length; i++) {
-            pwdlPolicies.addItem(policies[i]);
-        }
-
-        if (pwdlPolicies.getItemCount() > 0) {
-            pwdlPolicies.setSelectedIndex(0);
-        }
-    }
-
-    private AutomaticPowerdownloadPolicy[] loadPolicies() {
-        try {
-            String path = System.getProperty("user.dir") + File.separator + "pwdlpolicies" + File.separator;
-            File policyPath = new File(path);
-
-            if (!policyPath.isDirectory()) {
-                logger.info("Warnung: Kein Verzeichnis 'pwdlpolicies' vorhanden!");
-
-                return new AutomaticPowerdownloadPolicy[0];
-            }
-
-            String[] tempListe = policyPath.list();
-            PolicyJarClassLoader jarLoader = null;
-            ArrayList<AutomaticPowerdownloadPolicy> policies = new ArrayList<AutomaticPowerdownloadPolicy>();
-
-            for (int i = 0; i < tempListe.length; i++) {
-                if (tempListe[i].toLowerCase().endsWith(".jar")) {
-                    URL url = null;
-
-                    try {
-                        url = new URL("file://" + path + tempListe[i]);
-                        jarLoader = new PolicyJarClassLoader(url);
-                        AutomaticPowerdownloadPolicy aPolicy = jarLoader.getPolicy(path + tempListe[i]);
-
-                        if (aPolicy != null) {
-                            policies.add(aPolicy);
-                        }
-                    } catch (Exception e) {
-                        //Von einer Policy lassen wir uns nicht beirren! ;-)
-                        logger.error("Eine PowerdownloadPolicy konnte nicht instanziert werden", e);
-                        continue;
-                    }
-                }
-            }
-
-            return (AutomaticPowerdownloadPolicy[]) policies.toArray(new AutomaticPowerdownloadPolicy[policies.size()]);
-        } catch (Exception ex) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
-            return new AutomaticPowerdownloadPolicy[0];
-        }
     }
 
     private void alterRatio(boolean increase) {
