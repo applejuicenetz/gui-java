@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.wizard;
 
+import javax.swing.JPanel;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.tklsoft.gui.controls.TKLPanel;
 
 import java.awt.*;
 
@@ -17,7 +17,7 @@ import java.awt.*;
  */
 
 public abstract class WizardPanel
-    extends TKLPanel {
+    extends JPanel {
     private WizardPanel naechstesPanel;
     private WizardPanel vorherigesPanel;
     protected LanguageSelector languageSelector;

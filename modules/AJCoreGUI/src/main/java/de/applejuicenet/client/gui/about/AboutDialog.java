@@ -8,8 +8,6 @@ import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
-import de.tklsoft.gui.controls.TKLLabel;
-import de.tklsoft.gui.controls.TKLPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,13 +49,13 @@ public class AboutDialog extends JDialog {
         pack();
     }
 
-    class BackPanel extends TKLPanel {
+    class BackPanel extends JPanel {
         private Image backgroundImage;
         private Image flagge;
-        private TKLLabel version = new TKLLabel();
+        private JLabel version = new JLabel();
         private List<CreditsEntry> credits = new ArrayList<CreditsEntry>();
         private Logger logger;
-        private TKLPanel footer = new TKLPanel(new FlowLayout(FlowLayout.RIGHT));
+        private JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         public BackPanel() {
             super();

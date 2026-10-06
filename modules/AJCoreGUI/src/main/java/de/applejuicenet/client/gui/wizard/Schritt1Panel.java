@@ -6,7 +6,6 @@ package de.applejuicenet.client.gui.wizard;
 
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.tklsoft.gui.controls.TKLComboBox;
-import de.tklsoft.gui.controls.TKLTextArea;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +25,7 @@ import java.io.File;
  */
 public class Schritt1Panel extends WizardPanel
 {
-   private TKLTextArea erlaeuterung = new TKLTextArea();
+   private JTextArea erlaeuterung = new JTextArea();
    private TKLComboBox sprachen = new TKLComboBox();
 
    public Schritt1Panel()

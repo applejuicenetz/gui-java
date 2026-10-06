@@ -7,7 +7,6 @@ package de.applejuicenet.client.gui.options;
 import de.applejuicenet.client.gui.DialogLocation;
 
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLComboBox;
 
 import javax.swing.*;
@@ -27,7 +26,7 @@ import java.awt.event.*;
 public class IncomingDirSelectionDialog extends JDialog
 {
    private String[]    selectionValues;
-   private TKLButton   schliessen        = new TKLButton();
+   private JButton   schliessen        = new JButton();
    private TKLComboBox incomingDirs      = new TKLComboBox();
    private boolean     somethingSelected = false;
 

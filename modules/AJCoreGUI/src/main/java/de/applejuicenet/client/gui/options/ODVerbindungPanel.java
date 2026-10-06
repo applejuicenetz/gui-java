@@ -10,7 +10,6 @@ import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.NumberInputVerifier;
-import de.tklsoft.gui.controls.TKLButton;
 import de.tklsoft.gui.controls.TKLTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +51,7 @@ public class ODVerbindungPanel extends JPanel implements OptionsRegister {
     private AJSettings ajSettings;
     private Icon menuIcon;
     private String menuText;
-    private TKLButton wizzard = new TKLButton();
+    private JButton wizzard = new JButton();
     private OptionsDialog parent;
 
     public ODVerbindungPanel(OptionsDialog parent, AJSettings ajSettings) {

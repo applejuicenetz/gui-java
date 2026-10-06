@@ -4,8 +4,6 @@
 
 package de.applejuicenet.client.gui.wizard;
 
-import de.tklsoft.gui.controls.TKLLabel;
-import de.tklsoft.gui.controls.TKLTextArea;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,9 +20,9 @@ import java.awt.*;
  */
 public class Schritt2Panel extends WizardPanel
 {
-   private TKLLabel    label1    = new TKLLabel();
-   private TKLTextArea textArea1 = new TKLTextArea();
-   private TKLTextArea textArea2 = new TKLTextArea();
+   private JLabel    label1    = new JLabel();
+   private JTextArea textArea1 = new JTextArea();
+   private JTextArea textArea2 = new JTextArea();
 
    public Schritt2Panel()
    {

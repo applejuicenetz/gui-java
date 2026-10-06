@@ -7,7 +7,6 @@ package de.applejuicenet.client.gui.wizard;
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.tklsoft.gui.controls.InvalidRule;
 import de.tklsoft.gui.controls.ModifyableComponent;
-import de.tklsoft.gui.controls.TKLTextArea;
 import de.tklsoft.gui.controls.TKLTextField;
 
 import javax.swing.*;
@@ -27,7 +26,7 @@ import java.awt.event.KeyEvent;
  */
 public class Schritt3Panel extends WizardPanel
 {
-   private TKLTextArea  erlaeuterung = new TKLTextArea();
+   private JTextArea  erlaeuterung = new JTextArea();
    private TKLTextField nickname = new TKLTextField();
    private WizardDialog parent;
 

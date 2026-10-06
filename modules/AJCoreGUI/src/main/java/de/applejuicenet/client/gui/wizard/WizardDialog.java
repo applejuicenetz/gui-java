@@ -13,8 +13,6 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
-import de.tklsoft.gui.controls.TKLButton;
-import de.tklsoft.gui.controls.TKLPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,10 +40,10 @@ public class WizardDialog extends JDialog implements LanguageListener {
     private WizardPanel schritt3;
     private WizardPanel schritt4 = new Schritt4Panel();
     private WizardPanel schritt5 = new Schritt5Panel();
-    private TKLPanel buttons = new TKLPanel(new FlowLayout(FlowLayout.RIGHT));
-    private TKLButton zurueck = new TKLButton();
-    private TKLButton weiter = new TKLButton();
-    private TKLButton ende = new TKLButton();
+    private JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    private JButton zurueck = new JButton();
+    private JButton weiter = new JButton();
+    private JButton ende = new JButton();
     private AJSettings ajSettings;
     private boolean regularClosed = false;
 

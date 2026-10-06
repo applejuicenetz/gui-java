@@ -5,7 +5,6 @@
 package de.applejuicenet.client.gui.wizard;
 
 import de.tklsoft.gui.controls.TKLComboBox;
-import de.tklsoft.gui.controls.TKLTextArea;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,8 +21,8 @@ import java.awt.*;
  */
 public class Schritt4Panel extends WizardPanel
 {
-   private TKLTextArea label1         = new TKLTextArea();
-   private TKLTextArea label2         = new TKLTextArea();
+   private JTextArea label1         = new JTextArea();
+   private JTextArea label2         = new JTextArea();
    private TKLComboBox verbindungsart = new TKLComboBox();
 
    public Schritt4Panel()

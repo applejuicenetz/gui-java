@@ -27,10 +27,6 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.LookAndFeelLoader;
 import de.applejuicenet.client.shared.SoundPlayer;
-import de.tklsoft.gui.controls.TKLButton;
-import de.tklsoft.gui.controls.TKLFrame;
-import de.tklsoft.gui.controls.TKLLabel;
-import de.tklsoft.gui.controls.TKLPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +61,7 @@ import java.util.*;
  *
  * @author Maj0r [aj@tkl-soft.de]
  */
-public class AppleJuiceDialog extends TKLFrame implements LanguageListener, DataUpdateListener {
+public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUpdateListener {
 
     private static final Logger logger = LoggerFactory.getLogger(AppleJuiceDialog.class);
     public static boolean rewriteProperties = false;
@@ -75,7 +71,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
     private static TrayLoader trayLoader = null;
     private Information information = null;
     private RegisterPanel registerPane;
-    private TKLLabel[] statusbar = new TKLLabel[6];
+    private JLabel[] statusbar = new JLabel[6];
     private JMenu sprachMenu;
     private JMenu optionenMenu;
     private JMenu themesMenu = null;
@@ -93,8 +89,8 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
     private JMenuItem popupBeendenMenuItem = new JMenuItem();
     private JMenuItem popupShowHideMenuItem = new JMenuItem();
     private JMenuItem popupCheckUpdateMenuItem = new JMenuItem();
-    private TKLButton sound = new TKLButton();
-    private TKLButton memory = new TKLButton();
+    private JButton sound = new JButton();
+    private JButton memory = new JButton();
     private String keinServer;
     private boolean firstChange = true;
     private MemoryMonitorDialog memoryMonitorDialog;
@@ -129,7 +125,6 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
     public AppleJuiceDialog() {
         super();
         try {
-            enableCloseWindowListener(false);
             theApp = this;
             init();
             pack();
@@ -329,11 +324,11 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
         getContentPane().add(linkPane, BorderLayout.NORTH);
         getContentPane().add(registerPane, BorderLayout.CENTER);
 
-        TKLPanel panel = new TKLPanel(new GridBagLayout());
+        JPanel panel = new JPanel(new GridBagLayout());
 
         for (int i = 0; i < statusbar.length; i++) {
-            statusbar[i] = new TKLLabel("            ");
-            statusbar[i].setHorizontalAlignment(TKLLabel.RIGHT);
+            statusbar[i] = new JLabel("            ");
+            statusbar[i].setHorizontalAlignment(JLabel.RIGHT);
             statusbar[i].setBorder(new BevelBorder(BevelBorder.LOWERED));
             statusbar[i].setFont(new java.awt.Font("SansSerif", 0, 11));
         }
@@ -1053,7 +1048,7 @@ public class AppleJuiceDialog extends TKLFrame implements LanguageListener, Data
                     textArea.setPreferredSize(new Dimension(550, 300));
                     textArea.setMaximumSize(new Dimension(550, 300));
                     textArea.setEditable(false);
-                    textArea.setBackground(new TKLLabel().getBackground());
+                    textArea.setBackground(new JLabel().getBackground());
                     textArea.setText(returnValues.toString());
                     JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), new JScrollPane(textArea),
                             dialogTitel,
