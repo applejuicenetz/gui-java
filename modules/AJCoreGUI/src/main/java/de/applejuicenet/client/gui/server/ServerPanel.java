@@ -111,7 +111,6 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         setLayout(new BorderLayout());
         LanguageSelector.getInstance().addLanguageListener(this);
 
-        sucheServer.setForeground(Color.BLUE);
         IconManager im = IconManager.getInstance();
 
         verbinden = new JMenuItem();
