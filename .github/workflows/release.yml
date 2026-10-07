@@ -217,10 +217,16 @@ jobs:
             AJCoreGUI-linux-aarch64.flatpak; do
             test -s "target/$file"
           done
+      - name: Resolve release version
+        if: github.ref_type == 'tag'
+        id: release-version
+        shell: bash
+        run: printf 'version=%s\n' "${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
       - name: Publish GitHub release
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v3
         with:
+          name: ${{ steps.release-version.outputs.version }}
           generate_release_notes: true
           body: aktuelles Changelog befindet sich [hier](https://github.com/applejuicenetz/gui-java/blob/${{ github.ref_name }}/CHANGELOG.md#changelog)
           fail_on_unmatched_files: true
