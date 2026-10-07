@@ -48,6 +48,7 @@ public class SharePanel extends TklPanel {
     private JButton prioritaetSetzen = new JButton();
     private JButton prioritaetAufheben = new JButton();
     private JComboBox cmbPrio = new JComboBox();
+    private JTextField searchField = new JTextField(16);
     private AJSettings ajSettings;
     private ShareTable shareTable;
     private ShareTableModel shareModel;
@@ -77,6 +78,55 @@ public class SharePanel extends TklPanel {
 
     public JMenuItem getMnuOpenWithStandardProgram() {
         return itemOpenWithStandardProgramm;
+    }
+
+    private void installSearch() {
+        searchField.putClientProperty("JTextField.showClearButton", Boolean.TRUE);
+        searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            private void changed() {
+                shareTable.setFilter(searchField.getText());
+            }
+
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                changed();
+            }
+
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                changed();
+            }
+
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                changed();
+            }
+        });
+        searchField.getInputMap().put(KeyStroke.getKeyStroke("ESCAPE"), "clearSearch");
+        searchField.getActionMap().put("clearSearch", new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                searchField.setText("");
+                shareTable.requestFocusInWindow();
+            }
+        });
+        searchField.getInputMap().put(KeyStroke.getKeyStroke("DOWN"), "focusTable");
+        searchField.getActionMap().put("focusTable", new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                shareTable.requestFocusInWindow();
+            }
+        });
+        shareTable.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent e) {
+                char c = e.getKeyChar();
+                if (e.isControlDown() || e.isAltDown() || e.isMetaDown() || Character.isISOControl(c)) {
+                    return;
+                }
+                searchField.requestFocusInWindow();
+                searchField.setText(searchField.getText() + c);
+                e.consume();
+            }
+        });
+    }
+
+    public JTextField getSearchField() {
+        return searchField;
     }
 
     public JButton getBtnPrioritaetAufheben() {
@@ -245,6 +295,9 @@ public class SharePanel extends TklPanel {
         }
         toolbar.weightx = 1;
         panel1.add(Box.createHorizontalGlue(), toolbar);
+        toolbar.weightx = 0;
+        panel1.add(searchField, toolbar);
+        installSearch();
 
         panelCenter.add(panel1, BorderLayout.NORTH);
         JScrollPane scrollPane = new JScrollPane(shareTable);

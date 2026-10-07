@@ -8,13 +8,19 @@ import de.applejuicenet.client.gui.components.treetable.TreeTableModelAdapter;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.dnd.*;
+import javax.swing.JTree;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 import de.applejuicenet.client.fassade.entity.Share;
 
 public class ShareTable
     extends JTreeTable {
 	private static DragSource dragSource = DragSource.getDefaultDragSource();
     private boolean dragEnabled = false;
+    private List<Share> allShares = List.of();
+    private String filter = "";
 
     public ShareTable(ShareTableModel treeTableModel) {
         super(treeTableModel, new DefaultTreeTableCellRenderer(treeTableModel));
@@ -42,7 +48,41 @@ public class ShareTable
     }
 
     public void setShares(Collection<Share> shares) {
-        ShareTreeState.refresh(this, shares);
+        allShares = shares == null ? List.of() : new ArrayList<>(shares);
+        applyFilter(false);
+    }
+
+    public void setFilter(String text) {
+        String normalized = text == null ? "" : text.trim().toLowerCase(Locale.ROOT);
+        if (normalized.equals(filter)) {
+            return;
+        }
+        filter = normalized;
+        applyFilter(true);
+    }
+
+    static List<Share> filterShares(Collection<Share> shares, String lowerCaseFilter) {
+        if (lowerCaseFilter.isEmpty()) {
+            return new ArrayList<>(shares);
+        }
+        List<Share> result = new ArrayList<>();
+        for (Share share : shares) {
+            String name = share.getFilename();
+            if (name != null && name.toLowerCase(Locale.ROOT).contains(lowerCaseFilter)) {
+                result.add(share);
+            }
+        }
+        return result;
+    }
+
+    private void applyFilter(boolean expandMatches) {
+        ShareTreeState.refresh(this, filterShares(allShares, filter));
+        if (expandMatches && !filter.isEmpty()) {
+            JTree tree = getTree();
+            for (int row = 0; row < tree.getRowCount(); row++) {
+                tree.expandRow(row);
+            }
+        }
     }
 
     public Object[] getSelectedItems() {

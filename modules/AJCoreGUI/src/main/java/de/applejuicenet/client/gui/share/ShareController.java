@@ -763,6 +763,8 @@ public class ShareController extends GuiController
       sharePanel.getBtnPrioritaetSetzen().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.setprio.hint"));
       sharePanel.getBtnPrioritaetAufheben().setText(languageSelector.getFirstAttrbuteByTagName("mainform.clearprio.caption"));
       sharePanel.getBtnPrioritaetAufheben().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.clearprio.hint"));
+      sharePanel.getSearchField().setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.shareform.filter.hint"));
+      sharePanel.getSearchField().putClientProperty("JTextField.placeholderText", languageSelector.getFirstAttrbuteByTagName("javagui.shareform.filter.hint"));
 
       String[] tableColumns = new String[6];
 

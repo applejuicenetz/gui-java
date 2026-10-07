@@ -9,6 +9,7 @@
   - Neu: „Tabellenbreiten merken“, „IP in Statusanzeige maskieren“, Upload/Download wahlweise in kb/s oder MB/s
 - [red171] „Mein Share“: Dateiliste als `ajfsp`-Links oder AJL kopieren, A-Z/Z-A-Sortierung, HTML-Export entfernt
   - Neu: „Shareüberprüfung stoppen“ (ausgegraut bei Core 0.35.185.93 oder älter)
+  - Neu: Suchfeld filtert die Dateiliste; Tippen in der Liste springt ins Suchfeld
 - [red171] Bedienung:
   - „Öffnen mit Standardprogramm“ ist bei Remote-Core ausgegraut
   - Ungültige Eingaben werden mit rotem Rahmen markiert
