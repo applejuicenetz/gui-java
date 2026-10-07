@@ -64,7 +64,10 @@ python scripts/package.py native --platform linux --arch aarch64 --type app-imag
 
 Die Release-Pipeline baut DMG und EXE jeweils für amd64 und aarch64 sowie zwei
 Linux-Flatpaks mit OpenJDK 25. Jeder Build läuft auf passendem OS und passender
-Architektur. Bei manueller Ausführung stehen die sechs Pakete als Einzel-Artefakte `native-*` und `flatpak-*` bereit; `AJCoreGUI.zip` entsteht nur im Release-Job und wird nur bei Tags als Release veröffentlicht.
+Architektur. Pakete und Actions-Artefakte entstehen nur für Release-Tags, deren Commit
+auf `main` liegt; manuelle Ausführung ist nur für solche Tags möglich.
+`AJCoreGUI.zip` entsteht nur im Release-Job. Pull Requests, einschließlich Dependabot,
+führen ausschließlich den Maven-Build mit Tests in `ci.yml` aus, ohne Artefakt-Uploads.
 Tag (optional mit `v` davor) muss zur Maven-Version passen.
 
 Nach erfolgreicher Veröffentlichung eines Tags startet `notify-flatpak` die
@@ -105,8 +108,7 @@ Das bestehende Swing-Menü liefert Aktionen und Übersetzungen. Flatpak erlaubt 
 Die libtray-Version liegt in GitHub Packages (`red171/libtray-java`). Maven benötigt
 Server `github` mit Benutzername und Token mit `read:packages`; GitHub Actions
 konfiguriert dies über `actions/setup-java` und `GITHUB_TOKEN`. Keine Tokens ins
-Repository schreiben. Test-Builds auf Branches `build/javagui-*` erzeugen alle
-Pakete als Artefakte, ohne Release zu veröffentlichen.
+Repository schreiben. Branch-Builds erzeugen keine Installer oder Actions-Artefakte.
 
 macOS verlangt eine positive erste Zahl in `CFBundleVersion`. Für GUI-Versionen
 `0.x.y` nutzt jpackage deshalb intern Buildnummer `1.x.y`; sichtbare GUI-Version,
