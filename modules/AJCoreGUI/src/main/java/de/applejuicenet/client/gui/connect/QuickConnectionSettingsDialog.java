@@ -48,9 +48,17 @@ public class QuickConnectionSettingsDialog extends JDialog
    private boolean              dirty              = false;
    private int                  result = 0;
 
+   private boolean switchConnection;
+
    public QuickConnectionSettingsDialog(Frame parent)
    {
+      this(parent, false);
+   }
+
+   public QuickConnectionSettingsDialog(Frame parent, boolean switchConnection)
+   {
       super(parent, true);
+      this.switchConnection = switchConnection;
       logger = LoggerFactory.getLogger(getClass());
       try
       {
@@ -64,7 +72,8 @@ public class QuickConnectionSettingsDialog extends JDialog
 
    private void init()
    {
-      remote        = OptionsManagerImpl.getInstance().getRemoteSettings();
+      ConnectionSettings saved = OptionsManagerImpl.getInstance().getRemoteSettings();
+      remote = new ConnectionSettings(saved.getHost(), saved.getOldPassword(), saved.getXmlPort());
       connectionSet = OptionsManagerImpl.getInstance().getConnectionsSet();
       for(int i = 0; i < connectionSet.length; i++)
       {
@@ -170,6 +179,7 @@ public class QuickConnectionSettingsDialog extends JDialog
 
       JPanel panel4 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
+      cmbNieWiederZeigen.setVisible(!switchConnection);
       panel4.add(cmbNieWiederZeigen);
       panel3.add(panel4, BorderLayout.NORTH);
       panel3.add(panel1, BorderLayout.SOUTH);
@@ -179,9 +189,16 @@ public class QuickConnectionSettingsDialog extends JDialog
          {
             public void actionPerformed(ActionEvent ae)
             {
-               speichereEinstellungen();
-               result = 0;
-               setVisible(false);
+               if(switchConnection)
+               {
+                  switchCore();
+               }
+               else
+               {
+                  speichereEinstellungen();
+                  result = 0;
+                  setVisible(false);
+               }
             }
          });
 
@@ -189,6 +206,7 @@ public class QuickConnectionSettingsDialog extends JDialog
          {
             public void actionPerformed(ActionEvent ae)
             {
+               if(!ok.isEnabled()) return;
                result = ABGEBROCHEN;
                setVisible(false);
             }
@@ -197,6 +215,7 @@ public class QuickConnectionSettingsDialog extends JDialog
          {
             public void windowClosing(WindowEvent evt)
             {
+               if(!ok.isEnabled()) return;
                result = ABGEBROCHEN;
                setVisible(false);
             }
@@ -236,6 +255,73 @@ public class QuickConnectionSettingsDialog extends JDialog
       remotePanel.setXMLPort(Integer.toString(con.getXmlPort()));
       remotePanel.revalidate();
       remotePanel.repaint();
+   }
+
+   private void switchCore()
+   {
+      final String host = remotePanel.getHost().trim();
+      final Integer port;
+      final String password = remotePanel.getPassword();
+      try
+      {
+         port = remotePanel.getPort();
+         new CoreConnectionSettingsHolder(host, port, password, true);
+      }
+      catch(Exception e)
+      {
+         JOptionPane.showMessageDialog(this, GuiText.text("javagui.startup.fehlversuch"), getTitle(), JOptionPane.ERROR_MESSAGE);
+         return;
+      }
+      ok.setEnabled(false);
+      abbrechen.setEnabled(false);
+      setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+      new SwingWorker<Integer, Void>()
+      {
+         protected Integer doInBackground() throws Exception
+         {
+            CoreConnectionSettingsHolder candidate = new CoreConnectionSettingsHolder(host, port, password, true);
+            ApplejuiceFassade probe = new ApplejuiceFassade(candidate);
+            int available = probe.isCoreAvailable();
+            candidate.removeListener(probe);
+            return available;
+         }
+
+         protected void done()
+         {
+            try
+            {
+               int available = get();
+               if(available != 0)
+               {
+                  JOptionPane.showMessageDialog(QuickConnectionSettingsDialog.this,
+                        GuiText.text(available == 1 ? "mainform.msgdlgtext3" : "javagui.startup.fehlversuch"),
+                        getTitle(), JOptionPane.ERROR_MESSAGE);
+                  return;
+               }
+               remote.setHost(host);
+               remote.setXmlPort(port);
+               remote.setNewPassword(password);
+               remote.setOldMD5Password(remote.getNewPassword());
+               OptionsManagerImpl.getInstance().setConnectionsSet(getNeueConfigs(remote));
+               OptionsManagerImpl.getInstance().onlySaveRemote(remote);
+               AppleJuiceClient.restartGui();
+               result = 0;
+               setVisible(false);
+            }
+            catch(Exception e)
+            {
+               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+               JOptionPane.showMessageDialog(QuickConnectionSettingsDialog.this,
+                     GuiText.text("javagui.startup.fehlversuch"), getTitle(), JOptionPane.ERROR_MESSAGE);
+            }
+            finally
+            {
+               ok.setEnabled(true);
+               abbrechen.setEnabled(true);
+               setDefaultCloseOperation(HIDE_ON_CLOSE);
+            }
+         }
+      }.execute();
    }
 
    private void speichereEinstellungen()

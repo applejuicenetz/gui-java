@@ -89,6 +89,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
     private JMenuItem popupBeendenMenuItem = new JMenuItem();
     private JMenuItem popupShowHideMenuItem = new JMenuItem();
     private JMenuItem popupCheckUpdateMenuItem = new JMenuItem();
+    private JButton coreHost = new JButton();
     private JButton sound = new JButton();
     private JButton memory = new JButton();
     private String keinServer;
@@ -333,6 +334,19 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
             statusbar[i].setFont(new java.awt.Font("SansSerif", 0, 11));
         }
 
+        coreHost.setFont(statusbar[0].getFont());
+        coreHost.setMargin(new Insets(2, 6, 2, 6));
+        coreHost.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        updateCoreHost();
+        coreHost.addActionListener(e -> {
+            var dialog = new de.applejuicenet.client.gui.connect.QuickConnectionSettingsDialog(this, true);
+            dialog.setVisible(true);
+            dialog.dispose();
+            updateCoreHost();
+        });
+        AppleJuiceClient.getCoreConnectionSettingsHolder().addListener((item, oldValue, newValue) ->
+                SwingUtilities.invokeLater(this::updateCoreHost));
+
         memory.setIcon(IconManager.getInstance().getIcon("mmonitor"));
         memory.addActionListener(ae -> {
             if (memoryMonitorDialog == null) {
@@ -373,22 +387,24 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridx = 0;
         constraints.gridy = 0;
-        panel.add(statusbar[0], constraints);
+        panel.add(coreHost, constraints);
         constraints.gridx = 1;
+        panel.add(statusbar[0], constraints);
+        constraints.gridx = 2;
         constraints.weightx = 1;
         panel.add(statusbar[1], constraints);
         constraints.weightx = 0;
-        constraints.gridx = 2;
-        panel.add(statusbar[2], constraints);
         constraints.gridx = 3;
-        panel.add(statusbar[3], constraints);
+        panel.add(statusbar[2], constraints);
         constraints.gridx = 4;
-        panel.add(statusbar[4], constraints);
+        panel.add(statusbar[3], constraints);
         constraints.gridx = 5;
-        panel.add(statusbar[5], constraints);
+        panel.add(statusbar[4], constraints);
         constraints.gridx = 6;
-        panel.add(memory, constraints);
+        panel.add(statusbar[5], constraints);
         constraints.gridx = 7;
+        panel.add(memory, constraints);
+        constraints.gridx = 8;
         panel.add(sound, constraints);
         getContentPane().add(panel, BorderLayout.SOUTH);
         AjfspTransferHandler.install(getRootPane(), this::uebernehmeLink);
@@ -515,6 +531,14 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
             setTitle(titel);
             repaint();
         }
+    }
+
+    public void shutdownForRestart() {
+        einstellungenSpeichern();
+        AppleJuiceClient.getAjFassade().stopXMLCheck();
+        setVisible(false);
+        if (trayLoader != null) trayLoader.close();
+        System.exit(0);
     }
 
     private void closeDialog(WindowEvent evt) {
@@ -826,8 +850,19 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         }
     }
 
+    static String getCoreHostText(String host) {
+        return "localhost".equalsIgnoreCase(host) || "127.0.0.1".equals(host) || "::1".equals(host)
+                ? "localhost" : host;
+    }
+
+    private void updateCoreHost() {
+        coreHost.setText(getCoreHostText(AppleJuiceClient.getCoreConnectionSettingsHolder().getCoreHost()));
+        coreHost.setToolTipText(GuiText.text("javagui.mainform.switchcore.hint"));
+    }
+
     public void fireLanguageChanged() {
         try {
+            updateCoreHost();
             LanguageSelector languageSelector = LanguageSelector.getInstance();
 
             verbunden = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.verbunden");

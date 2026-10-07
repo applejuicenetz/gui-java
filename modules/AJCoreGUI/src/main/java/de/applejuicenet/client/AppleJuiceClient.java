@@ -83,6 +83,7 @@ public class AppleJuiceClient {
     }
 
     public static void main(String[] args) {
+        waitForRestartParent(args);
         useMacScreenMenuBar();
         ApplicationPaths.configure(args);
         logger = LoggerFactory.getLogger(AppleJuiceClient.class);
@@ -111,6 +112,40 @@ public class AppleJuiceClient {
         Thread t = new Thread(tg, runnable, "appleJuiceCoreGUI");
 
         t.start();
+    }
+
+    static java.util.List<String> restartCommand(String executable, String[] arguments, long parentPid) {
+        java.util.List<String> command = new java.util.ArrayList<>();
+        command.add(executable);
+        for (String argument : arguments) {
+            if (!argument.startsWith("-restart-parent=") && !argument.startsWith("ajfsp://")
+                    && !argument.startsWith("web+ajfsp://") && !argument.startsWith("-link=")
+                    && !argument.startsWith("-command=") && !argument.toLowerCase(Locale.ROOT).endsWith(".ajl")) {
+                command.add(argument);
+            }
+        }
+        command.add("-restart-parent=" + parentPid);
+        return command;
+    }
+
+    public static void restartGui() throws IOException {
+        ProcessHandle.Info process = ProcessHandle.current().info();
+        String executable = process.command().orElseThrow(() -> new IOException("GUI launcher unavailable"));
+        String[] arguments = process.arguments().orElseThrow(() -> new IOException("GUI launcher arguments unavailable"));
+        java.util.List<String> command = restartCommand(executable, arguments, ProcessHandle.current().pid());
+        command.removeIf(argument -> argument.startsWith("-path="));
+        command.add("-path=" + System.getProperty("user.dir"));
+        new ProcessBuilder(command).inheritIO().start();
+        AppleJuiceDialog.getApp().shutdownForRestart();
+    }
+
+    private static void waitForRestartParent(String[] args) {
+        for (String argument : args) {
+            if (argument.startsWith("-restart-parent=")) {
+                ProcessHandle.of(Long.parseLong(argument.substring("-restart-parent=".length())))
+                        .ifPresent(parent -> parent.onExit().join());
+            }
+        }
     }
 
     static void useMacScreenMenuBar() {
@@ -284,7 +319,8 @@ public class AppleJuiceClient {
 
             AppleJuiceDialog.initLookAndFeel();
 
-            boolean showDialog = OptionsManagerImpl.getInstance().shouldShowConnectionDialogOnStartup();
+            boolean restarting = java.util.Arrays.stream(args).anyMatch(arg -> arg.startsWith("-restart-parent="));
+            boolean showDialog = !restarting && OptionsManagerImpl.getInstance().shouldShowConnectionDialogOnStartup();
             boolean keyDown = ks.isKeyDown(KeyEvent.VK_SHIFT);
 
             if (!showDialog) {
