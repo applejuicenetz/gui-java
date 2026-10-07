@@ -217,16 +217,6 @@ jobs:
             AJCoreGUI-linux-aarch64.flatpak; do
             test -s "target/$file"
           done
-      - uses: actions/upload-artifact@v7
-        with:
-          name: AJCoreGUI-packages
-          path: |
-            target/AJCoreGUI.zip
-            target/*.dmg
-            target/*.exe
-            target/*.flatpak
-          if-no-files-found: error
-          retention-days: 1
       - name: Publish GitHub release
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v3

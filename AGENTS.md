@@ -64,8 +64,7 @@ python scripts/package.py native --platform linux --arch aarch64 --type app-imag
 
 Die Release-Pipeline baut DMG und EXE jeweils für amd64 und aarch64 sowie zwei
 Linux-Flatpaks mit OpenJDK 25. Jeder Build läuft auf passendem OS und passender
-Architektur. Alle sechs Pakete plus `AJCoreGUI.zip` bleiben bei manueller Ausführung
-als Actions-Artefakt verfügbar; Tags veröffentlichen dieselben Dateien als Release.
+Architektur. Bei manueller Ausführung stehen die sechs Pakete als Einzel-Artefakte `native-*` und `flatpak-*` bereit; `AJCoreGUI.zip` entsteht nur im Release-Job und wird nur bei Tags als Release veröffentlicht.
 Tag (optional mit `v` davor) muss zur Maven-Version passen.
 
 Nach erfolgreicher Veröffentlichung eines Tags startet `notify-flatpak` die
