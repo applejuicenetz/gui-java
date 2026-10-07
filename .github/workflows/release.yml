@@ -92,6 +92,7 @@ jobs:
           name: native-${{ matrix.platform }}-${{ matrix.arch }}
           path: target/AJCoreGUI-${{ matrix.platform }}-${{ matrix.arch }}.${{ matrix.type }}
           if-no-files-found: error
+          retention-days: 1
 
   flatpak:
     strategy:
@@ -161,6 +162,7 @@ jobs:
           name: flatpak-${{ matrix.package-arch }}
           path: target/AJCoreGUI-linux-${{ matrix.package-arch }}.flatpak
           if-no-files-found: error
+          retention-days: 1
 
   release:
     needs: [package, flatpak]
@@ -224,6 +226,7 @@ jobs:
             target/*.exe
             target/*.flatpak
           if-no-files-found: error
+          retention-days: 1
       - name: Publish GitHub release
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v3
