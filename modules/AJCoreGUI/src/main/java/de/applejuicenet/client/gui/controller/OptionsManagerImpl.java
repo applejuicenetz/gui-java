@@ -178,6 +178,14 @@ public class OptionsManagerImpl implements OptionsManager{
         propertiesManager.maskIpInStatusbar(mask);
     }
 
+    public boolean shouldCloseToTray() {
+        return propertiesManager.shouldCloseToTray();
+    }
+
+    public void closeToTray(boolean closeToTray) {
+        propertiesManager.closeToTray(closeToTray);
+    }
+
     public boolean shouldRememberColumnWidths() {
         return propertiesManager.shouldRememberColumnWidths();
     }

@@ -97,6 +97,10 @@ public interface OptionsManager
 
    void maskIpInStatusbar(boolean mask);
 
+   boolean shouldCloseToTray();
+
+   void closeToTray(boolean closeToTray);
+
    boolean shouldRememberColumnWidths();
 
    void rememberColumnWidths(boolean remember);

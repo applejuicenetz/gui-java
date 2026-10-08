@@ -11,6 +11,7 @@
   - Neu: „Shareüberprüfung stoppen“ (ausgegraut bei Core 0.35.185.93 oder älter)
   - Neu: Suchfeld filtert die Dateiliste; Tippen in der Liste springt ins Suchfeld
 - [red171] Bedienung:
+  - Neu: „Fenster schließen minimiert in den Tray“ (Standard an); „Beenden“ im Menü beendet weiterhin
   - Statusbar zeigt links den Core; Klick wechselt die Verbindung mit vollständigem GUI-Neustart
   - „Öffnen mit Standardprogramm“ ist bei Remote-Core ausgegraut
   - Ungültige Eingaben werden mit rotem Rahmen markiert

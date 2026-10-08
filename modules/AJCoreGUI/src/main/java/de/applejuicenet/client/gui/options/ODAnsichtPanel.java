@@ -36,6 +36,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
     private JCheckBox cmbStartscreenZeigen = new JCheckBox();
     private JCheckBox cmbTabellenbreiten = new JCheckBox();
     private JCheckBox cmbIpMaskieren = new JCheckBox();
+    private JCheckBox cmbCloseToTray = new JCheckBox();
     private JCheckBox updateNotification = new JCheckBox();
     private JCheckBox loadPlugins = new JCheckBox();
     private JComboBox<LevelItem> cmbLog;
@@ -65,6 +66,8 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
 
         cmbIpMaskieren.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.ipmaskieren"));
 
+        cmbCloseToTray.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.ansicht.closetotray"));
+
         setLayout(new BorderLayout());
         OptionsManager om = OptionsManagerImpl.getInstance();
 
@@ -74,6 +77,8 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
                 dirty = true;
             }
         });
+        cmbCloseToTray.setSelected(om.shouldCloseToTray());
+        cmbCloseToTray.addItemListener(e -> dirty = true);
         cmbIpMaskieren.setSelected(om.shouldMaskIpInStatusbar());
         cmbIpMaskieren.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent ce) {
@@ -127,7 +132,7 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
 
         JPanel box = new JPanel();
         box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
-        box.add(group("javagui.options.group.start", cmbStartscreenZeigen, loadPlugins, updateNotification));
+        box.add(group("javagui.options.group.start", cmbStartscreenZeigen, loadPlugins, updateNotification, cmbCloseToTray));
         box.add(group("javagui.options.group.anzeige", cmbTabellenbreiten, cmbIpMaskieren));
         box.add(group("javagui.options.group.logging", logRow));
 
@@ -157,6 +162,11 @@ public class ODAnsichtPanel extends JPanel implements OptionsRegister {
 
             if (om.shouldShowConnectionDialogOnStartup() != shouldShowStartcreen()) {
                 om.showConnectionDialogOnStartup(shouldShowStartcreen());
+                bRet = true;
+            }
+
+            if (om.shouldCloseToTray() != cmbCloseToTray.isSelected()) {
+                om.closeToTray(cmbCloseToTray.isSelected());
                 bRet = true;
             }
 

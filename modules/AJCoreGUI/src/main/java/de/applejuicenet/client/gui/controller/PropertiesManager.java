@@ -377,6 +377,14 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         propertyHandler.put("options_mask_ip_statusbar", mask);
     }
 
+    public boolean shouldCloseToTray() {
+        return propertyHandler.getAsBoolean("options_close_to_tray", true);
+    }
+
+    public void closeToTray(boolean closeToTray) {
+        propertyHandler.put("options_close_to_tray", closeToTray);
+    }
+
     public boolean shouldRememberColumnWidths() {
         return propertyHandler.getAsBoolean("options_columns_remember_widths", false);
     }

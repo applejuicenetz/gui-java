@@ -234,6 +234,10 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
+                if (shouldHideToTray()) {
+                    setVisible(false);
+                    return;
+                }
                 closeDialog(evt);
             }
         });
@@ -539,6 +543,10 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         setVisible(false);
         if (trayLoader != null) trayLoader.close();
         System.exit(0);
+    }
+
+    private boolean shouldHideToTray() {
+        return useTrayIcon && trayLoader != null && OptionsManagerImpl.getInstance().shouldCloseToTray();
     }
 
     private void closeDialog(WindowEvent evt) {
