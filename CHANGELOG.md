@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.86.4 (WIP)
+## 0.86.4
 
 ### Sichtbare Änderungen
 
