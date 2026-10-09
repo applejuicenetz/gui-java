@@ -5,11 +5,13 @@ import de.applejuicenet.client.fassade.ApplejuiceFassade;
 import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import java.io.BufferedReader;
@@ -24,6 +26,8 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -45,6 +49,23 @@ public class DownloadOverviewPanelThreadingTest {
         fassadeField = AppleJuiceClient.class.getDeclaredField("ajFassade");
         fassadeField.setAccessible(true);
         previousFassade = (ApplejuiceFassade) fassadeField.get(null);
+    }
+
+    private final List<JFrame> frames = new CopyOnWriteArrayList<>();
+
+    @After
+    public void disposeFrames() throws Exception {
+        SwingUtilities.invokeAndWait(() -> frames.forEach(JFrame::dispose));
+        frames.clear();
+    }
+
+    /** Der Worker laedt nur, solange die Tabelle sichtbar ist; das Panel braucht ein angezeigtes Fenster. */
+    private static JFrame show(DownloadOverviewPanel panel) {
+        JFrame frame = new JFrame();
+        frame.add(panel);
+        frame.setSize(600, 400);
+        frame.setVisible(true);
+        return frame;
     }
 
     @AfterClass
@@ -103,6 +124,8 @@ public class DownloadOverviewPanelThreadingTest {
                 } catch (ReflectiveOperationException e) {
                     throw new AssertionError(e);
                 }
+                panel.fireLanguageChanged();
+                frames.add(show(panel));
                 panelRef.set(panel);
             });
             DownloadOverviewPanel panel = panelRef.get();
@@ -136,6 +159,8 @@ public class DownloadOverviewPanelThreadingTest {
                 } catch (ReflectiveOperationException e) {
                     throw new AssertionError(e);
                 }
+                panel.fireLanguageChanged();
+                frames.add(show(panel));
                 panelRef.set(panel);
             });
             DownloadOverviewPanel panel = panelRef.get();
