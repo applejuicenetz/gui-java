@@ -55,7 +55,7 @@ public class PropertyHandlerTest {
         handler.save();
         String before = Files.readString(file, StandardCharsets.ISO_8859_1);
 
-        assertTrue(directory.setWritable(false));
+        org.junit.Assume.assumeTrue("Schreibschutz fuer Verzeichnisse nicht unterstuetzt", directory.setWritable(false));
         try {
             org.junit.Assume.assumeFalse("root ignoriert Schreibschutz", Files.isWritable(directory.toPath()));
             handler.put("a", "new");
