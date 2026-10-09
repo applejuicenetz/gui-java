@@ -133,6 +133,8 @@ public class DownloadOverviewPanelThreadingTest {
 
             SwingUtilities.invokeAndWait(() -> panel.setDownload(first));
             awaitLabel(label, "datei1.bin");
+            // Dateiname erscheint vor der Core-Antwort; erst der Zusatz " - " belegt die veroeffentlichte Partliste.
+            awaitLabel(label, " - ");
             SwingUtilities.invokeAndWait(() -> panel.setDownload(null));
             assertTrue(core.requests.get() >= 1);
             assertEquals("Verstoesse gegen den EDT-Vertrag: " + label.violations, Set.of(), label.violations);
