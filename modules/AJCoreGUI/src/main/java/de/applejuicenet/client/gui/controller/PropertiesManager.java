@@ -378,7 +378,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     }
 
     public boolean shouldCloseToTray() {
-        return propertyHandler.getAsBoolean("options_close_to_tray", true);
+        return propertyHandler.getAsBoolean("options_close_to_tray", false);
     }
 
     public void closeToTray(boolean closeToTray) {

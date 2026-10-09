@@ -5,6 +5,7 @@
 ### Sichtbare Änderungen
 
 - [red171] Bedienung:
+  - „Fenster schließen minimiert in den Tray“ ist jetzt standardmäßig aus; Schließen beendet die GUI
   - Link-Leiste nimmt mehrere `ajfsp`-Links auf (getrennt durch Leerzeichen oder Zeilenumbruch)
 
 ## 0.86.4
