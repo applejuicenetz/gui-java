@@ -22,6 +22,7 @@ import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_
 import de.applejuicenet.client.fassade.shared.AJSettings;
 import de.applejuicenet.client.fassade.shared.HtmlLoader;
 import de.applejuicenet.client.fassade.shared.NetworkInfo;
+import de.applejuicenet.client.fassade.shared.RefreshIntervals;
 import de.applejuicenet.client.fassade.shared.StringConstants;
 import de.applejuicenet.client.fassade.tools.MD5Encoder;
 
@@ -48,7 +49,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
     private Version coreVersion;
     private Map<Integer, Share> share = null;
     private PartListXMLHolder partlistXML = null;
-    private long sleepTime = 1000;
+    private long sleepTime = RefreshIntervals.CORE_POLL_MS;
 
     // Thread
     private final Object workerLock = new Object();
@@ -1000,8 +1001,8 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
 
         public void run() {
             try {
-                if (search.getCreationTime() > System.currentTimeMillis() - 10000) {
-                    sleep(10000);
+                if (search.getCreationTime() > System.currentTimeMillis() - RefreshIntervals.SEARCH_CANCEL_MIN_AGE_MS) {
+                    sleep(RefreshIntervals.SEARCH_CANCEL_MIN_AGE_MS);
                 }
                 while (!isInterrupted()) {
                     try {
@@ -1015,7 +1016,7 @@ public class ApplejuiceFassade implements CoreConnectionSettingsListener {
                         }
                         LOGGER.log(System.Logger.Level.WARNING,
                                 "Search cancellation failed for search {0}; retrying", search.getId());
-                        sleep(4000);
+                        sleep(RefreshIntervals.SEARCH_CANCEL_RETRY_MS);
                     }
                 }
             } catch (InterruptedException interrupted) {

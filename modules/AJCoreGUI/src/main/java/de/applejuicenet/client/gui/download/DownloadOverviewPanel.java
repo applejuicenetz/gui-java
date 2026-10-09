@@ -20,6 +20,7 @@ import de.applejuicenet.client.fassade.entity.Download;
 import de.applejuicenet.client.fassade.entity.DownloadSource;
 import de.applejuicenet.client.fassade.entity.PartList;
 import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
+import de.applejuicenet.client.fassade.shared.RefreshIntervals;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.Settings;
@@ -42,7 +43,6 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
     private JLabel label1 = new JLabel();
     private final Logger logger;
     private JCheckBox holeListe = new JCheckBox();
-    private static final long PARTLIST_REFRESH_MS = 1000;
     private PartListWorkerThread partListWorkerThread = null;
     private DownloadPanel downloadPanel;
     private String verfuegbar;
@@ -235,7 +235,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
 
                 if (!actualDlOverviewTable.isShowing()) {
                     try {
-                        sleep(PARTLIST_REFRESH_MS);
+                        sleep(RefreshIntervals.PARTLIST_REFRESH_MS);
                         continue;
                     } catch (InterruptedException iE) {
                         interrupt();
@@ -257,7 +257,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
 
                 if (shortPause) {
                     try {
-                        sleep(PARTLIST_REFRESH_MS);
+                        sleep(RefreshIntervals.PARTLIST_REFRESH_MS);
                         firstRun = false;
                         continue;
                     } catch (InterruptedException iE) {
