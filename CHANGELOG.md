@@ -10,6 +10,8 @@
 - [red171] „Mein Share“: Dateiliste als `ajfsp`-Links oder AJL kopieren, A-Z/Z-A-Sortierung, HTML-Export entfernt
   - Neu: „Shareüberprüfung stoppen“ (ausgegraut bei Core 0.35.185.93 oder älter)
   - Neu: Suchfeld filtert die Dateiliste; Tippen in der Liste springt ins Suchfeld
+- [red171] Uploads:
+  - Neu: Spalte „Chunk“ zeigt die Größe des angeforderten Abschnitts (nach Nickname)
 - [red171] Bedienung:
   - Neu: „Fenster schließen minimiert in den Tray“ (Standard an); „Beenden“ im Menü beendet weiterhin
   - Statusbar zeigt links den Core; Klick wechselt die Verbindung mit vollständigem GUI-Neustart

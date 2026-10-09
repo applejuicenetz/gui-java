@@ -391,15 +391,16 @@ public class UploadController extends GuiController {
 
         clientText = languageSelector.getFirstAttrbuteByTagName("mainform.uplcounttext");
         uploadPanel.getUploadListeLabel().setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
-        String[] columnsText = new String[7];
+        String[] columnsText = new String[8];
 
         columnsText[0] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col0caption");
         columnsText[1] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col1caption");
-        columnsText[2] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col2caption");
-        columnsText[3] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
-        columnsText[4] = languageSelector.getFirstAttrbuteByTagName("javagui.uploadform.columnwasserstand");
-        columnsText[5] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col4caption");
-        columnsText[6] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col5caption");
+        columnsText[2] = languageSelector.getFirstAttrbuteByTagName("javagui.uploadform.columnchunksize");
+        columnsText[3] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col2caption");
+        columnsText[4] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
+        columnsText[5] = languageSelector.getFirstAttrbuteByTagName("javagui.uploadform.columnwasserstand");
+        columnsText[6] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col4caption");
+        columnsText[7] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col5caption");
         TableColumn[] columns = uploadPanel.getTableActiveColumns();
 
         for (int i = 0; i < columns.length; i++) {

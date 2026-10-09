@@ -17,6 +17,7 @@ import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.upload.table.*;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.tablecellrenderer.ProgressTableCellRenderer;
+import de.applejuicenet.client.shared.tablecellrenderer.SizeTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.SpeedTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.StringTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.VersionTableCellRenderer;
@@ -55,11 +56,11 @@ public class UploadPanel extends TklPanel implements RegisterI {
     private JMenuItem itemCopyToClipboard = new JMenuItem();
     private JMenuItem itemReleaseInfo = new JMenuItem();
     private JPopupMenu columnActivePopup = new JPopupMenu();
-    private TableColumn[] columnsActiveUploads = new TableColumn[7];
+    private TableColumn[] columnsActiveUploads = new TableColumn[8];
     private JCheckBoxMenuItem[] columnPopupItemsActiveUploads = new JCheckBoxMenuItem[columnsActiveUploads.length];
     private JPopupMenu columnWaitingPopup = new JPopupMenu();
     private TableColumn[] columnsWaitingUploads = new TableColumn[7];
-    private JCheckBoxMenuItem[] columnPopupItemsWaitingUploads = new JCheckBoxMenuItem[columnsActiveUploads.length];
+    private JCheckBoxMenuItem[] columnPopupItemsWaitingUploads = new JCheckBoxMenuItem[columnsWaitingUploads.length];
     private AutoRowHeightTable uploadActiveTable;
     private UploadActiveTableModel uploadActiveTableModel;
     private AutoRowHeightTable uploadWaitingTable;
@@ -87,11 +88,12 @@ public class UploadPanel extends TklPanel implements RegisterI {
 
         uploadActiveTable.setDefaultRenderer(String.class, new StringTableCellRenderer());
         uploadActiveTable.getColumnModel().getColumn(0).setCellRenderer(new UploadTableFilenameCellRenderer());
-        uploadActiveTable.getColumnModel().getColumn(2).setCellRenderer(new SpeedTableCellRenderer());
-        uploadActiveTable.getColumnModel().getColumn(3).setCellRenderer(new ProgressTableCellRenderer(4));
+        uploadActiveTable.getColumnModel().getColumn(2).setCellRenderer(new SizeTableCellRenderer());
+        uploadActiveTable.getColumnModel().getColumn(3).setCellRenderer(new SpeedTableCellRenderer());
         uploadActiveTable.getColumnModel().getColumn(4).setCellRenderer(new ProgressTableCellRenderer(4));
-        uploadActiveTable.getColumnModel().getColumn(5).setCellRenderer(new UploadTablePrioCellRenderer());
-        uploadActiveTable.getColumnModel().getColumn(6).setCellRenderer(new VersionTableCellRenderer());
+        uploadActiveTable.getColumnModel().getColumn(5).setCellRenderer(new ProgressTableCellRenderer(4));
+        uploadActiveTable.getColumnModel().getColumn(6).setCellRenderer(new UploadTablePrioCellRenderer());
+        uploadActiveTable.getColumnModel().getColumn(7).setCellRenderer(new VersionTableCellRenderer());
 
         uploadActiveTable.addMouseListener(new MouseAdapter() {
             @Override

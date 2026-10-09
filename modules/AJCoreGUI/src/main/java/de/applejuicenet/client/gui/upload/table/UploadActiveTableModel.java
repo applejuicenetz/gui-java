@@ -21,15 +21,15 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
 {
    final static String[] COL_NAMES = 
                                      {
-                                        "Dateiname", "Nickname", "Geschwindigkeit", "Prozent geladen", "Gesamt geladen",
-                                        "Prioritaet", "Client"
+                                        "Dateiname", "Nickname", "Chunk", "Geschwindigkeit", "Prozent geladen",
+                                        "Gesamt geladen", "Prioritaet", "Client"
                                      };
    @SuppressWarnings("unchecked")
    public static final Class[] CLASS_TYPES                               = 
                                                                            {
-                                                                              Upload.class, String.class, Integer.class,
-                                                                              Double.class, Double.class, Integer.class,
-                                                                              Version.class
+                                                                              Upload.class, String.class, Long.class,
+                                                                              Integer.class, Double.class, Double.class,
+                                                                              Integer.class, Version.class
                                                                            };
    private List<Upload>        uploads      = new ArrayList<Upload>();
    private SimpleDateFormat    formatter    = new SimpleDateFormat("HH:mm:ss");
@@ -123,18 +123,21 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
             return upload.getNick();
 
          case 2:
-            return upload.getSpeed();
+            return upload.getSize();
 
          case 3:
-            return upload.getDownloadPercent();
+            return upload.getSpeed();
 
          case 4:
-            return upload.getLoaded();
+            return upload.getDownloadPercent();
 
          case 5:
-            return upload.getPrioritaet();
+            return upload.getLoaded();
 
          case 6:
+            return upload.getPrioritaet();
+
+         case 7:
             return upload.getVersion();
 
          default:
