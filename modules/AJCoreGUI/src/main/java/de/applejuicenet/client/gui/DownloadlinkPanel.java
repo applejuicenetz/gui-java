@@ -133,7 +133,34 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
 
    public boolean isLinkInvalid()
    {
-      return linkRule.test(txtDownloadLink.getText());
+      return splitLinks(txtDownloadLink.getText()).stream().anyMatch(linkRule);
+   }
+
+   /**
+    * Teilt Text mit mehreren Links (Whitespace, Zeilenumbrueche oder direkt
+    * aneinandergereiht) in einzelne Links auf. Jeder Link beginnt bei
+    * {@code ajfsp://} bzw. {@code web+ajfsp://}.
+    */
+   public static java.util.List<String> splitLinks(String text)
+   {
+      java.util.List<String> links = new java.util.ArrayList<>();
+
+      if(text == null)
+      {
+         return links;
+      }
+
+      for(String part : text.split("(?i)(?<!web\\+)(?=(web\\+)?ajfsp://)"))
+      {
+         String link = part.trim();
+
+         if(!link.isEmpty())
+         {
+            links.add(link);
+         }
+      }
+
+      return links;
    }
 
    public JTextField getTxtDownloadLink()

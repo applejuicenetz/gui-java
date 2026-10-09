@@ -17,6 +17,7 @@
   - Statusbar zeigt links den Core; Klick wechselt die Verbindung mit vollständigem GUI-Neustart
   - „Öffnen mit Standardprogramm“ ist bei Remote-Core ausgegraut
   - Ungültige Eingaben werden mit rotem Rahmen markiert
+  - Link-Leiste nimmt mehrere `ajfsp`-Links auf (getrennt durch Leerzeichen oder Zeilenumbruch)
   - Diverse Layout-Korrekturen
 - [red171] Plugins:
   - Neu: „Share-Treemap“ mit Ordner-Zoom, Dateitypfarben und Upload-Heatmap

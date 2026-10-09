@@ -445,10 +445,11 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
             return;
         }
 
-        final String link = linkPane.getTxtDownloadLink().getText().trim().replace("%7C", "|");
-        if (!link.isEmpty()) {
+        final java.util.List<String> links = DownloadlinkPanel.splitLinks(
+                linkPane.getTxtDownloadLink().getText().replace("%7C", "|"));
+        if (!links.isEmpty()) {
             linkPane.getTxtDownloadLink().setText("");
-            uebernehmeLink(link);
+            links.forEach(this::uebernehmeLink);
         }
     }
 

@@ -18,6 +18,29 @@ public class DownloadlinkPanelTest {
     }
 
     @Test
+    public void splitsLinksBySpaceNewlineAndConcatenation() {
+        String a = "ajfsp://file|a.bin|0123456789abcdef0123456789abcdef|1/";
+        String b = "web+ajfsp://file|b.bin|0123456789abcdef0123456789abcdef|2/";
+        String c = "ajfsp://server|host.de|9854/";
+        assertEquals(java.util.List.of(a, b, c), DownloadlinkPanel.splitLinks(a + " \n" + b + "\r\n\t" + c + "\n"));
+        assertEquals(java.util.List.of(a, b), DownloadlinkPanel.splitLinks(a + b));
+        assertEquals(java.util.List.of(a), DownloadlinkPanel.splitLinks("  " + a + "  "));
+        assertTrue(DownloadlinkPanel.splitLinks(" \n ").isEmpty());
+    }
+
+    @Test
+    public void multipleLinksValidOnlyIfAllValid() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            DownloadlinkPanel panel = new DownloadlinkPanel();
+            String ok = "ajfsp://file|a.bin|0123456789abcdef0123456789abcdef|1/";
+            panel.getTxtDownloadLink().setText(ok + "\n" + ok + " " + ok);
+            assertEquals(false, panel.isLinkInvalid());
+            panel.getTxtDownloadLink().setText(ok + "\najfsp://file|broken");
+            assertEquals(true, panel.isLinkInvalid());
+        });
+    }
+
+    @Test
     public void linkFieldFillsRemainingWidthBetweenLabelAndButton() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             DownloadlinkPanel panel = new DownloadlinkPanel();
