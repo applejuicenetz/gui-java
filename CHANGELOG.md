@@ -16,7 +16,7 @@
   - Zwei Bereiche: „Core-Einstellungen“ (gehen an den Core) und „JavaGUI-Einstellungen“ (nur lokal)
   - Neu: „Tabellenbreiten merken“, „IP in Statusanzeige maskieren“, Upload/Download wahlweise in kb/s oder MB/s
 - [red171] „Mein Share“: Dateiliste als `ajfsp`-Links oder AJL kopieren, A-Z/Z-A-Sortierung, HTML-Export entfernt
-  - Neu: „Shareüberprüfung stoppen“ (ausgegraut bei Core 0.35.185.93 oder älter)
+  - Neu: „Shareüberprüfung stoppen“ (ausgegraut bei Core älter als 0.35.186.1)
   - Neu: Suchfeld filtert die Dateiliste; Tippen in der Liste springt ins Suchfeld
 - [red171] Uploads:
   - Neu: Spalte „Chunk“ zeigt die Größe des angeforderten Abschnitts (nach Nickname)

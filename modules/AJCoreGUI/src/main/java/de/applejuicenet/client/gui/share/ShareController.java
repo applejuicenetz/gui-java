@@ -60,7 +60,7 @@ public class ShareController extends GuiController
    private static final int       PRIORITAET_SETZEN              = 1;
    private static final int       REFRESH                        = 2;
    private static final int       STOP_SHARECHECK                = 99;
-   private static final String    STOP_SHARECHECK_MIN_EXCLUSIVE  = "0.35.185.93";
+   private static final String    STOP_SHARECHECK_MIN_VERSION    = "0.35.186.1";
    private static final int       SHARE_ERNEUERN                 = 3;
    private static final int       NOT_SHARED                     = 4;
    private static final int       SHARE_WITHOUT_SUB              = 5;
@@ -485,7 +485,7 @@ public class ShareController extends GuiController
       {
          de.applejuicenet.client.fassade.entity.Version version = AppleJuiceClient.getAjFassade().getCoreVersion();
 
-         return version != null && version.compareTo(STOP_SHARECHECK_MIN_EXCLUSIVE) > 0;
+         return version != null && version.compareTo(STOP_SHARECHECK_MIN_VERSION) >= 0;
       }
       catch(Exception e)
       {
