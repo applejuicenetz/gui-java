@@ -7,6 +7,9 @@
 - [red171] Bedienung:
   - „Fenster schließen minimiert in den Tray“ ist jetzt standardmäßig aus; Schließen beendet die GUI
   - Link-Leiste nimmt mehrere `ajfsp`-Links auf (getrennt durch Leerzeichen oder Zeilenumbruch)
+  - Statusbar überarbeitet: Icons mit Tooltips, getrennte Felder für Status, Verbindungen, Server, Speed und Traffic
+  - Statusbar: Werte feste Mindestbreite und rechtsbündig, kein Wackeln mehr; Servername wird bei Platzmangel gekürzt, Host und Port im Tooltip
+  - Statusbar: schlankere Feldtrenner und Monospace-Schrift, „…“ hinter dem Verbindungsstatus entfernt
 
 ## 0.86.4
 

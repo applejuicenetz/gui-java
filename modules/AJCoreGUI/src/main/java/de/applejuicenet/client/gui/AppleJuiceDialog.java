@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import de.applejuicenet.client.shared.AjlFile;
 
 import javax.swing.filechooser.FileFilter;
@@ -71,7 +70,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
     private static TrayLoader trayLoader = null;
     private Information information = null;
     private RegisterPanel registerPane;
-    private JLabel[] statusbar = new JLabel[6];
+    private JLabel[] statusbar = new JLabel[9];
+    private JPanel statusPanel;
     private JMenu sprachMenu;
     private JMenu optionenMenu;
     private JMenu themesMenu = null;
@@ -330,12 +330,21 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         getContentPane().add(registerPane, BorderLayout.CENTER);
 
         JPanel panel = new JPanel(new GridBagLayout());
+        statusPanel = panel;
 
         for (int i = 0; i < statusbar.length; i++) {
-            statusbar[i] = new JLabel("            ");
+            int minChars = i == 2 || i == 7 ? 12 : i == 3 || i == 8 ? 11 : i == 6 ? 5 : 0;
+            statusbar[i] = new StatusLabel(minChars);
+            statusbar[i].setIconTextGap(4);
+            if (i == 2 || i == 3 || i == 7 || i == 8) {
+                statusbar[i].setHorizontalTextPosition(SwingConstants.LEFT);
+            }
             statusbar[i].setHorizontalAlignment(JLabel.RIGHT);
-            statusbar[i].setBorder(new BevelBorder(BevelBorder.LOWERED));
-            statusbar[i].setFont(new java.awt.Font("SansSerif", 0, 11));
+            java.awt.Color separator = UIManager.getColor("Separator.foreground");
+            statusbar[i].setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 1, 0, 0, separator != null ? separator : java.awt.Color.GRAY),
+                    BorderFactory.createEmptyBorder(1, 5, 1, 5)));
+            statusbar[i].setFont(new java.awt.Font(java.awt.Font.MONOSPACED, 0, 11));
         }
 
         coreHost.setFont(statusbar[0].getFont());
@@ -395,20 +404,38 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         constraints.gridx = 1;
         panel.add(statusbar[0], constraints);
         constraints.gridx = 2;
+        statusbar[6].setIcon(StatusIcons.connections());
+        panel.add(statusbar[6], constraints);
+        constraints.gridx = 3;
         constraints.weightx = 1;
+        statusbar[1].setHorizontalAlignment(JLabel.LEFT);
+        statusbar[1].setMinimumSize(new java.awt.Dimension(0, 0));
+        statusbar[1].setPreferredSize(new java.awt.Dimension(150, 1));
+        statusbar[1].setIcon(StatusIcons.server());
         panel.add(statusbar[1], constraints);
         constraints.weightx = 0;
-        constraints.gridx = 3;
-        panel.add(statusbar[2], constraints);
         constraints.gridx = 4;
-        panel.add(statusbar[3], constraints);
+        statusbar[2].setIcon(StatusIcons.speedDown());
+        panel.add(statusbar[2], constraints);
         constraints.gridx = 5;
-        panel.add(statusbar[4], constraints);
+        statusbar[7].setIcon(StatusIcons.speedUp());
+        panel.add(statusbar[7], constraints);
         constraints.gridx = 6;
-        panel.add(statusbar[5], constraints);
+        statusbar[3].setIcon(StatusIcons.totalDown());
+        panel.add(statusbar[3], constraints);
         constraints.gridx = 7;
-        panel.add(memory, constraints);
+        statusbar[8].setIcon(StatusIcons.totalUp());
+        panel.add(statusbar[8], constraints);
         constraints.gridx = 8;
+        statusbar[4].setIcon(StatusIcons.globe());
+        panel.add(statusbar[4], constraints);
+        constraints.gridx = 9;
+        statusbar[5].setIcon(StatusIcons.coin());
+        statusbar[5].setToolTipText("Credits");
+        panel.add(statusbar[5], constraints);
+        constraints.gridx = 10;
+        panel.add(memory, constraints);
+        constraints.gridx = 11;
         panel.add(sound, constraints);
         getContentPane().add(panel, BorderLayout.SOUTH);
         AjfspTransferHandler.install(getRootPane(), this::uebernehmeLink);
@@ -872,6 +899,10 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
     public void fireLanguageChanged() {
         try {
             updateCoreHost();
+            statusbar[2].setToolTipText(GuiText.text("javagui.mainform.speeddown.hint"));
+            statusbar[7].setToolTipText(GuiText.text("javagui.mainform.speedup.hint"));
+            statusbar[3].setToolTipText(GuiText.text("javagui.mainform.totaldown.hint"));
+            statusbar[8].setToolTipText(GuiText.text("javagui.mainform.totalup.hint"));
             LanguageSelector languageSelector = LanguageSelector.getInstance();
 
             verbunden = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.verbunden");
@@ -904,10 +935,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
             invalidLink = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.falscherlink");
             linkFailure = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.sonstigerlinkfehlerkurz");
             dialogTitel = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
-            if (firewalled) {
-                statusbar[0].setToolTipText(firewallWarning);
-            }
-
+            updateConnectionTooltip();
+            statusbar[6].setToolTipText(GuiText.text("javagui.mainform.connections.hint"));
             if (useTrayIcon && null != trayLoader) {
                 trayLoader.setTextVerstecken(languageSelector.getFirstAttrbuteByTagName("javagui.menu.verstecken"));
                 trayLoader.setTextZeigen(languageSelector.getFirstAttrbuteByTagName("javagui.menu.zeigen"));
@@ -931,11 +960,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
                     if (netInfo.isFirewalled() != firewalled) {
                         firewalled = !firewalled;
                         updateFirewall();
-                        if (firewalled) {
-                            statusbar[0].setToolTipText(firewallWarning);
-                        } else {
-                            statusbar[0].setToolTipText(null);
-                        }
+                        updateConnectionTooltip();
 
                         updateFirewall();
                     }
@@ -952,11 +977,14 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
                     updateConnectionStatus();
                     updateServerStatus();
 
-                    statusbar[2].setText(information.getUpDownAsString());
-                    statusbar[3].setText(information.getUpDownSessionAsString());
+                    statusbar[2].setText(information.getDownAsString().toString());
+                    statusbar[7].setText(information.getUpAsString().toString());
+                    statusbar[3].setText(information.getSessionDownAsString().toString());
+                    statusbar[8].setText(information.getSessionUpAsString().toString());
                     updateExternalIp();
-                    statusbar[5].setText(information.getCreditsAsString());
+                    statusbar[5].setText(information.getCreditsAsString().strip().replaceFirst("^[^:]*:\\s*", ""));
                     updateFirewall();
+                    ensureStatusbarFits();
                 } catch (Exception e) {
                     logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
                 }
@@ -964,32 +992,54 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         }
     }
 
-    private void updateConnectionStatus() {
-        if (information != null) {
-            statusbar[0].setText(getConnectionStatusText(getVerbindungsStatusAsString(information),
-                    offeneVerbindungen, information.getOpenConnections()));
+    private void ensureStatusbarFits() {
+        if (statusPanel == null || maximized || getExtendedState() != Frame.NORMAL) {
+            return;
+        }
+        Insets insets = getInsets();
+        int needed = statusPanel.getPreferredSize().width + insets.left + insets.right;
+        if (getWidth() < needed) {
+            setSize(needed, getHeight());
         }
     }
 
-    static String getConnectionStatusText(String status, String connectionsCaption, long openConnections) {
-        return status + " | " + connectionsCaption.replace("%d", Long.toString(openConnections));
+    private void updateConnectionTooltip() {
+        statusbar[0].setToolTipText(firewalled ? firewallWarning
+                : GuiText.text("javagui.mainform.connectionstatus.hint"));
+    }
+
+    private void updateConnectionStatus() {
+        if (information != null) {
+            statusbar[0].setText(getVerbindungsStatusAsString(information));
+            statusbar[6].setText(getConnectionCountText(offeneVerbindungen, information.getOpenConnections()));
+        }
+    }
+
+    static String getConnectionCountText(String connectionsCaption, long openConnections) {
+        return connectionsCaption.replace("%d", Long.toString(openConnections));
     }
 
     private void updateServerStatus() {
         if (information != null) {
-            statusbar[1].setText(information.getVerbindungsStatus() == Information.NICHT_VERBUNDEN
-                    ? keinServer : getServerStatusText(information));
+            boolean connected = information.getVerbindungsStatus() != Information.NICHT_VERBUNDEN;
+            statusbar[1].setText(connected ? getServerDisplayName(information) : keinServer);
+            statusbar[1].setToolTipText(connected ? getServerAddress(information) : null);
         }
     }
 
-    static String getServerStatusText(Information information) {
+    static String getServerAddress(Information information) {
         String address = information.getServerName();
         Server server = information.getServer();
         if (address == null || address.isBlank()) {
             address = server != null ? server.getHost() + ":" + server.getPort() : "";
         }
+        return address;
+    }
+
+    static String getServerDisplayName(Information information) {
+        Server server = information.getServer();
         String name = server != null ? server.getName() : null;
-        return name == null || name.isBlank() ? address : name.strip() + " (" + address + ")";
+        return name == null || name.isBlank() ? getServerAddress(information) : name.strip();
     }
 
     protected void updateFirewall() {

@@ -11,16 +11,17 @@ import static org.junit.Assert.assertEquals;
 
 public class ServerStatusTextTest {
     @Test
-    public void loadedServerNamePrecedesDynamicAddressAndPort() throws Exception {
+    public void loadedServerNameIsShownWithoutAddress() throws Exception {
         Information information = information(server("Mein Server"));
-        assertEquals("Mein Server (server.example.org:2002)", AppleJuiceDialog.getServerStatusText(information));
+        assertEquals("Mein Server", AppleJuiceDialog.getServerDisplayName(information));
+        assertEquals("server.example.org:2002", AppleJuiceDialog.getServerAddress(information));
     }
 
     @Test
-    public void unknownServerNameKeepsAddressOnly() throws Exception {
+    public void unknownServerNameFallsBackToAddress() throws Exception {
         for (String name : new String[] {null, "", "   "}) {
             Information information = information(server(name));
-            assertEquals("server.example.org:2002", AppleJuiceDialog.getServerStatusText(information));
+            assertEquals("server.example.org:2002", AppleJuiceDialog.getServerDisplayName(information));
         }
     }
 
@@ -28,18 +29,18 @@ public class ServerStatusTextTest {
     public void nameAppearsWhenExistingServerDetailsAreLoadedLater() throws Exception {
         Server server = server(null);
         Information information = information(server);
-        assertEquals("server.example.org:2002", AppleJuiceDialog.getServerStatusText(information));
+        assertEquals("server.example.org:2002", AppleJuiceDialog.getServerDisplayName(information));
         Method setter = server.getClass().getDeclaredMethod("setName", String.class);
         setter.setAccessible(true);
         setter.invoke(server, "Mein Server");
-        assertEquals("Mein Server (server.example.org:2002)", AppleJuiceDialog.getServerStatusText(information));
+        assertEquals("Mein Server", AppleJuiceDialog.getServerDisplayName(information));
         setter.invoke(server, "Neuer Name");
-        assertEquals("Neuer Name (server.example.org:2002)", AppleJuiceDialog.getServerStatusText(information));
+        assertEquals("Neuer Name", AppleJuiceDialog.getServerDisplayName(information));
     }
 
     @Test
     public void missingServerLeavesStatusTextEmpty() throws Exception {
-        assertEquals("", AppleJuiceDialog.getServerStatusText(information(null)));
+        assertEquals("", AppleJuiceDialog.getServerDisplayName(information(null)));
     }
 
     private static Information information(Server server) throws Exception {

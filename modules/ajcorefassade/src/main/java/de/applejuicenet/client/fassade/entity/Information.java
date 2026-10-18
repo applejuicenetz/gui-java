@@ -60,6 +60,16 @@ public abstract class Information implements Serializable
 		return result.toString();
 	}
 
+	public final StringBuffer getSessionDownAsString()
+	{
+		return bytesUmrechnen(getSessionDownload());
+	}
+
+	public final StringBuffer getSessionUpAsString()
+	{
+		return bytesUmrechnen(getSessionUpload());
+	}
+
 	public final StringBuffer getUpAsString()
 	{
 		return getBytesSpeed(getUploadSpeed());
