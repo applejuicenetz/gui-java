@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClientTG.java,v 1.12 2009/01/12 09:19:20 maj0r Exp $
+ * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClientTG.java,v 1.12 2009/01/12 09:19:20 maj0r Exp $.
  *
  * <p>Title: AppleJuice Client-GUI</p>
  * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
@@ -22,9 +22,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Maj0r <aj@tkl-soft.de>
  */
-public class AppleJuiceClientTG extends ThreadGroup {
+public class AppleJuiceThreadGroup extends ThreadGroup {
 
-    public AppleJuiceClientTG() {
+    public AppleJuiceThreadGroup() {
         super("AppleJuiceClientThreadGroup");
     }
 
@@ -42,15 +42,8 @@ public class AppleJuiceClientTG extends ThreadGroup {
             return;
         }
 
-        Logger logger = LoggerFactory.getLogger(AppleJuiceClientTG.class);
-        if (e.getClass() == ClassCastException.class && "java.awt.TrayIcon cannot be cast to java.awt.Component".equals(e.getMessage())) {
-
-            /*
-             * "insignificantly error in java6 -> ignoring"
-             */
-        } else if (e.getClass() == ArrayIndexOutOfBoundsException.class) {
-            logger.debug(ApplejuiceFacade.ERROR_MESSAGE, e);
-        } else if (e.getClass() == WrongPasswordException.class) {
+        Logger logger = LoggerFactory.getLogger(AppleJuiceThreadGroup.class);
+        if (e instanceof WrongPasswordException) {
             AppleJuiceDialog.getApp().informWrongPassword();
         } else if (e.getClass() == CoreLostException.class) {
             LanguageSelector languageSelector = LanguageSelector.getInstance();

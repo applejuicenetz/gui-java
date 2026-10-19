@@ -103,9 +103,9 @@ public class AppleJuiceClient {
             System.exit(1);
         }
 
-        AppleJuiceClientTG tg = new AppleJuiceClientTG();
+        AppleJuiceThreadGroup tg = new AppleJuiceThreadGroup();
         // Virtual threads do not belong to a ThreadGroup and would otherwise end up at the default handler
-        Thread.setDefaultUncaughtExceptionHandler((thread, error) -> AppleJuiceClientTG.handle(error));
+        Thread.setDefaultUncaughtExceptionHandler((thread, error) -> AppleJuiceThreadGroup.handle(error));
         final String[] myargs = args;
         Runnable runnable = () -> AppleJuiceClient.runmain(myargs);
 
