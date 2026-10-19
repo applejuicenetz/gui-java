@@ -7,6 +7,60 @@ import static org.junit.Assert.*;
 
 public class MessagesWorkerTest {
     @Test(timeout = 10000)
+    public void successfulRequestPublishesOnEdt() throws Exception {
+        JLabel version = new JLabel("unchanged");
+        JTextPane messages = new JTextPane();
+        AtomicBoolean onEdt = new AtomicBoolean();
+        version.addPropertyChangeListener("text", event -> onEdt.set(SwingUtilities.isEventDispatchThread()));
+        MessagesWorker worker = new MessagesWorker(version, messages, () -> "test",
+                () -> "http://localhost/%s", url -> "<html>fresh news</html>");
+        worker.start();
+        worker.join(2000);
+        SwingUtilities.invokeAndWait(() -> {});
+        assertFalse(worker.isAlive());
+        assertTrue(version.getText().contains("Core: test"));
+        assertTrue(messages.getText().contains("fresh news"));
+        assertTrue("Publication ran outside EDT", onEdt.get());
+    }
+
+    @Test(timeout = 10000)
+    public void coreStopDiscardsQueuedUiUpdate() throws Exception {
+        var entered = new java.util.concurrent.CountDownLatch(1);
+        var release = new java.util.concurrent.CountDownLatch(1);
+        JLabel version = new JLabel("unchanged");
+        MessagesWorker worker = new MessagesWorker(version, new JTextPane(), () -> "test",
+                () -> "http://localhost/%s", url -> "<html>news</html>");
+        var facade = new de.applejuicenet.client.facade.ApplejuiceFacade(
+                new de.applejuicenet.client.facade.controller.CoreConnectionSettingsHolder("localhost", 9851, "", true));
+        var listenersField = facade.getClass().getDeclaredField("coreListener");
+        listenersField.setAccessible(true);
+        var listeners = (java.util.Set<?>) listenersField.get(null);
+        int initial = listeners.size();
+        SwingUtilities.invokeLater(() -> {
+            entered.countDown();
+            try { release.await(); }
+            catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+        });
+        try {
+            assertTrue(entered.await(2, java.util.concurrent.TimeUnit.SECONDS));
+            worker.start();
+            worker.join(2000);
+            assertFalse("Worker did not finish loading", worker.isAlive());
+            var notifyStatus = facade.getClass().getDeclaredMethod("informCoreStatusListener",
+                    de.applejuicenet.client.facade.listener.CoreStatusListener.STATUS.class);
+            notifyStatus.setAccessible(true);
+            notifyStatus.invoke(facade, de.applejuicenet.client.facade.listener.CoreStatusListener.STATUS.CLOSED);
+        } finally {
+            if (worker.isAlive()) worker.interrupt();
+            release.countDown();
+            worker.join(2000);
+        }
+        SwingUtilities.invokeAndWait(() -> {});
+        assertEquals("Stopped core published stale news", "unchanged", version.getText());
+        assertEquals("Queued publication leaked status listener", initial, listeners.size());
+    }
+
+    @Test(timeout = 10000)
     public void interruptedRequestDoesNotRetryOrPublish() throws Exception {
         java.util.concurrent.CountDownLatch entered = new java.util.concurrent.CountDownLatch(1);
         java.util.concurrent.atomic.AtomicInteger requests = new java.util.concurrent.atomic.AtomicInteger();

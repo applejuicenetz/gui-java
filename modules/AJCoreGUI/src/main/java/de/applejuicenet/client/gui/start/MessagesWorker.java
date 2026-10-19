@@ -56,8 +56,13 @@ public class MessagesWorker extends Thread {
         if (isInterrupted()) return;
         logger.debug("MessagesWorkerThread started.");
 
+        java.util.concurrent.atomic.AtomicBoolean coreClosed = new java.util.concurrent.atomic.AtomicBoolean();
+        boolean publicationQueued = false;
         de.applejuicenet.client.facade.listener.CoreStatusListener statusListener = status -> {
-            if (status == de.applejuicenet.client.facade.listener.CoreStatusListener.STATUS.CLOSED) interrupt();
+            if (status == de.applejuicenet.client.facade.listener.CoreStatusListener.STATUS.CLOSED) {
+                coreClosed.set(true);
+                interrupt();
+            }
         };
         de.applejuicenet.client.facade.ApplejuiceFacade.addCoreStatusListener(statusListener);
         try {
@@ -102,19 +107,27 @@ public class MessagesWorker extends Thread {
 
             if (isInterrupted()) return;
             SwingUtilities.invokeLater(() -> {
-                if (isInterrupted()) return;
-                version.setText("<html>GUI: " + AppleJuiceDialog.getVersion() + "<br>Core: " + coreVersion + "</html>");
-                messages.setContentType("text/html");
-                messages.setText(htmlContent);
-                messages.setFont(version.getFont());
+                try {
+                    if (coreClosed.get() || isInterrupted()) return;
+                    version.setText("<html>GUI: " + AppleJuiceDialog.getVersion() + "<br>Core: " + coreVersion + "</html>");
+                    messages.setContentType("text/html");
+                    messages.setText(htmlContent);
+                    messages.setFont(version.getFont());
+                } finally {
+                    de.applejuicenet.client.facade.ApplejuiceFacade.removeCoreStatusListener(statusListener);
+                }
             });
+            publicationQueued = true;
         } catch (Exception e) {
             if (!isInterrupted()) {
                 logger.warn("Version-dependent messages could not be loaded.", e);
             }
         } finally {
-            de.applejuicenet.client.facade.ApplejuiceFacade.removeCoreStatusListener(statusListener);
+            if (!publicationQueued) {
+                de.applejuicenet.client.facade.ApplejuiceFacade.removeCoreStatusListener(statusListener);
+            }
         }
+
 
         logger.debug("MessagesWorkerThread finished.");
     }
