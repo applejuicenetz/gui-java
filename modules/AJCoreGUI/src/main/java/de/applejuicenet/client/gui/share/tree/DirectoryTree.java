@@ -15,6 +15,8 @@ import java.awt.event.MouseEvent;
 public class DirectoryTree
     extends JTree {
     private static final int WARNING_BLINK_MS = 700;
+    /** Width of the visible tree area; 20 % wider than the previous 200 px. */
+    private static final int PREFERRED_WIDTH = 240;
 
     private final Timer warningBlinkTimer;
     private boolean warningBlinking = false;
@@ -61,7 +63,7 @@ public class DirectoryTree
 
 	public Dimension getPreferredScrollableViewportSize() {
         Dimension result = super.getPreferredScrollableViewportSize();
-        result = new Dimension(200, result.height);
+        result = new Dimension(PREFERRED_WIDTH, result.height);
         return result;
     }
 
