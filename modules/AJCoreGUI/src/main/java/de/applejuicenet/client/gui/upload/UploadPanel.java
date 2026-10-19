@@ -20,6 +20,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.tablecellrenderer.ProgressTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.SizeTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.SpeedTableCellRenderer;
+import de.applejuicenet.client.shared.PopupMenuSupport;
 import de.applejuicenet.client.shared.tablecellrenderer.StringTableCellRenderer;
 import de.applejuicenet.client.shared.tablecellrenderer.VersionTableCellRenderer;
 
@@ -40,13 +41,13 @@ import java.util.Date;
  */
 public class UploadPanel extends TklPanel implements RegisterI {
     private JLabel uploadListLabel = new JLabel(GuiText.text("javagui.uploadform.clientcount").replace("%d", "0"));
-    private JPopupMenu popupMenu = new JPopupMenu();
+    private JPopupMenu popupMenu = PopupMenuSupport.create();
     private JMenuItem itemCopyToClipboard = new JMenuItem();
     private JMenuItem itemReleaseInfo = new JMenuItem();
-    private JPopupMenu columnActivePopup = new JPopupMenu();
+    private JPopupMenu columnActivePopup = PopupMenuSupport.create();
     private TableColumn[] columnsActiveUploads = new TableColumn[8];
     private JCheckBoxMenuItem[] columnPopupItemsActiveUploads = new JCheckBoxMenuItem[columnsActiveUploads.length];
-    private JPopupMenu columnWaitingPopup = new JPopupMenu();
+    private JPopupMenu columnWaitingPopup = PopupMenuSupport.create();
     private TableColumn[] columnsWaitingUploads = new TableColumn[7];
     private JCheckBoxMenuItem[] columnPopupItemsWaitingUploads = new JCheckBoxMenuItem[columnsWaitingUploads.length];
     private AutoRowHeightTable uploadActiveTable;

@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import de.applejuicenet.client.shared.AjlFile;
+import de.applejuicenet.client.shared.PopupMenuSupport;
 
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.DefaultEditorKit;
@@ -807,6 +808,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
                     if (laf.equals(feel.getName())) {
                         UIManager.setLookAndFeel(feel.getClassName());
                         SwingUtilities.updateComponentTreeUI(this);
+                        PopupMenuSupport.updateAll();
                         installClipboardKeys();
                         OptionsManagerImpl.getInstance().setDefaultLookAndFeel(feel);
                         return;
@@ -1057,7 +1059,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
     }
 
     public JPopupMenu makeSwingPopup() {
-        final JPopupMenu popup = new JPopupMenu();
+        final JPopupMenu popup = PopupMenuSupport.create();
 
         popupShowHideMenuItem.addActionListener(ae -> {
             if (!isVisible() || (getExtendedState() & Frame.ICONIFIED) != 0) {

@@ -1,6 +1,7 @@
 package de.applejuicenet.client.gui.plugins.sharetreemap;
 
 import de.applejuicenet.client.gui.controller.GuiText;
+import de.applejuicenet.client.shared.PopupMenuSupport;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -144,7 +145,7 @@ public class TreemapView extends JPanel {
             if (!e.isPopupTrigger()) return;
             ShareTree node = hit(e.getPoint());
             if (node == null || node.directory() || node.link().isEmpty()) return;
-            JPopupMenu menu = new JPopupMenu();
+            JPopupMenu menu = PopupMenuSupport.create();
             JMenuItem copy = GuiText.menuItem("plugins.treemap.copy");
             copy.addActionListener(event -> {
                 try { Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(node.link()), null); }

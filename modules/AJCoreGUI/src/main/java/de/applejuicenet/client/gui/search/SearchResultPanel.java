@@ -22,6 +22,7 @@ import de.applejuicenet.client.gui.search.table.SearchEntryIconRenderer;
 import de.applejuicenet.client.gui.search.table.SearchEntrySizeRenderer;
 import de.applejuicenet.client.gui.search.table.SearchTableModel;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.PopupMenuSupport;
 import de.applejuicenet.client.shared.ReleaseInfo;
 import de.applejuicenet.client.shared.SoundPlayer;
 import org.slf4j.Logger;
@@ -61,7 +62,7 @@ public class SearchResultPanel extends JPanel {
     private JLabel label1 = new JLabel();
     private JLabel label2 = new JLabel();
     private JLabel label3 = new JLabel();
-    private JPopupMenu popup = new JPopupMenu();
+    private JPopupMenu popup = PopupMenuSupport.create();
     private JMenuItem item1 = new JMenuItem();
     private JMenuItem mnuReleaseInfo = new JMenuItem();
     private JToggleButton[] filterButtons;

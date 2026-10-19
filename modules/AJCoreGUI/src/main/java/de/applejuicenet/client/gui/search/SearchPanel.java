@@ -11,6 +11,7 @@ import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.PopupMenuSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,7 +120,7 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
                }
             }
          });
-      menu = new JPopupMenu();
+      menu = PopupMenuSupport.create();
       IconManager im = IconManager.getInstance();
 
       paste = new JMenuItem();

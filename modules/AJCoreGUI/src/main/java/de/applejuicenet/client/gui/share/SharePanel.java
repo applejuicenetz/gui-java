@@ -16,6 +16,7 @@ import de.applejuicenet.client.gui.share.table.ShareTableModel;
 import de.applejuicenet.client.gui.share.tree.DirectoryTree;
 import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeCellRenderer;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.PopupMenuSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,12 +47,12 @@ public class SharePanel extends TklPanel {
     private AJSettings ajSettings;
     private ShareTable shareTable;
     private ShareTableModel shareModel;
-    private JPopupMenu popup = new JPopupMenu();
+    private JPopupMenu popup = PopupMenuSupport.create();
     private JMenuItem sharedwsub;
     private JMenuItem sharedwosub;
     private JMenuItem notshared;
-    private JPopupMenu popup2 = new JPopupMenu();
-    private JPopupMenu folderPopup = new JPopupMenu();
+    private JPopupMenu popup2 = PopupMenuSupport.create();
+    private JPopupMenu folderPopup = PopupMenuSupport.create();
     private JMenuItem itemCreateFileList = new JMenuItem();
     private JMenuItem itemReleaseInfo = new JMenuItem();
     private JMenuItem itemCopyToClipboard = new JMenuItem();

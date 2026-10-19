@@ -14,6 +14,7 @@ import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.download.table.*;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.PopupMenuSupport;
 import de.applejuicenet.client.shared.tablecellrenderer.*;
 import org.slf4j.Logger;
 
@@ -35,7 +36,7 @@ public class DownloadPanel extends TklPanel {
     private AutoRowHeightTable downloadActiveTable;
     private DownloadSourcesTableModel downloadSourceTableModel;
     private AutoRowHeightTable downloadSourceTable;
-    private JPopupMenu popup = new JPopupMenu();
+    private JPopupMenu popup = PopupMenuSupport.create();
     private JScrollPane aScrollPane;
     private JMenuItem cancel;
     private JMenuItem pause;
@@ -51,9 +52,9 @@ public class DownloadPanel extends TklPanel {
     private Logger logger;
     private TableColumn[] downloadColumns = new TableColumn[DownloadsTableModel.CLASS_TYPES.length];
     private TableColumn[] downloadSourceColumns = new TableColumn[DownloadSourcesTableModel.CLASS_TYPES.length];
-    private JPopupMenu columnDownloadPopup = new JPopupMenu();
+    private JPopupMenu columnDownloadPopup = PopupMenuSupport.create();
     private JCheckBoxMenuItem[] columnDownloadPopupItems = new JCheckBoxMenuItem[downloadColumns.length];
-    private JPopupMenu columnDownloadSourcesPopup = new JPopupMenu();
+    private JPopupMenu columnDownloadSourcesPopup = PopupMenuSupport.create();
     private JCheckBoxMenuItem[] columnDownloadSourcesPopupItems = new JCheckBoxMenuItem[downloadSourceColumns.length];
     private JPopupMenu menu;
     private JScrollPane downloadSourcesScrollPane;
@@ -185,7 +186,7 @@ public class DownloadPanel extends TklPanel {
         targetFolder = new JMenuItem();
         removeFinished = new JMenuItem();
 
-        menu = new JPopupMenu();
+        menu = PopupMenuSupport.create();
 
         IconManager im = IconManager.getInstance();
 

@@ -4,6 +4,7 @@ import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.gui.DialogLocation;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
+import de.applejuicenet.client.shared.PopupMenuSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +71,7 @@ public class LogViewerPlugin extends PluginConnector {
                 int index = list.locationToIndex(e.getPoint());
                 if (index < 0 || !list.getCellBounds(index, index).contains(e.getPoint())) return;
                 list.setSelectedIndex(index);
-                JPopupMenu menu = new JPopupMenu();
+                JPopupMenu menu = PopupMenuSupport.create();
                 JMenuItem item = GuiText.menuItem("plugins.logviewer.deleteone");
                 item.setEnabled(!active.test(list.getSelectedValue()));
                 item.addActionListener(event -> deleteSelected());

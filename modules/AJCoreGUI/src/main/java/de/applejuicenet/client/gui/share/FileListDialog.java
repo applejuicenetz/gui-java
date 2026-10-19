@@ -15,6 +15,7 @@ import de.applejuicenet.client.gui.controller.TableColumnSettings;
 import de.applejuicenet.client.gui.share.table.FileListTableModel;
 import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.PopupMenuSupport;
 import de.applejuicenet.client.shared.tablecellrenderer.SizeTableCellRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ public class FileListDialog extends JDialog {
     private JLabel copyAjl = new JLabel();
     private JTable table = new JTable();
     private JLabel text = new JLabel();
-    private JPopupMenu popup = new JPopupMenu();
+    private JPopupMenu popup = PopupMenuSupport.create();
     private JMenuItem remove = new JMenuItem();
     private JButton sort = new JButton();
     private final Logger logger;
