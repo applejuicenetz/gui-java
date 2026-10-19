@@ -4,92 +4,17 @@
 
 package de.applejuicenet.client.shared;
 
-import javax.swing.*;
-import javax.swing.plaf.metal.MetalToolTipUI;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import javax.swing.JToolTip;
 
-/**
- * Copyright: General Public License
- */
-public class MultiLineToolTip extends JToolTip
-{
-   public MultiLineToolTip()
-   {
-      setUI(new MultiLineToolTipUI());
-   }
-
-   public MultiLineToolTip(MetalToolTipUI toolTipUI)
-   {
-      setUI(toolTipUI);
-   }
-
-   private class MultiLineToolTipUI extends MetalToolTipUI
-   {
-      private String[] strs;
-
-      public void paint(Graphics g, JComponent c)
-      {
-         FontMetrics metrics = c.getFontMetrics(c.getFont());
-         Dimension   size = c.getSize();
-
-         g.setColor(c.getBackground());
-         g.fillRect(0, 0, size.width, size.height);
-         g.setColor(c.getForeground());
-         if(strs != null)
-         {
-            int i = 0;
-
-            for(String curS : strs)
-            {
-               g.drawString(curS, 3, (metrics.getHeight()) * (i + 1));
-               i++;
-            }
-         }
-      }
-
-      public Dimension getPreferredSize(JComponent c)
-      {
-         FontMetrics metrics = c.getFontMetrics(c.getFont());
-         String      tipText = ((JToolTip) c).getTipText();
-
-         if(tipText == null)
-         {
-            tipText = "";
-         }
-
-         StringTokenizer st       = new StringTokenizer(tipText, "|");
-         int             maxWidth = 0;
-         List<String>    v        = new ArrayList<String>();
-         String          token;
-         int             width;
-
-         while(st.hasMoreTokens())
-         {
-            token = st.nextToken();
-            width = SwingUtilities.computeStringWidth(metrics, token);
-
-            maxWidth = (maxWidth < width) ? width : maxWidth;
-            v.add(token);
-         }
-
-         int lines = v.size();
-
-         if(lines < 1)
-         {
-            strs  = null;
-            lines = 1;
-         }
-         else
-         {
-            strs = v.toArray(new String[v.size()]);
-         }
-
-         int height = metrics.getHeight() * lines;
-
-         return new Dimension(maxWidth + 6, height + 4);
-      }
-   }
+/** Theme-rendered tooltip supporting the language files' pipe-separated lines. */
+public class MultiLineToolTip extends JToolTip {
+    @Override
+    public void setTipText(String text) {
+        if (text == null) {
+            super.setTipText(null);
+            return;
+        }
+        String escaped = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+        super.setTipText("<html>" + escaped.replace("|", "<br>") + "</html>");
+    }
 }
