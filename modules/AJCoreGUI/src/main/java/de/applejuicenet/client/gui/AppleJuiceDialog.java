@@ -20,6 +20,7 @@ import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.memorymonitor.MemoryMonitorDialog;
 import de.applejuicenet.client.gui.options.IncomingDirSelectionDialog;
 import de.applejuicenet.client.gui.options.OptionsDialog;
+import de.applejuicenet.client.gui.share.ShareController;
 import de.applejuicenet.client.gui.tray.TrayLoader;
 import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
@@ -441,6 +442,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
 
         try {
             dm.startXMLCheck();
+            ShareController.showStartupShareWarning();
 
         }catch (RuntimeException e) {
             String msg = String.format("Core Version %s required!", ApplejuiceFacade.MIN_NEEDED_CORE_VERSION);

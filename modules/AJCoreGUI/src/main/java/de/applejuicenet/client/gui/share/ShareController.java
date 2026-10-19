@@ -18,6 +18,7 @@ import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
+import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.gui.controller.PositionManager;
 import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.controller.TableColumnSettings;
@@ -26,8 +27,11 @@ import de.applejuicenet.client.gui.share.tree.DirectoryNode;
 import de.applejuicenet.client.gui.share.tree.DirectoryTree;
 import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeModel;
 import de.applejuicenet.client.gui.share.tree.ShareTreeLocator;
+import de.applejuicenet.client.gui.share.tree.ShareWarningDetector;
 import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.ReleaseInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -65,6 +69,7 @@ public class ShareController extends GuiController
    private static final int       OPEN_WITH_STANDARD_PROGRAM     = 12;
    private static final int       RELEASE_INFO                   = 13;
    private static final int       FILELIST_FROM_FOLDER           = 14;
+   private static final Logger    startupLogger                   = LoggerFactory.getLogger(ShareController.class);
    private static ShareController instance                       = null;
    private SharePanel             sharePanel;
    private String                 fileSize;
@@ -385,8 +390,7 @@ public class ShareController extends GuiController
 
          entries.add(path);
          AppleJuiceClient.getAjFacade().addShareEntry(entries, SHAREMODE.SUBDIRECTORY);
-         DirectoryNode.setShareDirs(AppleJuiceClient.getAjFacade().getAJSettings().getShareDirs());
-         sharePanel.getDirectoryTree().repaint();
+         applyShareDirs(AppleJuiceClient.getAjFacade().getAJSettings().getShareDirs());
       }
    }
 
@@ -401,15 +405,13 @@ public class ShareController extends GuiController
 
          entries.add(path);
          AppleJuiceClient.getAjFacade().addShareEntry(entries, SHAREMODE.SINGLEDIRECTORY);
-         DirectoryNode.setShareDirs(AppleJuiceClient.getAjFacade().getAJSettings().getShareDirs());
-         sharePanel.getDirectoryTree().repaint();
+         applyShareDirs(AppleJuiceClient.getAjFacade().getAJSettings().getShareDirs());
       }
    }
 
    private void doNotShare()
    {
-      Set<ShareEntry> shares = AppleJuiceClient.getAjFacade().getAJSettings().getShareDirs();
-      DirectoryNode   node = (DirectoryNode) sharePanel.getDirectoryTree().getLastSelectedPathComponent();
+      DirectoryNode node = (DirectoryNode) sharePanel.getDirectoryTree().getLastSelectedPathComponent();
 
       if(node != null)
       {
@@ -418,9 +420,16 @@ public class ShareController extends GuiController
 
          entries.add(path);
          AppleJuiceClient.getAjFacade().removeShareEntry(entries);
-         DirectoryNode.setShareDirs(AppleJuiceClient.getAjFacade().getAJSettings().getShareDirs());
-         sharePanel.getDirectoryTree().repaint();
+         applyShareDirs(AppleJuiceClient.getAjFacade().getAJSettings().getShareDirs());
       }
+   }
+
+   /** Applies changed share settings to the tree: share colours, risky-share blinking and redraw. */
+   private void applyShareDirs(Set<ShareEntry> shareDirs)
+   {
+      DirectoryNode.setShareDirs(shareDirs);
+      sharePanel.getDirectoryTree().setWarningBlinking(DirectoryNode.hasWarningShares());
+      sharePanel.getDirectoryTree().repaint();
    }
 
    private void clearPriority()
@@ -614,6 +623,77 @@ public class ShareController extends GuiController
       worker.execute();
    }
 
+   /**
+    * Checks the core share settings once after startup and warns about shares that expose a
+    * whole drive, the filesystem root or the home directory.
+    */
+   public static void showStartupShareWarning()
+   {
+      new javax.swing.SwingWorker<List<ShareWarningDetector.Warning>, Void>()
+      {
+         protected List<ShareWarningDetector.Warning> doInBackground()
+         {
+            try
+            {
+               AJSettings settings = AppleJuiceClient.getAjFacade().getAJSettings();
+
+               return settings == null ? List.<ShareWarningDetector.Warning>of()
+                                    : ShareWarningDetector.findWarnings(settings.getShareDirs(),
+                                          System.getProperty("user.home"));
+            }
+            catch(RuntimeException e)
+            {
+               startupLogger.debug("Share warning check skipped", e);
+               return List.<ShareWarningDetector.Warning>of();
+            }
+         }
+
+         protected void done()
+         {
+            try
+            {
+               List<ShareWarningDetector.Warning> warnings = get();
+
+               if(!warnings.isEmpty())
+               {
+                  showShareWarning(warnings);
+               }
+            }
+            catch(Exception e)
+            {
+               startupLogger.debug("Share warning check skipped", e);
+            }
+         }
+      }.execute();
+   }
+
+   private static void showShareWarning(List<ShareWarningDetector.Warning> warnings)
+   {
+      StringBuilder message = new StringBuilder(GuiText.textOr("javagui.share.warning.intro", ""));
+
+      for(ShareWarningDetector.Warning warning : warnings)
+      {
+         message.append('\n').append("- ").append(warning.directory());
+         message.append(" (").append(reasonText(warning.reason())).append(')');
+      }
+      message.append("\n\n").append(GuiText.textOr("javagui.share.warning.footer", ""));
+      JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), message.toString(),
+            GuiText.textOr("javagui.share.warning.title", "appleJuice"), JOptionPane.WARNING_MESSAGE);
+   }
+
+   private static String reasonText(ShareWarningDetector.Reason reason)
+   {
+      switch(reason)
+      {
+         case FILESYSTEM_ROOT:
+            return GuiText.textOr("javagui.share.warning.reason.root", "");
+         case DRIVE_ROOT:
+            return GuiText.textOr("javagui.share.warning.reason.drive", "");
+         default:
+            return GuiText.textOr("javagui.share.warning.reason.home", "");
+      }
+   }
+
    public void componentSelected()
    {
       if(!SwingUtilities.isEventDispatchThread())
@@ -662,7 +742,7 @@ public class ShareController extends GuiController
                   {
                      try
                      {
-                        DirectoryNode.setShareDirs(get().getShareDirs());
+                        applyShareDirs(get().getShareDirs());
                         initShareSelectionTree(get().getIncomingDir());
                      }
                      catch(Exception e)

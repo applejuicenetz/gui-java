@@ -34,6 +34,7 @@ public class DirectoryNode
     private static final Logger logger = LoggerFactory.getLogger(DirectoryNode.class);
 
     private static Set<ShareEntry> shareDirs = new HashSet<ShareEntry>();
+    private static Set<String> warningDirs = Set.of();
     private static Map<String, Icon> icons = new HashMap<String, Icon>();
     private static boolean initialized = false;
 
@@ -62,6 +63,37 @@ public class DirectoryNode
 
     public static void setShareDirs(Set<ShareEntry> newShareDirs) {
         shareDirs = newShareDirs;
+        warningDirs = collectWarningDirs(newShareDirs);
+    }
+
+    private static Set<String> collectWarningDirs(Set<ShareEntry> entries) {
+        Set<String> result = new HashSet<String>();
+
+        for (ShareWarningDetector.Warning warning : ShareWarningDetector.findWarnings(
+                entries, System.getProperty("user.home"))) {
+            result.add(warning.directory());
+        }
+        return result;
+    }
+
+    /** True when any share exposes a whole drive, the filesystem root or the home directory. */
+    public static boolean hasWarningShares() {
+        return !warningDirs.isEmpty();
+    }
+
+    /** True when this node is one of the shares that triggered the startup warning. */
+    public boolean isWarningShare() {
+        if (directory == null) {
+            return false;
+        }
+        String nodePath = ShareWarningDetector.trimSeparators(directory.getPath());
+
+        for (String warningDir : warningDirs) {
+            if (nodePath.equalsIgnoreCase(ShareWarningDetector.trimSeparators(warningDir))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** True when this node is the incoming folder configured in the core. */
@@ -84,15 +116,7 @@ public class DirectoryNode
 
     /** Recognises root paths like {@code /}, {@code C:} or {@code C:\} without touching the filesystem. */
     static boolean isRootPath(String path) {
-        if (path == null || path.isEmpty()) {
-            return false;
-        }
-        String trimmed = trimSeparators(path);
-
-        if (trimmed.isEmpty()) {
-            return true;
-        }
-        return trimmed.length() == 2 && Character.isLetter(trimmed.charAt(0)) && trimmed.charAt(1) == ':';
+        return ShareWarningDetector.isRootPath(path);
     }
 
     private boolean isConfiguredDirectory(boolean incoming) {

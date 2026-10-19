@@ -21,6 +21,7 @@
   - SpeedGraph: feste Farben statt Farbeinstellungen; Plugins haben keine eigenen Einstellungen mehr
   - Dateiliste: Fehler beim Speichern und Kopieren werden angezeigt
   - „Mein Share“: Verzeichnisbaum öffnet beim Start den Pfad zum Incoming-Ordner und wählt ihn aus
+  - „Mein Share“: Warnung bei Freigaben von Laufwerk, `/` oder Home; betroffene Ordner blinken rot
   - Freigaben: Ordner hinzufügen sendet die richtige Anzahl an den Core
   - AJL-Export bleibt gültig bei Zeilenumbrüchen im Namen; Einträge ohne Name oder Prüfsumme entfallen
 

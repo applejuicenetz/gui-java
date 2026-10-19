@@ -19,9 +19,16 @@ public class ShareSelectionTreeCellRenderer
     /** Light matte orange blended over the tree background so it works in light and dark themes. */
     private static final Color SHARED_TINT = new Color(0xffb74d);
     private static final float TINT_STRENGTH = 0.32f;
+    /** Red marker for shares that expose a whole drive, the root or the home directory. */
+    private static final Color WARNING_TINT = new Color(0xd32f2f);
+    private static final float WARNING_STRENGTH = 0.55f;
 
     static Color shareBackground(Color background, int shareMode) {
         return blend(background, tintFor(shareMode), TINT_STRENGTH);
+    }
+
+    static Color warningBackground(Color background) {
+        return blend(background, WARNING_TINT, WARNING_STRENGTH);
     }
 
     /**
@@ -64,7 +71,9 @@ public class ShareSelectionTreeCellRenderer
 
             int shareMode = directoryNode.getShareMode();
             Color background = cellBackground(tree, isSelected);
-            Color shareBackground = shareBackground(background, shareMode);
+            Color shareBackground = warningMarkerVisible(tree, directoryNode)
+                    ? warningBackground(background)
+                    : shareBackground(background, shareMode);
 
             setOpaque(true);
             setBackground(shareBackground != null ? shareBackground : background);
@@ -101,6 +110,20 @@ public class ShareSelectionTreeCellRenderer
         // DefaultTreeCellRenderer drops ColorUIResource backgrounds to keep the LAF default,
         // so hand it a plain colour that actually shows up in the tree.
         return background instanceof ColorUIResource ? new Color(background.getRGB()) : background;
+    }
+
+    /**
+     * A risky share blinks red in the share directory tree. Plain trees (tests, previews) show
+     * the marker steadily so the colour does not depend on a running timer.
+     */
+    private static boolean warningMarkerVisible(JTree tree, DirectoryNode node) {
+        if (!node.isWarningShare()) {
+            return false;
+        }
+        if (tree instanceof DirectoryTree) {
+            return ((DirectoryTree) tree).isWarningVisible();
+        }
+        return true;
     }
 
     private static class ShareIcons implements Icon {

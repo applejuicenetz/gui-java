@@ -66,10 +66,53 @@ public class ShareSelectionTreeCellRendererTest {
         assertNotNull(ShareSelectionTreeCellRenderer.shareBackground(Color.BLACK, DirectoryNode.SHARED_WITH_SUB));
     }
 
+    @Test
+    public void riskySharesUseARedMarker() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            JTree tree = new JTree();
+            ShareSelectionTreeCellRenderer renderer = new ShareSelectionTreeCellRenderer();
+            Component cell = renderer.getTreeCellRendererComponent(tree, warningNode(), false, true, false, 0, false);
+            Color warning = cell.getBackground();
+            Color share = ShareSelectionTreeCellRenderer.shareBackground(tree.getBackground(),
+                    DirectoryNode.SHARED_WITH_SUB);
+
+            assertNotEquals("warning must differ from the orange share colour", share, warning);
+            assertTrue("warning must look red", warning.getRed() > warning.getGreen()
+                    && warning.getGreen() >= warning.getBlue());
+            assertTrue("warning must be bold", cell.getFont().isBold());
+        });
+    }
+
+    @Test
+    public void warningMarkerDependsOnTheBlinkPhaseOfTheShareTree() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            DirectoryTree tree = new DirectoryTree();
+            ShareSelectionTreeCellRenderer renderer = new ShareSelectionTreeCellRenderer();
+
+            assertTrue(tree.isWarningVisible());
+            Component cell = renderer.getTreeCellRendererComponent(tree, warningNode(), false, true, false, 0, false);
+            assertEquals(ShareSelectionTreeCellRenderer.warningBackground(tree.getBackground()), cell.getBackground());
+            tree.setWarningBlinking(false);
+            assertTrue(tree.isWarningVisible());
+        });
+    }
+
     private static DirectoryNode node(int mode) {
         return new DirectoryNode(null, null) {
             @Override public int getShareMode() {
                 return mode;
+            }
+        };
+    }
+
+    private static DirectoryNode warningNode() {
+        return new DirectoryNode(null, null) {
+            @Override public int getShareMode() {
+                return DirectoryNode.SHARED_WITH_SUB;
+            }
+
+            @Override public boolean isWarningShare() {
+                return true;
             }
         };
     }

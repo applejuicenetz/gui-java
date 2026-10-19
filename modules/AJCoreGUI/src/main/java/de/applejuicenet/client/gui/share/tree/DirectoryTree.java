@@ -14,11 +14,49 @@ import java.awt.event.MouseEvent;
 
 public class DirectoryTree
     extends JTree {
+    private static final int WARNING_BLINK_MS = 700;
+
+    private final Timer warningBlinkTimer;
+    private boolean warningBlinking = false;
+    private boolean warningVisible = true;
 
     public DirectoryTree() {
         // Tooltips only reach a component after it is registered with the ToolTipManager;
         // JComponent does that in setToolTipText, which this tree does not use.
         ToolTipManager.sharedInstance().registerComponent(this);
+        warningBlinkTimer = new Timer(WARNING_BLINK_MS, event -> {
+            warningVisible = !warningVisible;
+            repaint();
+        });
+    }
+
+    /** Starts or stops the red blinking of shares that expose a whole drive, root or home directory. */
+    public void setWarningBlinking(boolean blinking) {
+        warningBlinking = blinking;
+        warningVisible = true;
+        if (blinking) {
+            warningBlinkTimer.start();
+        } else {
+            warningBlinkTimer.stop();
+        }
+        repaint();
+    }
+
+    /** Current blink phase; the cell renderer draws the red marker only while it is true. */
+    public boolean isWarningVisible() {
+        return warningVisible;
+    }
+
+    public void addNotify() {
+        super.addNotify();
+        if (warningBlinking) {
+            warningBlinkTimer.start();
+        }
+    }
+
+    public void removeNotify() {
+        warningBlinkTimer.stop();
+        super.removeNotify();
     }
 
 	public Dimension getPreferredScrollableViewportSize() {
@@ -63,6 +101,9 @@ public class DirectoryTree
         }
         if (node.isTempDirectory()) {
             return "mainform.sharetree.temp.hint";
+        }
+        if (node.isWarningShare()) {
+            return "mainform.sharetree.warning.hint";
         }
         return null;
     }
