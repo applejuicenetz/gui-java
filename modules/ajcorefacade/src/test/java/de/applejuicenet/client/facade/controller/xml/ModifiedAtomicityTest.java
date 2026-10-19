@@ -10,6 +10,45 @@ import static org.junit.Assert.*;
 
 public class ModifiedAtomicityTest {
     @Test
+    @SuppressWarnings("unchecked")
+    public void downloadEventsCarrySnapshotsNotParserState() throws Exception {
+        ModifiedXMLHolder holder = new ModifiedXMLHolder(
+                new CoreConnectionSettingsHolder("localhost", 9851, "", true), null);
+        java.util.List<de.applejuicenet.client.facade.event.DataPropertyChangeEvent> delivered =
+                new java.util.concurrent.CopyOnWriteArrayList<>();
+        holder.getDownloadPropertyChangeInformer().addDataPropertyChangeListener(event -> {
+            if (event.isEventContainer()) {
+                delivered.addAll(java.util.Arrays.asList(event.getNestedEvents()));
+            } else {
+                delivered.add(event);
+            }
+        });
+        Method apply = ModifiedXMLHolder.class.getDeclaredMethod("applyDiff", String.class);
+        apply.setAccessible(true);
+        Field info = ModifiedXMLHolder.class.getDeclaredField("information");
+        info.setAccessible(true);
+        info.set(holder, new InformationDO());
+        Field network = ModifiedXMLHolder.class.getDeclaredField("netInfo");
+        network.setAccessible(true);
+        network.set(holder, new de.applejuicenet.client.facade.shared.NetworkInfo());
+        Method publish = ModifiedXMLHolder.class.getDeclaredMethod("publishDownloadEvents");
+        publish.setAccessible(true);
+        apply.invoke(holder, "<applejuice><download id='5' shareid='0' hash='abc' filename='first.bin' size='10' ready='0' "
+                + "temporaryfilenumber='1' status='0' targetdirectory='' powerdownload='0'/></applejuice>");
+        publish.invoke(holder);
+        var added = delivered.stream().filter(event -> "DOWNLOAD_ADDED".equals(event.getName())).findFirst().orElseThrow();
+        var sentDownload = (de.applejuicenet.client.facade.entity.Download) added.getNewValue();
+        var sentMap = (Map<Integer, Object>) added.getSource();
+        assertEquals("first.bin", sentDownload.getFilename());
+        // A listener that changes what it received must not change the parser state.
+        ((DownloadDO) sentDownload).setFilename("changed by listener");
+        sentMap.clear();
+        assertEquals("Listener changed the live download", "first.bin", holder.getDownloads().get(5).getFilename());
+        assertEquals("Listener cleared the live download map", 1, holder.getDownloads().size());
+        assertNotSame("Event exposes the live download map", holder.getDownloads(), sentMap);
+    }
+
+    @Test
     public void statusGettersDoNotExposeMutableParserState() throws Exception {
         ModifiedXMLHolder holder = new ModifiedXMLHolder(
                 new CoreConnectionSettingsHolder("localhost", 9851, "", true), null);

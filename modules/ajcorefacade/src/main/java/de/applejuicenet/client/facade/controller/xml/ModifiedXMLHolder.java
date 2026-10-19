@@ -1246,6 +1246,65 @@ public class ModifiedXMLHolder extends DefaultHandler
       }
    }
 
+   /**
+    * Delivers the collected download events to the listeners. The events are copied under the state
+    * lock, so listeners never see parser objects that the next diff modifies.
+    */
+   private void publishDownloadEvents()
+   {
+      DownloadDataPropertyChangeEvent event = null;
+
+      synchronized(stateLock)
+      {
+         if(downloadEvents.size() > 0)
+         {
+            Vector<DataPropertyChangeEvent> copies = new Vector<>();
+
+            for(DataPropertyChangeEvent current : downloadEvents)
+            {
+               copies.add(snapshotOf(current));
+            }
+
+            downloadEvents = new Vector<>();
+            event          = new DownloadDataPropertyChangeEvent(copies);
+         }
+      }
+
+      if(event != null)
+      {
+         downloadPropertyChangeInformer.propertyChanged(event);
+      }
+   }
+
+   private DataPropertyChangeEvent snapshotOf(DataPropertyChangeEvent original)
+   {
+      Object source   = snapshotValue(original.getSource());
+      Object oldValue = snapshotValue(original.getOldValue());
+      Object newValue = snapshotValue(original.getNewValue());
+
+      return new DownloadDataPropertyChangeEvent(source, original.getName(), oldValue, newValue);
+   }
+
+   @SuppressWarnings("unchecked")
+   private Object snapshotValue(Object value)
+   {
+      if(value instanceof DownloadDO)
+      {
+         return ((DownloadDO) value).snapshot();
+      }
+
+      if(value instanceof Map)
+      {
+         Map<Integer, Download> copy = new HashMap<>();
+
+         ((Map<Integer, Download>) value).forEach((key, download) -> copy.put(key,
+                                                                             download instanceof DownloadDO ? ((DownloadDO) download).snapshot() : download));
+         return copy;
+      }
+
+      return value;
+   }
+
    private void doReload()
    {
       boolean reloadSession = false;
@@ -1267,10 +1326,7 @@ public class ModifiedXMLHolder extends DefaultHandler
          {
             checkCount++;
          }
-         if(downloadEvents.size() > 0)
-         {
-            downloadPropertyChangeInformer.propertyChanged(new DownloadDataPropertyChangeEvent(downloadEvents));
-         }
+         publishDownloadEvents();
       }
       catch(WebSiteNotFoundException webSiteNotFound)
       {
