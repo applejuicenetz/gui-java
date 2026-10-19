@@ -78,6 +78,44 @@ public class ShareNode implements Node
       }
    }
 
+   private ShareNode(ShareNode parent, String directoryName, boolean directory)
+   {
+      this.parent = parent;
+      this.path   = directoryName;
+   }
+
+   /** Adds a folder without any file, so it shows up although nothing is shared below it. */
+   public void addDirectory(String directory)
+   {
+      String separator = ApplejuiceFacade.separator;
+      ShareNode node   = this;
+
+      for(String segment : directory.split(java.util.regex.Pattern.quote(separator)))
+      {
+         if(!segment.isEmpty())
+         {
+            node = node.directoryChild(segment);
+         }
+      }
+   }
+
+   private ShareNode directoryChild(String name)
+   {
+      for(Map.Entry<String, ShareNode> entry : children.entrySet())
+      {
+         if(entry.getValue().share == null && entry.getKey().equalsIgnoreCase(name))
+         {
+            return entry.getValue();
+         }
+      }
+
+      ShareNode child = new ShareNode(this, name, true);
+
+      children.put(name, child);
+      sortedChildren = null;
+      return child;
+   }
+
    public ShareNode getParent()
    {
       return parent;

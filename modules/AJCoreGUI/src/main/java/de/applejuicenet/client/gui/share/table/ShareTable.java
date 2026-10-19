@@ -21,6 +21,7 @@ public class ShareTable
     private boolean dragEnabled = false;
     private List<Share> allShares = List.of();
     private String filter = "";
+    private List<String> pinnedDirectories = List.of();
 
     public ShareTable(ShareTableModel treeTableModel) {
         super(treeTableModel, new DefaultTreeTableCellRenderer(treeTableModel));
@@ -52,6 +53,12 @@ public class ShareTable
         applyFilter(false);
     }
 
+    /** Keeps these folders in the list although they hold no file, e.g. an empty incoming folder. */
+    public void setPinnedDirectories(Collection<String> directories) {
+        pinnedDirectories = directories == null ? List.of() : new ArrayList<>(directories);
+        applyFilter(false);
+    }
+
     public void setFilter(String text) {
         String normalized = text == null ? "" : text.trim().toLowerCase(Locale.ROOT);
         if (normalized.equals(filter)) {
@@ -76,6 +83,8 @@ public class ShareTable
     }
 
     private void applyFilter(boolean expandMatches) {
+        // An empty folder cannot match a search text, so it only shows without a filter.
+        ((ShareTableModel) getTree().getModel()).setPinnedDirectories(filter.isEmpty() ? pinnedDirectories : List.of());
         ShareTreeState.refresh(this, filterShares(allShares, filter));
         if (expandMatches && !filter.isEmpty()) {
             JTree tree = getTree();

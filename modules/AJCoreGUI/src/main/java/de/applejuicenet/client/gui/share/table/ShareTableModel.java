@@ -10,7 +10,9 @@ import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import de.applejuicenet.client.facade.entity.Share;
 
 /**
@@ -32,12 +34,24 @@ public class ShareTableModel extends AbstractTreeTableModel
       super(rootNode);
    }
 
+   private List<String> pinnedDirectories = List.of();
+
+   /** Folders that are listed even when they contain no shared file. */
+   public void setPinnedDirectories(Collection<String> directories)
+   {
+      pinnedDirectories = new ArrayList<>(directories);
+   }
+
    public void setShares(Collection<Share> shares)
    {
       ShareNode newRoot = new ShareNode(null, null);
       for(Share share : shares)
       {
          newRoot.addChild(share);
+      }
+      for(String directory : pinnedDirectories)
+      {
+         newRoot.addDirectory(directory);
       }
       root = newRoot;
       fireTreeStructureChanged(this, new Object[]{root}, null, null);

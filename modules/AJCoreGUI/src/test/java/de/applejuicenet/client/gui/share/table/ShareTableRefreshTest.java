@@ -99,6 +99,38 @@ public class ShareTableRefreshTest {
     }
 
     @Test
+    public void pinnedEmptyDirectoryStaysListedAndKeepsItsFiles() {
+        String oldSeparator = ApplejuiceFacade.separator;
+        ApplejuiceFacade.separator = "/";
+        try {
+            ShareTableModel model = new ShareTableModel(new ShareNode(null, null));
+            model.setPinnedDirectories(List.of("/srv/AJ/incoming"));
+
+            model.setShares(Collections.emptyList());
+            ShareNode folder = pinned(model, "srv", "AJ", "incoming");
+            assertFalse(folder.isLeaf());
+            assertEquals(0, model.getChildCount(folder));
+
+            // a file arrives: same folder node path (case-insensitive), no duplicate folder
+            model.setShares(Collections.singletonList(share(1, "/srv/aj/incoming/file.bin")));
+            assertEquals(1, model.getChildCount(model.getRoot()));
+            assertEquals(1, model.getChildCount(pinned(model, "srv", "aj", "incoming")));
+        } finally {
+            ApplejuiceFacade.separator = oldSeparator;
+        }
+    }
+
+    private static ShareNode pinned(ShareTableModel model, String... segments) {
+        ShareNode node = model.getRootNode();
+        for (String segment : segments) {
+            assertEquals(1, model.getChildCount(node));
+            node = (ShareNode) model.getChild(node, 0);
+            assertTrue(segment.equalsIgnoreCase(node.toString()));
+        }
+        return node;
+    }
+
+    @Test
     public void addingDirectoryInvalidatesSortedChildren() {
         String oldSeparator = ApplejuiceFacade.separator;
         ApplejuiceFacade.separator = "/";

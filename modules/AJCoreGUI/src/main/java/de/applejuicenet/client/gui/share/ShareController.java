@@ -742,6 +742,9 @@ public class ShareController extends GuiController
                      try
                      {
                         applyShareDirs(get().getShareDirs());
+                        // The incoming folder is empty until a download finishes, but must be listed anyway.
+                        sharePanel.getShareTable().setPinnedDirectories(
+                              get().getIncomingDir() == null ? List.of() : List.of(get().getIncomingDir()));
                         initShareSelectionTree(get().getIncomingDir());
                      }
                      catch(Exception e)
