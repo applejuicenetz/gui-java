@@ -31,7 +31,7 @@ import java.util.Vector;
  */
 public class ODPluginPanel extends JPanel implements OptionsRegister
 {
-   private JList            pluginList;
+   private JList<PluginContainer> pluginList;
    private JTextArea        description            = new JTextArea();
    private JLabel           label1                  = new JLabel();
    private AppleJuiceDialog theApp;
@@ -77,7 +77,7 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
       description.setEditable(false);
       description.setLineWrap(true);
       description.setWrapStyleWord(true);
-      pluginList = new JList(v);
+      pluginList = new JList<>(v);
       pluginList.setPreferredSize(new Dimension(190, pluginList.getPreferredSize().height));
       pluginList.addListSelectionListener(e -> pluginList_valueChanged(e));
       setLayout(new BorderLayout());

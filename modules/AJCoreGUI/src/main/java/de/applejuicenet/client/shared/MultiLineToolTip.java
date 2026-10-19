@@ -91,7 +91,7 @@ public class MultiLineToolTip extends JToolTip
          }
          else
          {
-            strs = (String[]) v.toArray(new String[v.size()]);
+            strs = v.toArray(new String[v.size()]);
          }
 
          int height = metrics.getHeight() * lines;

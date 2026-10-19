@@ -26,7 +26,7 @@ public class IncomingDirSelectionDialog extends JDialog
 {
    private String[]    selectionValues;
    private JButton   close        = new JButton();
-   private JComboBox incomingDirs      = new JComboBox();
+   private JComboBox<String> incomingDirs = new JComboBox<>();
    private boolean     somethingSelected = false;
 
    public IncomingDirSelectionDialog(JFrame parentDialog, String[] selectionValues, String selected)

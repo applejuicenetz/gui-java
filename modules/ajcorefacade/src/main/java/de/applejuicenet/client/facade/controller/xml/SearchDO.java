@@ -201,7 +201,7 @@ class SearchDO extends Search
       {
          if(curSearchEntry.getId() == id)
          {
-            return (SearchEntry) curSearchEntry;
+            return curSearchEntry;
          }
       }
 
@@ -407,7 +407,7 @@ class SearchDO extends Search
 
       public FileName[] getFileNames()
       {
-         return (FileName[]) fileNames.toArray(new FileName[fileNames.size()]);
+         return fileNames.toArray(new FileName[fileNames.size()]);
       }
 
       class FileNameDO implements FileName

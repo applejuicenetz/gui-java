@@ -265,7 +265,7 @@ public class ShareController extends GuiController
       {
          Share share = ((ShareNode) obj[0]).getShare();
 
-         ReleaseInfo.handle(share.getShortfilename(), share.getCheckSum(), (long) share.getSize());
+         ReleaseInfo.handle(share.getShortfilename(), share.getCheckSum(), share.getSize());
       }
    }
 

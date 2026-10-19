@@ -305,7 +305,7 @@ public class DownloadController extends GuiController {
 
         Download curDownload = selectedItems[0];
 
-        ReleaseInfo.handle(curDownload.getFilename(), curDownload.getHash(), (long) curDownload.getSize());
+        ReleaseInfo.handle(curDownload.getFilename(), curDownload.getHash(), curDownload.getSize());
     }
 
     private void headerDownloadsDragged() {
@@ -820,8 +820,8 @@ public class DownloadController extends GuiController {
                 columnsDownloadSources[1].setMinWidth(statusMinWidth);
                 TableColumnSettings.installCompact(downloadPanel.getDownloadTable(), "download", columnsDownload);
                 TableColumnSettings.installCompact(downloadPanel.getDownloadSourceTable(), "downloadsources", columnsDownloadSources);
-                int loc = (int) ((downloadPanel.getSplitPane().getHeight() - downloadPanel.getSplitPane().getDividerSize() -
-                        downloadPanel.getPowerDownloadPanel().getPreferredSize().height));
+                int loc = downloadPanel.getSplitPane().getHeight() - downloadPanel.getSplitPane().getDividerSize() -
+                        downloadPanel.getPowerDownloadPanel().getPreferredSize().height;
 
                 downloadPanel.getSplitPane().setDividerLocation(loc);
                 if (null != sortDownloads) {

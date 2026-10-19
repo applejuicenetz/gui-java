@@ -137,7 +137,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         connectingText.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 int selected = serverTable.getSelectedRow();
-                Server server = (Server) ((ServerTableModel) serverTable.getModel()).getRow(selected);
+                Server server = ((ServerTableModel) serverTable.getModel()).getRow(selected);
                 ApplejuiceFacade af = AppleJuiceClient.getAjFacade();
 
                 if (af.getInformation().getConnectionStatus() == Information.CONNECTED) {

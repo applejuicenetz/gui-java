@@ -192,7 +192,7 @@ public class DirectoryNode
         for (int i = 0; i < n - 1; i++) {
             k = i;
             for (int j = i + 1; j < n; j++) {
-                if (!((DirectoryNode) children.get(j)).getDirectory().isFileSystem()) {
+                if (!children.get(j).getDirectory().isFileSystem()) {
                     continue;
                 }
                 if (children.get(j).toString().compareToIgnoreCase(children.get(

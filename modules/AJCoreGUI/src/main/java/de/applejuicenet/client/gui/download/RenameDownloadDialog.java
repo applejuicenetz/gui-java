@@ -33,7 +33,7 @@ public class RenameDownloadDialog extends JDialog
 {
    private Download    download;
    private JButton     close        = new JButton();
-   private JComboBox possibleNames     = new JComboBox();
+   private JComboBox<String> possibleNames = new JComboBox<>();
    private boolean     somethingSelected = false;
 
    public RenameDownloadDialog(JFrame parentDialog, Download selectedDownload)

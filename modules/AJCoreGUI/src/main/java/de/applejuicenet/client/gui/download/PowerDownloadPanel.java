@@ -341,7 +341,7 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
             ratioValue = 2.2f;
             btnInactive.setSelected(true);
         } else {
-            float value = (float) ((float) (powerdownloadValue + 10) / 10);
+            float value = (float) (powerdownloadValue + 10) / 10;
 
             ratio.setText(Float.toString(value));
             ratioValue = value;

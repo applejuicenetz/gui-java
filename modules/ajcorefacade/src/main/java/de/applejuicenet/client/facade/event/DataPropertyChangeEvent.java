@@ -25,7 +25,7 @@ public abstract class DataPropertyChangeEvent
 
    public DataPropertyChangeEvent(Vector<DataPropertyChangeEvent> dataPropertyChangeEvents)
    {
-      events = (DataPropertyChangeEvent[]) dataPropertyChangeEvents.toArray(new DataPropertyChangeEvent[dataPropertyChangeEvents.size()]);
+      events = dataPropertyChangeEvents.toArray(new DataPropertyChangeEvent[dataPropertyChangeEvents.size()]);
       source   = null;
       name     = null;
       oldValue = null;

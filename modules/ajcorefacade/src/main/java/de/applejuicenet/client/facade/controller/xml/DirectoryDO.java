@@ -87,7 +87,7 @@ class DirectoryDO extends Directory {
 		if (children == null) {
 			return null;
 		}
-		return (Directory[]) children
+		return children
 				.toArray(new Directory[children.size()]);
 	}
 }

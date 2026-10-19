@@ -43,7 +43,7 @@ public class QuickConnectionSettingsDialog extends JDialog
    private JButton              ok                 = new JButton("OK");
    private JButton              cancel          = GuiText.button("javagui.quickconnect.cancel");
    private JCheckBox            cmbNeverShowAgain = new JCheckBox();
-   private JComboBox            connectionList    = new JComboBox();
+   private JComboBox<ConnectionSettings> connectionList = new JComboBox<>();
    private Logger logger;
    private boolean              dirty              = false;
    private int                  result = 0;

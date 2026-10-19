@@ -29,8 +29,8 @@ public class SettingsDialog extends JDialog implements ActionListener {
     private JTextField tfPowerdownloadCount = new JTextField();
     private JTextField tfSleepTime = new JTextField();
     private JButton btnOk = new JButton("Ok");
-    private JList listSorting = new JList();
-    private DefaultListModel listSortingModel = new DefaultListModel();
+    private JList<String> listSorting = new JList<>();
+    private DefaultListModel<String> listSortingModel = new DefaultListModel<>();
     private JLabel btnUp;
     private JLabel btnDown;
 
@@ -145,8 +145,8 @@ public class SettingsDialog extends JDialog implements ActionListener {
     }
 
     private void moveListEntry(int from, int to) {
-        Object objFrom = listSortingModel.getElementAt(from);
-        Object objTo = listSortingModel.getElementAt(to);
+        String objFrom = listSortingModel.getElementAt(from);
+        String objTo = listSortingModel.getElementAt(to);
         listSortingModel.setElementAt(objFrom, to);
         listSortingModel.setElementAt(objTo, from);
         listSorting.setSelectedIndex(to);
@@ -227,7 +227,7 @@ public class SettingsDialog extends JDialog implements ActionListener {
     public Order[] getOrder() {
         Order[] order = new Order[4];
         for (int i = 0; i < listSortingModel.size(); i++) {
-            String cur = (String) listSortingModel.elementAt(i);
+            String cur = listSortingModel.elementAt(i);
             if (cur == PERCENT_LOADED) {
                 order[i] = Order.PERCENT_LOADED;
             } else if (cur == SIZE) {

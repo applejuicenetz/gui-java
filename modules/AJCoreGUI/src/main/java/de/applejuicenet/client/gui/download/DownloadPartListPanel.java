@@ -75,7 +75,7 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
 
     public void paintComponent(Graphics g) {
         if (partList != null && image != null) {
-            if (height != (int) getSize().height || width != (int) getSize().width) {
+            if (height != getSize().height || width != getSize().width) {
                 setPartList(partList, id);
             }
 

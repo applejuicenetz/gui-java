@@ -91,7 +91,7 @@ public class NetworkServerXMLHolder extends DefaultHandler
 
          links.clear();
          xr.parse(new InputSource(new StringReader(xmlData)));
-         return (String[]) links.toArray(new String[links.size()]);
+         return links.toArray(new String[links.size()]);
       }
       catch(Exception e)
       {

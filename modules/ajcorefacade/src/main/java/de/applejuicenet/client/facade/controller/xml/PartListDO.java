@@ -65,7 +65,7 @@ class PartListDO extends PartList
 
    public PartDO[] getParts()
    {
-      return (PartDO[]) parts.toArray(new PartDO[parts.size()]);
+      return parts.toArray(new PartDO[parts.size()]);
    }
 
    public void setSize(long size)

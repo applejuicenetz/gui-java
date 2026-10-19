@@ -22,7 +22,7 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
    private JLabel       lblLink          = new JLabel();
    private JTextField txtDownloadLink  = new JTextField();
    private JButton      btnStartDownload = new JButton();
-   private JComboBox  cmbTargetDir     = new JComboBox();
+   private JComboBox<String> cmbTargetDir = new JComboBox<>();
    private JLabel       lblTargetDir     = new JLabel();
    private java.util.function.Predicate<String> linkRule;
 
@@ -172,7 +172,7 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
       return btnStartDownload;
    }
 
-   public JComboBox getCmbTargetDir()
+   public JComboBox<String> getCmbTargetDir()
    {
       return cmbTargetDir;
    }

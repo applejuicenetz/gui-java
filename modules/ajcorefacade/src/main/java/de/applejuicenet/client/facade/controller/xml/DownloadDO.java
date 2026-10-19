@@ -132,7 +132,7 @@ class DownloadDO implements Download, Cloneable
 
       synchronized(sourceMap)
       {
-         sources = (DownloadSource[]) sourceMap.values().toArray(new DownloadSource[sourceMap.size()]);
+         sources = sourceMap.values().toArray(new DownloadSource[sourceMap.size()]);
       }
 
       return sources;

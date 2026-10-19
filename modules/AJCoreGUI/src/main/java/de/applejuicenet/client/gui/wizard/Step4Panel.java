@@ -22,7 +22,7 @@ public class Step4Panel extends WizardPanel
 {
    private JTextArea label1         = new JTextArea();
    private JTextArea label2         = new JTextArea();
-   private JComboBox connectionType = new JComboBox();
+   private JComboBox<ConnectionKind> connectionType = new JComboBox<>();
 
    public Step4Panel()
    {

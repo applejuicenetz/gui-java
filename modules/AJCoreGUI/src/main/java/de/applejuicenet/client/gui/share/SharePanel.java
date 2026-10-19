@@ -47,7 +47,7 @@ public class SharePanel extends TklPanel {
     private JButton stopShareCheck = new JButton();
     private JButton applyPriority = new JButton();
     private JButton clearPriority = new JButton();
-    private JComboBox cmbPriority = new JComboBox();
+    private JComboBox<Integer> cmbPriority = new JComboBox<>();
     private JTextField searchField = new JTextField(16);
     private AJSettings ajSettings;
     private ShareTable shareTable;
@@ -193,7 +193,7 @@ public class SharePanel extends TklPanel {
         return files;
     }
 
-    public JComboBox getCmbPriority() {
+    public JComboBox<Integer> getCmbPriority() {
         return cmbPriority;
     }
 

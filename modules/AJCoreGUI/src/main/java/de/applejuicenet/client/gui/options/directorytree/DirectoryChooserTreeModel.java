@@ -57,7 +57,7 @@ public class DirectoryChooserTreeModel implements TreeModel
    {
       for(int i = 0; i < listener.size(); i++)
       {
-         TreeModelListener ml = (TreeModelListener) listener.get(i);
+         TreeModelListener ml = listener.get(i);
 
          ml.treeNodesChanged(new TreeModelEvent(obj, path));
       }
@@ -67,7 +67,7 @@ public class DirectoryChooserTreeModel implements TreeModel
    {
       for(int i = 0; i < listener.size(); i++)
       {
-         TreeModelListener ml = (TreeModelListener) listener.get(i);
+         TreeModelListener ml = listener.get(i);
 
          ml.treeStructureChanged(new TreeModelEvent(this, new TreePath(root)));
       }
@@ -77,7 +77,7 @@ public class DirectoryChooserTreeModel implements TreeModel
    {
       for(int i = 0; i < listener.size(); i++)
       {
-         TreeModelListener ml = (TreeModelListener) listener.get(i);
+         TreeModelListener ml = listener.get(i);
 
          ml.treeNodesInserted(new TreeModelEvent(obj, path, new int[] {ind}, new Object[] {child}));
       }

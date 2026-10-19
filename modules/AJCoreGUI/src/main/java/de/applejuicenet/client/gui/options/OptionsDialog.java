@@ -225,7 +225,7 @@ public class OptionsDialog extends JDialog
    {
       for(int i = 0; i < optionPanels.length; i++)
       {
-         ((OptionsRegister) optionPanels[i]).reloadSettings();
+         optionPanels[i].reloadSettings();
       }
    }
 

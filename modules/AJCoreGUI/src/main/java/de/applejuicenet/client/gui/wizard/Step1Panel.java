@@ -25,7 +25,7 @@ import java.io.File;
 public class Step1Panel extends WizardPanel
 {
    private JTextArea explanation = new JTextArea();
-   private JComboBox languages = new JComboBox();
+   private JComboBox<String> languages = new JComboBox<>();
 
    public Step1Panel()
    {
