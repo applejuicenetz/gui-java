@@ -195,6 +195,7 @@ public class AutomaticPowerdownload extends Thread {
     }
 
     private void setPowerDownload(List<Download> downloads) throws IllegalArgumentException {
+        if (isInterrupted() || paused) return;
         int value = powerdownloadValue;
 
         applejuiceFacade.setPowerDownload(downloads, Integer.valueOf(value));

@@ -110,6 +110,38 @@ public class AutomaticPowerdownloadThreadingTest {
         }
     }
 
+    @Test(timeout = 10000)
+    public void stopDuringSnapshotDoesNotSendPowerCommand() throws Exception {
+        CountDownLatch entered = new CountDownLatch(1);
+        AtomicBoolean powerSent = new AtomicBoolean();
+        var constructor = Class.forName("de.applejuicenet.client.facade.controller.xml.DownloadDO")
+                .getDeclaredConstructor(int.class);
+        constructor.setAccessible(true);
+        var download = (de.applejuicenet.client.facade.entity.Download) constructor.newInstance(1);
+        var facade = new de.applejuicenet.client.facade.ApplejuiceFacade(
+                new de.applejuicenet.client.facade.controller.CoreConnectionSettingsHolder("localhost", 9851, "", true)) {
+            @Override public java.util.Map<Integer, de.applejuicenet.client.facade.entity.Download> getDownloadsSnapshot() {
+                entered.countDown();
+                try { new CountDownLatch(1).await(); }
+                catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+                return java.util.Map.of(1, download);
+            }
+            @Override public void setPowerDownload(java.util.List<de.applejuicenet.client.facade.entity.Download> downloads, Integer power) {
+                powerSent.set(true);
+            }
+        };
+        AutomaticPowerdownload worker = new AutomaticPowerdownload(facade);
+        worker.start();
+        try {
+            assertTrue(entered.await(2, TimeUnit.SECONDS));
+        } finally {
+            worker.interrupt();
+            worker.join(2000);
+        }
+        assertFalse("Worker did not stop", worker.isAlive());
+        assertFalse("Stopped policy sent power command after snapshot", powerSent.get());
+    }
+
     private static void language() {
         LanguageSelector.getInstance(Paths.get("../../resources/language/deutsch.properties")
                 .toAbsolutePath().normalize().toString());
