@@ -409,17 +409,16 @@ public class ModifiedXMLHolder extends DefaultHandler
       }
    }
 
-   @SuppressWarnings("unchecked")
-   private void checkNetworkMap(NetworkInfo netInfo, Map userAttributes)
+   private void checkNetworkMap(NetworkInfo netInfo, Map<String, String> userAttributes)
    {
-      netInfo.setAjTotalUsers(Long.parseLong((String) userAttributes.get(StringConstants.USERS)));
-      netInfo.setAjFileCount(Long.parseLong((String) userAttributes.get(StringConstants.FILES)));
-      netInfo.setAjTotalShare((String) userAttributes.get(StringConstants.FILESIZE));
-      netInfo.setFirewalled(((String) userAttributes.get(StringConstants.FIREWALLED)).equals(StringConstants.TRUE));
-      netInfo.setExternalIP((String) userAttributes.get(StringConstants.IP));
-      netInfo.setTryConnectToServer(Integer.parseInt((String) userAttributes.get(StringConstants.TRYCONNECTTOSERVER)));
-      netInfo.setConnectedWithServerId(Integer.parseInt((String) userAttributes.get(StringConstants.CONNECTEDWITHSERVERID)));
-      netInfo.setConnectionTime(Long.parseLong((String) userAttributes.get(StringConstants.CONNECTEDSINCE)));
+      netInfo.setAjTotalUsers(Long.parseLong(userAttributes.get(StringConstants.USERS)));
+      netInfo.setAjFileCount(Long.parseLong(userAttributes.get(StringConstants.FILES)));
+      netInfo.setAjTotalShare(userAttributes.get(StringConstants.FILESIZE));
+      netInfo.setFirewalled((userAttributes.get(StringConstants.FIREWALLED)).equals(StringConstants.TRUE));
+      netInfo.setExternalIP(userAttributes.get(StringConstants.IP));
+      netInfo.setTryConnectToServer(Integer.parseInt(userAttributes.get(StringConstants.TRYCONNECTTOSERVER)));
+      netInfo.setConnectedWithServerId(Integer.parseInt(userAttributes.get(StringConstants.CONNECTEDWITHSERVERID)));
+      netInfo.setConnectionTime(Long.parseLong(userAttributes.get(StringConstants.CONNECTEDSINCE)));
    }
 
    private void checkNetworkInfoAttributes(Attributes attr)
@@ -441,14 +440,13 @@ public class ModifiedXMLHolder extends DefaultHandler
       attributes.clear();
    }
 
-   @SuppressWarnings("unchecked")
-   private void checkServerMap(ServerDO serverDO, Map userAttributes)
+   private void checkServerMap(ServerDO serverDO, Map<String, String> userAttributes)
    {
-      serverDO.setName((String) userAttributes.get(StringConstants.NAME));
-      serverDO.setHost((String) userAttributes.get(StringConstants.HOST));
-      serverDO.setTimeLastSeen(Long.parseLong((String) userAttributes.get(StringConstants.LAST_SEEN)));
-      serverDO.setPort((String) userAttributes.get(StringConstants.PORT));
-      serverDO.setAttempts(Integer.parseInt((String) userAttributes.get(StringConstants.CONNECTIONTRY)));
+      serverDO.setName(userAttributes.get(StringConstants.NAME));
+      serverDO.setHost(userAttributes.get(StringConstants.HOST));
+      serverDO.setTimeLastSeen(Long.parseLong(userAttributes.get(StringConstants.LAST_SEEN)));
+      serverDO.setPort(userAttributes.get(StringConstants.PORT));
+      serverDO.setAttempts(Integer.parseInt(userAttributes.get(StringConstants.CONNECTIONTRY)));
    }
 
    private void checkServerAttributes(Attributes attr)
@@ -478,22 +476,21 @@ public class ModifiedXMLHolder extends DefaultHandler
       attributes.clear();
    }
 
-   @SuppressWarnings("unchecked")
-   private void checkUploadMap(UploadDO uploadDO, Map userAttributes)
+   private void checkUploadMap(UploadDO uploadDO, Map<String, String> userAttributes)
    {
-      uploadDO.setShareFileID(Integer.parseInt((String) userAttributes.get(StringConstants.SHAREID)));
-      uploadDO.setStatus(Integer.parseInt((String) userAttributes.get(StringConstants.STATUS)));
-      uploadDO.setDirectState(Integer.parseInt((String) userAttributes.get(StringConstants.DIRECTSTATE)));
-      uploadDO.setPriority(Integer.parseInt((String) userAttributes.get(StringConstants.PRIORITY)));
-      uploadDO.setUploadFrom(Long.parseLong((String) userAttributes.get(StringConstants.UPLOADFROM)));
-      uploadDO.setActualUploadPosition(Long.parseLong((String) userAttributes.get(StringConstants.ACTUALUPLOADPOSITION)));
-      uploadDO.setUploadTo(Long.parseLong((String) userAttributes.get(StringConstants.UPLOADTO)));
-      uploadDO.setSpeed(Integer.parseInt((String) userAttributes.get(StringConstants.SPEED)));
-      uploadDO.setNick((String) userAttributes.get(StringConstants.NICK));
-      uploadDO.setLastConnection(Long.parseLong((String) userAttributes.get(StringConstants.LASTCONNECTION)));
-      uploadDO.setLoaded(Double.parseDouble((String) userAttributes.get(StringConstants.LOADED)));
-      String versionNr = (String) userAttributes.get(StringConstants.VERSION);
-      int    os = Integer.parseInt((String) userAttributes.get(StringConstants.OPERATINGSYSTEM));
+      uploadDO.setShareFileID(Integer.parseInt(userAttributes.get(StringConstants.SHAREID)));
+      uploadDO.setStatus(Integer.parseInt(userAttributes.get(StringConstants.STATUS)));
+      uploadDO.setDirectState(Integer.parseInt(userAttributes.get(StringConstants.DIRECTSTATE)));
+      uploadDO.setPriority(Integer.parseInt(userAttributes.get(StringConstants.PRIORITY)));
+      uploadDO.setUploadFrom(Long.parseLong(userAttributes.get(StringConstants.UPLOADFROM)));
+      uploadDO.setActualUploadPosition(Long.parseLong(userAttributes.get(StringConstants.ACTUALUPLOADPOSITION)));
+      uploadDO.setUploadTo(Long.parseLong(userAttributes.get(StringConstants.UPLOADTO)));
+      uploadDO.setSpeed(Integer.parseInt(userAttributes.get(StringConstants.SPEED)));
+      uploadDO.setNick(userAttributes.get(StringConstants.NICK));
+      uploadDO.setLastConnection(Long.parseLong(userAttributes.get(StringConstants.LASTCONNECTION)));
+      uploadDO.setLoaded(Double.parseDouble(userAttributes.get(StringConstants.LOADED)));
+      String versionNr = userAttributes.get(StringConstants.VERSION);
+      int    os = Integer.parseInt(userAttributes.get(StringConstants.OPERATINGSYSTEM));
 
       if(!versionNr.equals(StringConstants._0_0_0_0) && os != -1)
       {
@@ -539,23 +536,22 @@ public class ModifiedXMLHolder extends DefaultHandler
       }
    }
 
-   @SuppressWarnings("unchecked")
-   private void checkUserMap(DownloadSourceDO downloadSourceDO, Map userAttributes)
+   private void checkUserMap(DownloadSourceDO downloadSourceDO, Map<String, String> userAttributes)
    {
-      downloadSourceDO.setStatus(Integer.parseInt((String) userAttributes.get(StringConstants.STATUS)));
-      downloadSourceDO.setDirectstate(Integer.parseInt((String) userAttributes.get(StringConstants.DIRECTSTATE)));
-      downloadSourceDO.setDownloadFrom(Long.parseLong((String) userAttributes.get(StringConstants.DOWNLOADFROM)));
-      downloadSourceDO.setDownloadTo(Long.parseLong((String) userAttributes.get(StringConstants.DOWNLOADTO)));
-      downloadSourceDO.setActualDownloadPosition(Long.parseLong((String) userAttributes.get(StringConstants.ACTUALDOWNLOADPOSITION)));
-      downloadSourceDO.setSpeed(Integer.parseInt((String) userAttributes.get(StringConstants.SPEED)));
-      downloadSourceDO.setQueuePosition(Integer.parseInt((String) userAttributes.get(StringConstants.QUEUEPOSITION)));
-      downloadSourceDO.setPowerDownload(Integer.parseInt((String) userAttributes.get(StringConstants.POWERDOWNLOAD)));
-      downloadSourceDO.setFilename((String) userAttributes.get(StringConstants.FILENAME));
-      downloadSourceDO.setNickname((String) userAttributes.get(StringConstants.NICKNAME));
-      String versionNr = (String) userAttributes.get(StringConstants.VERSION);
+      downloadSourceDO.setStatus(Integer.parseInt(userAttributes.get(StringConstants.STATUS)));
+      downloadSourceDO.setDirectstate(Integer.parseInt(userAttributes.get(StringConstants.DIRECTSTATE)));
+      downloadSourceDO.setDownloadFrom(Long.parseLong(userAttributes.get(StringConstants.DOWNLOADFROM)));
+      downloadSourceDO.setDownloadTo(Long.parseLong(userAttributes.get(StringConstants.DOWNLOADTO)));
+      downloadSourceDO.setActualDownloadPosition(Long.parseLong(userAttributes.get(StringConstants.ACTUALDOWNLOADPOSITION)));
+      downloadSourceDO.setSpeed(Integer.parseInt(userAttributes.get(StringConstants.SPEED)));
+      downloadSourceDO.setQueuePosition(Integer.parseInt(userAttributes.get(StringConstants.QUEUEPOSITION)));
+      downloadSourceDO.setPowerDownload(Integer.parseInt(userAttributes.get(StringConstants.POWERDOWNLOAD)));
+      downloadSourceDO.setFilename(userAttributes.get(StringConstants.FILENAME));
+      downloadSourceDO.setNickname(userAttributes.get(StringConstants.NICKNAME));
+      String versionNr = userAttributes.get(StringConstants.VERSION);
 
-      downloadSourceDO.setOrigin(Integer.parseInt((String) userAttributes.get(StringConstants.SOURCE)));
-      int os = Integer.parseInt((String) userAttributes.get(StringConstants.OPERATINGSYSTEM));
+      downloadSourceDO.setOrigin(Integer.parseInt(userAttributes.get(StringConstants.SOURCE)));
+      int os = Integer.parseInt(userAttributes.get(StringConstants.OPERATINGSYSTEM));
 
       if(!versionNr.equals(StringConstants._0_0_0_0) && os != -1)
       {
@@ -603,24 +599,23 @@ public class ModifiedXMLHolder extends DefaultHandler
       downloadSourceEvent = true;
    }
 
-   @SuppressWarnings("unchecked")
-   private void checkDownloadMap(DownloadDO downloadDO, Map userAttributes, boolean newDownload)
+   private void checkDownloadMap(DownloadDO downloadDO, Map<String, String> userAttributes, boolean newDownload)
    {
-      downloadDO.setShareId(Integer.parseInt((String) userAttributes.get(StringConstants.SHAREID)));
-      downloadDO.setSize(Long.parseLong((String) userAttributes.get(StringConstants.SIZE)));
-      downloadDO.setHash((String) userAttributes.get(StringConstants.HASH));
-      downloadDO.setTemporaryFileNumber(Integer.parseInt((String) userAttributes.get(StringConstants.TEMPORARYFILENUMBER)));
+      downloadDO.setShareId(Integer.parseInt(userAttributes.get(StringConstants.SHAREID)));
+      downloadDO.setSize(Long.parseLong(userAttributes.get(StringConstants.SIZE)));
+      downloadDO.setHash(userAttributes.get(StringConstants.HASH));
+      downloadDO.setTemporaryFileNumber(Integer.parseInt(userAttributes.get(StringConstants.TEMPORARYFILENUMBER)));
       if(newDownload)
       {
-         downloadDO.setStatus(Integer.parseInt((String) userAttributes.get(StringConstants.STATUS)));
-         downloadDO.setFilename((String) userAttributes.get(StringConstants.FILENAME));
-         downloadDO.setTargetDirectory((String) userAttributes.get(StringConstants.TARGETDIRECTORY));
-         downloadDO.setPowerDownload(Integer.parseInt((String) userAttributes.get(StringConstants.POWERDOWNLOAD)));
-         downloadDO.setReady(Long.parseLong((String) userAttributes.get(StringConstants.READY)));
+         downloadDO.setStatus(Integer.parseInt(userAttributes.get(StringConstants.STATUS)));
+         downloadDO.setFilename(userAttributes.get(StringConstants.FILENAME));
+         downloadDO.setTargetDirectory(userAttributes.get(StringConstants.TARGETDIRECTORY));
+         downloadDO.setPowerDownload(Integer.parseInt(userAttributes.get(StringConstants.POWERDOWNLOAD)));
+         downloadDO.setReady(Long.parseLong(userAttributes.get(StringConstants.READY)));
       }
       else
       {
-         Integer tmpInt = Integer.parseInt((String) userAttributes.get(StringConstants.STATUS));
+         Integer tmpInt = Integer.parseInt(userAttributes.get(StringConstants.STATUS));
          Integer oldInt;
 
          if(tmpInt != downloadDO.getStatus())
@@ -631,7 +626,7 @@ public class ModifiedXMLHolder extends DefaultHandler
                                                                    oldInt, tmpInt));
          }
 
-         String tmpString = (String) userAttributes.get(StringConstants.FILENAME);
+         String tmpString = userAttributes.get(StringConstants.FILENAME);
          String oldText = downloadDO.getFilename();
 
          if(oldText == null || !oldText.equals(tmpString))
@@ -641,7 +636,7 @@ public class ModifiedXMLHolder extends DefaultHandler
                                                                    oldText, tmpString));
          }
 
-         tmpString = (String) userAttributes.get(StringConstants.TARGETDIRECTORY);
+         tmpString = userAttributes.get(StringConstants.TARGETDIRECTORY);
          oldText   = downloadDO.getTargetDirectory();
          if(oldText == null || !oldText.equals(tmpString))
          {
@@ -650,7 +645,7 @@ public class ModifiedXMLHolder extends DefaultHandler
                                                                    oldText, tmpString));
          }
 
-         tmpInt = Integer.parseInt((String) userAttributes.get(StringConstants.POWERDOWNLOAD));
+         tmpInt = Integer.parseInt(userAttributes.get(StringConstants.POWERDOWNLOAD));
          if(tmpInt != downloadDO.getPowerDownload())
          {
             oldInt = downloadDO.getPowerDownload();
@@ -659,7 +654,7 @@ public class ModifiedXMLHolder extends DefaultHandler
                                                                    oldInt, tmpInt));
          }
 
-         long tmpReady = Long.parseLong((String) userAttributes.get(StringConstants.READY));
+         long tmpReady = Long.parseLong(userAttributes.get(StringConstants.READY));
 
          if(tmpReady != downloadDO.getReady())
          {
@@ -776,14 +771,13 @@ public class ModifiedXMLHolder extends DefaultHandler
       }
    }
 
-   @SuppressWarnings("unchecked")
-   private void checkSearchMap(SearchDO aSearch, Map userAttributes)
+   private void checkSearchMap(SearchDO aSearch, Map<String, String> userAttributes)
    {
-      aSearch.setSearchText((String) userAttributes.get(StringConstants.SEARCHTEXT));
-      aSearch.setOpenSearches(Integer.parseInt((String) userAttributes.get(StringConstants.OPENSEARCHES)));
-      aSearch.setFoundFiles(Integer.parseInt((String) userAttributes.get(StringConstants.FOUNDFILES)));
-      aSearch.setSearchedClients(Integer.parseInt((String) userAttributes.get(StringConstants.SUMSEARCHES)));
-      aSearch.setRunning(((String) userAttributes.get(StringConstants.RUNNING)).equals(StringConstants.TRUE));
+      aSearch.setSearchText(userAttributes.get(StringConstants.SEARCHTEXT));
+      aSearch.setOpenSearches(Integer.parseInt(userAttributes.get(StringConstants.OPENSEARCHES)));
+      aSearch.setFoundFiles(Integer.parseInt(userAttributes.get(StringConstants.FOUNDFILES)));
+      aSearch.setSearchedClients(Integer.parseInt(userAttributes.get(StringConstants.SUMSEARCHES)));
+      aSearch.setRunning((userAttributes.get(StringConstants.RUNNING)).equals(StringConstants.TRUE));
    }
 
    private void checkSearchAttributes(Attributes attr)
