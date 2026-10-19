@@ -43,6 +43,31 @@ public class ShareTreeLocatorTest {
         assertNull(ShareTreeLocator.locate(model, "Z:\\elsewhere", "\\", ShareTreeLocatorTest::path));
     }
 
+    @Test
+    public void looksThroughContainerNodesLikeThisPcOnWindows() {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+        DefaultMutableTreeNode desktop = new DefaultMutableTreeNode("Desktop");
+        DefaultMutableTreeNode thisPc = new DefaultMutableTreeNode("This PC");
+        DefaultMutableTreeNode drive = new DefaultMutableTreeNode("C:\\");
+        DefaultMutableTreeNode users = new DefaultMutableTreeNode("C:\\Users");
+        DefaultMutableTreeNode incoming = new DefaultMutableTreeNode("C:\\Users\\me");
+        root.add(desktop);
+        desktop.add(thisPc);
+        thisPc.add(drive);
+        drive.add(users);
+        users.add(incoming);
+        TreeModel model = new DefaultTreeModel(root);
+        Function<Object, String> nodePath = node -> node.toString().contains(":") ? node.toString() : null;
+
+        assertNull("without container support the drive is not found",
+                ShareTreeLocator.locate(model, "C:\\Users\\me", "\\", nodePath));
+        TreePath path = ShareTreeLocator.locate(model, "C:\\Users\\me", "\\", nodePath,
+                node -> node == desktop || node == thisPc);
+        assertNotNull(path);
+        assertSame(incoming, path.getLastPathComponent());
+        assertEquals(6, path.getPathCount());
+    }
+
     private static String path(Object node) {
         return node.toString();
     }

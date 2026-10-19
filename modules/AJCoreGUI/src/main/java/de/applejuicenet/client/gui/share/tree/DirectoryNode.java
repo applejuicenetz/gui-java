@@ -105,6 +105,18 @@ public class DirectoryNode
         return isConfiguredDirectory(false);
     }
 
+    /** Windows shell id of "This PC"; the core reports it as a normal folder with this path. */
+    static final String THIS_PC_PATH = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}";
+
+    /**
+     * "Desktop" and "This PC": virtual Windows nodes that only group the drives. "This PC" is told
+     * apart by its fixed shell id, because its name is localised and its type is a plain folder.
+     */
+    public boolean isContainer() {
+        return directory != null
+                && (directory.getType() == Directory.TYPE_DESKTOP || THIS_PC_PATH.equalsIgnoreCase(directory.getPath()));
+    }
+
     /** Filesystem root, home directory or system drive; other drives such as a network drive stay shareable. */
     public boolean isCriticalDirectory() {
         return directory != null && ShareWarningDetector.isCritical(directory.getPath());

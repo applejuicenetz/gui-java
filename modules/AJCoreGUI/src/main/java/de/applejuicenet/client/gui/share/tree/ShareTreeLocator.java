@@ -5,6 +5,7 @@ import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Walks the lazily loaded share directory tree down to a configured directory.
@@ -64,30 +65,53 @@ public final class ShareTreeLocator {
      * segment exists. {@code nodePath} tells the path of a node; comparison ignores case.
      */
     public static TreePath locate(TreeModel model, String targetPath, String separator, Function<Object, String> nodePath) {
-        Object node = model.getRoot();
-        TreePath result = new TreePath(node);
+        return locate(model, targetPath, separator, nodePath, node -> false);
+    }
+
+    /**
+     * Like {@link #locate(TreeModel, String, String, Function)}, but looks through {@code container}
+     * nodes when a segment is not a direct child. On Windows the drives are not below the tree root but
+     * below "Desktop" and "This PC", which have no path of their own.
+     */
+    public static TreePath locate(TreeModel model, String targetPath, String separator,
+                                  Function<Object, String> nodePath, Predicate<Object> container) {
+        TreePath result = new TreePath(model.getRoot());
 
         for (String prefix : prefixes(targetPath, separator)) {
-            Object child = childWithPath(model, node, prefix, nodePath);
+            TreePath found = find(model, result, prefix, nodePath, container);
 
-            if (child == null) {
+            if (found == null) {
                 break;
             }
 
-            result = result.pathByAddingChild(child);
-            node = child;
+            result = found;
         }
 
         return result.getPathCount() > 1 ? result : null;
     }
 
-    private static Object childWithPath(TreeModel model, Object parent, String path, Function<Object, String> nodePath) {
+    private static TreePath find(TreeModel model, TreePath parentPath, String path,
+                                 Function<Object, String> nodePath, Predicate<Object> container) {
+        Object parent = parentPath.getLastPathComponent();
+        List<Object> containers = new ArrayList<>();
+
         for (int index = 0; index < model.getChildCount(parent); index++) {
             Object child = model.getChild(parent, index);
             String childPath = nodePath.apply(child);
 
             if (childPath != null && childPath.equalsIgnoreCase(path)) {
-                return child;
+                return parentPath.pathByAddingChild(child);
+            }
+            if (container.test(child)) {
+                containers.add(child);
+            }
+        }
+
+        for (Object child : containers) {
+            TreePath found = find(model, parentPath.pathByAddingChild(child), path, nodePath, container);
+
+            if (found != null) {
+                return found;
             }
         }
 

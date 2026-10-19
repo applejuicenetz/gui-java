@@ -778,7 +778,8 @@ public class ShareController extends GuiController
             ShareSelectionTreeModel model = new ShareSelectionTreeModel();
             TreePath incomingPath = ShareTreeLocator.locate(model, incomingDir, ApplejuiceFacade.separator,
                   node -> ((DirectoryNode) node).getDirectory() == null ? null
-                        : ((DirectoryNode) node).getDirectory().getPath());
+                        : ((DirectoryNode) node).getDirectory().getPath(),
+                  node -> ((DirectoryNode) node).isContainer());
 
             return new DirectoryTreeInit(model, incomingPath);
          }
