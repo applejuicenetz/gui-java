@@ -9,9 +9,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 /**
  * $Header:
@@ -118,23 +119,16 @@ public abstract class WebXMLParser extends XMLDecoder {
 				}
 			}
 			String time = Long.toString(System.currentTimeMillis());
-			String path = System.getProperty("user.dir") + File.separator
-					+ "logs";
-			File aFile = new File(path);
-			if (!aFile.exists()) {
-				aFile.mkdir();
-			}
-			FileWriter fileWriter = null;
-			String filename = path + File.separator + time + ".exc";
+			File directory = new File(System.getProperty("user.dir"), "logs");
+			File dump = new File(directory, time + ".exc");
 			try {
-				fileWriter = new FileWriter(filename);
-				fileWriter.write(xmlData);
-				fileWriter.close();
+				Files.createDirectories(directory.toPath());
+				Files.writeString(dump.toPath(), xmlData, StandardCharsets.UTF_8);
 			} catch (IOException ioE) {
-				throw new RuntimeException(ioE);
+				x.addSuppressed(ioE);
+				throw new RuntimeException("XML parse error; the dump could not be written to " + dump, x);
 			}
-			throw new RuntimeException("SAX-Exception -> content saved in "
-					+ filename, x);
+			throw new RuntimeException("XML parse error; content saved in " + dump, x);
 		}
 	}
 

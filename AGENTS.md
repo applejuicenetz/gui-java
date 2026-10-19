@@ -12,9 +12,12 @@
   darunter in einem eigenen Abschnitt sammeln.
 - Zusammengehörige Änderungen unter einem gemeinsamen Themenpunkt bündeln,
   zum Beispiel „Mein Share“, Soundpakete oder Code und Bibliotheken.
-- Einträge kurz fassen: ein Satz pro Änderung.
-- Zeilen nicht zu lang halten.
-- Technisch nicht zu tief gehen; beschreiben, was Nutzer merken.
+- Nur aufnehmen, was für Nutzer relevant ist: Verhalten, Bedienung, Fehler, die man bemerkt.
+  Interne Umbauten, Refactorings, Tests und Fehlerbehandlung ohne sichtbare Wirkung weglassen
+  oder in einer einzigen Zeile im Abschnitt „Technische Änderungen“ bündeln.
+- Einträge kurz und knackig: ein Satz pro Änderung, eine Zeile, kein Umbruch,
+  höchstens etwa 110 Zeichen. Beschreiben, was Nutzer merken, nicht wie es gebaut ist.
+- Beim Kürzen den Inhalt belassen, nur Füllwörter und Implementierungsdetails streichen.
 
 ### neues Release in dieser Reihenfolge erstellen
 

@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 public class XMLDecoderTest {
     @Rule
@@ -33,6 +35,20 @@ public class XMLDecoderTest {
         decoder.setAttributeByTagName(new String[]{"settings", "port"}, 9851);
         WritableDecoder reloaded = new WritableDecoder(file);
         assertEquals("9851", reloaded.getFirstAttributeByTagName(new String[]{"settings", "port"}));
+    }
+
+    @Test
+    public void malformedXmlIsReportedToTheCaller() throws Exception {
+        File file = temporaryFolder.newFile("broken.xml");
+        Files.writeString(file.toPath(), "<root><settings name='old'>", StandardCharsets.UTF_8);
+        IllegalStateException error = assertThrows(IllegalStateException.class, () -> new WritableDecoder(file));
+        assertTrue(error.getMessage().contains("broken.xml"));
+    }
+
+    @Test
+    public void missingFileIsReportedToTheCaller() {
+        File file = new File(temporaryFolder.getRoot(), "missing.xml");
+        assertThrows(IllegalStateException.class, () -> new WritableDecoder(file));
     }
 
     private static class WritableDecoder extends XMLDecoder {

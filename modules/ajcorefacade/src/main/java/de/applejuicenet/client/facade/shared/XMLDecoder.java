@@ -12,12 +12,14 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * $Header:
@@ -68,25 +70,17 @@ public abstract class XMLDecoder
 
    protected void reload(File xmlFile)
    {
-      try
+      try(InputStreamReader reader = new InputStreamReader(new FileInputStream(xmlFile), StandardCharsets.UTF_8))
       {
          DocumentBuilder builder = SecureXml.newDocumentBuilder();
+         Document        parsed  = builder.parse(new InputSource(reader));
 
-         document = builder.parse(new InputSource(new InputStreamReader(new FileInputStream(xmlFile), "UTF-8")));
+         document = parsed;
          this.filePath = xmlFile.getPath();
       }
-      catch(SAXException sxe)
+      catch(SAXException | IOException | ParserConfigurationException e)
       {
-         Exception x = sxe;
-
-         if(sxe.getException() != null)
-         {
-            x = sxe.getException();
-         }
-      }
-      catch(Exception e)
-      {
-         e.printStackTrace();
+         throw new IllegalStateException("XML file could not be read: " + xmlFile, e);
       }
    }
 
