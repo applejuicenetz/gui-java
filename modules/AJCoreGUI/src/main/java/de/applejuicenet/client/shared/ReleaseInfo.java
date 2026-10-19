@@ -2,6 +2,9 @@ package de.applejuicenet.client.shared;
 
 import de.applejuicenet.client.gui.start.HyperlinkAdapter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -9,6 +12,8 @@ import java.util.Base64;
 import java.util.Properties;
 
 public class ReleaseInfo {
+
+    private static final Logger logger = LoggerFactory.getLogger(ReleaseInfo.class);
 
     private static final String defaultHost = new String(Base64.getDecoder().decode("aHR0cHM6Ly93d3cuYXBwbGUtZGVsdXhlLmNvL2luZGV4LnBocD9jdD00MDMmdmE9JXM="));
 
@@ -28,14 +33,14 @@ public class ReleaseInfo {
 
                     releaseInfoHost = props.getProperty("host", defaultHost);
                 } catch (Exception e) {
-                    // nix zu tun
+                    logger.warn("rel.properties could not be read; using the default host", e);
                 }
             } else {
                 props.setProperty("host", defaultHost);
                 try (OutputStream outputStream = new FileOutputStream(aFile)) {
                     props.store(outputStream, null);
                 } catch (IOException e) {
-                    // nix zu tun
+                    logger.warn("rel.properties could not be written", e);
                 }
             }
 

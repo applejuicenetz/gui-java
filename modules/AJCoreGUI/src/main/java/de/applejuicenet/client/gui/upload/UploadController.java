@@ -128,7 +128,7 @@ public class UploadController extends GuiController {
             }
 
             default:
-                logger.error("Unregistrierte EventId " + actionId);
+                logger.error("Unregistered event id {}", actionId);
         }
     }
 

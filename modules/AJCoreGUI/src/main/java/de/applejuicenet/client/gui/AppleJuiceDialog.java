@@ -585,8 +585,6 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         String message = "appleJuice GUI is shutting down...";
 
         logger.info(message);
-
-        System.out.println(message);
         if (!rewriteProperties) {
             saveSettingsAction();
         }
@@ -608,13 +606,11 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         String message = "appleJuice GUI is shutting down...";
 
         logger.info(message);
-
-        System.out.println(message);
         if (saveSettings && !rewriteProperties) {
             saveSettingsAction();
         }
 
-        System.out.println("Error: " + error);
+        logger.error("Fatal error: {}", error);
 
         if (trayLoader != null) trayLoader.close();
         System.exit(-1);

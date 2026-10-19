@@ -43,6 +43,7 @@ public class LinkListener extends Thread implements CoreStatusListener, AutoClos
         this.passwordSupplier = passwordSupplier;
         this.linkProcessor = linkProcessor;
         listen = new ServerSocket(port, 50, InetAddress.getByName("localhost"));
+        logger.debug("Link listener started on port {}", port);
         setName("LinkListenerThread");
         setDaemon(true);
         start();

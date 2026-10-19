@@ -15,10 +15,15 @@ import java.net.SocketException;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.zip.DataFormatException;
 
 public abstract class HtmlLoader
 {
+   private static final Logger logger = LoggerFactory.getLogger(HtmlLoader.class);
+
    public static final int POST = 0;
    public static final int GET = 1;
    private static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 10000;
@@ -167,10 +172,12 @@ public abstract class HtmlLoader
          }
          catch(SocketException socketException)
          {
+            logger.debug("Core request to {}:{} failed: {}", host, port, socketException.toString());
             throw new WebSiteNotFoundException(WebSiteNotFoundException.AUTHORIZATION_REQUIRED, socketException);
          }
          catch(IOException ioE)
          {
+            logger.debug("Core request to {}:{} failed: {}", host, port, ioE.toString());
             throw new WebSiteNotFoundException(WebSiteNotFoundException.AUTHORIZATION_REQUIRED, ioE);
          }
       }
@@ -180,6 +187,7 @@ public abstract class HtmlLoader
          {
             throw wnfE;
          }
+         logger.debug("Core command without a result failed: {}", wnfE.toString());
       }
 
       return urlContent.toString();

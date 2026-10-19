@@ -4,6 +4,9 @@
 package de.applejuicenet.client.gui.tray;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +14,8 @@ import java.net.URI;
 
 public class DesktopTool
 {
+   private static final Logger logger = LoggerFactory.getLogger(DesktopTool.class);
+
    public DesktopTool()
    {
       if(!Desktop.isDesktopSupported())
@@ -37,7 +42,7 @@ public class DesktopTool
       }
       catch(IOException e)
       {
-         e.printStackTrace();
+         logger.warn("Cannot open {}", toOpen, e);
       }
    }
 }

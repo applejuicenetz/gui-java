@@ -182,6 +182,7 @@ public class PropertyHandler {
             }
         } catch (UnsupportedOperationException | IOException e) {
             // File system without POSIX permissions: the temp file keeps its default permissions
+            LoggerFactory.getLogger(PropertyHandler.class).debug("Permissions of {} not copied: {}", to, e.toString());
         }
     }
 

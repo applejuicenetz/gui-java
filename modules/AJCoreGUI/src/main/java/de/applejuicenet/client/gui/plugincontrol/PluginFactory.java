@@ -30,6 +30,7 @@ public abstract class PluginFactory {
             }
 
             plugins = new LinkedHashSet<>();
+            logger.debug("Looking for plugins in {} and {}", System.getProperty("user.dir") + File.separator + "plugins", System.getProperty("user.home") + File.separator + "appleJuice" + File.separator + "gui" + File.separator + "plugins");
 
             Map<String, File> tempList = new TreeMap<>();
 
@@ -70,6 +71,7 @@ public abstract class PluginFactory {
                     }
 
                     if (!isPlugin) {
+                        logger.debug("{} has no plugin.properties and is skipped", pluginFile.getKey());
                         continue;
                     }
 

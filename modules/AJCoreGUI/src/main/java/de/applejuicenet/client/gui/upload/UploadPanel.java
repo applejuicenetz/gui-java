@@ -135,7 +135,7 @@ public class UploadPanel extends TklPanel implements RegisterI {
                                             uploadActiveTable.getColumnModel()
                                                     .getColumnIndex(columnsActiveUploads[y].getIdentifier()));
                         } catch (IllegalArgumentException niaE) {
-                            //nix zu tun
+                            // column not (yet) in the model: keep the stored position
                         }
                     }
                 }

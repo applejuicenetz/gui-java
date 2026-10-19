@@ -309,6 +309,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
                     partList = AppleJuiceClient.getAjFacade().getPartList(download);
                 } catch (WebSiteNotFoundException wsnfE) {
                     // the core is probably overloaded right now
+                    logger.debug("Part list of download {} not available: {}", download.getId(), wsnfE.toString());
                     partList = null;
                 }
 
@@ -333,6 +334,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
                 partList = AppleJuiceClient.getAjFacade().getPartList(downloadSource);
             } catch (WebSiteNotFoundException ex) {
                 // the core is probably overloaded right now
+                logger.debug("Part list of source {} not available: {}", downloadSource.getId(), ex.toString());
                 partList = null;
             }
 

@@ -18,10 +18,7 @@
 ### Technische Änderungen
 
 - [red171] Code und Bibliotheken:
-  - Code, Kommentare und Logtexte auf Englisch
-  - Paket `fassade` zu `facade`, Modul `ajcorefassade` zu `ajcorefacade`
-  - Sprachschlüssel englisch benannt, ungenutzte Schlüssel entfernt
-  - Neue Tests für Sprachschlüssel und Plugin-Metadaten
+  - Code auf Englisch, Paket `facade`; mehr Debug-Logs, Level per `-Dajgui.loglevel=debug`
 
 ## 0.86.4
 

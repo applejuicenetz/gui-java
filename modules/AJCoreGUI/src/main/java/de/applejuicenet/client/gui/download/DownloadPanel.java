@@ -298,7 +298,7 @@ public class DownloadPanel extends TklPanel {
                                             downloadActiveTable.getColumnModel()
                                                     .getColumnIndex(downloadColumns[y].getIdentifier()));
                         } catch (IllegalArgumentException niaE) {
-                            //nix zu tun
+                            // column not (yet) in the model: keep the stored position
                         }
                     }
                 }
@@ -366,7 +366,7 @@ public class DownloadPanel extends TklPanel {
                                             downloadSourceTable.getColumnModel()
                                                     .getColumnIndex(downloadSourceColumns[y].getIdentifier()));
                         } catch (IllegalArgumentException niaE) {
-                            //nix zu tun
+                            // column not (yet) in the model: keep the stored position
                         }
                     }
                 }

@@ -7,13 +7,15 @@ package de.applejuicenet.client.facade.controller;
 import de.applejuicenet.client.facade.listener.DataUpdateListener;
 import de.applejuicenet.client.facade.listener.DataUpdateListener.DATALISTENER_TYPE;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.util.Set;
 
 public abstract class DataUpdateInformer
 {
+   private static final Logger logger = LoggerFactory.getLogger(DataUpdateInformer.class);
    private final DATALISTENER_TYPE listenerType;
    private final Set<DataUpdateListener> listener = new CopyOnWriteArraySet<>();
 
@@ -46,8 +48,7 @@ public abstract class DataUpdateInformer
          try {
             curListener.fireContentChanged(listenerType, content);
          } catch (RuntimeException exception) {
-            Logger.getLogger(DataUpdateInformer.class.getName()).log(Level.WARNING,
-                  "Data listener failed: " + curListener.getClass().getName() + " (" + listenerType + ")", exception);
+            logger.warn("Data listener {} failed ({})", curListener.getClass().getName(), listenerType, exception);
          }
       }
    }

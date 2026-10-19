@@ -17,7 +17,7 @@
         </encoder>
     </appender>
 
-    <root level="info" additivity="true">
+    <root level="${ajgui.loglevel:-info}" additivity="true">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </root>

@@ -34,7 +34,7 @@ public class MessagesWorker extends Thread {
         this.startController = startController;
         this.version = version;
         this.messages = messages;
-        this.setName("NachrichtenWorker");
+        this.setName("MessagesWorker");
     }
 
     public void run() {
@@ -42,7 +42,7 @@ public class MessagesWorker extends Thread {
 
         try {
             final String coreVersion = AppleJuiceClient.getAjFacade().getCoreVersion().getVersion();
-            logger.info("verwendeter Core: " + coreVersion);
+            logger.info("Using core {}", coreVersion);
 
             String htmlText = null;
             String newsURL = OptionsManagerImpl.getInstance().getNewsURL();
@@ -87,6 +87,6 @@ public class MessagesWorker extends Thread {
             logger.error("Version-dependent messages could not be loaded.");
         }
 
-        logger.debug("NachrichtenWorkerThread beendet.");
+        logger.debug("MessagesWorkerThread beendet.");
     }
 }

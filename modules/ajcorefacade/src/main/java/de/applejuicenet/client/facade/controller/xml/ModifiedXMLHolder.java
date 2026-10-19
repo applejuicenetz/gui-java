@@ -10,6 +10,8 @@ import de.applejuicenet.client.facade.controller.DataPropertyChangeInformer;
 import de.applejuicenet.client.facade.controller.xml.SearchDO.SearchEntryDO;
 import de.applejuicenet.client.facade.controller.xml.SearchDO.SearchEntryDO.FileNameDO;
 import de.applejuicenet.client.facade.entity.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import de.applejuicenet.client.facade.event.DataPropertyChangeEvent;
 import de.applejuicenet.client.facade.event.DownloadDataPropertyChangeEvent;
 import de.applejuicenet.client.facade.exception.CoreLostException;
@@ -47,6 +49,8 @@ import java.util.*;
  */
 public class ModifiedXMLHolder extends DefaultHandler
 {
+   private static final Logger logger = LoggerFactory.getLogger(ModifiedXMLHolder.class);
+
    private final CoreConnectionSettingsHolder coreHolder;
    private Map<Integer, Download>             sourcesToDownloads             = new HashMap<Integer, Download>();
    private Map<Integer, Share>                parsingShares;
@@ -1226,6 +1230,7 @@ public class ModifiedXMLHolder extends DefaultHandler
             downloadSourcesToDo = oldPendingSources;
             tmpSearchEntry = oldEntry;
             downloadEvents = oldEvents;
+            logger.warn("modified.xml diff could not be applied; previous state restored", ex);
             throw ex;
          }
          finally
@@ -1263,10 +1268,12 @@ public class ModifiedXMLHolder extends DefaultHandler
       }
       catch(WebSiteNotFoundException webSiteNotFound)
       {
+         logger.debug("modified.xml not available ({}); requesting a new session", webSiteNotFound.toString());
          reloadSession = true;
       }
       catch(IllegalArgumentException webSiteNotFound)
       {
+         logger.debug("modified.xml was rejected by the core; requesting a new session");
          reloadSession = true;
       }
       catch(RuntimeException rE)
@@ -1287,6 +1294,7 @@ public class ModifiedXMLHolder extends DefaultHandler
             String           sessionId = sessionHolder.getNewSessionId();
 
             sessionContext   = "&session=" + sessionId;
+            logger.debug("New core session established");
          }
          catch(CoreLostException clE)
          {

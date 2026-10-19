@@ -46,6 +46,7 @@ public class AutomaticPowerdownload extends Thread {
     }
 
     public final void run() {
+        logger.debug("Automatic powerdownload started (interval {} ms, {} downloads, power {})", sleeptime, downloadCount, powerdownloadValue);
         try {
             while (!isInterrupted()) {
                 if (!paused) {
@@ -61,6 +62,7 @@ public class AutomaticPowerdownload extends Thread {
             logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
         }
 
+        logger.debug("Automatic powerdownload finished");
         PowerDownloadPanel parent = parentToInformEnd;
 
         parentToInformEnd = null;
@@ -87,6 +89,7 @@ public class AutomaticPowerdownload extends Thread {
         }
 
         paused = pause;
+        logger.debug("Automatic powerdownload {}", pause ? "paused" : "resumed");
         if (paused) {
             pauseAllDownloads();
         }
@@ -146,6 +149,7 @@ public class AutomaticPowerdownload extends Thread {
             }
 
             if (changed(downloads2Start, downloads2Stop)) {
+                logger.debug("Automatic powerdownload: {} downloads started, {} paused", downloads2Start.size(), downloads2Stop.size());
                 setPowerDownload(downloads2Start);
                 applejuiceFacade.resumeDownload(downloads2Start);
                 applejuiceFacade.pauseDownload(downloads2Stop);

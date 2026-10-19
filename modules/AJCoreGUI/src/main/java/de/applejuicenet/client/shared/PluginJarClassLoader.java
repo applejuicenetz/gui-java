@@ -193,7 +193,7 @@ public class PluginJarClassLoader extends SecureClassLoader {
                     break;
                 } catch (NoClassDefFoundError clfE) {
 
-                    // rekursiv probieren
+                    // try again recursively
                     String className = clfE.getMessage();
                     ZipEntry entry = jarFile.getEntry(className + ".class");
                     byte[] innerBuf = readEntry(jarFile, entry);

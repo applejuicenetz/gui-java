@@ -27,6 +27,9 @@ import de.applejuicenet.client.facade.shared.StringConstants;
 import de.applejuicenet.client.facade.tools.MD5Encoder;
 
 import java.io.File;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -55,7 +58,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
     private final Object workerLock = new Object();
     private Thread workerThread;
     private final Map<Integer, CancelThread> cancelWorkers = new HashMap<>();
-    private static final System.Logger LOGGER = System.getLogger(ApplejuiceFacade.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(ApplejuiceFacade.class);
 
     public ApplejuiceFacade(CoreConnectionSettingsHolder coreConnectionSettingsHolder)
             throws IllegalArgumentException {
@@ -157,12 +160,12 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
     }
 
     private void informCoreStatusListener(STATUS newStatus) {
+        logger.debug("Core status: {}", newStatus);
         for (CoreStatusListener curListener : coreListener) {
             try {
                 curListener.fireStatusChanged(newStatus);
             } catch (RuntimeException exception) {
-                java.util.logging.Logger.getLogger(ApplejuiceFacade.class.getName()).log(
-                        java.util.logging.Level.WARNING, "Core status listener failed: " + curListener.getClass().getName(), exception);
+                logger.warn("Core status listener {} failed", curListener.getClass().getName(), exception);
             }
         }
     }
@@ -191,7 +194,9 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
                 return count;
             }
             count++;
+            logger.debug("Core update failed ({} of 3)", count);
             if (count == 3) {
+                logger.warn("Core {}:{} is lost after {} failed updates", coreHolder.getCoreHost(), coreHolder.getCorePort(), count);
                 throw new CoreLostException();
             }
         }
@@ -204,6 +209,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
             if (workerThread != null && workerThread.isAlive()) {
                 return;
             }
+            logger.debug("Starting the core poller for {}:{}", coreHolder.getCoreHost(), coreHolder.getCorePort());
             workerThread = createWorkerThread();
             workerThread.start();
         }
@@ -224,6 +230,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
                     shareXML = new ShareXMLHolder(coreHolder);
                     if (coreVersion == null) {
                         coreVersion = informationXML.getCoreVersion();
+                        logger.info("Connected to core {}", coreVersion);
                         checkForValidCoreversion();
                     }
                 } catch (RuntimeException error) {
@@ -271,6 +278,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
             if (workerThread == null) {
                 return;
             }
+            logger.debug("Stopping the core poller");
             workerThread.interrupt();
             workerThread = null;
         }
@@ -498,8 +506,8 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
             stopXMLCheck();
             throw wpE;
         } catch (Exception re) {
-
             // connection to core lost, next try
+            logger.debug("Core update failed: {}", re.toString());
             return false;
         }
     }
@@ -548,6 +556,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
             throw new IllegalArgumentException("invalid search-phrase");
         }
 
+        logger.debug("Starting search '{}'", toSearch);
         HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.POST,
                 "/function/search?password=" + coreHolder.getCorePassword() + "&search=" + toSearch, false);
     }
@@ -560,6 +569,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
 
         synchronized (workerLock) {
             if (!cancelWorkers.containsKey(search.getId())) {
+                logger.debug("Cancelling search {}", search.getId());
                 CancelThread cancelWorker = new CancelThread(search);
                 cancelWorkers.put(search.getId(), cancelWorker);
                 cancelWorker.start();
@@ -712,6 +722,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
             throw new IllegalArgumentException("invalid server");
         }
 
+        logger.debug("Connecting to server {}", server.getId());
         HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.POST,
                 "/function/serverlogin?password=" + coreHolder.getCorePassword() + "&id=" + server.getId(), false);
     }
@@ -803,6 +814,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
         }
 
         subdir = processSubdir(subdir);
+        logger.debug("Submitting link to the core (target directory '{}')", subdir);
         String encodedLink = link;
 
         StringBuilder tempLink = new StringBuilder(link);
@@ -1014,8 +1026,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
                         if (isInterrupted()) {
                             return;
                         }
-                        LOGGER.log(System.Logger.Level.WARNING,
-                                "Search cancellation failed for search {0}; retrying", search.getId());
+                        logger.warn("Search cancellation failed for search {}; retrying", search.getId());
                         sleep(RefreshIntervals.SEARCH_CANCEL_RETRY_MS);
                     }
                 }

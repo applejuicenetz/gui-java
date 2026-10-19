@@ -165,6 +165,7 @@ public class AppleJuiceClient {
             linkListener = new LinkListener();
         } catch (IOException ex) {
             //a GUI already exists, so close this GUI
+            logger.info("Another GUI instance is already running");
             doubleInstance = true;
         }
 
@@ -187,7 +188,7 @@ public class AppleJuiceClient {
                         }
 
                         System.out.println();
-                        System.out.println(" -help                       Diese Übersicht.");
+                        System.out.println(" -help                       Show this overview.");
                         System.out.println(" -path=<path>                Set the working path. Everything in the GUI is relative to it.");
                         System.out.println(" -link=<md5Password|link>    Pass an ajfsp link to the GUI. The GUI is started if necessary.");
                         System.out.println();
@@ -250,6 +251,7 @@ public class AppleJuiceClient {
                 //no previous GUI instance exists, so open the GUI
                 processLink = true;
             } catch (Exception e) {
+                logger.error("Handing over the link or .ajl file failed", e);
                 System.exit(1);
             }
         }
@@ -304,12 +306,10 @@ public class AppleJuiceClient {
                 logger.info(message);
             }
 
-            System.out.println(message);
-
             if (logger.isInfoEnabled()) {
-                message = "erkanntes GUI-OS: " + System.getProperty("os.name");
+                message = "detected GUI OS: " + System.getProperty("os.name");
                 logger.info(message);
-                message = "erkannte Java-Version: " + System.getProperty("java.version");
+                message = "detected Java version: " + System.getProperty("java.version");
                 logger.info(message);
             }
 
@@ -362,7 +362,6 @@ public class AppleJuiceClient {
                         message = message.replaceFirst("%s", OptionsManagerImpl.getInstance().getRemoteSettings().getHost());
                         JOptionPane.showMessageDialog(connectFrame, message, title, JOptionPane.OK_OPTION);
                         logger.error(message);
-                        System.out.println("Error: " + message);
                         System.exit(-1);
                     }
                 }
@@ -390,8 +389,6 @@ public class AppleJuiceClient {
                 String message1 = "appleJuice GUI started...";
 
                 logger.info(message1);
-
-                System.out.println(message1);
                 splash.dispose();
                 if (OptionsManagerImpl.getInstance().isFirstStart()) {
                     showConnectionWizard(theApp);
@@ -405,7 +402,7 @@ public class AppleJuiceClient {
             });
 
         } catch (Exception e) {
-            logger.error("Programmabbruch", e);
+            logger.error("Startup aborted", e);
 
             System.exit(-1);
         }

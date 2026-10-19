@@ -259,7 +259,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
                     try {
                         lookAndFeels.add(new LookAFeel(feel.getName(), feel.getClassName()));
                     } catch (Exception e) {
-                        //unsupported
+                        logger.debug("Look and feel {} is not supported: {}", feel.getName(), e.toString());
                     }
                 }
 
