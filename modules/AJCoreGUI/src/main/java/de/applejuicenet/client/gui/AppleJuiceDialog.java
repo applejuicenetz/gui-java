@@ -662,7 +662,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
                 if (result == JOptionPane.YES_OPTION) {
-                    AppleJuiceClient.getAjFacade().shutdownCore();
+                    Thread.ofVirtual().name("ShutdownCore").start(() -> AppleJuiceClient.getAjFacade().shutdownCore());
+
                 }
             });
             menuItemAbout.addActionListener(e -> showAboutDialog());

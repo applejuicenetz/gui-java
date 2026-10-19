@@ -427,10 +427,18 @@ public class DownloadController extends GuiController {
                     }
                 }
 
-                AppleJuiceClient.getAjFacade().setPowerDownload(temp, Integer.valueOf(powerDownload));
-                if (downloadPanel.getBtnPowerDownloadActive().isSelected()) {
-                    SoundPlayer.getInstance().playSound(SoundPlayer.POWER);
-                }
+                int requestedPower = powerDownload;
+                boolean playSound = downloadPanel.getBtnPowerDownloadActive().isSelected();
+                Thread.ofVirtual().name("SetPowerDownload").start(() -> {
+                    try {
+                        AppleJuiceClient.getAjFacade().setPowerDownload(temp, requestedPower);
+                        if (playSound) {
+                            SoundPlayer.getInstance().playSound(SoundPlayer.POWER);
+                        }
+                    } catch (Exception error) {
+                        logger.error("Setting powerdownload failed", error);
+                    }
+                });
             }
         } catch (Exception ex) {
             logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
@@ -514,11 +522,13 @@ public class DownloadController extends GuiController {
                 return;
             } else {
                 if (curDownload.getFilename().compareTo(newName) != 0) {
-                    try {
-                        AppleJuiceClient.getAjFacade().renameDownload(curDownload, newName);
-                    } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
-                    }
+                    Thread.ofVirtual().name("RenameDownload").start(() -> {
+                        try {
+                            AppleJuiceClient.getAjFacade().renameDownload(curDownload, newName);
+                        } catch (Exception e) {
+                            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
+                        }
+                    });
                 }
             }
         }
@@ -615,11 +625,14 @@ public class DownloadController extends GuiController {
         }
 
         if (toChange.size() > 0) {
-            try {
-                AppleJuiceClient.getAjFacade().setTargetDir(toChange, newName);
-            } catch (IllegalArgumentException e) {
-                logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
-            }
+            String targetDirectory = newName;
+            Thread.ofVirtual().name("SetTargetDirectory").start(() -> {
+                try {
+                    AppleJuiceClient.getAjFacade().setTargetDir(toChange, targetDirectory);
+                } catch (Exception e) {
+                    logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
+                }
+            });
         }
     }
 

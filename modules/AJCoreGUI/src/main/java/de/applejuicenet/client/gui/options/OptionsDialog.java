@@ -171,28 +171,41 @@ public class OptionsDialog extends JDialog
             somethingChanged = true;
          }
 
-         // core settings
-         if(standardPanel.isDirty() || coreConnectionPanel.isDirty())
+         // Capture Swing state before dispatching the ordered core saves.
+         boolean saveCore = standardPanel.isDirty() || coreConnectionPanel.isDirty();
+         boolean saveRemote = connectionPanel.isDirty() || standardPanel.isXmlPortDirty();
+         if(saveCore || saveRemote)
          {
-            om.saveAJSettings(ajSettings);
-            somethingChanged = true;
-         }
-
-         if(connectionPanel.isDirty() || standardPanel.isXmlPortDirty())
-         {
-            try
+            new javax.swing.SwingWorker<Void, Void>()
             {
-               om.saveRemote(remote);
-               somethingChanged = true;
-            }
-            catch(InvalidPasswordException ex)
-            {
-               LanguageSelector languageSelector = LanguageSelector.getInstance();
-               String           title = languageSelector.getFirstAttributeByTagName("javagui.inputerror");
-               String           message = languageSelector.getFirstAttributeByTagName("javagui.options.remote.errortext");
+               protected Void doInBackground() throws Exception
+               {
+                  if(saveCore) om.saveAJSettings(ajSettings);
+                  if(saveRemote) om.saveRemote(remote);
+                  return null;
+               }
 
-               JOptionPane.showMessageDialog(parent, message, title, JOptionPane.OK_OPTION);
-            }
+               protected void done()
+               {
+                  try
+                  {
+                     get();
+                     SoundPlayer.getInstance().playSound(SoundPlayer.SAVED);
+                     dispose();
+                  }
+                  catch(Exception error)
+                  {
+                     logger.error("Saving core settings failed", error);
+                     saveButton.setEnabled(true);
+                     LanguageSelector texts = LanguageSelector.getInstance();
+                     JOptionPane.showMessageDialog(parent,
+                           texts.getFirstAttributeByTagName("javagui.options.remote.errortext"),
+                           texts.getFirstAttributeByTagName("javagui.inputerror"), JOptionPane.ERROR_MESSAGE);
+                  }
+               }
+            }.execute();
+            saveButton.setEnabled(false);
+            return;
          }
 
          if(somethingChanged)
