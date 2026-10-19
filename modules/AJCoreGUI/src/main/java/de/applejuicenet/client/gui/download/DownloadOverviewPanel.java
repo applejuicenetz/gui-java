@@ -235,7 +235,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
 
                 if (!actualDlOverviewTable.isShowing()) {
                     try {
-                        sleep(RefreshIntervals.PARTLIST_REFRESH_MS);
+                        sleep(RefreshIntervals.partlistRefreshMs());
                         continue;
                     } catch (InterruptedException iE) {
                         interrupt();
@@ -257,7 +257,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
 
                 if (shortPause) {
                     try {
-                        sleep(RefreshIntervals.PARTLIST_REFRESH_MS);
+                        sleep(RefreshIntervals.partlistRefreshMs());
                         firstRun = false;
                         continue;
                     } catch (InterruptedException iE) {

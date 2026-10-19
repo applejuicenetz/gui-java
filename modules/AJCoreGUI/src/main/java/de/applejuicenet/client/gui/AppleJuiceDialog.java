@@ -6,6 +6,7 @@ package de.applejuicenet.client.gui;
 import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.shared.RefreshIntervals;
 import de.applejuicenet.client.facade.entity.Download;
 import de.applejuicenet.client.facade.entity.Information;
 import de.applejuicenet.client.facade.entity.Server;
@@ -449,6 +450,10 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         dm.addDataUpdateListener(this, DATALISTENER_TYPE.INFORMATION_CHANGED);
         dm.addDataUpdateListener(this, DATALISTENER_TYPE.NETINFO_CHANGED);
         dm.addDataUpdateListener(this, DATALISTENER_TYPE.SERVER_CHANGED);
+
+        // saved refresh intervals apply from the first poll on
+        dm.setUpdateInterval(OptionsManagerImpl.getInstance().getCorePollIntervalMs());
+        RefreshIntervals.setPartlistRefreshMs(OptionsManagerImpl.getInstance().getPartlistRefreshIntervalMs());
 
         try {
             dm.startXMLCheck();

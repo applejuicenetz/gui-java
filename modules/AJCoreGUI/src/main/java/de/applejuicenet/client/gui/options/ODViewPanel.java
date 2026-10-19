@@ -8,7 +8,9 @@ import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.DialogLocation;
 import de.applejuicenet.client.gui.controller.GuiText;
 
+import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.shared.RefreshIntervals;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
@@ -39,6 +41,8 @@ public class ODViewPanel extends JPanel implements OptionsRegister {
     private JCheckBox cmbCloseToTray = new JCheckBox();
     private JCheckBox updateNotification = new JCheckBox();
     private JCheckBox loadPlugins = new JCheckBox();
+    private final JSpinner corePollSeconds = seconds(RefreshIntervals.CORE_POLL_MIN_MS, RefreshIntervals.CORE_POLL_MAX_MS);
+    private final JSpinner partlistSeconds = seconds(RefreshIntervals.PARTLIST_REFRESH_MIN_MS, RefreshIntervals.PARTLIST_REFRESH_MAX_MS);
     private JComboBox<LevelItem> cmbLog;
     private final Logger logger;
     private Icon menuIcon;
@@ -99,6 +103,11 @@ public class ODViewPanel extends JPanel implements OptionsRegister {
         loadPlugins.setSelected(om.shouldLoadPluginsOnStartup());
         loadPlugins.addItemListener(e -> dirty = true);
 
+        corePollSeconds.setValue(om.getCorePollIntervalMs() / 1000.0);
+        partlistSeconds.setValue(om.getPartlistRefreshIntervalMs() / 1000.0);
+        corePollSeconds.addChangeListener(e -> dirty = true);
+        partlistSeconds.addChangeListener(e -> dirty = true);
+
         LevelItem[] levelItems = {
             new LevelItem("INFO", "Info"), new LevelItem("WARN", "Warn"), new LevelItem("ERROR", "Error"),
             new LevelItem("DEBUG", "Debug"), new LevelItem("OFF", "Off")
@@ -134,12 +143,48 @@ public class ODViewPanel extends JPanel implements OptionsRegister {
         box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
         box.add(group("javagui.options.group.start", cmbShowStartscreen, loadPlugins, updateNotification, cmbCloseToTray));
         box.add(group("javagui.options.group.display", cmbTableWidths, cmbMaskIp));
+        box.add(group("javagui.options.group.refresh",
+                intervalRow("javagui.options.refresh.corepoll", corePollSeconds),
+                intervalRow("javagui.options.refresh.partlist", partlistSeconds)));
         box.add(group("javagui.options.group.logging", logRow));
 
         add(box, BorderLayout.NORTH);
 
         reloadSettings();
 
+    }
+
+    /** Seconds with half-second steps; the limits come from {@link RefreshIntervals}. */
+    private static JSpinner seconds(long minMs, long maxMs) {
+        JSpinner spinner = new JSpinner(new SpinnerNumberModel(minMs / 1000.0, minMs / 1000.0, maxMs / 1000.0, 0.5));
+        spinner.setEditor(new JSpinner.NumberEditor(spinner, "0.0"));
+        return spinner;
+    }
+
+    private static JPanel intervalRow(String labelKey, JSpinner spinner) {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        JLabel label = GuiText.label(labelKey);
+        label.setLabelFor(spinner);
+        // same label width in both rows, so the spinners line up
+        label.setPreferredSize(new Dimension(Math.max(label.getPreferredSize().width, 110), label.getPreferredSize().height));
+        row.add(label);
+        row.add(Box.createHorizontalStrut(8));
+        row.add(spinner);
+        row.add(Box.createHorizontalStrut(4));
+        row.add(GuiText.label("javagui.options.refresh.unit"));
+        return row;
+    }
+
+    JSpinner corePollSpinner() {
+        return corePollSeconds;
+    }
+
+    JSpinner partlistSpinner() {
+        return partlistSeconds;
+    }
+
+    private static long toMillis(JSpinner spinner) {
+        return Math.round(((Number) spinner.getValue()).doubleValue() * 1000);
     }
 
     private static JPanel group(String titleKey, JComponent... components) {
@@ -188,6 +233,18 @@ public class ODViewPanel extends JPanel implements OptionsRegister {
 
             if (om.getUpdateInfo() != updateNotification.isSelected()) {
                 om.setUpdateInfo(updateNotification.isSelected());
+                bRet = true;
+            }
+
+            if (om.getCorePollIntervalMs() != toMillis(corePollSeconds)) {
+                om.setCorePollIntervalMs(toMillis(corePollSeconds));
+                AppleJuiceClient.getAjFacade().setUpdateInterval(om.getCorePollIntervalMs());
+                bRet = true;
+            }
+
+            if (om.getPartlistRefreshIntervalMs() != toMillis(partlistSeconds)) {
+                om.setPartlistRefreshIntervalMs(toMillis(partlistSeconds));
+                RefreshIntervals.setPartlistRefreshMs(om.getPartlistRefreshIntervalMs());
                 bRet = true;
             }
 

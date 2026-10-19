@@ -1,5 +1,6 @@
 package de.applejuicenet.client.gui.controller;
 
+import de.applejuicenet.client.facade.shared.RefreshIntervals;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.Settings;
@@ -65,6 +66,39 @@ public class PropertiesManagerRobustnessTest {
         String content = Files.readString(file.toPath());
         assertTrue(content, content.contains("options_columns_download_column1_width=222"));
         assertTrue(content, content.contains("options_sprache=deutsch"));
+    }
+
+    @Test(timeout = 20000)
+    public void refreshIntervalsDefaultToTheBuiltInValues() throws Exception {
+        PropertiesManager manager = manager(write("options_sound=true\n"));
+        assertEquals(RefreshIntervals.CORE_POLL_DEFAULT_MS, manager.getCorePollIntervalMs());
+        assertEquals(RefreshIntervals.PARTLIST_REFRESH_DEFAULT_MS, manager.getPartlistRefreshIntervalMs());
+    }
+
+    @Test(timeout = 20000)
+    public void refreshIntervalsAreClampedToTheAllowedRange() throws Exception {
+        PropertiesManager manager = manager(write("options_core_poll_ms=5\noptions_partlist_refresh_ms=99999999\n"));
+        assertEquals(RefreshIntervals.CORE_POLL_MIN_MS, manager.getCorePollIntervalMs());
+        assertEquals(RefreshIntervals.PARTLIST_REFRESH_MAX_MS, manager.getPartlistRefreshIntervalMs());
+    }
+
+    @Test(timeout = 20000)
+    public void invalidRefreshIntervalFallsBackToDefault() throws Exception {
+        PropertiesManager manager = manager(write("options_core_poll_ms=fast\noptions_partlist_refresh_ms=\n"));
+        assertEquals(RefreshIntervals.CORE_POLL_DEFAULT_MS, manager.getCorePollIntervalMs());
+        assertEquals(RefreshIntervals.PARTLIST_REFRESH_DEFAULT_MS, manager.getPartlistRefreshIntervalMs());
+        assertFalse(AppleJuiceDialog.rewriteProperties);
+    }
+
+    @Test(timeout = 20000)
+    public void savedRefreshIntervalsSurviveReload() throws Exception {
+        File file = write("options_sound=true\n");
+        PropertiesManager manager = manager(file);
+        manager.setCorePollIntervalMs(2500);
+        manager.setPartlistRefreshIntervalMs(4000);
+        PropertiesManager reloaded = manager(file);
+        assertEquals(2500, reloaded.getCorePollIntervalMs());
+        assertEquals(4000, reloaded.getPartlistRefreshIntervalMs());
     }
 
     @Test(timeout = 20000)

@@ -52,7 +52,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
     private Version coreVersion;
     private Map<Integer, Share> share = null;
     private PartListXMLHolder partlistXML = null;
-    private long sleepTime = RefreshIntervals.CORE_POLL_MS;
+    private volatile long sleepTime = RefreshIntervals.CORE_POLL_DEFAULT_MS;
 
     // Thread
     private final Object workerLock = new Object();

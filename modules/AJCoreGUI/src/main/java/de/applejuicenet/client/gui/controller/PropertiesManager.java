@@ -6,6 +6,7 @@ package de.applejuicenet.client.gui.controller;
 
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.shared.RefreshIntervals;
 import de.applejuicenet.client.facade.listener.DataUpdateListener;
 import de.applejuicenet.client.facade.listener.DataUpdateListener.DATALISTENER_TYPE;
 import de.applejuicenet.client.facade.shared.AJSettings;
@@ -374,6 +375,38 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
     public void closeToTray(boolean closeToTray) {
         propertyHandler.put("options_close_to_tray", closeToTray);
+    }
+
+    public long getCorePollIntervalMs() {
+        return readInterval("options_core_poll_ms", RefreshIntervals.CORE_POLL_DEFAULT_MS,
+                RefreshIntervals.CORE_POLL_MIN_MS, RefreshIntervals.CORE_POLL_MAX_MS);
+    }
+
+    public void setCorePollIntervalMs(long millis) {
+        propertyHandler.put("options_core_poll_ms", Long.toString(RefreshIntervals.clamp(millis,
+                RefreshIntervals.CORE_POLL_MIN_MS, RefreshIntervals.CORE_POLL_MAX_MS)));
+        saveFile();
+    }
+
+    public long getPartlistRefreshIntervalMs() {
+        return readInterval("options_partlist_refresh_ms", RefreshIntervals.PARTLIST_REFRESH_DEFAULT_MS,
+                RefreshIntervals.PARTLIST_REFRESH_MIN_MS, RefreshIntervals.PARTLIST_REFRESH_MAX_MS);
+    }
+
+    public void setPartlistRefreshIntervalMs(long millis) {
+        propertyHandler.put("options_partlist_refresh_ms", Long.toString(RefreshIntervals.clamp(millis,
+                RefreshIntervals.PARTLIST_REFRESH_MIN_MS, RefreshIntervals.PARTLIST_REFRESH_MAX_MS)));
+        saveFile();
+    }
+
+    /** A missing, invalid or out-of-range value never resets the file: it falls back to the default or the nearest limit. */
+    private long readInterval(String key, long defaultMs, long minMs, long maxMs) {
+        try {
+            return RefreshIntervals.clamp(Long.parseLong(propertyHandler.get(key, Long.toString(defaultMs)).trim()), minMs, maxMs);
+        } catch (NumberFormatException e) {
+            logger.warn("Invalid value for {}, using the default {} ms", key, defaultMs);
+            return defaultMs;
+        }
     }
 
     public boolean shouldRememberColumnWidths() {

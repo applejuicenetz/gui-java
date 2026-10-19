@@ -97,6 +97,14 @@ public interface OptionsManager
 
    void closeToTray(boolean closeToTray);
 
+   long getCorePollIntervalMs();
+
+   void setCorePollIntervalMs(long millis);
+
+   long getPartlistRefreshIntervalMs();
+
+   void setPartlistRefreshIntervalMs(long millis);
+
    boolean shouldRememberColumnWidths();
 
    void rememberColumnWidths(boolean remember);

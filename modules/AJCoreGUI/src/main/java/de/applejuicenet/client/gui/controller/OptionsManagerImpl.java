@@ -178,6 +178,22 @@ public class OptionsManagerImpl implements OptionsManager{
         propertiesManager.closeToTray(closeToTray);
     }
 
+    public long getCorePollIntervalMs() {
+        return propertiesManager.getCorePollIntervalMs();
+    }
+
+    public void setCorePollIntervalMs(long millis) {
+        propertiesManager.setCorePollIntervalMs(millis);
+    }
+
+    public long getPartlistRefreshIntervalMs() {
+        return propertiesManager.getPartlistRefreshIntervalMs();
+    }
+
+    public void setPartlistRefreshIntervalMs(long millis) {
+        propertiesManager.setPartlistRefreshIntervalMs(millis);
+    }
+
     public boolean shouldRememberColumnWidths() {
         return propertiesManager.shouldRememberColumnWidths();
     }
