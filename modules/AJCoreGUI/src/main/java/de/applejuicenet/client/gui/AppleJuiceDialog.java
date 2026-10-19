@@ -26,6 +26,7 @@ import de.applejuicenet.client.shared.IconManager;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.LookAndFeelLoader;
 import de.applejuicenet.client.shared.SoundPlayer;
+import de.applejuicenet.client.shared.ThemeRefresh;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -807,10 +808,9 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
                 for (LookAFeel feel : feels) {
                     if (laf.equals(feel.getName())) {
                         UIManager.setLookAndFeel(feel.getClassName());
-                        SwingUtilities.updateComponentTreeUI(this);
-                        PopupMenuSupport.updateAll();
-                        installClipboardKeys();
                         OptionsManagerImpl.getInstance().setDefaultLookAndFeel(feel);
+                        ThemeRefresh.refresh(this);
+                        installClipboardKeys();
                         return;
                     }
                 }

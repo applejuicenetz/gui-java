@@ -8,6 +8,7 @@
   - Themes nach Familie gruppiert; neue FlatLaf-Themes und Farbvarianten zur Auswahl
   - Tabellenüberschriften übernehmen beim Theme-Wechsel Farben und Schrift vollständig
   - Kontextmenüs übernehmen den Theme-Wechsel sofort mit
+  - Theme-Wechsel von JGoodies Plastic bricht die GUI nicht mehr ab; Auswahl wird immer gespeichert
   - „Fenster schließen minimiert in den Tray“ ist jetzt standardmäßig aus; Schließen beendet die GUI
   - Link-Leiste nimmt mehrere `ajfsp`-Links auf (getrennt durch Leerzeichen oder Zeilenumbruch)
   - Statusbar: Icons, Tooltips und getrennte Felder für Status, Verbindungen, Server, Speed und Traffic
