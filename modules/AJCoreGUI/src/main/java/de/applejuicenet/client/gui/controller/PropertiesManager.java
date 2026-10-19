@@ -250,9 +250,6 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             try {
                 lookAndFeels.add(LookAndFeelLoader.DEFAULT);
 
-                if (System.getProperty("os.name").toLowerCase().contains("win")) {
-                    lookAndFeels.add(new LookAFeel("JGoodies Windows", "com.jgoodies.looks.windows.WindowsLookAndFeel"));
-                }
 
                 LookAndFeelInfo[] feels = UIManager.getInstalledLookAndFeels();
 
@@ -264,7 +261,17 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
                     }
                 }
 
+                lookAndFeels.add(new LookAFeel("FlatLaf Light", "com.formdev.flatlaf.FlatLightLaf"));
+                lookAndFeels.add(new LookAFeel("FlatLaf Dark", "com.formdev.flatlaf.FlatDarkLaf"));
+                lookAndFeels.add(new LookAFeel("FlatLaf IntelliJ", "com.formdev.flatlaf.FlatIntelliJLaf"));
+                lookAndFeels.add(new LookAFeel("FlatLaf macOS Light", "com.formdev.flatlaf.themes.FlatMacLightLaf"));
+                lookAndFeels.add(new LookAFeel("FlatLaf macOS Dark", "com.formdev.flatlaf.themes.FlatMacDarkLaf"));
                 lookAndFeels.add(new LookAFeel("Darcula", "com.formdev.flatlaf.FlatDarculaLaf"));
+                lookAndFeels.add(new LookAFeel("Nord", "com.formdev.flatlaf.intellijthemes.FlatNordIJTheme"));
+                lookAndFeels.add(new LookAFeel("Arc Dark", "com.formdev.flatlaf.intellijthemes.FlatArcDarkIJTheme"));
+                lookAndFeels.add(new LookAFeel("Dracula", "com.formdev.flatlaf.intellijthemes.FlatDraculaIJTheme"));
+                lookAndFeels.add(new LookAFeel("Solarized Light", "com.formdev.flatlaf.intellijthemes.FlatSolarizedLightIJTheme"));
+                lookAndFeels.add(new LookAFeel("Solarized Dark", "com.formdev.flatlaf.intellijthemes.FlatSolarizedDarkIJTheme"));
 
             } catch (Exception e) {
                 logger.warn("Themes could not be loaded completely", e);

@@ -44,6 +44,46 @@ public class PropertiesManagerRobustnessTest {
     }
 
     @Test(timeout = 20000)
+    public void additionalColorThemesAreSelectableAndRender() throws Exception {
+        PropertiesManager manager = manager(write("options_sound=false\n"));
+        var themes = java.util.Arrays.asList(manager.getLookAndFeels());
+        for (String name : List.of("Nord", "Arc Dark", "Dracula", "Solarized Light", "Solarized Dark",
+                "FlatLaf Light", "FlatLaf Dark", "FlatLaf IntelliJ", "FlatLaf macOS Light", "FlatLaf macOS Dark")) {
+            var theme = themes.stream().filter(candidate -> name.equals(candidate.getName())).findFirst();
+            assertTrue("Missing theme: " + name, theme.isPresent());
+            javax.swing.SwingUtilities.invokeAndWait(() -> {
+                javax.swing.LookAndFeel previous = javax.swing.UIManager.getLookAndFeel();
+                try {
+                    javax.swing.UIManager.setLookAndFeel(theme.get().getClassName());
+                    javax.swing.JPanel panel = new javax.swing.JPanel(new java.awt.GridLayout(0, 1));
+                    panel.add(new javax.swing.JButton("Download"));
+                    panel.add(new javax.swing.JTextField("Filter"));
+                    panel.add(new javax.swing.JScrollPane(new javax.swing.JTable(
+                            new Object[][]{{"example.bin", "50 %"}}, new Object[]{"File", "Progress"})));
+                    panel.add(new javax.swing.JScrollPane(new javax.swing.JTree()));
+                    panel.setSize(500, 400);
+                    panel.doLayout();
+                    java.awt.Graphics2D graphics = new java.awt.image.BufferedImage(500, 400,
+                            java.awt.image.BufferedImage.TYPE_INT_ARGB).createGraphics();
+                    try {
+                        panel.printAll(graphics);
+                    } finally {
+                        graphics.dispose();
+                    }
+                } catch (Exception failure) {
+                    throw new AssertionError("Cannot render theme: " + name, failure);
+                } finally {
+                    try {
+                        javax.swing.UIManager.setLookAndFeel(previous);
+                    } catch (javax.swing.UnsupportedLookAndFeelException failure) {
+                        throw new AssertionError(failure);
+                    }
+                }
+            });
+        }
+    }
+
+    @Test(timeout = 20000)
     public void invalidRemotePortFallsBackToDefaultWithoutExiting() throws Exception {
         File file = write("options_remote_host=example.org\noptions_remote_port=abc\noptions_sound=false\n");
         PropertiesManager manager = manager(file);

@@ -717,23 +717,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
             }
 
             themesMenu = new JMenu();
-            final LookAFeel[] feels = OptionsManagerImpl.getInstance().getLookAndFeels();
-            LookAFeel defaultlookandfeel = OptionsManagerImpl.getInstance().getDefaultLookAndFeel();
-            ButtonGroup lafGroup2 = new ButtonGroup();
-
-            for (LookAFeel feel : feels) {
-                final JCheckBoxLookAndFeelMenuItem lookAndFeelMenuItem = new JCheckBoxLookAndFeelMenuItem(feel);
-
-                lafGroup2.add(lookAndFeelMenuItem);
-                themesMenu.add(lookAndFeelMenuItem);
-                lookAndFeelMenuItem.setSelected(defaultlookandfeel != null && feel.getName().equals(defaultlookandfeel.getName()));
-
-                lookAndFeelMenuItem.addItemListener(ae -> {
-                    if (lookAndFeelMenuItem.isSelected()) {
-                        activateLaF(lookAndFeelMenuItem.getText());
-                    }
-                });
-            }
+            populateThemesMenu();
             menuBar.add(themesMenu);
 
             iconsetMenu = new JMenu();
@@ -821,6 +805,12 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         }
     }
 
+    private void populateThemesMenu() {
+        LookAFeel selected = OptionsManagerImpl.getInstance().getDefaultLookAndFeel();
+        ThemeMenu.populate(themesMenu, OptionsManagerImpl.getInstance().getLookAndFeels(),
+                selected == null ? null : selected.getName(), GuiText::text, this::activateLaF);
+    }
+
     private void activateLaF(String laf) {
         try {
 
@@ -829,6 +819,9 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
             if (feels != null && laf != null) {
                 for (LookAFeel feel : feels) {
                     if (laf.equals(feel.getName())) {
+                        UIManager.setLookAndFeel(feel.getClassName());
+                        SwingUtilities.updateComponentTreeUI(this);
+                        installClipboardKeys();
                         OptionsManagerImpl.getInstance().setDefaultLookAndFeel(feel);
                         return;
                     }
@@ -925,6 +918,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
             menuItemFileList.setText(languageSelector.getFirstAttributeByTagName("javagui.menu.filelist"));
             menuItemFileList.setToolTipText(null);
             themesMenu.setText(languageSelector.getFirstAttributeByTagName("javagui.menu.themes"));
+            populateThemesMenu();
             iconsetMenu.setText(languageSelector.getFirstAttributeByTagName("javagui.menu.icons"));
             soundsetMenu.setText(languageSelector.getFirstAttributeByTagName("javagui.menu.sound"));
             confirmation = languageSelector.getFirstAttributeByTagName("javagui.menu.confirmation");
@@ -1213,25 +1207,6 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
     }
 
 
-    private class JCheckBoxLookAndFeelMenuItem extends JCheckBoxMenuItem {
-        private final LookAFeel lookAFeel;
-
-        public JCheckBoxLookAndFeelMenuItem(LookAFeel lookAFeelToUse) {
-            super(lookAFeelToUse.getName());
-            this.lookAFeel = lookAFeelToUse;
-            addItemListener(ae -> {
-                if (isSelected()) {
-                    try {
-                        UIManager.setLookAndFeel(lookAFeel.getClassName());
-                        SwingUtilities.updateComponentTreeUI(AppleJuiceDialog.this);
-                        installClipboardKeys();
-                    } catch (Exception ex) {
-                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
-                    }
-                }
-            });
-        }
-    }
 
     private static class iconsetFeelMenuItem extends JCheckBoxMenuItem {
         public iconsetFeelMenuItem(String name) {

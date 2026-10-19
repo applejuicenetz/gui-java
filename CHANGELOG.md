@@ -5,6 +5,7 @@
 ### Sichtbare Änderungen
 
 - [red171] Bedienung:
+  - Themes nach Familie gruppiert; neue FlatLaf-Themes und Farbvarianten zur Auswahl
   - „Fenster schließen minimiert in den Tray“ ist jetzt standardmäßig aus; Schließen beendet die GUI
   - Link-Leiste nimmt mehrere `ajfsp`-Links auf (getrennt durch Leerzeichen oder Zeilenumbruch)
   - Statusbar: Icons, Tooltips und getrennte Felder für Status, Verbindungen, Server, Speed und Traffic
