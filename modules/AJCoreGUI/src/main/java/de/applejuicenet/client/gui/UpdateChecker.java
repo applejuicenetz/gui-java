@@ -3,7 +3,6 @@ package de.applejuicenet.client.gui;
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import de.applejuicenet.client.facade.shared.WebsiteContentLoader;
-import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

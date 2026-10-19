@@ -9,7 +9,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 
 /** Paints immutable snapshots; never edits history or persists settings. */
 public class UpDownChart extends JPanel {

@@ -5,7 +5,6 @@
 package de.applejuicenet.client.gui.options;
 
 import de.applejuicenet.client.gui.AppleJuiceDialog;
-import de.applejuicenet.client.gui.DialogLocation;
 import de.applejuicenet.client.gui.controller.GuiText;
 
 import de.applejuicenet.client.AppleJuiceClient;
@@ -23,7 +22,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.io.File;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODViewPanel.java,v 1.12 2009/01/26 13:31:36 maj0r Exp $

@@ -4,13 +4,11 @@
 
 package de.applejuicenet.client.gui.search.table;
 
-import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.facade.entity.FileName;
 import de.applejuicenet.client.facade.entity.Search;
 import de.applejuicenet.client.facade.entity.SearchEntry;
 import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
-import org.slf4j.Logger;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;

@@ -12,7 +12,6 @@ import de.applejuicenet.client.facade.entity.Search;
 import de.applejuicenet.client.facade.entity.Share;
 import de.applejuicenet.client.facade.event.DataPropertyChangeEvent;
 import de.applejuicenet.client.facade.event.DownloadDataPropertyChangeEvent;
-import de.applejuicenet.client.facade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.components.util.Value;

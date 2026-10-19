@@ -3,7 +3,6 @@ package de.applejuicenet.client.gui.controller;
 import de.applejuicenet.client.facade.shared.RefreshIntervals;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.shared.ConnectionSettings;
-import de.applejuicenet.client.shared.Settings;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;

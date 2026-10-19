@@ -9,7 +9,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 

@@ -16,7 +16,6 @@ package de.applejuicenet.client.facade.controller.xml;
  *
  */
 
-import de.applejuicenet.client.facade.shared.ProxySettings;
 import de.applejuicenet.client.facade.shared.WebsiteContentLoader;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;

@@ -4,7 +4,6 @@ import de.applejuicenet.client.gui.controller.GuiText;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
 
 /** EDT-owned controls and summary above a shared time axis. */

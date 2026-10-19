@@ -3,7 +3,6 @@ package de.applejuicenet.client.gui.components.table;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
