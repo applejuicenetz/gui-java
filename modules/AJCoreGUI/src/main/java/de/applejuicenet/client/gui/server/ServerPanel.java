@@ -4,6 +4,7 @@
 
 package de.applejuicenet.client.gui.server;
 
+import de.applejuicenet.client.shared.CoreCall;
 import de.applejuicenet.client.gui.DialogLocation;
 
 import de.applejuicenet.client.AppleJuiceClient;
@@ -171,13 +172,9 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                 }
 
                 // Core call blocks on a slow core: not on the EDT
-                Thread.ofVirtual().name("ConnectToServer").start(() -> {
-                    try {
-                        af.connectToServer(server);
-                        SoundPlayer.getInstance().playSound(SoundPlayer.CONNECT);
-                    } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
-                    }
+                CoreCall.runInBackground("ConnectToServer", () -> {
+                    af.connectToServer(server);
+                    SoundPlayer.getInstance().playSound(SoundPlayer.CONNECT);
                 });
             }
         });
@@ -239,13 +236,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                 if (newServerDialog.isLegal()) {
                     final String link = newServerDialog.getLink();
 
-                    Thread.ofVirtual().name("AddServer").start(() -> {
-                        try {
-                            AppleJuiceClient.getAjFacade().processLink(link, "");
-                        } catch (IllegalArgumentException e) {
-                            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
-                        }
-                    });
+                    CoreCall.runInBackground("AddServer", () -> AppleJuiceClient.getAjFacade().processLink(link, ""));
                 }
             }
         };
@@ -265,7 +256,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         constraints.gridy = 0;
 
         searchServer.addActionListener(ae -> {
-            Thread.ofVirtual().name("SearchServers").start(() -> {
+            CoreCall.runInBackground("SearchServers", () -> {
                 String ServerListURL = OptionsManagerImpl.getInstance().getServerListURL();
                 ApplejuiceFacade af = AppleJuiceClient.getAjFacade();
                 String[] server = af.getNetworkKnownServers(ServerListURL);
@@ -278,7 +269,8 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                     try {
                         af.processLink(server[i], "");
                     } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
+                        // one rejected entry must not stop the rest of the list
+                        logger.warn("Server entry {} was rejected: {}", server[i], e.toString());
                     }
                 }
             });

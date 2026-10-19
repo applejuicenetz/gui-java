@@ -4,6 +4,7 @@
 
 package de.applejuicenet.client.gui.search;
 
+import de.applejuicenet.client.shared.CoreCall;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.facade.entity.Download;
@@ -101,18 +102,11 @@ public class SearchController extends GuiController
          searchTerm.setSelectionEnd(searchText.length());
 
          // Core calls (fetch share list, start search) block on a slow core: not on the EDT
-         Thread.ofVirtual().name("StartSearch").start(() ->
+         CoreCall.runInBackground("StartSearch", () ->
          {
-            try
-            {
-               startFirstSearch();
-               AppleJuiceClient.getAjFacade().startSearch(searchText);
-               SoundPlayer.getInstance().playSound(SoundPlayer.SEARCH);
-            }
-            catch(IllegalArgumentException e)
-            {
-               logger.error(ApplejuiceFacade.ERROR_MESSAGE,e);
-            }
+            startFirstSearch();
+            AppleJuiceClient.getAjFacade().startSearch(searchText);
+            SoundPlayer.getInstance().playSound(SoundPlayer.SEARCH);
          });
       }
    }

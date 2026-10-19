@@ -3,6 +3,7 @@
  */
 package de.applejuicenet.client.gui;
 
+import de.applejuicenet.client.shared.CoreCall;
 import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.facade.ApplejuiceFacade;
@@ -496,8 +497,8 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         final String targetDir = tmp;
 
         if (link.length() != 0) {
-            Thread.ofVirtual().name("ProcessLink").start(() -> {
-                try {
+            CoreCall.runInBackground("ProcessLink", () -> {
+                {
                     final String result = AppleJuiceClient.getAjFacade().processLink(link, targetDir);
 
                     SoundPlayer.getInstance().playSound(SoundPlayer.LOADING);
@@ -518,8 +519,6 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
                             }
                         });
                     }
-                } catch (IllegalArgumentException e) {
-                    logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                 }
             });
 
@@ -666,7 +665,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
                 if (result == JOptionPane.YES_OPTION) {
-                    Thread.ofVirtual().name("ShutdownCore").start(() -> AppleJuiceClient.getAjFacade().shutdownCore());
+                    CoreCall.runInBackground("ShutdownCore", () -> AppleJuiceClient.getAjFacade().shutdownCore());
 
                 }
             });
@@ -881,7 +880,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
 
                 final String targetDir = directory;
 
-                Thread.ofVirtual().name("AJL-Import").start(() -> importAjl(file, targetDir));
+                CoreCall.runInBackground("AJL-Import", () -> importAjl(file, targetDir));
             }
         }
     }

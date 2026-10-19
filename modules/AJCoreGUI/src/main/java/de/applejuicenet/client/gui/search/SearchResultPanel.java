@@ -4,6 +4,7 @@
 
 package de.applejuicenet.client.gui.search;
 
+import de.applejuicenet.client.shared.CoreCall;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.facade.entity.Search;
@@ -248,8 +249,8 @@ public class SearchResultPanel extends JPanel {
     }
 
     private void processLink(final String link) {
-        Thread.ofVirtual().name("ProcessLink").start(() -> {
-            try {
+        CoreCall.runInBackground("ProcessLink", () -> {
+            {
                 final String result = AppleJuiceClient.getAjFacade().processLink(link, "");
 
                 SoundPlayer.getInstance().playSound(SoundPlayer.LOADING);
@@ -273,8 +274,6 @@ public class SearchResultPanel extends JPanel {
                         }
                     });
                 }
-            } catch (IllegalArgumentException e) {
-                logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
             }
         });
     }

@@ -4,6 +4,7 @@
 
 package de.applejuicenet.client.gui.download;
 
+import de.applejuicenet.client.shared.CoreCall;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.facade.entity.*;
@@ -371,7 +372,7 @@ public class DownloadController extends GuiController {
     }
 
     private void clearReadyDownloads() {
-        Thread.ofVirtual().name("CleanDownloadList").start(() -> AppleJuiceClient.getAjFacade().cleanDownloadList());
+        CoreCall.runInBackground("CleanDownloadList", () -> AppleJuiceClient.getAjFacade().cleanDownloadList());
         downloadPanel.getPowerDownloadPanel().getBtnPowerdownload().setEnabled(false);
         downloadPanel.getPowerDownloadPanel().setPowerdownloadValue(0);
         downloadPanel.getDownloadTable().getSelectionModel().clearSelection();
@@ -548,13 +549,7 @@ public class DownloadController extends GuiController {
             }
 
             if (pause.size() > 0) {
-                Thread.ofVirtual().name("PauseDownload").start(() -> {
-                    try {
-                        AppleJuiceClient.getAjFacade().pauseDownload(pause);
-                    } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
-                    }
-                });
+                CoreCall.runInBackground("PauseDownload", () -> AppleJuiceClient.getAjFacade().pauseDownload(pause));
             }
         }
     }
@@ -573,13 +568,7 @@ public class DownloadController extends GuiController {
             }
 
             if (resume.size() > 0) {
-                Thread.ofVirtual().name("ResumeDownload").start(() -> {
-                    try {
-                        AppleJuiceClient.getAjFacade().resumeDownload(resume);
-                    } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
-                    }
-                });
+                CoreCall.runInBackground("ResumeDownload", () -> AppleJuiceClient.getAjFacade().resumeDownload(resume));
             }
         }
     }
@@ -728,13 +717,9 @@ public class DownloadController extends GuiController {
                 Collections.addAll(cancel, selectedDownloads);
 
                 if (cancel.size() > 0) {
-                    Thread.ofVirtual().name("CancelDownload").start(() -> {
-                        try {
-                            AppleJuiceClient.getAjFacade().cancelDownload(cancel);
-                            SoundPlayer.getInstance().playSound(SoundPlayer.CANCELLED);
-                        } catch (IllegalArgumentException e) {
-                            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
-                        }
+                    CoreCall.runInBackground("CancelDownload", () -> {
+                        AppleJuiceClient.getAjFacade().cancelDownload(cancel);
+                        SoundPlayer.getInstance().playSound(SoundPlayer.CANCELLED);
                     });
                 }
             }
