@@ -57,7 +57,7 @@ public class PropertyHandlerTest {
 
         org.junit.Assume.assumeTrue("Read-only directories not supported", directory.setWritable(false));
         try {
-            org.junit.Assume.assumeFalse("root ignoriert Schreibschutz", Files.isWritable(directory.toPath()));
+            org.junit.Assume.assumeFalse("root ignores write protection", Files.isWritable(directory.toPath()));
             handler.put("a", "new");
             assertThrows(IllegalArgumentException.class, handler::save);
             assertEquals(before, Files.readString(file, StandardCharsets.ISO_8859_1));

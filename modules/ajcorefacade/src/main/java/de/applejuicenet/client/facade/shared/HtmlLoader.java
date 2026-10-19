@@ -207,9 +207,9 @@ public abstract class HtmlLoader
 
                      urlContent.append(new String(data, StandardCharsets.ISO_8859_1));
                   }
-                  catch(DataFormatException dfe)
+                  catch(DataFormatException formatError)
                   {
-                     throw new WebSiteNotFoundException(WebSiteNotFoundException.INPUT_ERROR, dfe);
+                     throw new WebSiteNotFoundException(WebSiteNotFoundException.INPUT_ERROR, formatError);
                   }
                }
                else

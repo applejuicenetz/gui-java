@@ -23,10 +23,10 @@ public class ShareSelectionTreeCellRenderer
     extends DefaultTreeCellRenderer
     implements TreeCellRenderer {
     public Component getTreeCellRendererComponent(JTree tree, Object value,
-                                                  boolean sel, boolean expanded,
+                                                  boolean isSelected, boolean expanded,
                                                   boolean leaf,
                                                   int row, boolean hasFocus) {
-        super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+        super.getTreeCellRendererComponent(tree, value, isSelected, expanded, leaf, row, hasFocus);
         setFont(tree.getFont());
         Icon icon = value instanceof Node ? ((Node) value).getConvenientIcon() : getIcon();
         if (value instanceof DirectoryNode) {

@@ -29,7 +29,7 @@ public class LogParserTest {
     }
 
     @Test public void attachesExceptionToPrecedingEntryAndKeepsLineBreaks() {
-        String html = HEADER + row(5, "ERROR", "kaputt")
+        String html = HEADER + row(5, "ERROR", "broken")
                 + "<tr><td class=\"Exception\" colspan=\"6\">java.io.IOException: x\n<br />&nbsp;&nbsp;&nbsp;&nbsp;at a.B.&lt;clinit&gt;(B.java:1)\n</td></tr>\n"
                 + row(6, "INFO", "weiter");
         LogParser.Result result = LogParser.parse(html, 100);
@@ -41,7 +41,7 @@ public class LogParserTest {
 
     @Test public void toleratesUnfinishedFilesUnknownLevelsAndGarbage() {
         String html = HEADER + row(1, "TRACE", "t") + row(2, "FATAL", "f")
-                + "<tr class=\"info odd\">\n<td class=\"RelativeTime\">3</td>\n<td class=\"Message\">abgeschnitten";
+                + "<tr class=\"info odd\">\n<td class=\"RelativeTime\">3</td>\n<td class=\"Message\">truncated";
         LogParser.Result result = LogParser.parse(html, 100);
         assertEquals(2, result.entries().size());
         assertEquals(LogParser.Level.TRACE, result.entries().get(0).level());

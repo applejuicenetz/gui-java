@@ -15,12 +15,12 @@ public class LogEntryTableTest {
         SwingUtilities.invokeAndWait(() -> {
             LogEntryTable table = new LogEntryTable();
             table.setEntries(List.of(entry(1, LogParser.Level.INFO, "start", ""),
-                    entry(2, LogParser.Level.WARN, "langsam", ""),
-                    entry(3, LogParser.Level.ERROR, "kaputt", "java.io.IOException: x\n at A.b(A.java:1)")));
+                    entry(2, LogParser.Level.WARN, "slow", ""),
+                    entry(3, LogParser.Level.ERROR, "broken", "java.io.IOException: x\n at A.b(A.java:1)")));
             assertEquals(3, table.visibleCount());
             table.setMinimumLevel(LogParser.Level.WARN);
             assertEquals(2, table.visibleCount());
-            table.setFilterText("KAPUTT");
+            table.setFilterText("BROKEN");
             assertEquals(1, table.visibleCount());
             table.setFilterText("IOException");
             assertEquals(1, table.visibleCount());
@@ -34,9 +34,9 @@ public class LogEntryTableTest {
         SwingUtilities.invokeAndWait(() -> {
             LogEntryTable table = new LogEntryTable();
             table.setEntries(List.of(entry(1, LogParser.Level.INFO, "start", ""),
-                    entry(3, LogParser.Level.ERROR, "kaputt", "java.io.IOException: x")));
+                    entry(3, LogParser.Level.ERROR, "broken", "java.io.IOException: x")));
             assertTrue(table.detailText().contains("java.io.IOException: x"));
-            assertTrue(table.detailText().contains("kaputt"));
+            assertTrue(table.detailText().contains("broken"));
             table.setEntries(List.of(entry(1, LogParser.Level.INFO, "info only", "")));
             assertEquals("", table.detailText());
             table.selectRow(0);

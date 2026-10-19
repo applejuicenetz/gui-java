@@ -139,7 +139,7 @@ public class SoundPlayerTest {
     @Test(timeout = 20000)
     public void invalidFormatAndMissingFileFreeTheSlot() throws Exception {
         SoundPlayer player = player(file -> {
-            throw new UnsupportedAudioFileException("kaputt");
+            throw new UnsupportedAudioFileException("broken");
         });
         player.playSound(SoundPlayer.LOADING);
         await(() -> player.activeSounds() == 0, "Slot not free after invalid format");
@@ -161,7 +161,7 @@ public class SoundPlayerTest {
         for (int i = 0; i < 12; i++) {
             player.playSound(SoundPlayer.LOADING);
         }
-        await(() -> opened.size() == SoundPlayer.MAX_ACTIVE_SOUNDS, "erwartet " + SoundPlayer.MAX_ACTIVE_SOUNDS);
+        await(() -> opened.size() == SoundPlayer.MAX_ACTIVE_SOUNDS, "expected " + SoundPlayer.MAX_ACTIVE_SOUNDS);
         Thread.sleep(200);
         assertEquals(SoundPlayer.MAX_ACTIVE_SOUNDS, opened.size());
         assertEquals(SoundPlayer.MAX_ACTIVE_SOUNDS, player.activeSounds());
@@ -205,7 +205,7 @@ public class SoundPlayerTest {
         opened.get(0).finish();
         pack.set("warp");
         player.playSound(SoundPlayer.COMPLETE_SOUND);
-        await(() -> opened.size() == 2, "zweiter Ton");
+        await(() -> opened.size() == 2, "second sound");
         assertEquals("classic", opened.get(0).file.getParent().getFileName().toString());
         assertEquals("warp", opened.get(1).file.getParent().getFileName().toString());
         opened.get(1).finish();

@@ -20,7 +20,7 @@ public class LogViewerPluginTest {
 
     private static final String LOG = "<html><body><p>Log session start time X</p><table>"
             + "<tr class=\"error even\"><td class=\"RelativeTime\">1</td><td class=\"Thread\">t</td><td class=\"Level\">ERROR</td>"
-            + "<td class=\"Logger\">a.B</td><td class=\"LineOfCaller\">1</td><td class=\"Message\">fehler</td></tr></table></body></html>";
+            + "<td class=\"Logger\">a.B</td><td class=\"LineOfCaller\">1</td><td class=\"Message\">error</td></tr></table></body></html>";
 
     private Path logs(int count) throws Exception {
         Path directory = folder.newFolder().toPath();

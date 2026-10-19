@@ -18,10 +18,10 @@ import java.awt.*;
  */
 public class DirectoryChooserTreeCellRenderer extends DefaultTreeCellRenderer
 {
-   public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row,
+   public Component getTreeCellRendererComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row,
       boolean hasFocus)
    {
-      super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+      super.getTreeCellRendererComponent(tree, value, isSelected, expanded, leaf, row, hasFocus);
       Icon icon = value instanceof Node ? ((Node) value).getConvenientIcon() : null;
 
       if(icon != null)

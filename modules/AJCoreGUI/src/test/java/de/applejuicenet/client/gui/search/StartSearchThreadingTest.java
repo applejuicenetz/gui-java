@@ -173,7 +173,7 @@ public class StartSearchThreadingTest {
             // The core still holds back share.xml; the EDT must still work immediately
             long t0 = System.nanoTime();
             SwingUtilities.invokeAndWait(() -> text.setText("weiter"));
-            assertTrue("EDT blockiert", System.nanoTime() - t0 < 1_000_000_000L);
+            assertTrue("EDT blocked", System.nanoTime() - t0 < 1_000_000_000L);
             assertEquals(0, core.searchRequests.get());
 
             core.release.countDown();

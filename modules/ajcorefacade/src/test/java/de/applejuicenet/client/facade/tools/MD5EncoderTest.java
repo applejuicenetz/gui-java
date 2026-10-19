@@ -16,7 +16,7 @@ public class MD5EncoderTest {
 
     @Test
     public void keepsLeadingZeroBytesAndLowerCase() throws Exception {
-        // "a" ergibt 0cc175b9c0f1b6a831c399e269772661 (fuehrende Null)
+        // "a" gives 0cc175b9c0f1b6a831c399e269772661 (leading zero)
         assertEquals("0cc175b9c0f1b6a831c399e269772661", MD5Encoder.getMD5("a"));
         for (int i = 0; i < 500; i++) {
             String text = "pw" + i;

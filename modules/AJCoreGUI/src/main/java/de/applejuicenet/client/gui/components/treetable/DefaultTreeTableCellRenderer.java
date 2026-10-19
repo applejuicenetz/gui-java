@@ -30,12 +30,12 @@ public class DefaultTreeTableCellRenderer extends JTree implements
 		
 	public void updateUI() {
 		super.updateUI();
-		TreeCellRenderer tcr = getCellRenderer();
-		if (tcr instanceof DefaultTreeCellRenderer) {
-			DefaultTreeCellRenderer dtcr = ((DefaultTreeCellRenderer) tcr);
-			dtcr.setTextSelectionColor(UIManager
+		TreeCellRenderer treeRenderer = getCellRenderer();
+		if (treeRenderer instanceof DefaultTreeCellRenderer) {
+			DefaultTreeCellRenderer defaultRenderer = ((DefaultTreeCellRenderer) treeRenderer);
+			defaultRenderer.setTextSelectionColor(UIManager
 					.getColor("Table.selectionForeground"));
-			dtcr.setBackgroundSelectionColor(UIManager
+			defaultRenderer.setBackgroundSelectionColor(UIManager
 					.getColor("Table.selectionBackground"));
 		}
 	}

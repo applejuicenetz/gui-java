@@ -55,7 +55,7 @@ public class JarLoaderResourceTest {
     @Test
     public void pluginLoaderClosesTheJarEvenWhenThePluginIsInvalid() throws Exception {
         org.junit.Assume.assumeTrue("needs /proc", Files.isDirectory(Path.of("/proc/self/fd")));
-        File jar = jarWith("kaputt.jar", "plugin.properties", "general.classname=gibt.es.nicht\n");
+        File jar = jarWith("broken.jar", "plugin.properties", "general.classname=does.not.exist\n");
         long before = openHandlesOn(jar);
         for (int i = 0; i < 20; i++) {
             assertNull(new PluginJarClassLoader().getPlugin(jar));
@@ -80,7 +80,7 @@ public class JarLoaderResourceTest {
         try (Stream<Path> fds = Files.list(Path.of("/proc/self/fd"))) {
             handlesAfter = fds.count();
         }
-        assertTrue("Dateihandles gewachsen: " + handlesBefore + " -> " + handlesAfter, handlesAfter - handlesBefore < 20);
+        assertTrue("File handles grew: " + handlesBefore + " -> " + handlesAfter, handlesAfter - handlesBefore < 20);
     }
 
     @Test

@@ -53,19 +53,19 @@ public abstract class ZLibUtils
     */
    public static byte[] inflate(byte[] b, int maxBytes) throws DataFormatException
    {
-      Inflater infl = new Inflater();
+      Inflater inflater = new Inflater();
 
       try
       {
-         infl.setInput(b);
+         inflater.setInput(b);
          ByteArrayOutputStream bos = new ByteArrayOutputStream(Math.min(Math.max(b.length * 4, 256), maxBytes));
          byte[]                buf = new byte[4096];
 
-         while(!infl.finished())
+         while(!inflater.finished())
          {
-            int count = infl.inflate(buf);
+            int count = inflater.inflate(buf);
 
-            if(count == 0 && (infl.needsInput() || infl.needsDictionary()))
+            if(count == 0 && (inflater.needsInput() || inflater.needsDictionary()))
             {
                throw new DataFormatException("Incomplete zlib data");
             }
@@ -82,7 +82,7 @@ public abstract class ZLibUtils
       }
       finally
       {
-         infl.end();
+         inflater.end();
       }
    }
 
@@ -92,7 +92,7 @@ public abstract class ZLibUtils
     */
    public static byte[] inflate(InputStream in, int maxBytes) throws IOException, DataFormatException
    {
-      Inflater infl = new Inflater();
+      Inflater inflater = new Inflater();
 
       try
       {
@@ -100,9 +100,9 @@ public abstract class ZLibUtils
          byte[]                input = new byte[4096];
          byte[]                buf   = new byte[4096];
 
-         while(!infl.finished())
+         while(!inflater.finished())
          {
-            int count = infl.inflate(buf);
+            int count = inflater.inflate(buf);
 
             if(count > 0)
             {
@@ -113,11 +113,11 @@ public abstract class ZLibUtils
 
                bos.write(buf, 0, count);
             }
-            else if(infl.needsDictionary())
+            else if(inflater.needsDictionary())
             {
                throw new DataFormatException("Zlib dictionary not supported");
             }
-            else if(infl.needsInput())
+            else if(inflater.needsInput())
             {
                int read = in.read(input);
 
@@ -126,7 +126,7 @@ public abstract class ZLibUtils
                   throw new DataFormatException("Incomplete zlib data");
                }
 
-               infl.setInput(input, 0, read);
+               inflater.setInput(input, 0, read);
             }
          }
 
@@ -134,7 +134,7 @@ public abstract class ZLibUtils
       }
       finally
       {
-         infl.end();
+         inflater.end();
       }
    }
 
@@ -152,9 +152,9 @@ public abstract class ZLibUtils
 
          return retval;
       }
-      catch(DataFormatException dfe)
+      catch(DataFormatException formatError)
       {
-         throw new IllegalArgumentException(dfe);
+         throw new IllegalArgumentException(formatError);
       }
    }
 }

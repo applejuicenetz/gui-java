@@ -219,10 +219,10 @@ public class FileListDialog extends JDialog {
 
         tableColumns[0] = languageSelector.getFirstAttributeByTagName("linklist.files.col0caption");
         tableColumns[1] = languageSelector.getFirstAttributeByTagName("linklist.files.col1caption");
-        TableColumnModel tcm = table.getColumnModel();
+        TableColumnModel columnModel = table.getColumnModel();
 
         for (int i = 0; i < tableColumns.length; i++) {
-            tcm.getColumn(i).setHeaderValue(tableColumns[i]);
+            columnModel.getColumn(i).setHeaderValue(tableColumns[i]);
         }
     }
 

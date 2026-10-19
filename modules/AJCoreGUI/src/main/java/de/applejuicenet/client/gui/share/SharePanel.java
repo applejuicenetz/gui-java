@@ -329,11 +329,11 @@ public class SharePanel extends TklPanel {
     }
 
     public int[] getColumnWidths() {
-        TableColumnModel tcm = shareTable.getColumnModel();
-        int[] widths = new int[tcm.getColumnCount()];
+        TableColumnModel columnModel = shareTable.getColumnModel();
+        int[] widths = new int[columnModel.getColumnCount()];
 
-        for (int i = 0; i < tcm.getColumnCount(); i++) {
-            widths[i] = tcm.getColumn(i).getWidth();
+        for (int i = 0; i < columnModel.getColumnCount(); i++) {
+            widths[i] = columnModel.getColumn(i).getWidth();
         }
 
         return widths;

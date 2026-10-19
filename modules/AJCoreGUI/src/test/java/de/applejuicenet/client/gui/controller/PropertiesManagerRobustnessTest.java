@@ -56,7 +56,7 @@ public class PropertiesManagerRobustnessTest {
 
     @Test(timeout = 20000)
     public void otherSettingsSurviveOneBadValue() throws Exception {
-        File file = write("options_remote_port=kaputt\noptions_sprache=deutsch\noptions_sound=false\n"
+        File file = write("options_remote_port=broken\noptions_sprache=deutsch\noptions_sound=false\n"
                 + "options_columns_download_column1_width=222\n");
         PropertiesManager manager = manager(file);
         manager.getRemoteSettings();

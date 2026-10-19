@@ -353,10 +353,10 @@ public class SearchResultPanel extends JPanel {
             label1.setText(openSearches.replaceFirst("%i", Integer.toString(search.getOpenSearches())));
             label2.setText(foundFilesList.replaceFirst("%i", Long.toString(search.getEntryCount())));
             label3.setText(searchedClients.replaceFirst("%i", Integer.toString(search.getSearchedClients())));
-            TableColumnModel tcm = searchResultTable.getColumnModel();
+            TableColumnModel columnModel = searchResultTable.getColumnModel();
 
-            for (int i = 0; i < tcm.getColumnCount(); i++) {
-                tcm.getColumn(i).setHeaderValue(columns[i]);
+            for (int i = 0; i < columnModel.getColumnCount(); i++) {
+                columnModel.getColumn(i).setHeaderValue(columns[i]);
             }
         } catch (Exception e) {
             logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);

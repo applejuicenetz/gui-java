@@ -775,11 +775,11 @@ public class ShareController extends GuiController
       tableColumns[4] = languageSelector.getFirstAttributeByTagName("javagui.shareform.downloadrequests");
       tableColumns[5] = languageSelector.getFirstAttributeByTagName("javagui.shareform.searchrequests");
 
-      TableColumnModel tcm = sharePanel.getShareTable().getColumnModel();
+      TableColumnModel columnModel = sharePanel.getShareTable().getColumnModel();
 
       for(int i = 0; i < tableColumns.length; i++)
       {
-         tcm.getColumn(i).setHeaderValue(tableColumns[tcm.getColumn(i).getModelIndex()]);
+         columnModel.getColumn(i).setHeaderValue(tableColumns[columnModel.getColumn(i).getModelIndex()]);
       }
 
       entriesText = languageSelector.getFirstAttributeByTagName("javagui.shareform.sharecount");
