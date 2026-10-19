@@ -11,6 +11,20 @@ import static org.junit.Assert.*;
 
 public class TransferSnapshotTest {
     @Test
+    public void equalDownloadsHaveEqualHashCodesAndWorkAsSetMembers() {
+        DownloadDO first = new DownloadDO(7);
+        DownloadDO sameId = new DownloadDO(7);
+        DownloadDO other = new DownloadDO(8);
+        assertEquals(first, sameId);
+        assertEquals("equal objects need equal hash codes", first.hashCode(), sameId.hashCode());
+        java.util.Set<Download> set = new java.util.HashSet<>();
+        set.add(first);
+        assertTrue("a download with the same id must be found in a hash set", set.contains(sameId));
+        assertFalse(set.contains(other));
+        assertEquals("a snapshot is still the same download", first.hashCode(), first.snapshot().hashCode());
+    }
+
+    @Test
     @SuppressWarnings("unchecked")
     public void otherSnapshotsDetachMutableValues() throws Exception {
         ModifiedXMLHolder holder = new ModifiedXMLHolder(

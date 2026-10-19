@@ -375,4 +375,10 @@ class DownloadDO implements Download, Cloneable
 
       return getId() == ((Download) obj).getId();
    }
+
+   @Override
+   public final int hashCode()
+   {
+      return Integer.hashCode(getId());
+   }
 }
