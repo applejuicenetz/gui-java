@@ -36,7 +36,7 @@ import java.util.*;
 
 public class ApplejuiceFacade implements CoreConnectionSettingsListener {
     public static final String MIN_NEEDED_CORE_VERSION = "0.31.149.112";
-    public static final String ERROR_MESSAGE = "Unbehandelte Exception";
+    public static final String ERROR_MESSAGE = "Unhandled exception";
     public static String separator;
 
     private static final int MAX_SUBDIR_DEPTH = 5;

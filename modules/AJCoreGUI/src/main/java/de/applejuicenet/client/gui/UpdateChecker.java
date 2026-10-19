@@ -54,7 +54,7 @@ public class UpdateChecker {
             String downloadData = loader.load();
 
             if (downloadData == null || downloadData.isEmpty()) {
-                throw new IllegalStateException("leere Antwort");
+                throw new IllegalStateException("empty response");
             }
 
             JsonObject jsonObject = Json.parse(downloadData).asObject();

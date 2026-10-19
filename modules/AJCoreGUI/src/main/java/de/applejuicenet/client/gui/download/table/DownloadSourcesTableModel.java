@@ -29,7 +29,7 @@ public class DownloadSourcesTableModel extends AbstractTableModel implements Lan
                                                                               Integer.class, Version.class
                                                                            };
 
-   //Source-Stati
+   //source states
    public static String                unasked                    = "";
    public static String                tryingToConnect          = "";
    public static String                peerHasOldVersion            = "";

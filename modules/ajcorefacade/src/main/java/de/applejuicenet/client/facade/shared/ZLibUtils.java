@@ -67,12 +67,12 @@ public abstract class ZLibUtils
 
             if(count == 0 && (infl.needsInput() || infl.needsDictionary()))
             {
-               throw new DataFormatException("Unvollstaendige Zlib-Daten");
+               throw new DataFormatException("Incomplete zlib data");
             }
 
             if(bos.size() + count > maxBytes)
             {
-               throw new DataFormatException("Entpackte Daten ueberschreiten " + maxBytes + " Bytes");
+               throw new DataFormatException("Inflated data exceeds " + maxBytes + " bytes");
             }
 
             bos.write(buf, 0, count);
@@ -108,7 +108,7 @@ public abstract class ZLibUtils
             {
                if(bos.size() + count > maxBytes)
                {
-                  throw new DataFormatException("Entpackte Daten ueberschreiten " + maxBytes + " Bytes");
+                  throw new DataFormatException("Inflated data exceeds " + maxBytes + " bytes");
                }
 
                bos.write(buf, 0, count);
@@ -123,7 +123,7 @@ public abstract class ZLibUtils
 
                if(read < 0)
                {
-                  throw new DataFormatException("Unvollstaendige Zlib-Daten");
+                  throw new DataFormatException("Incomplete zlib data");
                }
 
                infl.setInput(input, 0, read);

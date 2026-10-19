@@ -6,6 +6,7 @@ package de.applejuicenet.client.gui.about;
 
 import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
+import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
 import org.slf4j.Logger;
@@ -69,11 +70,11 @@ public class AboutDialog extends JDialog {
         }
 
         private void init() {
-            credits.add(new CreditsEntry(true, "Programmierung"));
+            credits.add(new CreditsEntry(true, GuiText.text("javagui.about.programming")));
             credits.add(new CreditsEntry(false, "Maj0r"));
             credits.add(new CreditsEntry(false, "loevenwong"));
             credits.add(new CreditsEntry(false, "red171"));
-            credits.add(new CreditsEntry(true, "Besonderen Dank an"));
+            credits.add(new CreditsEntry(true, GuiText.text("javagui.about.thanks")));
             credits.add(new CreditsEntry(false, "muhviehstarr"));
 
             backgroundImage = IconManager.getInstance().getIcon("applejuiceinfobanner").getImage();

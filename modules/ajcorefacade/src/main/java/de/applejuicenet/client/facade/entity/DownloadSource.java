@@ -32,7 +32,7 @@ public abstract class DownloadSource implements IdOwner
    public static final int INDIRECT_CONNECTION_UNCONFIRMED = 2;
    public static final int INDIRECT_CONNECTION              = 3;
 
-   // herkunft
+   // origin
    public static final int      SOURCE_AJFSP                = 1;
    public static final int      SOURCE_CLIENT2CLIENT        = 2;
    public static final int      SOURCE_UPLOADLIST           = 3;

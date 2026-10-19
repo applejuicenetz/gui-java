@@ -294,7 +294,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
                         Integer oldDownloadStatus = states.get(curDownload.getId());
 
                         if (null == oldDownloadStatus) {
-                            // neu
+                            // new
                             states.put(curDownload.getId(), curDownload.getStatus());
                         } else if (curDownload.getStatus() == Download.FINISHED && oldDownloadStatus != Download.FINISHED &&
                                 !alreadyNotified.contains(curDownload.getId())) {
@@ -439,7 +439,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
         getContentPane().add(panel, BorderLayout.SOUTH);
         AjfspTransferHandler.install(getRootPane(), this::applyLink);
 
-        //Tooltipps einstellen
+        //set tooltips
         ToolTipManager.sharedInstance().setInitialDelay(1);
         ToolTipManager.sharedInstance().setDismissDelay(50000);
         LanguageSelector.getInstance().addLanguageListener(linkPane);

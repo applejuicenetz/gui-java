@@ -60,7 +60,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     private final Map<String, Integer> tableColumnSettings = new HashMap<>();
     private static PropertiesManager instance = null;
     private static final String PROPERTIES_ERROR = "Error accessing ajgui.properties. The file will be recreated.";
-    private static final String PROPERTIES_ERROR_MESSAGE = "ajgui.properties neu erstellt";
+    private static final String PROPERTIES_ERROR_MESSAGE = "ajgui.properties recreated";
     private static Logger logger;
     private static String path;
     private static final int DEFAULT_UPLOADS_ACTIVE_TABLE_COLUMN_WIDTH = 90;
@@ -133,7 +133,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             return dialog.get();
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
-            throw new IllegalStateException("Einstellungsreset abgebrochen", ex);
+            throw new IllegalStateException("Settings reset cancelled", ex);
         } catch (java.util.concurrent.ExecutionException ex) {
             throw new IllegalStateException("Settings dialog failed", ex.getCause());
         }
@@ -411,7 +411,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
                 return null;
             }
 
-            logger.debug("Aktueller Loglevel: " + result);
+            logger.debug("Current log level: " + result);
 
             return result;
         } catch (Exception e) {
@@ -442,7 +442,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             settings.setDownloadOverview(downloadOverview);
             return settings;
         } catch (Exception e) {
-            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getSettings nutzt vorhandene Werte", e);
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getSettings uses the existing values", e);
             return settings != null ? settings : new Settings();
         }
     }
@@ -478,7 +478,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             connectionSettings.setXmlPort(xmlPort);
             return connectionSettings;
         } catch (Exception e) {
-            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getRemoteSettings nutzt vorhandene Werte", e);
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getRemoteSettings uses the existing values", e);
             return connectionSettings != null ? connectionSettings : new ConnectionSettings();
         }
     }

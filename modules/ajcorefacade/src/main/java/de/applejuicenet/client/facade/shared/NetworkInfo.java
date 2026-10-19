@@ -125,7 +125,7 @@ public class NetworkInfo implements Cloneable {
             return StringConstants._0_00_MB;
         }
 
-        if (factor == 0) { // selbst entscheiden
+        if (factor == 0) { // choose automatically
             if (share / 1024 < 1024) {
                 factor = 1024;
             } else if (share / 1048576 < 1024) {

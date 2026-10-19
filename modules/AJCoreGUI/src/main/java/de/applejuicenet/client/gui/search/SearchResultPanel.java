@@ -48,7 +48,7 @@ import java.util.List;
  */
 public class SearchResultPanel extends JPanel {
     private static String openSearches = "%i offene Suchen";
-    private static String foundFilesList = "%i gefundene Dateien";
+    private static String foundFilesList = "%i found files";
     private static String searchedClients = "%i durchsuchte Clients";
     private static String loadLink = "Link";
     private static String stopSearch = "Suche stoppen";

@@ -219,8 +219,8 @@ public abstract class HtmlLoader
                   if(body.length < length)
                   {
                      throw new WebSiteNotFoundException(WebSiteNotFoundException.INPUT_ERROR,
-                                                        new EOFException("Response after " + body.length + " of " + length +
-                                                                         " Bytes beendet"));
+                                                        new EOFException("Response ended after " + body.length + " of " + length +
+                                                                         " bytes"));
                   }
 
                   urlContent.append(new String(body, Charset.defaultCharset()));

@@ -11,7 +11,7 @@ public class Value {
 	
 	public Value(String identifier){
 		if (identifier == null){
-			throw new RuntimeException("Uengueltiger Identifiert");
+			throw new RuntimeException("Invalid identifier");
 		}
 		this.identifier = identifier;
 		value = "";

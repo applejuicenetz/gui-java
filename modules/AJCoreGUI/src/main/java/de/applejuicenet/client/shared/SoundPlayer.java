@@ -28,9 +28,9 @@ import java.util.function.Supplier;
  * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
- * <p>Dateien werden in einem eigenen Thread geladen und abgespielt, nie im Aufrufer (EDT, Poller).
- * Jeder Clip wird nach dem Ende oder bei einem Fehler geschlossen. Es laufen hoechstens
- * {@value #MAX_ACTIVE_SOUNDS} Toene gleichzeitig; weitere werden verworfen, statt Audio-Lines zu belegen.</p>
+ * <p>Files are loaded and played in their own thread, never in the caller (EDT, poller).
+ * Every clip is closed after it ends or on an error. At most
+ * {@value #MAX_ACTIVE_SOUNDS} sounds play at the same time; further ones are dropped instead of occupying audio lines.</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
  */
@@ -139,7 +139,7 @@ public class SoundPlayer {
 
             if (active.incrementAndGet() > MAX_ACTIVE_SOUNDS) {
                 active.decrementAndGet();
-                logger.debug("Zu viele gleichzeitige Toene, " + file.getFileName() + " is not played");
+                logger.debug("Too many simultaneous sounds, " + file.getFileName() + " is not played");
                 return;
             }
 
@@ -147,7 +147,7 @@ public class SoundPlayer {
                 executor.execute(() -> play(file));
             } catch (RejectedExecutionException e) {
                 active.decrementAndGet();
-                logger.debug("Soundwarteschlange voll, " + file.getFileName() + " is not played");
+                logger.debug("Sound queue is full, " + file.getFileName() + " is not played");
             }
         } catch (Exception e) {
             logger.error("Sound could not be played", e);

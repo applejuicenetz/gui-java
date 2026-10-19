@@ -1,7 +1,7 @@
 package de.applejuicenet.client.facade.shared;
 
 /**
- * Zentrale Aktualisierungsintervalle in Millisekunden.
+ * Central refresh intervals in milliseconds.
  */
 public final class RefreshIntervals
 {

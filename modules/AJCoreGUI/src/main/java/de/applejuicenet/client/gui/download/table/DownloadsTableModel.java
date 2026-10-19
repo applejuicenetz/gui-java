@@ -27,7 +27,7 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
                                                                               String.class
                                                                            };
 
-   //Download-Stati
+   //download states
    public static String          searchLabel                  = "";
    public static String          load                   = "";
    public static String          noSpace               = "";

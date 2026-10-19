@@ -21,8 +21,8 @@ import java.util.Properties;
  *
  * <p><b>Copyright: General Public License</b></p>
  *
- * <p>Diese Klasse darf nicht veraendert werden!
- * Um ein Plugin zu erstellen, muss diese Klasse ueberschrieben werden.</p>
+ * <p>This class must not be changed.
+ * To create a plugin, extend this class.</p>
  *
  * @author Maj0r [aj@tkl-soft.de]
  */
@@ -127,10 +127,10 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
    }
 
    /**
-    * Liefert ein Icon zurueck, welches in der Lasche angezeigt werden soll. Es muss als icon.png im Plugin-Unterordner /icons gespeichert
-    * werden, damit es spaeter an die richtige Stelle im jar-Archiv wandert (ca. 16x16)
+    * Returns the icon shown on the tab. It must be saved as icon.png in the plugin subfolder /icons so that
+    * it ends up at the right place in the jar archive later (about 16x16).
     *
-    * @return ImageIcon: LaschenIcon
+    * @return ImageIcon: tab icon
     */
    public final ImageIcon getIcon()
    {
@@ -138,8 +138,8 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
    }
 
    /**
-    * Liefert anhand seines Dateinamens ohne Suffix ein Icon zurueck, welches in der Lasche angezeigt werden soll. Es muss im Plugin-Unterordner /icons gespeichert
-    * werden, damit es spaeter an die richtige Stelle im jar-Archiv wandert (ca. 16x16)
+    * Returns an icon by its file name without suffix. It must be saved in the plugin subfolder /icons so that
+    * it ends up at the right place in the jar archive later (about 16x16).
     *
     * @return ImageIcon: ImageIcon
     */

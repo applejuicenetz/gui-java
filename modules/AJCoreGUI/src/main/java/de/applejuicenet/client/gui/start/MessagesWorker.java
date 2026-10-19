@@ -87,6 +87,6 @@ public class MessagesWorker extends Thread {
             logger.error("Version-dependent messages could not be loaded.");
         }
 
-        logger.debug("MessagesWorkerThread beendet.");
+        logger.debug("MessagesWorkerThread finished.");
     }
 }
