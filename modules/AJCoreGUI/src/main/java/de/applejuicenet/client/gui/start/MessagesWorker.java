@@ -25,35 +25,58 @@ import javax.swing.*;
  */
 public class MessagesWorker extends Thread {
     private final Logger logger;
-    private StartController startController;
-    private JLabel version;
-    private JTextPane messages;
+    private final JLabel version;
+    private final JTextPane messages;
+    private final java.util.function.Supplier<String> coreVersionSupplier;
+    private final java.util.function.Supplier<String> newsUrlSupplier;
+    private final Loader loader;
+
+    interface Loader {
+        String load(String url) throws NoAccessException;
+    }
+
 
     public MessagesWorker(StartController startController, JLabel version, JTextPane messages) {
+        this(version, messages, () -> AppleJuiceClient.getAjFacade().getCoreVersion().getVersion(),
+                () -> OptionsManagerImpl.getInstance().getNewsURL(), WebsiteContentLoader::getWebsiteContent);
+    }
+
+    MessagesWorker(JLabel version, JTextPane messages, java.util.function.Supplier<String> coreVersionSupplier,
+                   java.util.function.Supplier<String> newsUrlSupplier, Loader loader) {
+        super("MessagesWorker");
         logger = LoggerFactory.getLogger(getClass());
-        this.startController = startController;
         this.version = version;
         this.messages = messages;
-        this.setName("MessagesWorker");
+        this.coreVersionSupplier = coreVersionSupplier;
+        this.newsUrlSupplier = newsUrlSupplier;
+        this.loader = loader;
     }
 
     public void run() {
+        if (isInterrupted()) return;
         logger.debug("MessagesWorkerThread started.");
 
+        de.applejuicenet.client.facade.listener.CoreStatusListener statusListener = status -> {
+            if (status == de.applejuicenet.client.facade.listener.CoreStatusListener.STATUS.CLOSED) interrupt();
+        };
+        de.applejuicenet.client.facade.ApplejuiceFacade.addCoreStatusListener(statusListener);
         try {
-            final String coreVersion = AppleJuiceClient.getAjFacade().getCoreVersion().getVersion();
+            if (isInterrupted()) return;
+            final String coreVersion = coreVersionSupplier.get();
+
             logger.info("Using core {}", coreVersion);
 
             String htmlText = null;
-            String newsURL = OptionsManagerImpl.getInstance().getNewsURL();
-            String newsURLFormatted = String.format(newsURL, AppleJuiceClient.getAjFacade().getCoreVersion().getVersion());
+            String newsURL = newsUrlSupplier.get();
+            String newsURLFormatted = String.format(newsURL, coreVersion);
             logger.debug(String.format("GET %s", newsURLFormatted));
 
             try {
-                htmlText = WebsiteContentLoader.getWebsiteContent(newsURLFormatted);
+                htmlText = loader.load(newsURLFormatted);
             } catch (NoAccessException e) {
+                if (isInterrupted()) return;
                 newsURLFormatted = String.format(newsURL, "index"); // fallback to show regular news
-                htmlText = WebsiteContentLoader.getWebsiteContent(newsURLFormatted);
+                htmlText = loader.load(newsURLFormatted);
             }
 
             int pos = htmlText.toLowerCase().indexOf("<html>");
@@ -77,14 +100,20 @@ public class MessagesWorker extends Thread {
             htmlText = buffer.toString();
             final String htmlContent = htmlText;
 
+            if (isInterrupted()) return;
             SwingUtilities.invokeLater(() -> {
+                if (isInterrupted()) return;
                 version.setText("<html>GUI: " + AppleJuiceDialog.getVersion() + "<br>Core: " + coreVersion + "</html>");
                 messages.setContentType("text/html");
                 messages.setText(htmlContent);
                 messages.setFont(version.getFont());
             });
         } catch (Exception e) {
-            logger.error("Version-dependent messages could not be loaded.");
+            if (!isInterrupted()) {
+                logger.warn("Version-dependent messages could not be loaded.", e);
+            }
+        } finally {
+            de.applejuicenet.client.facade.ApplejuiceFacade.removeCoreStatusListener(statusListener);
         }
 
         logger.debug("MessagesWorkerThread finished.");
