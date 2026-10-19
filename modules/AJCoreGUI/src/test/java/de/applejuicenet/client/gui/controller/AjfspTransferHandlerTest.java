@@ -58,6 +58,28 @@ public class AjfspTransferHandlerTest {
     }
 
     @Test
+    public void aFailingFlavorDoesNotHideLinksFromOtherFlavors() throws Exception {
+        DataFlavor broken = new DataFlavor("text/uri-list;class=java.io.Reader");
+        Transferable transferable = new Transferable() {
+            public DataFlavor[] getTransferDataFlavors() {
+                return new DataFlavor[]{broken, DataFlavor.stringFlavor};
+            }
+
+            public boolean isDataFlavorSupported(DataFlavor flavor) {
+                return true;
+            }
+
+            public Object getTransferData(DataFlavor flavor) throws java.io.IOException {
+                if (flavor.equals(broken)) {
+                    throw new java.io.IOException("drag source went away");
+                }
+                return FILE_LINK;
+            }
+        };
+        assertEquals(List.of(FILE_LINK), AjfspTransferHandler.readLinks(transferable));
+    }
+
+    @Test
     public void installsOnExistingAndNewChildrenAndImportsLinks() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             JPanel panel = new JPanel();

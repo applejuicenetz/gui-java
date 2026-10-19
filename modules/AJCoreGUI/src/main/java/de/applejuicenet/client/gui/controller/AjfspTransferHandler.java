@@ -18,6 +18,7 @@ import java.util.Locale;
 import java.util.function.Consumer;
 
 public final class AjfspTransferHandler extends TransferHandler {
+    private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(AjfspTransferHandler.class);
     private final TransferHandler original;
     private final Consumer<String> linkConsumer;
 
@@ -79,7 +80,9 @@ public final class AjfspTransferHandler extends TransferHandler {
                         links.add(link);
                     }
                 }
-            } catch (Exception ignored) {
+            } catch (Exception unreadableFlavor) {
+                // One unreadable flavor (e.g. a drag source that went away) must not hide the others.
+                LOGGER.debug("Skipping unreadable drop flavor {}: {}", flavor.getMimeType(), unreadableFlavor.toString());
             }
         }
         return new ArrayList<>(links);
