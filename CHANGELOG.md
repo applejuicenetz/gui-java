@@ -9,7 +9,6 @@
   - Link-Leiste nimmt mehrere `ajfsp`-Links auf (getrennt durch Leerzeichen oder Zeilenumbruch)
   - Statusbar: Icons, Tooltips und getrennte Felder für Status, Verbindungen, Server, Speed und Traffic
   - Statusbar: feste Feldbreiten ohne Wackeln, Servername wird gekürzt, Host und Port im Tooltip
-  - Statusbar: dünnere Trenner, „…“ beim Verbindungsstatus entfernt
   - Spaltenüberschriften und weitere feste Texte kommen aus den Sprachdateien
   - Plugin-Beschreibungen auf Deutsch und Englisch
   - Optionen „Allgemein“: Abfrageintervall des Cores (0,5–10 s) und der Teilliste (1–30 s) einstellbar
