@@ -64,6 +64,30 @@ public class UpdateCheckerTest {
     }
 
     @Test
+    public void tagPrefixAndSuffixDoNotMakeTheSameVersionLookNewer() {
+        assertEquals(0, UpdateChecker.compareVersion("v0.86.4", "0.86.4"));
+        assertEquals(0, UpdateChecker.compareVersion("0.86.4", "v0.86.4"));
+        assertEquals(0, UpdateChecker.compareVersion("0.86.5-beta", "0.86.5"));
+        assertEquals(0, UpdateChecker.compareVersion("0.86.5+build7", "0.86.5"));
+        assertEquals(List.of(), run(true, () -> release("v0.86.4"), "0.86.4").events);
+        assertEquals(List.of("none"), run(false, () -> release("v0.86.4"), "0.86.4").events);
+    }
+
+    @Test
+    public void realNewerVersionsStayNewerWithPrefixOrSuffix() {
+        assertEquals(1, UpdateChecker.compareVersion("v0.86.10", "0.86.9"));
+        assertEquals(1, UpdateChecker.compareVersion("0.87.0-rc1", "0.86.9"));
+        assertEquals(-1, UpdateChecker.compareVersion("0.86.5", "v0.86.10"));
+    }
+
+    @Test
+    public void unparsableTagIsReportedAsFailureNotAsNewVersion() {
+        assertEquals(List.of(), run(true, () -> release("latest"), "0.86.4").events);
+        assertEquals(List.of("failed"), run(false, () -> release("latest"), "0.86.4").events);
+        assertEquals(List.of("failed"), run(false, () -> release("0.86..5"), "0.86.4").events);
+    }
+
+    @Test
     public void failuresStaySilentAtStartButAreShownOnRequest() {
         UpdateChecker.Loader broken = () -> {
             throw new java.io.IOException("offline");

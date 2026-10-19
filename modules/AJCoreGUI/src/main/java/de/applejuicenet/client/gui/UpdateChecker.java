@@ -99,29 +99,41 @@ public class UpdateChecker {
         }
     }
 
-    public static int compareVersion(String A, String B) {
-        List<String> strList1 = Arrays.stream(A.split("\\."))
-                .map(s -> s.replaceAll("^0+(?!$)", ""))
-                .collect(Collectors.toList());
-        List<String> strList2 = Arrays.stream(B.split("\\."))
-                .map(s -> s.replaceAll("^0+(?!$)", ""))
-                .collect(Collectors.toList());
-        int len1 = strList1.size();
-        int len2 = strList2.size();
-        int i = 0;
-        while (i < len1 && i < len2) {
-            if (strList1.get(i).length() > strList2.get(i).length()) return 1;
-            if (strList1.get(i).length() < strList2.get(i).length()) return -1;
-            int result = Long.valueOf(strList1.get(i)).compareTo(Long.valueOf(strList2.get(i)));
-            if (result != 0) return result;
-            i++;
-        }
-        while (i < len1) {
-            if (!strList1.get(i++).equals("0")) return 1;
-        }
-        while (i < len2) {
-            if (!strList2.get(i++).equals("0")) return -1;
+    private static final java.util.regex.Pattern VERSION = java.util.regex.Pattern.compile(
+            "^[vV]?(\\d+(?:\\.\\d+)*)(?:[-+].*)?$");
+
+    /**
+     * Compares release versions such as {@code 0.86.4}. A leading {@code v} and a suffix after
+     * {@code -} or {@code +} (e.g. {@code -beta}, {@code +build7}) are ignored.
+     *
+     * @throws IllegalArgumentException if a value is not a version number
+     */
+    public static int compareVersion(String a, String b) {
+        List<Long> first = parseVersion(a);
+        List<Long> second = parseVersion(b);
+        int length = Math.max(first.size(), second.size());
+
+        for (int i = 0; i < length; i++) {
+            long left = i < first.size() ? first.get(i) : 0;
+            long right = i < second.size() ? second.get(i) : 0;
+
+            if (left != right) {
+                return left > right ? 1 : -1;
+            }
         }
         return 0;
+    }
+
+    private static List<Long> parseVersion(String version) {
+        java.util.regex.Matcher matcher = VERSION.matcher(version == null ? "" : version.trim());
+
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Not a version number: '" + version + "'");
+        }
+        try {
+            return Arrays.stream(matcher.group(1).split("\\.")).map(Long::valueOf).collect(Collectors.toList());
+        } catch (NumberFormatException tooLarge) {
+            throw new IllegalArgumentException("Not a version number: '" + version + "'", tooLarge);
+        }
     }
 }
