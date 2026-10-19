@@ -5,6 +5,11 @@
 - Änderungen nach Themen in getrennte Commits aufteilen.
 - Unabhängige Änderungen nicht in einem Commit mischen.
 
+## Code
+
+- Code und Code-Kommentare sind auf Englisch: Bezeichner, Kommentare, Javadoc, Log- und Fehlertexte.
+- Texte für Nutzer stehen in den Sprachdateien (`resources/language`), nicht im Code.
+
 ## Changelog
 
 - Änderungen innerhalb jeder Version nach Themen gruppieren.
