@@ -935,7 +935,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
         Set<ShareEntry> shareDirs = getAJSettings().getShareDirs();
         StringBuilder parameters = new StringBuilder();
 
-        parameters.append("countshares=" + shareDirs.size() + paths.size());
+        parameters.append("countshares=" + (shareDirs.size() + paths.size()));
         int i = 1;
 
         for (ShareEntry curShareEntry : shareDirs) {
