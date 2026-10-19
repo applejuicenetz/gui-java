@@ -77,6 +77,39 @@ public class AutomaticPowerdownloadThreadingTest {
         assertFalse("Stopped policy sent another command", powerSent.get());
     }
 
+    @Test(timeout = 10000)
+    public void coreStopCancelsBlockedPolicyAndRemovesListener() throws Exception {
+        CountDownLatch entered = new CountDownLatch(1);
+        var facade = new de.applejuicenet.client.facade.ApplejuiceFacade(
+                new de.applejuicenet.client.facade.controller.CoreConnectionSettingsHolder("localhost", 9851, "", true)) {
+            @Override public java.util.Map<Integer, de.applejuicenet.client.facade.entity.Download> getDownloadsSnapshot() {
+                entered.countDown();
+                try { new CountDownLatch(1).await(); }
+                catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+                return java.util.Map.of();
+            }
+        };
+        var listenersField = de.applejuicenet.client.facade.ApplejuiceFacade.class.getDeclaredField("coreListener");
+        listenersField.setAccessible(true);
+        var listeners = (java.util.Set<?>) listenersField.get(null);
+        int initialListeners = listeners.size();
+        AutomaticPowerdownload worker = new AutomaticPowerdownload(facade);
+        worker.start();
+        try {
+            assertTrue(entered.await(2, TimeUnit.SECONDS));
+            var notifyStatus = de.applejuicenet.client.facade.ApplejuiceFacade.class.getDeclaredMethod(
+                    "informCoreStatusListener", de.applejuicenet.client.facade.listener.CoreStatusListener.STATUS.class);
+            notifyStatus.setAccessible(true);
+            notifyStatus.invoke(facade, de.applejuicenet.client.facade.listener.CoreStatusListener.STATUS.CLOSED);
+            worker.join(1000);
+            assertFalse("Policy survived core stop", worker.isAlive());
+            assertEquals("Policy leaked status listener", initialListeners, listeners.size());
+        } finally {
+            worker.interrupt();
+            worker.join(2000);
+        }
+    }
+
     private static void language() {
         LanguageSelector.getInstance(Paths.get("../../resources/language/deutsch.properties")
                 .toAbsolutePath().normalize().toString());

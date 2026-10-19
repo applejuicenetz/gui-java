@@ -50,6 +50,12 @@ public class AutomaticPowerdownload extends Thread {
 
     public final void run() {
         logger.debug("Automatic powerdownload started (interval {} ms, {} downloads, power {})", sleepTime, downloadCount, powerdownloadValue);
+        de.applejuicenet.client.facade.listener.CoreStatusListener statusListener = status -> {
+            if (status == de.applejuicenet.client.facade.listener.CoreStatusListener.STATUS.CLOSED) {
+                interrupt();
+            }
+        };
+        ApplejuiceFacade.addCoreStatusListener(statusListener);
         try {
             while (!isInterrupted()) {
                 boolean applyPause;
@@ -75,7 +81,11 @@ public class AutomaticPowerdownload extends Thread {
         } catch (InterruptedException iE) {
             interrupt();
         } catch (Exception ex) {
-            logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
+            if (!isInterrupted()) {
+                logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
+            }
+        } finally {
+            ApplejuiceFacade.removeCoreStatusListener(statusListener);
         }
 
         logger.debug("Automatic powerdownload finished");
