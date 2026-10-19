@@ -17,12 +17,12 @@ import static org.junit.Assert.assertSame;
 public class DialogLocationTest {
     @Test
     public void alignsRightInsideOwnerAndFollowsItsMovement() throws Exception {
-        checkPlacement(DialogLocation::alignRight, new Point(440, 210), new Point(500, 270));
+        checkPlacement(DialogLocation::alignRight, new Point(240, 160), new Point(300, 220));
     }
 
     @Test
     public void centersOverOffCenterWindowAndFollowsItsMovement() throws Exception {
-        checkPlacement(DialogLocation::center, new Point(240, 210), new Point(300, 270));
+        checkPlacement(DialogLocation::center, new Point(140, 160), new Point(200, 220));
     }
 
     private static void checkPlacement(Consumer<JDialog> position, Point initial, Point moved) throws Exception {
@@ -32,7 +32,8 @@ public class DialogLocationTest {
         SwingUtilities.invokeAndWait(() -> {
             owner[0] = new JFrame();
             dialog[0] = new JDialog(owner[0]);
-            owner[0].setBounds(40, 60, 600, 400);
+            // Small enough for a 640x480 virtual display, so nothing gets clamped to the screen.
+            owner[0].setBounds(40, 60, 400, 300);
             owner[0].setVisible(true);
             dialog[0].setSize(200, 100);
         });

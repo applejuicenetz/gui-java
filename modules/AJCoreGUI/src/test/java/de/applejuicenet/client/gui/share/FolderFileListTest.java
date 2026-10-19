@@ -52,11 +52,13 @@ public class FolderFileListTest {
                             .map(Share::getShortfilename).collect(Collectors.toSet()));
                     assertEquals(0, findTable(emptyDialog).getRowCount());
                     assertNotNull(findTable(dialog).getDropTarget());
-                    owner.setBounds(40, 60, 900, 600);
+                    // Small owner at the screen origin so it fits on any (virtual) display.
+                    owner.setBounds(40, 60, 400, 300);
                     owner.setVisible(true);
                     dialog.setSize(300, 200);
                     dialog.setVisible(true);
-                    assertEquals(new Point(640, 260), dialog.getLocation());
+                    assertEquals(new Point(owner.getX() + owner.getWidth() - dialog.getWidth(),
+                            owner.getY() + (owner.getHeight() - dialog.getHeight()) / 2), dialog.getLocation());
                 } finally {
                     emptyDialog.dispose();
                     dialog.dispose();
