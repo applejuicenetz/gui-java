@@ -12,6 +12,7 @@
   - Statusbar: schlankere Feldtrenner und Monospace-Schrift, „…“ hinter dem Verbindungsstatus entfernt
   - Spaltenüberschriften (Suche, Server, Dateiliste, Uploads) und weitere bisher fest eingebaute Texte kommen aus den Sprachdateien
   - Plugin-Beschreibungen sind mehrsprachig (Deutsch und Englisch)
+  - Dateiliste: Fehler beim Speichern oder Kopieren werden angezeigt; AJL-Export bleibt bei Zeilenumbrüchen im Dateinamen gültig und überspringt Einträge ohne Namen oder Prüfsumme
 
 ### Technische Änderungen
 

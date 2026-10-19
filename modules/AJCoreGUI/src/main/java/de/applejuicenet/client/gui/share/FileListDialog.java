@@ -251,8 +251,15 @@ public class FileListDialog extends JDialog {
                 Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(content), null);
             } catch (Exception ex) {
                 logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
+                showError("javagui.filelist.copyerror", ex);
             }
         }
+    }
+
+    private void showError(String key, Exception ex) {
+        String detail = ex.getMessage() == null ? ex.getClass().getSimpleName() : ex.getMessage();
+        JOptionPane.showMessageDialog(DialogLocation.getReference(this),
+                GuiText.text(key).replace("%s", detail), GuiText.text("javagui.error"), JOptionPane.ERROR_MESSAGE);
     }
 
     class SaveMouseAdapter extends MouseAdapter {
@@ -285,6 +292,7 @@ public class FileListDialog extends JDialog {
                     Files.writeString(file.toPath(), text.toString(), StandardCharsets.UTF_8);
                 } catch (Exception ex) {
                     logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
+                    showError("javagui.filelist.saveerror", ex);
                 }
             }
         }

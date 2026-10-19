@@ -62,6 +62,56 @@ public class ShareListFormatTest {
         });
     }
 
+    @Test
+    public void ajlRoundTripsThroughTheReader() throws Exception {
+        Share[] shares = {share("b.bin", "h2", 2), share("A.bin", "h1", 1)};
+        java.io.File file = java.io.File.createTempFile("share", ".ajl");
+        try {
+            java.nio.file.Files.writeString(file.toPath(), ShareListFormat.ajl(shares),
+                    java.nio.charset.StandardCharsets.UTF_8);
+            assertEquals(java.util.List.of("ajfsp://file|A.bin|h1|1/", "ajfsp://file|b.bin|h2|2/"),
+                    de.applejuicenet.client.shared.AjlFile.readLinks(file));
+        } finally {
+            file.delete();
+        }
+    }
+
+    @Test
+    public void lineBreaksInNamesDoNotShiftTheEntryLayout() throws Exception {
+        Share[] shares = {share("a\r\nb\nc.bin", "h1", 1), share("z.bin", "h2", 2)};
+        java.io.File file = java.io.File.createTempFile("share", ".ajl");
+        try {
+            java.nio.file.Files.writeString(file.toPath(), ShareListFormat.ajl(shares),
+                    java.nio.charset.StandardCharsets.UTF_8);
+            assertEquals(java.util.List.of("ajfsp://file|a b c.bin|h1|1/", "ajfsp://file|z.bin|h2|2/"),
+                    de.applejuicenet.client.shared.AjlFile.readLinks(file));
+        } finally {
+            file.delete();
+        }
+    }
+
+    @Test
+    public void entriesWithoutNameOrChecksumAreSkipped() {
+        Share[] shares = {share(null, "h0", 1), share("   ", "h0", 1), share("x.bin", null, 1),
+                share("y.bin", " ", 1), null, share("ok.bin", "h9", 9)};
+        String ajl = ShareListFormat.ajl(shares);
+        assertTrue(ajl.endsWith("100\r\nok.bin\r\nh9\r\n9\r\n"));
+        assertEquals("ajfsp://file|ok.bin|h9|9/", ShareListFormat.ajfsp(new Share[]{share("ok.bin", "h9", 9), null})
+                .replace("\r\n", ""));
+    }
+
+    @Test
+    public void emptyListGivesHeaderOnly() {
+        String ajl = ShareListFormat.ajl(new Share[0]);
+        assertTrue(ajl.endsWith("-----\r\n100\r\n"));
+    }
+
+    @Test
+    public void singleLineReplacesAllLineBreakKinds() {
+        assertEquals("a b c d", ShareListFormat.singleLine("a\r\nb\rc\nd"));
+        assertEquals("plain", ShareListFormat.singleLine("  plain  "));
+    }
+
     private static Share share(String name, String hash, long size) {
         return new Share() {
             public int getId() { return 0; }
