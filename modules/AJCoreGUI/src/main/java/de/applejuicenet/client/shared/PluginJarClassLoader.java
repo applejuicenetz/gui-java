@@ -219,15 +219,12 @@ public class PluginJarClassLoader extends SecureClassLoader {
             return null;
         }
 
-        URL url = null;
-
         try {
-            url = new URL("jar:file:" + entry.getAbsolutePath() + "!/" + name);
+            return new URL("jar:" + entry.toPath().toUri() + "!/" + name);
         } catch (MalformedURLException e) {
-            // silly, but not that bad
+            logger.warn("Resource {} of {} has no valid URL", name, entry, e);
+            return null;
         }
-
-        return url;
     }
 
     private static String stripClassSuffix(String name) {

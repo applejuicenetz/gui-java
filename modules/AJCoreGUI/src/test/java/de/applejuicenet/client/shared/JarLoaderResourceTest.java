@@ -82,4 +82,25 @@ public class JarLoaderResourceTest {
         }
         assertTrue("Dateihandles gewachsen: " + handlesBefore + " -> " + handlesAfter, handlesAfter - handlesBefore < 20);
     }
+
+    @Test
+    public void resourceUrlHandlesPathsWithSpacesAndUmlauts() throws Exception {
+        File dir = folder.newFolder("Müller Plugins");
+        File jar = new File(dir, "my plugin.jar");
+        try (JarOutputStream out = new JarOutputStream(Files.newOutputStream(jar.toPath()))) {
+            out.putNextEntry(new JarEntry("plugin.properties"));
+            out.write("general.classname=x.Y\n".getBytes());
+            out.closeEntry();
+            out.putNextEntry(new JarEntry("icon.gif"));
+            out.write(new byte[]{'G', 'I', 'F'});
+            out.closeEntry();
+        }
+        PluginJarClassLoader loader = new PluginJarClassLoader();
+        loader.getPlugin(jar);
+        URL url = loader.getResource("icon.gif");
+        assertNotNull(url);
+        try (java.io.InputStream in = url.openStream()) {
+            assertEquals(3, in.readAllBytes().length);
+        }
+    }
 }

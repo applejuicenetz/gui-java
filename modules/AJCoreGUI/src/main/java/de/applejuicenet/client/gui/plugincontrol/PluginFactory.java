@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.TreeMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipFile;
@@ -29,9 +29,9 @@ public abstract class PluginFactory {
                 return plugins;
             }
 
-            plugins = new HashSet<>();
+            plugins = new LinkedHashSet<>();
 
-            Map<String, File> tempList = new HashMap<>();
+            Map<String, File> tempList = new TreeMap<>();
 
             String shippedPath = System.getProperty("user.dir") + File.separator + "plugins" + File.separator;
             String userPath = System.getProperty("user.home") + File.separator + "appleJuice" + File.separator + "gui" + File.separator + "plugins" + File.separator;
@@ -91,7 +91,7 @@ public abstract class PluginFactory {
     }
 
     private static Set<PluginConnector> loadPluginsFromClasspath() {
-        Set<PluginConnector> thePlugins = new HashSet<PluginConnector>();
+        Set<PluginConnector> thePlugins = new LinkedHashSet<PluginConnector>();
         String[] which = new String[]{
                 "de.applejuicenet.client.gui.plugins.logviewer.LogViewerPluginTestLoader",
                 "de.applejuicenet.client.gui.plugins.speedgraph.SpeedGraphPluginTestLoader",
