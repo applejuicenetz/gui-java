@@ -5,6 +5,7 @@ import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.facade.entity.Directory;
 import de.applejuicenet.client.facade.entity.ShareEntry;
 import de.applejuicenet.client.facade.entity.ShareEntry.SHAREMODE;
+import de.applejuicenet.client.facade.shared.AJSettings;
 import de.applejuicenet.client.facade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.components.tree.ApplejuiceNode;
 import de.applejuicenet.client.gui.components.treetable.Node;
@@ -61,6 +62,73 @@ public class DirectoryNode
 
     public static void setShareDirs(Set<ShareEntry> newShareDirs) {
         shareDirs = newShareDirs;
+    }
+
+    /** True when this node is the incoming folder configured in the core. */
+    public boolean isIncomingDirectory() {
+        return isConfiguredDirectory(true);
+    }
+
+    /** True when this node is the temp folder configured in the core. */
+    public boolean isTempDirectory() {
+        return isConfiguredDirectory(false);
+    }
+
+    /** True for a drive or filesystem root such as {@code C:} or {@code /}. */
+    public boolean isRootDrive() {
+        if (directory == null) {
+            return false;
+        }
+        return directory.getType() == Directory.TYPE_DRIVE || isRootPath(directory.getPath());
+    }
+
+    /** Recognises root paths like {@code /}, {@code C:} or {@code C:\} without touching the filesystem. */
+    static boolean isRootPath(String path) {
+        if (path == null || path.isEmpty()) {
+            return false;
+        }
+        String trimmed = trimSeparators(path);
+
+        if (trimmed.isEmpty()) {
+            return true;
+        }
+        return trimmed.length() == 2 && Character.isLetter(trimmed.charAt(0)) && trimmed.charAt(1) == ':';
+    }
+
+    private boolean isConfiguredDirectory(boolean incoming) {
+        if (directory == null) {
+            return false;
+        }
+        try {
+            AJSettings settings = AppleJuiceClient.getAjFacade().getAJSettings();
+
+            if (settings == null) {
+                return false;
+            }
+            return sameDirectory(directory.getPath(), incoming ? settings.getIncomingDir() : settings.getTempDir());
+        } catch (RuntimeException e) {
+            logger.debug("Configured core directory unavailable", e);
+            return false;
+        }
+    }
+
+    /** Compares two folder paths ignoring case and trailing separators. */
+    static boolean sameDirectory(String nodePath, String configuredPath) {
+        if (nodePath == null || configuredPath == null) {
+            return false;
+        }
+        String configured = trimSeparators(configuredPath);
+
+        return !configured.isEmpty() && trimSeparators(nodePath).equalsIgnoreCase(configured);
+    }
+
+    private static String trimSeparators(String path) {
+        int end = path.length();
+
+        while (end > 0 && (path.charAt(end - 1) == '/' || path.charAt(end - 1) == '\\')) {
+            end--;
+        }
+        return path.substring(0, end);
     }
 
     public int getChildCount() {

@@ -64,6 +64,10 @@ public class ShareTreeMouseAdapter extends MouseAdapter {
                 if (node == null) {
                     return;
                 }
+                if (node.isIncomingDirectory() || node.isTempDirectory()) {
+                    // Core-owned folders: no share actions, the tree tooltip explains them.
+                    return;
+                }
                 popup.removeAll();
                 int nodeShareMode = node.getShareMode();
                 if (nodeShareMode == DirectoryNode.NOT_SHARED
