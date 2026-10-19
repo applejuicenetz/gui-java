@@ -107,7 +107,7 @@ mit Leerzeichen/Umlauten im Pfad öffnen. macOS- und Windows-Installer sind unsi
 
 ## libtray
 
-Wie im Collector nutzt Linux `io.github.red171:libtray-java:0.1.0-SNAPSHOT` für
+Wie im Collector nutzt Linux `io.github.red171:libtray-java:1.2.0` für
 StatusNotifierItem, ohne Kotlin und SLF4J in der Tray-Lib. macOS/Windows und fehlende Linux-Backends nutzen AWT.
 macOS verwendet dabei ein natives AWT-Kontextmenü wie der Core.
 Das bestehende Swing-Menü liefert Aktionen und Übersetzungen. Flatpak erlaubt Zugriff auf
