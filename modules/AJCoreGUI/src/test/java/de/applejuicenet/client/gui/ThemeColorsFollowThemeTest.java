@@ -2,10 +2,12 @@ package de.applejuicenet.client.gui;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
+import de.applejuicenet.client.gui.memorymonitor.MemoryMonitor;
 import org.junit.Test;
 
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
@@ -72,6 +74,43 @@ public class ThemeColorsFollowThemeTest {
                 }
             }
         });
+    }
+
+    @Test
+    public void memoryMonitorCaptionsFollowTheTheme() throws Exception {
+        SwingUtilities.invokeAndWait(() -> {
+            LookAndFeel previous = UIManager.getLookAndFeel();
+            try {
+                UIManager.setLookAndFeel(new MetalLookAndFeel());
+                MemoryMonitor monitor = new MemoryMonitor();
+                Color metal = UIManager.getColor("Label.disabledForeground");
+                assertEquals(1, countLabels(monitor, metal) > 0 ? 1 : 0);
+
+                UIManager.setLookAndFeel(new FlatDarkLaf());
+                SwingUtilities.updateComponentTreeUI(monitor);
+                Color flat = UIManager.getColor("Label.disabledForeground");
+                assertNotEquals(metal, flat);
+                assertEquals(3, countLabels(monitor, flat));
+            } catch (Exception failure) {
+                throw new AssertionError(failure);
+            } finally {
+                try {
+                    UIManager.setLookAndFeel(previous);
+                } catch (Exception failure) {
+                    throw new AssertionError(failure);
+                }
+            }
+        });
+    }
+
+    private static int countLabels(Component root, Color foreground) {
+        int count = root instanceof JLabel && foreground.equals(root.getForeground()) ? 1 : 0;
+        if (root instanceof java.awt.Container container) {
+            for (Component child : container.getComponents()) {
+                count += countLabels(child, foreground);
+            }
+        }
+        return count;
     }
 
     private static Color separatorColor(StatusLabel label) {

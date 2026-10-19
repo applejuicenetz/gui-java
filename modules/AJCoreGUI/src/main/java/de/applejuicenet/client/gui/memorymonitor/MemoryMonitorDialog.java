@@ -12,7 +12,14 @@ public class MemoryMonitorDialog
     extends JDialog {
 
     private MemoryMonitor memoryMonitorPanel;
-    private final JLabel note = new JLabel();
+    private final JLabel note = new JLabel() {
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            // The dialog instance is long-lived, so follow theme changes.
+            setForeground(UIManager.getColor("Label.disabledForeground"));
+        }
+    };
 
     public MemoryMonitorDialog(Dialog parent) {
         super(parent, false);
@@ -26,7 +33,6 @@ public class MemoryMonitorDialog
 
     private void init() {
         memoryMonitorPanel = new MemoryMonitor();
-        note.setForeground(UIManager.getColor("Label.disabledForeground"));
         note.setFont(note.getFont().deriveFont(note.getFont().getSize2D() - 1f));
         note.setBorder(BorderFactory.createEmptyBorder(6, 14, 10, 14));
 

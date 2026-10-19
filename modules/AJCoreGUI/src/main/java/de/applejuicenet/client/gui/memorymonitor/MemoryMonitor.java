@@ -111,8 +111,14 @@ public class MemoryMonitor
     }
 
     private static JLabel captionLabel() {
-        JLabel label = new JLabel(" ");
-        label.setForeground(UIManager.getColor("Label.disabledForeground"));
+        JLabel label = new JLabel(" ") {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                // Colour comes from the look and feel, so re-read it on every theme change.
+                setForeground(UIManager.getColor("Label.disabledForeground"));
+            }
+        };
         label.setFont(label.getFont().deriveFont(label.getFont().getSize2D() - 1f));
         return label;
     }
