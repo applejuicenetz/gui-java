@@ -34,7 +34,17 @@ public class LogViewerPlugin extends PluginConnector {
     private final JList<File> list = new JList<>(files);
     private final LogEntryTable entries = new LogEntryTable();
     private final JLabel summary = GuiText.label("plugins.logviewer.empty");
-    private final JLabel notice = new JLabel(" ");
+    private final JLabel notice = new JLabel(" ") {
+        @Override
+        public void updateUI() {
+            super.updateUI();
+            // Colours come from the look and feel, so rebuild them on every theme change.
+            Color disabled = UIManager.getColor("Label.disabledForeground");
+            Color separator = UIManager.getColor("Separator.foreground");
+            setForeground(disabled == null ? Color.GRAY : disabled);
+            setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, separator == null ? Color.LIGHT_GRAY : separator));
+        }
+    };
     private final JComboBox<String> levels = GuiText.combo("plugins.logviewer.all", "plugins.logviewer.info", "plugins.logviewer.warnings", "plugins.logviewer.errorsonly");
     private final JTextField search = new JTextField(22);
     private SwingWorker<LogParser.Result, Void> loader;
@@ -115,9 +125,6 @@ public class LogViewerPlugin extends PluginConnector {
         JPanel right = new JPanel(new BorderLayout(0, 8));
         right.add(header, BorderLayout.NORTH);
         right.add(entries, BorderLayout.CENTER);
-        notice.setForeground(UIManager.getColor("Label.disabledForeground") == null ? Color.GRAY : UIManager.getColor("Label.disabledForeground"));
-        notice.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0,
-                UIManager.getColor("Separator.foreground") == null ? Color.LIGHT_GRAY : UIManager.getColor("Separator.foreground")));
         right.add(notice, BorderLayout.SOUTH);
 
         JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left, right);

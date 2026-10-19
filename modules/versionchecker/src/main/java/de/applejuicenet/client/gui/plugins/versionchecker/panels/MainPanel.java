@@ -118,8 +118,17 @@ public class MainPanel extends JPanel {
     }
 
     private JPanel card(String title, JLabel value) {
-        JPanel panel = new JPanel(new BorderLayout(0, 8));
-        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(UIManager.getColor("Separator.foreground") == null ? Color.GRAY : UIManager.getColor("Separator.foreground")), BorderFactory.createEmptyBorder(12, 14, 12, 14)));
+        JPanel panel = new JPanel(new BorderLayout(0, 8)) {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                // The separator colour comes from the look and feel, so rebuild it on every theme change.
+                Color separator = UIManager.getColor("Separator.foreground");
+                setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(separator == null ? Color.GRAY : separator),
+                        BorderFactory.createEmptyBorder(12, 14, 12, 14)));
+            }
+        };
         JLabel heading = new JLabel(title);
         GuiText.setText(heading, title.equals(GuiText.text("plugins.versions.contacts")) ? "plugins.versions.contacts"
                 : title.equals(GuiText.text("plugins.versions.versions")) ? "plugins.versions.versions" : "plugins.versions.leading");
