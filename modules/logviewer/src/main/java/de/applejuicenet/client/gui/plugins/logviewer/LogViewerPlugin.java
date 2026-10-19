@@ -64,7 +64,23 @@ public class LogViewerPlugin extends PluginConnector {
         JButton refresh = GuiText.button("plugins.logviewer.refresh");
         refresh.addActionListener(e -> reload());
         JButton delete = GuiText.button("plugins.logviewer.delete");
-        delete.addActionListener(e -> deleteSelected());
+        delete.addActionListener(e -> deleteAll());
+        list.addMouseListener(new java.awt.event.MouseAdapter() {
+            private void popup(java.awt.event.MouseEvent e) {
+                if (!e.isPopupTrigger()) return;
+                int index = list.locationToIndex(e.getPoint());
+                if (index < 0 || !list.getCellBounds(index, index).contains(e.getPoint())) return;
+                list.setSelectedIndex(index);
+                JPopupMenu menu = new JPopupMenu();
+                JMenuItem item = GuiText.menuItem("plugins.logviewer.deleteone");
+                item.setEnabled(!active.test(list.getSelectedValue()));
+                item.addActionListener(event -> deleteSelected());
+                menu.add(item);
+                menu.show(list, e.getX(), e.getY());
+            }
+            @Override public void mousePressed(java.awt.event.MouseEvent e) { popup(e); }
+            @Override public void mouseReleased(java.awt.event.MouseEvent e) { popup(e); }
+        });
         JPanel listButtons = new JPanel(new GridLayout(1, 2, 6, 0));
         listButtons.add(refresh);
         listButtons.add(delete);
@@ -181,13 +197,29 @@ public class LogViewerPlugin extends PluginConnector {
                 GuiText.text("plugins.logviewer.confirmdelete", file.getName()), GuiText.text("plugins.logviewer.deletetitle"),
                 JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (answer != JOptionPane.YES_OPTION) return;
-        try {
-            Files.deleteIfExists(file.toPath());
-            reload();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(DialogLocation.getReference(this), GuiText.text("plugins.logviewer.deletefailed", e.getMessage()),
-                    GuiText.text("plugins.logviewer.deletetitle"), JOptionPane.ERROR_MESSAGE);
+        deleteFiles(List.of(file));
+    }
+
+    private void deleteAll() {
+        if (files.isEmpty()) return;
+        int answer = JOptionPane.showConfirmDialog(DialogLocation.getReference(this),
+                GuiText.text("plugins.logviewer.confirmdeleteall"), GuiText.text("plugins.logviewer.deletetitle"),
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (answer == JOptionPane.YES_OPTION) deleteFiles(java.util.Collections.list(files.elements()));
+    }
+
+    void deleteFiles(List<File> candidates) {
+        for (File file : candidates) {
+            if (active.test(file)) continue;
+            try {
+                Files.deleteIfExists(file.toPath());
+            } catch (IOException e) {
+                LOGGER.warn("LogViewer: deleting failed: {}", file, e);
+                JOptionPane.showMessageDialog(DialogLocation.getReference(this), GuiText.text("plugins.logviewer.deletefailed", e.getMessage()),
+                        GuiText.text("plugins.logviewer.deletetitle"), JOptionPane.ERROR_MESSAGE);
+            }
         }
+        reload();
     }
 
     JList<File> fileList() { return list; }

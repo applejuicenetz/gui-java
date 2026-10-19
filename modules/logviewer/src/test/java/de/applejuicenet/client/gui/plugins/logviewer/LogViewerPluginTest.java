@@ -87,6 +87,26 @@ public class LogViewerPluginTest {
             assertFalse(containsText(plugin, "Refresh"));
         });
     }
+    @Test public void deletingAllKeepsActiveLogEvenWhenNotNewest() throws Exception {
+        Path directory = logs(3);
+        LogViewerPlugin plugin = open(directory, f -> f.getName().equals("2026-00.html"));
+        SwingUtilities.invokeAndWait(() -> plugin.deleteFiles(java.util.Collections.list(
+                ((DefaultListModel<File>) plugin.fileList().getModel()).elements())));
+        assertEquals(1, htmlFiles(directory));
+        assertTrue(Files.exists(directory.resolve("2026-00.html")));
+    }
+
+    @Test public void deletingOneKeepsOtherLogsAndProtectsActiveLog() throws Exception {
+        Path directory = logs(3);
+        LogViewerPlugin plugin = open(directory, f -> f.getName().equals("2026-02.html"));
+        SwingUtilities.invokeAndWait(() -> plugin.deleteFiles(java.util.List.of(
+                directory.resolve("2026-01.html").toFile(), directory.resolve("2026-02.html").toFile())));
+        assertEquals(2, htmlFiles(directory));
+        assertTrue(Files.exists(directory.resolve("2026-02.html")));
+        assertTrue(Files.exists(directory.resolve("2026-00.html")));
+        assertFalse(Files.exists(directory.resolve("2026-01.html")));
+    }
+
     private static boolean containsText(java.awt.Container parent, String text) {
         for (java.awt.Component c : parent.getComponents()) {
             if (c instanceof javax.swing.AbstractButton b && text.equals(b.getText())) return true;
