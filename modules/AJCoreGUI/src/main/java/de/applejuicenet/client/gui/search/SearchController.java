@@ -5,13 +5,13 @@
 package de.applejuicenet.client.gui.search;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.fassade.entity.Search;
-import de.applejuicenet.client.fassade.entity.Share;
-import de.applejuicenet.client.fassade.event.DataPropertyChangeEvent;
-import de.applejuicenet.client.fassade.event.DownloadDataPropertyChangeEvent;
-import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Download;
+import de.applejuicenet.client.facade.entity.Search;
+import de.applejuicenet.client.facade.entity.Share;
+import de.applejuicenet.client.facade.event.DataPropertyChangeEvent;
+import de.applejuicenet.client.facade.event.DownloadDataPropertyChangeEvent;
+import de.applejuicenet.client.facade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.components.util.Value;
@@ -34,7 +34,7 @@ public class SearchController extends GuiController
    private SearchPanel                     searchPanel;
    private boolean                         panelSelected                  = false;
    private boolean                         firstSearch                    = true;
-   private String                          bearbeitung;
+   private String                          processing;
 
    private SearchController()
    {
@@ -46,10 +46,10 @@ public class SearchController extends GuiController
 
    private void init()
    {
-      AppleJuiceClient.getAjFassade().addDataUpdateListener(this, DATALISTENER_TYPE.SEARCH_CHANGED);
+      AppleJuiceClient.getAjFacade().addDataUpdateListener(this, DATALISTENER_TYPE.SEARCH_CHANGED);
 
       searchPanel.getStartStopBtn().addActionListener(new GuiControllerActionListener(this, START_STOP));
-      AppleJuiceClient.getAjFassade().getDownloadPropertyChangeInformer()
+      AppleJuiceClient.getAjFacade().getDownloadPropertyChangeInformer()
       .addDataPropertyChangeListener(new DownloadPropertyChangeListener(this, DOWNLOAD_PROPERTY_CHANGE_EVENT));
    }
 
@@ -92,26 +92,26 @@ public class SearchController extends GuiController
 
    private void startStop()
    {
-      JTextField suchbegriff = searchPanel.getSuchbegriffTxt();
-      String       suchText = suchbegriff.getText();
+      JTextField searchTerm = searchPanel.getSearchTermTxt();
+      String       searchText = searchTerm.getText();
 
-      if(suchText.length() != 0)
+      if(searchText.length() != 0)
       {
-         suchbegriff.setSelectionStart(0);
-         suchbegriff.setSelectionEnd(suchText.length());
+         searchTerm.setSelectionStart(0);
+         searchTerm.setSelectionEnd(searchText.length());
 
-         // Core-Aufrufe (Anteilsliste holen, Suche starten) blockieren bei langsamem Core: nicht auf dem EDT
+         // Core calls (fetch share list, start search) block on a slow core: not on the EDT
          Thread.ofVirtual().name("StartSearch").start(() ->
          {
             try
             {
                startFirstSearch();
-               AppleJuiceClient.getAjFassade().startSearch(suchText);
-               SoundPlayer.getInstance().playSound(SoundPlayer.SUCHEN);
+               AppleJuiceClient.getAjFacade().startSearch(searchText);
+               SoundPlayer.getInstance().playSound(SoundPlayer.SEARCH);
             }
             catch(IllegalArgumentException e)
             {
-               logger.error(ApplejuiceFassade.ERROR_MESSAGE,e);
+               logger.error(ApplejuiceFacade.ERROR_MESSAGE,e);
             }
          });
       }
@@ -142,9 +142,9 @@ public class SearchController extends GuiController
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      bearbeitung = languageSelector.getFirstAttrbuteByTagName("mainform.opensearches.caption");
-      searchPanel.getBearbeitungLbl().setText(bearbeitung.replaceAll("%d", Integer.toString(Search.currentSearchCount)));
-      searchPanel.getMnuEinfuegen().setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.einfuegen"));
+      processing = languageSelector.getFirstAttributeByTagName("mainform.opensearches.caption");
+      searchPanel.getProcessingLbl().setText(processing.replaceAll("%d", Integer.toString(Search.currentSearchCount)));
+      searchPanel.getMnuPaste().setText(languageSelector.getFirstAttributeByTagName("javagui.downloadform.paste"));
    }
 
    protected synchronized void startFirstSearch()
@@ -155,16 +155,16 @@ public class SearchController extends GuiController
       }
 
       firstSearch = false;
-      AppleJuiceClient.getAjFassade().getDownloadPropertyChangeInformer()
+      AppleJuiceClient.getAjFacade().getDownloadPropertyChangeInformer()
       .addDataPropertyChangeListener(new DownloadPropertyChangeListener(this, DOWNLOAD_PROPERTY_CHANGE_EVENT));
-      Map<Integer, Share> shares = AppleJuiceClient.getAjFassade().getShare(false);
+      Map<Integer, Share> shares = AppleJuiceClient.getAjFacade().getShare(false);
 
       for(Share curShare : shares.values())
       {
          SearchEntryIconRenderer.addMd5Sum(curShare.getCheckSum());
       }
 
-      Map<Integer, Download> downloads = AppleJuiceClient.getAjFassade().getDownloadsSnapshot();
+      Map<Integer, Download> downloads = AppleJuiceClient.getAjFacade().getDownloadsSnapshot();
 
       for(Download curDownload : downloads.values())
       {
@@ -202,8 +202,8 @@ public class SearchController extends GuiController
                               aSearch = theContent.get(curKey);
                               SearchResultPanel searchResultPanel = new SearchResultPanel(aSearch);
 
-                              resultPanel.addTab(aSearch.getSuchText(), searchResultPanel);
-                              searchResultPanel.aendereSprache();
+                              resultPanel.addTab(aSearch.getSearchText(), searchResultPanel);
+                              searchResultPanel.changeLanguage();
                               resultPanel.setSelectedComponent(searchResultPanel);
                               searchIds.put(curKey, searchResultPanel);
                            }
@@ -224,7 +224,7 @@ public class SearchController extends GuiController
                                  }
                                  else
                                  {
-                                    searchResultPanel.updateZahlen();
+                                    searchResultPanel.updateNumbers();
                                  }
                               }
                            }
@@ -238,7 +238,7 @@ public class SearchController extends GuiController
                            id = aSearch.getId();
                            int index = resultPanel.indexOfComponent((Component) curObj);
 
-                           resultPanel.setTitleAt(index, aSearch.getSuchText() + " (" + aSearch.getEntryCount() + ")");
+                           resultPanel.setTitleAt(index, aSearch.getSearchText() + " (" + aSearch.getEntryCount() + ")");
                            if(!theContent.containsKey(id))
                            {
                               searchIds.remove(id);
@@ -250,13 +250,13 @@ public class SearchController extends GuiController
                            }
                         }
 
-                        searchPanel.getBearbeitungLbl()
-                        .setText(bearbeitung.replaceAll("%d", Integer.toString(Search.currentSearchCount)));
+                        searchPanel.getProcessingLbl()
+                        .setText(processing.replaceAll("%d", Integer.toString(Search.currentSearchCount)));
                      }
                   }
                   catch(Exception e)
                   {
-                     logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                     logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                   }
                }
             });

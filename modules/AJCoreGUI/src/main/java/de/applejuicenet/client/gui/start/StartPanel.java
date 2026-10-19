@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.start;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.shared.IconManager;
@@ -14,11 +14,10 @@ import java.awt.*;
  * 1.57 2004/06/15 16:19:19 maj0r Exp $
  *
  * <p>
- * Titel: AppleJuice Client-GUI
+ * Title: AppleJuice Client-GUI
  * </p>
  * <p>
- * Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten
- * appleJuice-Core
+ * Description: Official GUI for the appleJuice core developed by muhviehstarr
  * </p>
  * <p>
  * Copyright: General Public License
@@ -29,18 +28,18 @@ import java.awt.*;
 
 public class StartPanel extends TklPanel {
 
-    private static final Color APFEL_ROT = new Color(146, 36, 60);
+    private static final Color APPLE_RED = new Color(146, 36, 60);
 
-    private JLabel warnungen;
-    private JLabel deinClient;
+    private JLabel warnings;
+    private JLabel yourClient;
     private JLabel firewallWarning;
-    private JTextPane nachrichten;
-    private JLabel neuigkeiten;
-    private JLabel netzwerk;
+    private JTextPane messages;
+    private JLabel news;
+    private JLabel network;
     private JLabel status;
-    private JLabel verbindungsNachricht;
+    private JLabel connectionMessage;
     private JLabel version;
-    private JLabel warnungIcon;
+    private JLabel warningIcon;
     private JTextPane serverMessage;
 
     public StartPanel(GuiController guiController) {
@@ -48,12 +47,12 @@ public class StartPanel extends TklPanel {
         try {
             init();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
-    public JTextPane getNachrichtenPane() {
-        return nachrichten;
+    public JTextPane getMessagesPane() {
+        return messages;
     }
 
     public JTextPane getServerMessagePane() {
@@ -64,12 +63,12 @@ public class StartPanel extends TklPanel {
         return version;
     }
 
-    public JLabel getLblWarnung() {
-        return warnungen;
+    public JLabel getLblWarning() {
+        return warnings;
     }
 
-    public JLabel getLblWarnungIcon() {
-        return warnungIcon;
+    public JLabel getLblWarningIcon() {
+        return warningIcon;
     }
 
     public JLabel getLblStatus() {
@@ -80,20 +79,20 @@ public class StartPanel extends TklPanel {
         return firewallWarning;
     }
 
-    public JLabel getLblVerbindungsnachricht() {
-        return verbindungsNachricht;
+    public JLabel getLblConnectionMessage() {
+        return connectionMessage;
     }
 
-    public JLabel getLblNetzwerk() {
-        return netzwerk;
+    public JLabel getLblNetwork() {
+        return network;
     }
 
-    public JLabel getLblDeinClient() {
-        return deinClient;
+    public JLabel getLblYourClient() {
+        return yourClient;
     }
 
-    public JLabel getLblNeuigkeiten() {
-        return neuigkeiten;
+    public JLabel getLblNews() {
+        return news;
     }
 
     private void init() {
@@ -125,9 +124,9 @@ public class StartPanel extends TklPanel {
 
         constraints.gridx = 1;
         constraints.weightx = 1;
-        deinClient = new JLabel();
-        deinClient.setForeground(APFEL_ROT);
-        panel3.add(deinClient, constraints);
+        yourClient = new JLabel();
+        yourClient.setForeground(APPLE_RED);
+        panel3.add(yourClient, constraints);
         constraints.weightx = 0;
 
         constraints.gridy++;
@@ -139,13 +138,13 @@ public class StartPanel extends TklPanel {
         constraints.insets.left = 5;
         constraints.gridx = 0;
         ImageIcon icon3 = im.getIcon("warnung");
-        warnungIcon = new JLabel(icon3);
-        panel3.add(warnungIcon, constraints);
+        warningIcon = new JLabel(icon3);
+        panel3.add(warningIcon, constraints);
 
         constraints.gridx = 1;
-        warnungen = new JLabel();
-        warnungen.setForeground(APFEL_ROT);
-        panel3.add(warnungen, constraints);
+        warnings = new JLabel();
+        warnings.setForeground(APPLE_RED);
+        panel3.add(warnings, constraints);
 
         constraints.gridy++;
         constraints.insets.left = 15;
@@ -162,16 +161,16 @@ public class StartPanel extends TklPanel {
         panel3.add(label4, constraints);
 
         constraints.gridx = 1;
-        neuigkeiten = new JLabel();
-        neuigkeiten.setForeground(APFEL_ROT);
-        panel3.add(neuigkeiten, constraints);
+        news = new JLabel();
+        news.setForeground(APPLE_RED);
+        panel3.add(news, constraints);
 
         constraints.gridy++;
         constraints.insets.left = 15;
-        nachrichten = new JTextPane();
-        panel3.add(nachrichten, constraints);
-        nachrichten.setEditable(false);
-        nachrichten.setBackground(UIManager.getColor("TextField.background"));
+        messages = new JTextPane();
+        panel3.add(messages, constraints);
+        messages.setEditable(false);
+        messages.setBackground(UIManager.getColor("TextField.background"));
 
         constraints.gridy++;
         constraints.insets.left = 5;
@@ -181,14 +180,14 @@ public class StartPanel extends TklPanel {
         panel3.add(label5, constraints);
 
         constraints.gridx = 1;
-        netzwerk = new JLabel();
-        netzwerk.setForeground(APFEL_ROT);
-        panel3.add(netzwerk, constraints);
+        network = new JLabel();
+        network.setForeground(APPLE_RED);
+        panel3.add(network, constraints);
 
         constraints.gridy++;
         constraints.insets.left = 15;
-        verbindungsNachricht = new JLabel();
-        panel3.add(verbindungsNachricht, constraints);
+        connectionMessage = new JLabel();
+        panel3.add(connectionMessage, constraints);
 
         constraints.gridy++;
         constraints.insets.top = 5;

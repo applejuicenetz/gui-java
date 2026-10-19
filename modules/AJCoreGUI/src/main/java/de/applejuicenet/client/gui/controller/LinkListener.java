@@ -4,9 +4,9 @@
 package de.applejuicenet.client.gui.controller;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
-import de.applejuicenet.client.fassade.listener.CoreStatusListener;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.exception.IllegalArgumentException;
+import de.applejuicenet.client.facade.listener.CoreStatusListener;
 import de.applejuicenet.client.shared.AjlFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ public class LinkListener extends Thread implements CoreStatusListener, AutoClos
         this(OptionsManagerImpl.getInstance().getLinkListenerPort(),
                 () -> OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword(),
                 LinkListener::submitToCore);
-        ApplejuiceFassade.addCoreStatusListener(this);
+        ApplejuiceFacade.addCoreStatusListener(this);
     }
 
     LinkListener(int port, Supplier<String> passwordSupplier, BiConsumer<String, String> linkProcessor) throws IOException {
@@ -62,16 +62,16 @@ public class LinkListener extends Thread implements CoreStatusListener, AutoClos
                     boolean accepted = handleMessage(reader.readLine());
                     writer.write(accepted ? "OK\n" : "ERROR\n");
                 } catch (Exception e) {
-                    logger.warn("Link-/AJL-Übergabe fehlgeschlagen", e);
+                    logger.warn("Link/AJL hand-over failed", e);
                     writer.write("ERROR\n");
                 }
                 writer.flush();
             } catch (SocketException e) {
                 if (!listen.isClosed()) {
-                    logger.warn("LinkListener-Verbindung fehlgeschlagen", e);
+                    logger.warn("LinkListener connection failed", e);
                 }
             } catch (IOException e) {
-                logger.warn("LinkListener-Verbindung fehlgeschlagen", e);
+                logger.warn("LinkListener connection failed", e);
             }
         }
     }
@@ -124,7 +124,7 @@ public class LinkListener extends Thread implements CoreStatusListener, AutoClos
             writer.flush();
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
             if (!"OK".equals(reader.readLine())) {
-                throw new IOException("Link/AJL-Datei wurde von der laufenden GUI nicht angenommen");
+                throw new IOException("The running GUI did not accept the link/AJL file");
             }
         }
     }
@@ -139,7 +139,7 @@ public class LinkListener extends Thread implements CoreStatusListener, AutoClos
     public synchronized void fireStatusChanged(STATUS newStatus) {
         if (newStatus == STATUS.STARTED && !ready) {
             ready = true;
-            ApplejuiceFassade.removeCoreStatusListener(this);
+            ApplejuiceFacade.removeCoreStatusListener(this);
             for (Link link : linkCache) {
                 linkProcessor.accept(link.link, link.directory);
             }
@@ -165,9 +165,9 @@ public class LinkListener extends Thread implements CoreStatusListener, AutoClos
 
     private static void submitToCore(String link, String directory) {
         try {
-            AppleJuiceClient.getAjFassade().processLink(link, directory);
+            AppleJuiceClient.getAjFacade().processLink(link, directory);
         } catch (IllegalArgumentException e) {
-            logger.warn(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.warn(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -177,7 +177,7 @@ public class LinkListener extends Thread implements CoreStatusListener, AutoClos
 
     @Override
     public void close() throws IOException {
-        ApplejuiceFassade.removeCoreStatusListener(this);
+        ApplejuiceFacade.removeCoreStatusListener(this);
         listen.close();
     }
 

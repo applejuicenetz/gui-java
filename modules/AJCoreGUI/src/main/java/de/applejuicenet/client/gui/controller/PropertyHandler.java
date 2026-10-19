@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui.controller;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,18 +26,18 @@ public class PropertyHandler {
     private HashSet<PropertyChangeListener> listeners = null;
     private String path;
     private Properties props;
-    private String beschreibung;
+    private String description;
     private boolean inform = true;
 
-    public PropertyHandler(String propertiesLocation, String beschreibung, boolean load)
+    public PropertyHandler(String propertiesLocation, String description, boolean load)
             throws IllegalArgumentException {
         logger = LoggerFactory.getLogger(getClass());
         try {
             path = propertiesLocation;
-            if (beschreibung == null) {
-                this.beschreibung = "";
+            if (description == null) {
+                this.description = "";
             } else {
-                this.beschreibung = beschreibung;
+                this.description = description;
             }
 
             if (load) {
@@ -46,7 +46,7 @@ public class PropertyHandler {
                 props = new Properties();
             }
         } catch (Exception e) {
-            throw new IllegalArgumentException("Einstellungen konnten nicht geladen werden", e);
+            throw new IllegalArgumentException("Settings could not be loaded", e);
         }
     }
 
@@ -71,7 +71,7 @@ public class PropertyHandler {
             props.put(identifier, value);
             informListener(identifier, oldValue, value);
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -128,20 +128,20 @@ public class PropertyHandler {
             try (InputStream inputStream = Files.newInputStream(Path.of(path))) {
                 loaded.load(inputStream);
             } catch (NoSuchFileException e) {
-                throw new IllegalArgumentException("PropertyDatei konnte nicht gefunden werden.", e);
+                throw new IllegalArgumentException("Property file could not be found.", e);
             } catch (IOException | IllegalArgumentException e) {
-                throw new IllegalArgumentException("Ungueltige PropertyDatei.", e);
+                throw new IllegalArgumentException("Invalid property file.", e);
             }
 
             props = loaded;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Einstellungen konnten nicht geladen werden", e);
+            throw new IllegalArgumentException("Settings could not be loaded", e);
         }
     }
 
     /**
-     * Schreibt in eine Temp-Datei im Zielverzeichnis und ersetzt die Zieldatei erst danach.
-     * Bei einem Fehler bleibt die letzte gueltige Datei erhalten.
+     * Writes to a temp file in the target directory and replaces the target file only afterwards.
+     * On error the last valid file is kept.
      */
     public void save() throws IllegalArgumentException {
         Path target = Path.of(path).toAbsolutePath();
@@ -152,7 +152,7 @@ public class PropertyHandler {
             Files.createDirectories(directory);
             temp = Files.createTempFile(directory, target.getFileName().toString(), ".tmp");
             try (OutputStream outputStream = Files.newOutputStream(temp)) {
-                props.store(outputStream, beschreibung);
+                props.store(outputStream, description);
             }
             copyPermissions(target, temp);
             try {
@@ -162,14 +162,14 @@ public class PropertyHandler {
             }
             temp = null;
         } catch (IOException e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
-            throw new IllegalArgumentException("PropertyDatei konnte nicht gespeichert werden.", e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
+            throw new IllegalArgumentException("Property file could not be saved.", e);
         } finally {
             if (temp != null) {
                 try {
                     Files.deleteIfExists(temp);
                 } catch (IOException e) {
-                    logger.warn("Temporaere Datei {} nicht geloescht", temp, e);
+                    logger.warn("Temporary file {} was not deleted", temp, e);
                 }
             }
         }
@@ -181,7 +181,7 @@ public class PropertyHandler {
                 Files.setPosixFilePermissions(to, Files.getPosixFilePermissions(from));
             }
         } catch (UnsupportedOperationException | IOException e) {
-            // Dateisystem ohne POSIX-Rechte: Standardrechte der Temp-Datei bleiben
+            // File system without POSIX permissions: the temp file keeps its default permissions
         }
     }
 

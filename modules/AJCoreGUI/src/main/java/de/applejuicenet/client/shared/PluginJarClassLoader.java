@@ -26,8 +26,8 @@ import java.util.zip.ZipEntry;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/PluginJarClassLoader.java,v 1.31 2009/01/12 10:33:12 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r aj@tkl-soft.de>
@@ -64,7 +64,7 @@ public class PluginJarClassLoader extends SecureClassLoader {
 
             return aPlugin;
         } catch (Throwable e) {
-            logger.info("Plugin " + pluginJar.getName() + " entspricht nicht dem Standard und wurde nicht geladen.", e);
+            logger.info("Plugin " + pluginJar.getName() + " does not conform to the standard and was not loaded.", e);
 
             return null;
         }
@@ -75,7 +75,7 @@ public class PluginJarClassLoader extends SecureClassLoader {
             return;
         }
 
-        // Alle Klassen und Ressourcen werden hier vollstaendig eingelesen; danach wird die Datei nicht mehr gebraucht
+        // All classes and resources are read completely here; afterwards the file is no longer needed
         try (JarFile jf = new JarFile(jar)) {
             loadClassBytes(jar, jf);
         }
@@ -131,9 +131,9 @@ public class PluginJarClassLoader extends SecureClassLoader {
 
                 curLanguageProperties.load(new InputStreamReader(new ByteArrayInputStream(buf), StandardCharsets.UTF_8));
 
-                String sprache = curLanguageProperties.getProperty("language");
+                String language = curLanguageProperties.getProperty("language");
 
-                languageFiles.put(sprache, curLanguageProperties);
+                languageFiles.put(language, curLanguageProperties);
             } else if (entryName.endsWith(".jar")) {
                 File aFile = File.createTempFile("ajg", null);
 
@@ -207,7 +207,7 @@ public class PluginJarClassLoader extends SecureClassLoader {
         } catch (LinkageError lE) {
             logger.debug("Mist im Plugin", lE);
 
-            //Klasse wurde aus irgendeinem Grund bereits geladen
+            //the class was already loaded for some reason
         }
     }
 
@@ -224,7 +224,7 @@ public class PluginJarClassLoader extends SecureClassLoader {
         try {
             url = new URL("jar:file:" + entry.getAbsolutePath() + "!/" + name);
         } catch (MalformedURLException e) {
-            // bloed, aber nicht soooo schlimm
+            // silly, but not that bad
         }
 
         return url;

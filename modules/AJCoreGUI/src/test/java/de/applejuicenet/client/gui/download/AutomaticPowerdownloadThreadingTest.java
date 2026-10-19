@@ -25,19 +25,19 @@ public class AutomaticPowerdownloadThreadingTest {
         SwingUtilities.invokeAndWait(() -> {
             PowerDownloadPanel panel = new PowerDownloadPanel(null) {
                 @Override
-                public void autoPwdlFinished() {
+                public void autoPowerdownloadFinished() {
                     reset.set(true);
                 }
             };
             try {
-                var current = PowerDownloadPanel.class.getDeclaredField("autoPwdlThread");
+                var current = PowerDownloadPanel.class.getDeclaredField("autoPowerdownloadThread");
                 current.setAccessible(true);
-                AutomaticPowerdownload pwdl = new AutomaticPowerdownload(null);
-                current.set(panel, pwdl);
-                panel.autoPwdlFinished((AutomaticPowerdownload) null);
+                AutomaticPowerdownload powerdownload = new AutomaticPowerdownload(null);
+                current.set(panel, powerdownload);
+                panel.autoPowerdownloadFinished((AutomaticPowerdownload) null);
                 assertFalse("Old thread reset current thread", reset.get());
-                assertSame(pwdl, current.get(panel));
-                panel.autoPwdlFinished(pwdl);
+                assertSame(powerdownload, current.get(panel));
+                panel.autoPowerdownloadFinished(powerdownload);
                 assertTrue(reset.get());
             } catch (ReflectiveOperationException e) {
                 throw new AssertionError(e);
@@ -55,16 +55,16 @@ public class AutomaticPowerdownloadThreadingTest {
         PowerDownloadPanel[] panel = new PowerDownloadPanel[1];
         SwingUtilities.invokeAndWait(() -> panel[0] = new PowerDownloadPanel(null) {
             @Override
-            public void autoPwdlFinished(AutomaticPowerdownload completed2) {
+            public void autoPowerdownloadFinished(AutomaticPowerdownload completed2) {
                 onEdt.set(SwingUtilities.isEventDispatchThread());
                 completed.countDown();
             }
         });
-        AutomaticPowerdownload pwdl = new AutomaticPowerdownload(null);
-        pwdl.setParentToInform(panel[0]);
-        pwdl.start();
-        pwdl.interrupt();
-        pwdl.join(2000);
+        AutomaticPowerdownload powerdownload = new AutomaticPowerdownload(null);
+        powerdownload.setParentToInform(panel[0]);
+        powerdownload.start();
+        powerdownload.interrupt();
+        powerdownload.join(2000);
         assertTrue(completed.await(2, TimeUnit.SECONDS));
         assertTrue("Callback ran outside EDT", onEdt.get());
         SwingUtilities.invokeAndWait(() -> LanguageSelector.getInstance().removeLanguageListener(panel[0]));

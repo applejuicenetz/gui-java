@@ -23,9 +23,7 @@ public class DefaultTreeTableCellRenderer extends JTree implements
 		setCellRenderer(getIconNodeRenderer());
 	}
 
-	/**
-	 * Ueberschreiben, um den IconNodeRenderer anzupassen
-	 */
+	/** Override to customise the IconNodeRenderer */
 	protected DefaultIconNodeRenderer getIconNodeRenderer(){
 		return new DefaultIconNodeRenderer();
 	}

@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.share;
 
-import de.applejuicenet.client.fassade.entity.Share;
+import de.applejuicenet.client.facade.entity.Share;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;

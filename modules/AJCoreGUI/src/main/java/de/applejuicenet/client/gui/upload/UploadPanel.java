@@ -4,8 +4,9 @@
 
 package de.applejuicenet.client.gui.upload;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Version;
+import de.applejuicenet.client.gui.controller.GuiText;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Version;
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
@@ -38,11 +39,10 @@ import java.util.Date;
  * 1.48 2004/06/23 13:31:24 maj0r Exp $
  *
  * <p>
- * Titel: AppleJuice Client-GUI
+ * Title: AppleJuice Client-GUI
  * </p>
  * <p>
- * Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten
- * appleJuice-Core
+ * Description: Official GUI for the appleJuice core developed by muhviehstarr
  * </p>
  * <p>
  * Copyright: General Public License
@@ -51,7 +51,7 @@ import java.util.Date;
  * @author Maj0r [aj@tkl-soft.de]
  */
 public class UploadPanel extends TklPanel implements RegisterI {
-    private JLabel uploadListeLabel = new JLabel("0 Clients in Deiner Uploadliste");
+    private JLabel uploadListLabel = new JLabel(GuiText.text("javagui.uploadform.clientcount").replace("%d", "0"));
     private JPopupMenu popupMenu = new JPopupMenu();
     private JMenuItem itemCopyToClipboard = new JMenuItem();
     private JMenuItem itemReleaseInfo = new JMenuItem();
@@ -71,7 +71,7 @@ public class UploadPanel extends TklPanel implements RegisterI {
         try {
             init();
         } catch (Exception ex) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
         }
     }
 
@@ -81,7 +81,7 @@ public class UploadPanel extends TklPanel implements RegisterI {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
         add(tablePanel, BorderLayout.CENTER);
-        add(uploadListeLabel, BorderLayout.SOUTH);
+        add(uploadListLabel, BorderLayout.SOUTH);
         uploadActiveTableModel = new UploadActiveTableModel();
         uploadActiveTable = new AutoRowHeightTable(uploadActiveTableModel);
         uploadActiveTable.setRowIcons(IconManager.getInstance().getIcon("treeUebertrage"));
@@ -92,7 +92,7 @@ public class UploadPanel extends TklPanel implements RegisterI {
         uploadActiveTable.getColumnModel().getColumn(3).setCellRenderer(new SpeedTableCellRenderer());
         uploadActiveTable.getColumnModel().getColumn(4).setCellRenderer(new ProgressTableCellRenderer(4));
         uploadActiveTable.getColumnModel().getColumn(5).setCellRenderer(new ProgressTableCellRenderer(4));
-        uploadActiveTable.getColumnModel().getColumn(6).setCellRenderer(new UploadTablePrioCellRenderer());
+        uploadActiveTable.getColumnModel().getColumn(6).setCellRenderer(new UploadTablePriorityCellRenderer());
         uploadActiveTable.getColumnModel().getColumn(7).setCellRenderer(new VersionTableCellRenderer());
 
         uploadActiveTable.addMouseListener(new MouseAdapter() {
@@ -166,7 +166,7 @@ public class UploadPanel extends TklPanel implements RegisterI {
 
         uploadWaitingTable.getColumnModel().getColumn(1).setCellRenderer(new UploadTableWaitingStatusCellRenderer());
         uploadWaitingTable.getColumnModel().getColumn(3).setCellRenderer(new ProgressTableCellRenderer(4));
-        uploadWaitingTable.getColumnModel().getColumn(4).setCellRenderer(new UploadTablePrioCellRenderer());
+        uploadWaitingTable.getColumnModel().getColumn(4).setCellRenderer(new UploadTablePriorityCellRenderer());
 
         uploadWaitingTable.setDefaultRenderer(Version.class, new VersionTableCellRenderer());
         uploadWaitingTable.setDefaultRenderer(Date.class, new UploadTableDateCellRenderer());
@@ -320,8 +320,8 @@ public class UploadPanel extends TklPanel implements RegisterI {
         return popupMenu;
     }
 
-    public JLabel getUploadListeLabel() {
-        return uploadListeLabel;
+    public JLabel getUploadListLabel() {
+        return uploadListLabel;
     }
 
     public JMenuItem getMnuCopyToClipboard() {

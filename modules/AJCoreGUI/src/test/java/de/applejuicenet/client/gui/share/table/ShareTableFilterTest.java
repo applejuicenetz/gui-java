@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.share.table;
 
-import de.applejuicenet.client.fassade.entity.Share;
+import de.applejuicenet.client.facade.entity.Share;
 import org.junit.Test;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class ShareTableFilterTest {
             public String getShortfilename() { return name.substring(name.lastIndexOf('/') + 1); }
             public long getSize() { return 1; }
             public String getCheckSum() { return "h"; }
-            public int getPrioritaet() { return 1; }
+            public int getPriority() { return 1; }
             public long getAskCount() { return 0; }
             public long getLastAsked() { return 0; }
             public long getSearchCount() { return 0; }

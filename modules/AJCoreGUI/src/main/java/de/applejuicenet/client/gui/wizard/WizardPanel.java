@@ -8,8 +8,8 @@ import java.awt.*;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/WizardPanel.java,v 1.7 2005/02/22 09:21:07 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -18,8 +18,8 @@ import java.awt.*;
 
 public abstract class WizardPanel
     extends JPanel {
-    private WizardPanel naechstesPanel;
-    private WizardPanel vorherigesPanel;
+    private WizardPanel nextPanel;
+    private WizardPanel previousPanel;
     protected LanguageSelector languageSelector;
 
     public WizardPanel() {
@@ -27,20 +27,20 @@ public abstract class WizardPanel
         languageSelector = LanguageSelector.getInstance();
     }
 
-    public WizardPanel getNaechstesPanel() {
-        return naechstesPanel;
+    public WizardPanel getNextPanel() {
+        return nextPanel;
     }
 
-    public void setNaechstesPanel(WizardPanel naechstesPanel) {
-        this.naechstesPanel = naechstesPanel;
+    public void setNextPanel(WizardPanel nextPanel) {
+        this.nextPanel = nextPanel;
     }
 
-    public WizardPanel getVorherigesPanel() {
-        return vorherigesPanel;
+    public WizardPanel getPreviousPanel() {
+        return previousPanel;
     }
 
-    public void setVorherigesPanel(WizardPanel vorherigesPanel) {
-        this.vorherigesPanel = vorherigesPanel;
+    public void setPreviousPanel(WizardPanel previousPanel) {
+        this.previousPanel = previousPanel;
     }
 
     public abstract void fireLanguageChanged();

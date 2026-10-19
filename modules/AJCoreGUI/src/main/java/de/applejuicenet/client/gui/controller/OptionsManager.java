@@ -6,8 +6,8 @@ package de.applejuicenet.client.gui.controller;
 
 
 import ch.qos.logback.classic.Level;
-import de.applejuicenet.client.fassade.listener.DataUpdateListener;
-import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.facade.listener.DataUpdateListener;
+import de.applejuicenet.client.facade.shared.AJSettings;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.Settings;
@@ -16,8 +16,8 @@ import de.applejuicenet.client.shared.exception.InvalidPasswordException;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManager.java,v 1.46 2009/01/05 09:26:44 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General  License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -29,21 +29,21 @@ public interface OptionsManager
 
    void addConnectionSettingsListener(DataUpdateListener listener);
 
-   String getSprache();
+   String getLanguage();
 
    boolean getUpdateInfo();
 
    void setUpdateInfo(boolean UpdateInfo);
 
-   boolean isErsterStart();
+   boolean isFirstStart();
 
-   void setErsterStart(boolean ersterStart);
+   void setFirstStart(boolean firstStart);
 
    boolean isSoundEnabled();
 
    void enableSound(boolean enable);
 
-   void setSprache(String sprache);
+   void setLanguage(String language);
 
    Level getLogLevel();
 

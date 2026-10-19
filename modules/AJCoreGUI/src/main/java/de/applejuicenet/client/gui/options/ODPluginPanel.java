@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui.options;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.plugincontrol.PluginFactory;
@@ -22,8 +22,8 @@ import java.util.Vector;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODPluginPanel.java,v 1.8 2009/01/12 09:19:20 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -32,14 +32,14 @@ import java.util.Vector;
 public class ODPluginPanel extends JPanel implements OptionsRegister
 {
    private JList            pluginList;
-   private JTextArea        beschreibung            = new JTextArea();
+   private JTextArea        description            = new JTextArea();
    private JLabel           label1                  = new JLabel();
    private AppleJuiceDialog theApp;
-   private JButton          einstellungen           = new JButton();
+   private JButton          settings           = new JButton();
    private String           name;
    private String           version;
-   private String           autor;
-   private String           erlaeuterung;
+   private String           author;
+   private String           explanation;
    private Logger logger;
    private PluginConnector  selectedPluginConnector = null;
    private JDialog          parentDialog;
@@ -57,7 +57,7 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
       }
       catch(Exception e)
       {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
       }
    }
 
@@ -67,7 +67,7 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
       menuIcon = im.getIcon("opt_plugins");
       Set<PluginConnector> plugins = PluginFactory.getPlugins();
 
-      einstellungen.setVisible(false);
+      settings.setVisible(false);
       Vector<PluginContainer> v = new Vector<PluginContainer>();
 
       for(PluginConnector curPlugin : plugins)
@@ -77,37 +77,37 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
 
       Dimension parentSize = theApp.getSize();
 
-      beschreibung.setBackground(label1.getBackground());
-      beschreibung.setPreferredSize(new Dimension(parentSize.width / 3, beschreibung.getPreferredSize().height));
-      beschreibung.setEditable(false);
-      beschreibung.setLineWrap(true);
-      beschreibung.setWrapStyleWord(true);
+      description.setBackground(label1.getBackground());
+      description.setPreferredSize(new Dimension(parentSize.width / 3, description.getPreferredSize().height));
+      description.setEditable(false);
+      description.setLineWrap(true);
+      description.setWrapStyleWord(true);
       pluginList = new JList(v);
       pluginList.setPreferredSize(new Dimension(190, pluginList.getPreferredSize().height));
       pluginList.addListSelectionListener(e -> pluginList_valueChanged(e));
       setLayout(new BorderLayout());
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      label1.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Label11.caption") + ":");
-      name    = languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.name");
-      version = languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.version");
-      erlaeuterung = languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.beschreibung");
-      autor = languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.autor");
-      einstellungen.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.plugins.einstellungen"));
-      menuText = languageSelector.getFirstAttrbuteByTagName("einstform.TabSheet1.caption");
+      label1.setText(languageSelector.getFirstAttributeByTagName("einstform.Label11.caption") + ":");
+      name    = languageSelector.getFirstAttributeByTagName("javagui.options.plugins.name");
+      version = languageSelector.getFirstAttributeByTagName("javagui.options.plugins.version");
+      explanation = languageSelector.getFirstAttributeByTagName("javagui.options.plugins.description");
+      author = languageSelector.getFirstAttributeByTagName("javagui.options.plugins.author");
+      settings.setText(languageSelector.getFirstAttributeByTagName("javagui.options.plugins.settings"));
+      menuText = languageSelector.getFirstAttributeByTagName("einstform.TabSheet1.caption");
 
       add(label1, BorderLayout.NORTH);
       add(pluginList, BorderLayout.WEST);
       JPanel panel1 = new JPanel(new BorderLayout());
       JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-      panel2.add(einstellungen);
-      JScrollPane sp = new JScrollPane(beschreibung);
+      panel2.add(settings);
+      JScrollPane sp = new JScrollPane(description);
 
       panel1.add(sp, BorderLayout.CENTER);
       panel1.add(panel2, BorderLayout.SOUTH);
       add(panel1, BorderLayout.CENTER);
-      einstellungen.addActionListener(ae -> {
+      settings.addActionListener(ae -> {
          if(selectedPluginConnector != null)
          {
             ODPluginOptionsDialog pluginOptionsDialog = new ODPluginOptionsDialog(parentDialog, selectedPluginConnector);
@@ -122,15 +122,15 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
    {
       PluginContainer selected = (PluginContainer) ((JList) e.getSource()).getSelectedValue();
 
-      beschreibung.setText(selected.getBeschreibung());
+      description.setText(selected.getDescription());
       if(selected.getPluginOptionPanel() == null)
       {
-         einstellungen.setVisible(false);
+         settings.setVisible(false);
       }
       else
       {
          selectedPluginConnector = selected.getPlugin();
-         einstellungen.setVisible(true);
+         settings.setVisible(true);
       }
    }
 
@@ -169,13 +169,13 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
          return plugin;
       }
 
-      public String getBeschreibung()
+      public String getDescription()
       {
          String text;
 
-         text = name + ":\r\n" + plugin.getTitle() + "\r\n\r\n" + autor + ":\r\n" + plugin.getAutor() + " [" + plugin.getContact() +
-                "]" + "\r\n\r\n" + version + ":\r\n" + plugin.getVersion() + "\r\n\r\n" + erlaeuterung + ":\r\n" +
-                plugin.getBeschreibung();
+         text = name + ":\r\n" + plugin.getTitle() + "\r\n\r\n" + author + ":\r\n" + plugin.getAuthor() + " [" + plugin.getContact() +
+                "]" + "\r\n\r\n" + version + ":\r\n" + plugin.getVersion() + "\r\n\r\n" + explanation + ":\r\n" +
+                plugin.getDescription();
          return text;
       }
 

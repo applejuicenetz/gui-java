@@ -4,8 +4,8 @@
 
 package de.applejuicenet.client.gui.controller;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import org.slf4j.Logger;
@@ -25,8 +25,8 @@ import java.util.Properties;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.30 2009/01/12 09:02:56 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI f\uFFFDr den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r [aj@tkl-soft.de]
@@ -50,13 +50,13 @@ public class LanguageSelector extends XMLValueHolder {
         if (instance == null) {
             String path = System.getProperty("user.dir") + File.separator + "language" + File.separator;
             OptionsManager om = OptionsManagerImpl.getInstance();
-            String datei = om.getSprache();
+            String file = om.getLanguage();
 
-            if (null == datei || datei.length() == 0) {
-                datei = "english";
+            if (null == file || file.length() == 0) {
+                file = "english";
             }
 
-            path += datei + ".properties";
+            path += file + ".properties";
 
             instance = new LanguageSelector(path);
         }
@@ -97,10 +97,10 @@ public class LanguageSelector extends XMLValueHolder {
                 }
                 values.putAll(selectedValues);
             } else if (!languageFile.isFile()) {
-                logger.warn("Sprachdatei {} fehlt; Englisch wird verwendet.", languageFile);
+                logger.warn("Language file {} is missing; falling back to English.", languageFile);
             }
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -108,9 +108,9 @@ public class LanguageSelector extends XMLValueHolder {
         if (instance == null) {
             instance = new LanguageSelector(path);
         } else {
-            File sprachDatei = new File(path);
+            File languageFile = new File(path);
 
-            instance.init(sprachDatei);
+            instance.init(languageFile);
             instance.informLanguageListener();
         }
 
@@ -133,7 +133,7 @@ public class LanguageSelector extends XMLValueHolder {
         }
     }
 
-    public String getFirstAttrbuteByTagName(String[] pathToValue) {
+    public String getFirstAttributeByTagName(String[] pathToValue) {
         StringBuffer path = new StringBuffer();
 
         path.append(".");
@@ -143,10 +143,10 @@ public class LanguageSelector extends XMLValueHolder {
             path.append(pathToValue[i]);
         }
 
-        return getFirstAttrbuteByTagName(path.toString());
+        return getFirstAttributeByTagName(path.toString());
     }
 
-    public String getFirstAttrbuteByTagName(String identifier) {
+    public String getFirstAttributeByTagName(String identifier) {
         String value = values.getProperty(identifier);
         return value == null || value.isBlank() ? englishValues.getProperty(identifier, "") : value;
     }
@@ -161,7 +161,7 @@ public class LanguageSelector extends XMLValueHolder {
 
         if (pluginsToWatch != null) {
             it = pluginsToWatch.iterator();
-            String language = getFirstAttrbuteByTagName("Languageinfo.name").toLowerCase();
+            String language = getFirstAttributeByTagName("Languageinfo.name").toLowerCase();
 
             while (it.hasNext()) {
                 ((PluginConnector) it.next()).setLanguage(language);

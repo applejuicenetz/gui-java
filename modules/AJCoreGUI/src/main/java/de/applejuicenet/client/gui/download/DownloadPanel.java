@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui.download;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.components.table.HeaderListener;
@@ -29,11 +29,10 @@ import java.awt.*;
  * 1.109 2004/06/23 12:39:15 maj0r Exp $
  *
  * <p>
- * Titel: AppleJuice Client-GUI
+ * Title: AppleJuice Client-GUI
  * </p>
  * <p>
- * Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten
- * appleJuice-Core
+ * Description: Official GUI for the appleJuice core developed by muhviehstarr
  * </p>
  * <p>
  * Copyright: General Public License
@@ -50,12 +49,12 @@ public class DownloadPanel extends TklPanel {
     private AutoRowHeightTable downloadSourceTable;
     private JPopupMenu popup = new JPopupMenu();
     private JScrollPane aScrollPane;
-    private JMenuItem abbrechen;
+    private JMenuItem cancel;
     private JMenuItem pause;
-    private JMenuItem fortsetzen;
-    private JMenuItem umbenennen;
-    private JMenuItem zielordner;
-    private JMenuItem fertigEntfernen;
+    private JMenuItem resume;
+    private JMenuItem rename;
+    private JMenuItem targetFolder;
+    private JMenuItem removeFinished;
     private JMenuItem itemReleaseInfo = new JMenuItem();
     private JMenuItem itemCopyToClipboard = new JMenuItem();
     private JMenuItem itemCopyToClipboardWithSources = new JMenuItem();
@@ -78,7 +77,7 @@ public class DownloadPanel extends TklPanel {
             powerDownloadPanel = new PowerDownloadPanel((DownloadController) guiController);
             init();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -123,43 +122,43 @@ public class DownloadPanel extends TklPanel {
     }
 
     public JButton getBtnPowerDownload() {
-        return powerDownloadPanel.getBtnPdl();
+        return powerDownloadPanel.getBtnPowerdownload();
     }
 
-    public JRadioButton getBtnPowerDownloadInaktiv() {
-        return powerDownloadPanel.btnInaktiv;
+    public JRadioButton getBtnPowerDownloadInactive() {
+        return powerDownloadPanel.btnInactive;
     }
 
-    public JRadioButton getBtnPowerDownloadAktiv() {
-        return powerDownloadPanel.btnAktiv;
+    public JRadioButton getBtnPowerDownloadActive() {
+        return powerDownloadPanel.btnActive;
     }
 
     public JTextField getRatioField() {
         return powerDownloadPanel.ratio;
     }
 
-    public JMenuItem getMnuAbbrechen() {
-        return abbrechen;
+    public JMenuItem getMnuCancel() {
+        return cancel;
     }
 
     public JMenuItem getMnuPause() {
         return pause;
     }
 
-    public JMenuItem getMnuFortsetzen() {
-        return fortsetzen;
+    public JMenuItem getMnuResume() {
+        return resume;
     }
 
-    public JMenuItem getMnuUmbenennen() {
-        return umbenennen;
+    public JMenuItem getMnuRename() {
+        return rename;
     }
 
-    public JMenuItem getMnuZielordner() {
-        return zielordner;
+    public JMenuItem getMnuTargetFolder() {
+        return targetFolder;
     }
 
-    public JMenuItem getMnuFertigeEntfernen() {
-        return fertigEntfernen;
+    public JMenuItem getMnuRemoveFinished() {
+        return removeFinished;
     }
 
     public JMenuItem getMnuReleaseInfo() {
@@ -191,35 +190,35 @@ public class DownloadPanel extends TklPanel {
 
         bottomPanel.setLayout(new BorderLayout());
 
-        abbrechen = new JMenuItem();
+        cancel = new JMenuItem();
         pause = new JMenuItem();
-        fortsetzen = new JMenuItem();
-        umbenennen = new JMenuItem();
-        zielordner = new JMenuItem();
-        fertigEntfernen = new JMenuItem();
+        resume = new JMenuItem();
+        rename = new JMenuItem();
+        targetFolder = new JMenuItem();
+        removeFinished = new JMenuItem();
 
         menu = new JPopupMenu();
 
         IconManager im = IconManager.getInstance();
 
-        abbrechen.setIcon(im.getIcon("abbrechen"));
+        cancel.setIcon(im.getIcon("abbrechen"));
         pause.setIcon(im.getIcon("pause"));
-        umbenennen.setIcon(im.getIcon("umbenennen"));
-        zielordner.setIcon(im.getIcon("zielordner"));
-        fertigEntfernen.setIcon(im.getIcon("bereinigen"));
-        fortsetzen.setIcon(im.getIcon("pause"));
+        rename.setIcon(im.getIcon("umbenennen"));
+        targetFolder.setIcon(im.getIcon("zielordner"));
+        removeFinished.setIcon(im.getIcon("bereinigen"));
+        resume.setIcon(im.getIcon("pause"));
         itemReleaseInfo.setIcon(im.getIcon("hint"));
         itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
         itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
 
-        popup.add(fortsetzen);
+        popup.add(resume);
         popup.add(pause);
-        popup.add(abbrechen);
+        popup.add(cancel);
         popup.add(new JSeparator());
-        popup.add(umbenennen);
-        popup.add(zielordner);
+        popup.add(rename);
+        popup.add(targetFolder);
         popup.add(new JSeparator());
-        popup.add(fertigEntfernen);
+        popup.add(removeFinished);
         popup.add(new JSeparator());
         popup.add(itemCopyToClipboard);
         popup.add(itemCopyToClipboardWithSources);
@@ -338,7 +337,7 @@ public class DownloadPanel extends TklPanel {
 
             @Override
             public void internalSort(int column, boolean ascent) {
-                pm.setDownlodSourcesSort(column, ascent);
+                pm.setDownloadSourcesSort(column, ascent);
 
                 super.internalSort(column, ascent);
             }

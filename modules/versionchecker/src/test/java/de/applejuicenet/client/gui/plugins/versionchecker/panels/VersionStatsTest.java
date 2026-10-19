@@ -26,6 +26,6 @@ public class VersionStatsTest {
         stats.observe("d", null, 0);
         assertEquals(3, stats.snapshot().total());
         assertEquals(2, stats.snapshot().systems().get(0).intValue());
-        assertTrue(stats.snapshot().versions().stream().anyMatch(v -> v.version().equals("Unbekannt")));
+        assertTrue(stats.snapshot().versions().stream().anyMatch(v -> v.version().equals("Unknown")));
     }
 }

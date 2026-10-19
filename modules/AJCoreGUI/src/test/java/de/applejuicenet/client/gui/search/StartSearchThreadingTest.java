@@ -1,8 +1,8 @@
 package de.applejuicenet.client.gui.search;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.controller.CoreConnectionSettingsHolder;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -34,27 +34,27 @@ import static org.junit.Assert.*;
 
 public class StartSearchThreadingTest {
     private static final java.util.List<String> UNCAUGHT = new java.util.concurrent.CopyOnWriteArrayList<>();
-    private static Field fassadeField;
-    private static ApplejuiceFassade previous;
+    private static Field facadeField;
+    private static ApplejuiceFacade previous;
 
     @BeforeClass
     public static void setUp() throws Exception {
         LanguageSelector.getInstance(Paths.get("../../resources/language/deutsch.properties")
                 .toAbsolutePath().normalize().toString());
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> UNCAUGHT.add(t.getName() + ": " + e));
-        fassadeField = AppleJuiceClient.class.getDeclaredField("ajFassade");
-        fassadeField.setAccessible(true);
-        previous = (ApplejuiceFassade) fassadeField.get(null);
+        facadeField = AppleJuiceClient.class.getDeclaredField("ajFacade");
+        facadeField.setAccessible(true);
+        previous = (ApplejuiceFacade) facadeField.get(null);
     }
 
     @AfterClass
     public static void restore() throws Exception {
-        fassadeField.set(null, previous);
+        facadeField.set(null, previous);
     }
 
     /**
-     * Core, der share.xml erst nach der Freigabe beantwortet. Die erste Suche holt die Anteilsliste, ein langsamer
-     * Core bremst den Klick also genau dort.
+     * Core that answers share.xml only after release. The first search fetches the share list, so a
+     * slow core slows the click exactly there.
      */
     private static class SlowCore implements AutoCloseable {
         final CountDownLatch shareSeen = new CountDownLatch(1);
@@ -130,15 +130,15 @@ public class StartSearchThreadingTest {
     @Test(timeout = 60000)
     public void searchButtonReturnsImmediatelyWhileTheCoreIsSlow() throws Exception {
         try (SlowCore core = new SlowCore()) {
-            ApplejuiceFassade fassade = new ApplejuiceFassade(
+            ApplejuiceFacade facade = new ApplejuiceFacade(
                     new CoreConnectionSettingsHolder("127.0.0.1", core.port(), "", true));
-            fassadeField.set(null, fassade);
-            Field shareHolder = ApplejuiceFassade.class.getDeclaredField("shareXML");
+            facadeField.set(null, facade);
+            Field shareHolder = ApplejuiceFacade.class.getDeclaredField("shareXML");
             shareHolder.setAccessible(true);
-            Class<?> holderType = Class.forName("de.applejuicenet.client.fassade.controller.xml.ShareXMLHolder");
+            Class<?> holderType = Class.forName("de.applejuicenet.client.facade.controller.xml.ShareXMLHolder");
             Constructor<?> holderConstructor = holderType.getDeclaredConstructor(CoreConnectionSettingsHolder.class);
             holderConstructor.setAccessible(true);
-            shareHolder.set(fassade, holderConstructor.newInstance(
+            shareHolder.set(facade, holderConstructor.newInstance(
                     new CoreConnectionSettingsHolder("127.0.0.1", core.port(), "", true)));
             Constructor<SearchController> constructor = SearchController.class.getDeclaredConstructor();
             constructor.setAccessible(true);
@@ -151,7 +151,7 @@ public class StartSearchThreadingTest {
                 }
             });
             SearchPanel panel = (SearchPanel) controller[0].getComponent();
-            JTextField text = panel.getSuchbegriffTxt();
+            JTextField text = panel.getSearchTermTxt();
             JButton button = panel.getStartStopBtn();
             long[] clickNanos = new long[1];
             int[] selection = new int[2];
@@ -163,14 +163,14 @@ public class StartSearchThreadingTest {
                 selection[0] = text.getSelectionStart();
                 selection[1] = text.getSelectionEnd();
             });
-            // Der Suchtext wird sofort markiert, ohne auf den Core zu warten
+            // The search text is marked immediately without waiting for the core
             assertEquals(0, selection[0]);
             assertEquals("ubuntu iso".length(), selection[1]);
 
-            assertTrue("Klick hat auf den Core gewartet: " + clickNanos[0] / 1_000_000 + " ms",
+            assertTrue("Click waited for the core: " + clickNanos[0] / 1_000_000 + " ms",
                     clickNanos[0] < 1_500_000_000L);
-            assertTrue("Anteilsliste wurde nie angefragt", core.shareSeen.await(10, TimeUnit.SECONDS));
-            // Der Core haelt share.xml noch zurueck; der EDT muss trotzdem sofort arbeiten
+            assertTrue("Share list was never requested", core.shareSeen.await(10, TimeUnit.SECONDS));
+            // The core still holds back share.xml; the EDT must still work immediately
             long t0 = System.nanoTime();
             SwingUtilities.invokeAndWait(() -> text.setText("weiter"));
             assertTrue("EDT blockiert", System.nanoTime() - t0 < 1_000_000_000L);
@@ -178,7 +178,7 @@ public class StartSearchThreadingTest {
 
             core.release.countDown();
             if (!core.searchSeen.await(10, TimeUnit.SECONDS)) {
-                fail("Suche kam nach der Freigabe nicht beim Core an. Nicht gefangen: " + UNCAUGHT);
+                fail("Search did not reach the core after release. Not caught: " + UNCAUGHT);
             }
             assertEquals(1, core.searchRequests.get());
         }

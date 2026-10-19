@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui.download.table;
 
-import de.applejuicenet.client.fassade.shared.FileType;
+import de.applejuicenet.client.facade.shared.FileType;
 import de.applejuicenet.client.shared.IconManager;
 
 import javax.swing.*;

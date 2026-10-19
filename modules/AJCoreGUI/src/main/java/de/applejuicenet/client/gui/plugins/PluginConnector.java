@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui.plugins;
 
-import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.facade.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.RegisterI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +15,9 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * <p>Titel: AppleJuice Core-GUI</p>
+ * <p>Title: AppleJuice Core-GUI</p>
  *
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten
- * appleJuice-Core</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  *
  * <p><b>Copyright: General Public License</b></p>
  *
@@ -40,23 +39,23 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
    {
       if(null == properties)
       {
-         throw new RuntimeException("properties nicht uebergeben");
+         throw new RuntimeException("properties not passed");
       }
 
       if(null == icon)
       {
-         throw new RuntimeException("Icon nicht uebergeben");
+         throw new RuntimeException("Icon not passed");
       }
 
       if(null == languageFiles)
       {
-         throw new RuntimeException("Sprachdateien nicht uebergeben");
+         throw new RuntimeException("Language files not passed");
       }
 
       if(null == availableIcons)
       {
          Logger logger = LoggerFactory.getLogger(getClass());
-         logger.info("Map availableIcons nicht uebergeben");
+         logger.info("Map availableIcons not passed");
          availableIcons = new HashMap<>();
       }
 
@@ -80,10 +79,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
       return properties.getProperty(identifier);
    }
 
-   /**
-    *
-    * @return String: Titel, der als Reitertext ausgegeben wird
-    */
+   /** @return String: title shown as the tab text */
    public final String getTitle()
    {
       return getGeneralXMLAttributeByTagName("general.title");
@@ -98,11 +94,8 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
       return getGeneralXMLAttributeByTagName("general.version");
    }
 
-   /**
-    *
-    * @return String: Name des Autors
-    */
-   public final String getAutor()
+   /** @return String: name of the author */
+   public final String getAuthor()
    {
       return getGeneralXMLAttributeByTagName("general.author");
    }
@@ -116,20 +109,14 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
       return getGeneralXMLAttributeByTagName("general.contact");
    }
 
-   /**
-    *
-    * @return boolean: Liefert true zurueck, wenn das Plugin eine sichtbare Oberflaeche haben soll, sonst false
-    */
-   public final boolean istReiter()
+   /** @return boolean: true if the plugin should have a visible user interface, otherwise false */
+   public final boolean isTab()
    {
       return getGeneralXMLAttributeByTagName("general.istab").toLowerCase().equals("true");
    }
 
-   /**
-    *
-    * @return String: Liefert eine Kurzbeschreibung des Plugins zurueck.
-    */
-   public final String getBeschreibung()
+   /** @return String: a short description of the plugin */
+   public final String getDescription()
    {
       String result = "";
 
@@ -148,10 +135,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
       }
    }
 
-   /**
-    *
-    * @return JPanel: Liefert ein JPanel fuer den Optionsdialog oder NULL, wenn keine Optionen vorhanden sind
-    */
+   /** @return JPanel: a JPanel for the options dialog or NULL if there are no options */
    public JPanel getOptionPanel()
    {
       return null;
@@ -179,9 +163,7 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
       return availableIcons.get(name);
    }
 
-   /**
-    * Wird aufgerufen, wenn der Reiter fuer dieses Plugin die Selektion verliert.
-    */
+   /** Called when the tab of this plugin loses the selection. */
    public void lostSelection()
    {
    }
@@ -198,25 +180,19 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
       }
    }
 
-   /**
-    * Wird aufgerufen, wenn der Reiter fuer dieses Plugin selektiert wurde.
-    */
+   /** Called when the tab of this plugin was selected. */
    public abstract void registerSelected();
 
    /**
-    * Wird automatisch aufgerufen, wenn neue Informationen vom Server
-    * eingegangen sind. Ueber den DataManger koennen diese abgerufen werden.
-    *
-    * @param type int: Typ des angesprochenen Listeners
-    * @param content Object: Geaenderte Werte, Typ abhaengig vom
-    *   angesprochenen Listener
-    * @see DataUpdateListener
+    * Called automatically when new information has arrived from the server. It can be retrieved via
+    * the DataManager. @param type int: type of the addressed listener @param content Object:
+    * changed values, type depends on the addressed listener @see DataUpdateListener
     */
    public abstract void fireContentChanged(DATALISTENER_TYPE type, Object content);
 
    /**
-    * Wird automatisch aufgerufen, wenn die Sprache geaendert wurde.
-    * zB kann an dieser Stelle eine eigene xml-Datei zur Anpassung der eigenen Panels ausgewertet werden
-    **/
+    * Called automatically when the language was changed. For example, a custom xml file for
+    * adapting the own panels can be evaluated here.
+    */
    public abstract void fireLanguageChanged();
 }

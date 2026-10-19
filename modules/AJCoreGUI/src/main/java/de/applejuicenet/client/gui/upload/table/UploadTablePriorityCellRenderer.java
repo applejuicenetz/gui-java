@@ -1,0 +1,44 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
+package de.applejuicenet.client.gui.upload.table;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+
+public class UploadTablePriorityCellRenderer extends DefaultTableCellRenderer
+{
+   public UploadTablePriorityCellRenderer()
+   {
+      super();
+      setHorizontalAlignment(SwingConstants.RIGHT);
+   }
+
+   @Override
+   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
+                                                  int column)
+   {
+      Integer priorityTotal = (Integer) value;
+      String  text = priorityTotal + "";
+
+      return super.getTableCellRendererComponent(table, text, isSelected, hasFocus, row, column);
+   }
+
+   public static String powerdownload(int powerdownload)
+   {
+      if(powerdownload == 0)
+      {
+         return "1:1,0";
+      }
+
+      double power = powerdownload;
+
+      power = power / 10 + 1;
+      String temp = Double.toString(power);
+
+      temp = temp.replace('.', ',');
+      return "1:" + temp;
+   }
+}

@@ -22,9 +22,9 @@ public class DarculaRenderingTest {
             try {
                 UIManager.setLookAndFeel(new FlatDarculaLaf());
                 JMenuBar menuBar = new JMenuBar();
-                menuBar.add(new JMenu("Datei"));
+                menuBar.add(new JMenu("File"));
                 JComponent[] components = {
-                        new JButton("Verbinden"), new JCheckBox("Aktiviert", true), menuBar
+                        new JButton("Connect"), new JCheckBox("Enabled", true), menuBar
                 };
                 for (JComponent component : components) {
                     component.setSize(240, 40);

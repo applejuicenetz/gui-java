@@ -1,8 +1,8 @@
 package de.applejuicenet.client.gui.powerdownload;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Download;
+import de.applejuicenet.client.facade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.download.PowerDownloadPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,36 +13,36 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Automatischer Powerdownload: haelt die ersten {@code anzahlDownloads} Downloads
- * (nach {@link Reihenfolge} sortiert) mit dem eingestellten Powerdownload-Wert aktiv
+ * Automatischer Powerdownload: haelt die ersten {@code downloadCount} Downloads
+ * (nach {@link Order} sortiert) mit dem eingestellten Powerdownload-Wert aktiv
  * und pausiert alle uebrigen wartenden Downloads.
  *
  * @author Maj0r [aj@tkl-soft.de] &amp; loevenwong
  */
 public class AutomaticPowerdownload extends Thread {
 
-    public enum Reihenfolge {
-        SOURCEN, PROZENT_GELADEN, GROESSE, ID
+    public enum Order {
+        SOURCES, PERCENT_LOADED, SIZE, ID
     }
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final ApplejuiceFassade applejuiceFassade;
-    private volatile PowerDownloadPanel parentToInformEnde;
+    private final ApplejuiceFacade applejuiceFacade;
+    private volatile PowerDownloadPanel parentToInformEnd;
     private volatile boolean paused = false;
 
-    private volatile int pwdlValue = 12;
-    private volatile int anzahlDownloads = 2;
+    private volatile int powerdownloadValue = 12;
+    private volatile int downloadCount = 2;
     private volatile int sleeptime = 30000;
-    private volatile Reihenfolge[] reihenfolge = new Reihenfolge[] {
-            Reihenfolge.SOURCEN, Reihenfolge.PROZENT_GELADEN, Reihenfolge.GROESSE, Reihenfolge.ID};
+    private volatile Order[] order = new Order[] {
+            Order.SOURCES, Order.PERCENT_LOADED, Order.SIZE, Order.ID};
 
-    private int informedPowerdownload = pwdlValue;
+    private int informedPowerdownload = powerdownloadValue;
     private List<Download> resumedDownloads = new ArrayList<>();
     private List<Download> pausedDownloads = new ArrayList<>();
 
-    public AutomaticPowerdownload(ApplejuiceFassade applejuiceFassade) {
+    public AutomaticPowerdownload(ApplejuiceFacade applejuiceFacade) {
         super("AutomaticPowerdownload");
-        this.applejuiceFassade = applejuiceFassade;
+        this.applejuiceFacade = applejuiceFacade;
     }
 
     public final void run() {
@@ -58,27 +58,27 @@ public class AutomaticPowerdownload extends Thread {
         } catch (InterruptedException iE) {
             interrupt();
         } catch (Exception ex) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
         }
 
-        PowerDownloadPanel parent = parentToInformEnde;
+        PowerDownloadPanel parent = parentToInformEnd;
 
-        parentToInformEnde = null;
+        parentToInformEnd = null;
         if (parent != null) {
-            javax.swing.SwingUtilities.invokeLater(() -> parent.autoPwdlFinished(this));
+            javax.swing.SwingUtilities.invokeLater(() -> parent.autoPowerdownloadFinished(this));
         }
     }
 
-    public final void setParentToInform(PowerDownloadPanel parentToInformEnde) {
-        this.parentToInformEnde = parentToInformEnde;
+    public final void setParentToInform(PowerDownloadPanel parentToInformEnd) {
+        this.parentToInformEnd = parentToInformEnd;
     }
 
-    /** Uebernimmt neue Einstellungen; wirkt ab dem naechsten Durchlauf. */
-    public void applySettings(int anzahlDownloads, int pwdlValue, int sleeptimeMillis, Reihenfolge[] reihenfolge) {
-        this.anzahlDownloads = anzahlDownloads;
-        this.pwdlValue = pwdlValue;
+    /** Applies new settings; takes effect from the next run. */
+    public void applySettings(int downloadCount, int powerdownloadValue, int sleeptimeMillis, Order[] order) {
+        this.downloadCount = downloadCount;
+        this.powerdownloadValue = powerdownloadValue;
         this.sleeptime = sleeptimeMillis;
-        this.reihenfolge = reihenfolge.clone();
+        this.order = order.clone();
     }
 
     public final synchronized void setPaused(boolean pause) {
@@ -98,68 +98,68 @@ public class AutomaticPowerdownload extends Thread {
 
     private void pauseAllDownloads() {
         try {
-            Map<Integer, Download> downloads = applejuiceFassade.getDownloadsSnapshot();
+            Map<Integer, Download> downloads = applejuiceFacade.getDownloadsSnapshot();
 
             synchronized (downloads) {
-                List<Download> dos = new ArrayList<>(downloads.values());
+                List<Download> downloadList = new ArrayList<>(downloads.values());
 
-                applejuiceFassade.pauseDownload(dos);
-                applejuiceFassade.setPowerDownload(dos, Integer.valueOf(0));
+                applejuiceFacade.pauseDownload(downloadList);
+                applejuiceFacade.setPowerDownload(downloadList, Integer.valueOf(0));
             }
         } catch (Exception ex) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
         }
     }
 
     private void doAction() throws Exception {
-        Map<Integer, Download> downloads = applejuiceFassade.getDownloadsSnapshot();
+        Map<Integer, Download> downloads = applejuiceFacade.getDownloadsSnapshot();
 
         if (downloads.isEmpty()) {
             return;
         }
 
         synchronized (downloads) {
-            int anzahl = anzahlDownloads;
+            int count = downloadCount;
 
-            if (downloads.size() <= anzahl) {
+            if (downloads.size() <= count) {
                 List<Download> power = new ArrayList<>(downloads.values());
 
                 setPowerDownload(power);
-                applejuiceFassade.resumeDownload(power);
+                applejuiceFacade.resumeDownload(power);
                 return;
             }
 
-            List<Download> naechste = new ArrayList<>();
+            List<Download> nextDownloads = new ArrayList<>();
 
             for (Download current : downloads.values()) {
-                if (current.getStatus() == Download.PAUSIERT || current.getStatus() == Download.SUCHEN_LADEN) {
-                    naechste.add(current);
+                if (current.getStatus() == Download.PAUSED || current.getStatus() == Download.SEARCHING_LOADING) {
+                    nextDownloads.add(current);
                 }
             }
 
-            naechste.sort(comparator(reihenfolge));
+            nextDownloads.sort(comparator(order));
             List<Download> downloads2Start = new ArrayList<>();
             List<Download> downloads2Stop = new ArrayList<>();
 
-            for (int pos = 0; pos < naechste.size(); pos++) {
-                (pos < anzahl ? downloads2Start : downloads2Stop).add(naechste.get(pos));
+            for (int pos = 0; pos < nextDownloads.size(); pos++) {
+                (pos < count ? downloads2Start : downloads2Stop).add(nextDownloads.get(pos));
             }
 
             if (changed(downloads2Start, downloads2Stop)) {
                 setPowerDownload(downloads2Start);
-                applejuiceFassade.resumeDownload(downloads2Start);
-                applejuiceFassade.pauseDownload(downloads2Stop);
-            } else if (informedPowerdownload != pwdlValue) {
+                applejuiceFacade.resumeDownload(downloads2Start);
+                applejuiceFacade.pauseDownload(downloads2Stop);
+            } else if (informedPowerdownload != powerdownloadValue) {
                 setPowerDownload(downloads2Start);
             }
         }
     }
 
     private void setPowerDownload(List<Download> downloads) throws IllegalArgumentException {
-        int wert = pwdlValue;
+        int value = powerdownloadValue;
 
-        applejuiceFassade.setPowerDownload(downloads, Integer.valueOf(wert));
-        informedPowerdownload = wert;
+        applejuiceFacade.setPowerDownload(downloads, Integer.valueOf(value));
+        informedPowerdownload = value;
     }
 
     private boolean changed(List<Download> downloads2Start, List<Download> downloads2Stop) {
@@ -171,14 +171,14 @@ public class AutomaticPowerdownload extends Thread {
         return changed;
     }
 
-    private static boolean listsEquals(List<Download> erste, List<Download> zweite) {
-        if (erste.size() != zweite.size()) {
+    private static boolean listsEquals(List<Download> first, List<Download> second) {
+        if (first.size() != second.size()) {
             return false;
         }
 
-        for (int i = 0; i < erste.size(); i++) {
-            Download a = erste.get(i);
-            Download b = zweite.get(i);
+        for (int i = 0; i < first.size(); i++) {
+            Download a = first.get(i);
+            Download b = second.get(i);
 
             if (a.getId() != b.getId() || a.getPowerDownload() != b.getPowerDownload()) {
                 return false;
@@ -188,15 +188,15 @@ public class AutomaticPowerdownload extends Thread {
         return true;
     }
 
-    static Comparator<Download> comparator(Reihenfolge[] reihenfolge) {
+    static Comparator<Download> comparator(Order[] order) {
         return (a, b) -> {
             int result = 0;
 
-            for (int i = 0; i < reihenfolge.length && result == 0; i++) {
-                switch (reihenfolge[i]) {
-                    case SOURCEN -> result = Integer.compare(quellen(b), quellen(a));
-                    case PROZENT_GELADEN -> result = Double.compare(b.getProzentGeladen(), a.getProzentGeladen());
-                    case GROESSE -> result = Long.compare(b.getGroesse(), a.getGroesse());
+            for (int i = 0; i < order.length && result == 0; i++) {
+                switch (order[i]) {
+                    case SOURCES -> result = Integer.compare(sourcesText(b), sourcesText(a));
+                    case PERCENT_LOADED -> result = Double.compare(b.getPercentLoaded(), a.getPercentLoaded());
+                    case SIZE -> result = Long.compare(b.getSize(), a.getSize());
                     default -> result = Integer.compare(a.getId(), b.getId());
                 }
             }
@@ -205,7 +205,7 @@ public class AutomaticPowerdownload extends Thread {
         };
     }
 
-    private static int quellen(Download download) {
+    private static int sourcesText(Download download) {
         return download.getSources() == null ? 0 : download.getSources().length;
     }
 }

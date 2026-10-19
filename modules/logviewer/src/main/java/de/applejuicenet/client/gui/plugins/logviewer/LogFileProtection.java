@@ -36,7 +36,7 @@ final class LogFileProtection {
             return false;
         } catch (IOException exception) {
             LoggerFactory.getLogger(LogFileProtection.class)
-                    .warn("LogViewer: Logdatei kann nicht sicher geprueft werden: {}", file, exception);
+                    .warn("LogViewer: log file cannot be checked safely: {}", file, exception);
             return true;
         }
     }

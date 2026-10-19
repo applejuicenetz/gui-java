@@ -1,9 +1,9 @@
 package de.applejuicenet.client.gui.download;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
-import de.applejuicenet.client.fassade.entity.Download;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.controller.CoreConnectionSettingsHolder;
+import de.applejuicenet.client.facade.entity.Download;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -39,16 +39,16 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.junit.Assert.*;
 
 public class DownloadOverviewPanelThreadingTest {
-    private static ApplejuiceFassade previousFassade;
-    private static Field fassadeField;
+    private static ApplejuiceFacade previousFacade;
+    private static Field facadeField;
 
     @BeforeClass
     public static void setUp() throws Exception {
         LanguageSelector.getInstance(Paths.get("../../resources/language/deutsch.properties")
                 .toAbsolutePath().normalize().toString());
-        fassadeField = AppleJuiceClient.class.getDeclaredField("ajFassade");
-        fassadeField.setAccessible(true);
-        previousFassade = (ApplejuiceFassade) fassadeField.get(null);
+        facadeField = AppleJuiceClient.class.getDeclaredField("ajFacade");
+        facadeField.setAccessible(true);
+        previousFacade = (ApplejuiceFacade) facadeField.get(null);
     }
 
     private final List<JFrame> frames = new CopyOnWriteArrayList<>();
@@ -59,7 +59,7 @@ public class DownloadOverviewPanelThreadingTest {
         frames.clear();
     }
 
-    /** Der Worker laedt nur, solange die Tabelle sichtbar ist; das Panel braucht ein angezeigtes Fenster. */
+    /** The worker only loads while the table is visible; the panel needs a displayed window. */
     private static JFrame show(DownloadOverviewPanel panel) {
         JFrame frame = new JFrame();
         frame.add(panel);
@@ -70,10 +70,10 @@ public class DownloadOverviewPanelThreadingTest {
 
     @AfterClass
     public static void restore() throws Exception {
-        fassadeField.set(null, previousFassade);
+        facadeField.set(null, previousFacade);
     }
 
-    /** Label, das jede Aenderung ausserhalb des EDT meldet. */
+    /** Label that reports every change outside the EDT. */
     private static class CheckedLabel extends JLabel {
         final Set<String> violations = ConcurrentHashMap.newKeySet();
         private boolean constructed;
@@ -85,20 +85,20 @@ public class DownloadOverviewPanelThreadingTest {
         @Override
         public void setText(String text) {
             if (constructed && !SwingUtilities.isEventDispatchThread()) {
-                violations.add("setText(" + text + ") auf " + Thread.currentThread().getName());
+                violations.add("setText(" + text + ") on " + Thread.currentThread().getName());
             }
             super.setText(text);
         }
     }
 
     private static Download download(int id) throws Exception {
-        Class<?> clazz = Class.forName("de.applejuicenet.client.fassade.controller.xml.DownloadDO");
+        Class<?> clazz = Class.forName("de.applejuicenet.client.facade.controller.xml.DownloadDO");
         Constructor<?> constructor = clazz.getDeclaredConstructor(int.class);
         constructor.setAccessible(true);
         Object download = constructor.newInstance(id);
         Method status = clazz.getDeclaredMethod("setStatus", int.class);
         status.setAccessible(true);
-        status.invoke(download, Download.PAUSIERT);
+        status.invoke(download, Download.PAUSED);
         Method name = clazz.getDeclaredMethod("setFilename", String.class);
         name.setAccessible(true);
         name.invoke(download, "datei" + id + ".bin");
@@ -108,17 +108,17 @@ public class DownloadOverviewPanelThreadingTest {
     @Test(timeout = 30000)
     public void partListIsPublishedOnlyOnEventDispatchThread() throws Exception {
         try (PartListCore core = new PartListCore(Set.of())) {
-            fassadeField.set(null, new ApplejuiceFassade(
+            facadeField.set(null, new ApplejuiceFacade(
                     new CoreConnectionSettingsHolder("127.0.0.1", core.port(), "", true)));
             AtomicReference<DownloadOverviewPanel> panelRef = new AtomicReference<>();
             CheckedLabel label = new CheckedLabel();
             SwingUtilities.invokeAndWait(() -> {
                 DownloadOverviewPanel panel = new DownloadOverviewPanel(null);
                 try {
-                    Field labelField = DownloadOverviewPanel.class.getDeclaredField("actualDLDateiName");
+                    Field labelField = DownloadOverviewPanel.class.getDeclaredField("actualDLFileName");
                     labelField.setAccessible(true);
                     labelField.set(panel, label);
-                    Field checkbox = DownloadOverviewPanel.class.getDeclaredField("holeListe");
+                    Field checkbox = DownloadOverviewPanel.class.getDeclaredField("fetchList");
                     checkbox.setAccessible(true);
                     ((JCheckBox) checkbox.get(panel)).setSelected(true);
                 } catch (ReflectiveOperationException e) {
@@ -133,11 +133,11 @@ public class DownloadOverviewPanelThreadingTest {
 
             SwingUtilities.invokeAndWait(() -> panel.setDownload(first));
             awaitLabel(label, "datei1.bin");
-            // Dateiname erscheint vor der Core-Antwort; erst der Zusatz " - " belegt die veroeffentlichte Partliste.
+            // The file name appears before the core answer; only the " - " suffix proves the published part list.
             awaitLabel(label, " - ");
             SwingUtilities.invokeAndWait(() -> panel.setDownload(null));
             assertTrue(core.requests.get() >= 1);
-            assertEquals("Verstoesse gegen den EDT-Vertrag: " + label.violations, Set.of(), label.violations);
+            assertEquals("Violations of the EDT contract: " + label.violations, Set.of(), label.violations);
         }
     }
 
@@ -145,17 +145,17 @@ public class DownloadOverviewPanelThreadingTest {
     public void switchingSelectionNeverShowsTheEarlierFileAfterwards() throws Exception {
         CountDownLatch releaseFirst = new CountDownLatch(1);
         try (PartListCore core = new PartListCore(Set.of(1), releaseFirst)) {
-            fassadeField.set(null, new ApplejuiceFassade(
+            facadeField.set(null, new ApplejuiceFacade(
                     new CoreConnectionSettingsHolder("127.0.0.1", core.port(), "", true)));
             AtomicReference<DownloadOverviewPanel> panelRef = new AtomicReference<>();
             CheckedLabel label = new CheckedLabel();
             SwingUtilities.invokeAndWait(() -> {
                 DownloadOverviewPanel panel = new DownloadOverviewPanel(null);
                 try {
-                    Field labelField = DownloadOverviewPanel.class.getDeclaredField("actualDLDateiName");
+                    Field labelField = DownloadOverviewPanel.class.getDeclaredField("actualDLFileName");
                     labelField.setAccessible(true);
                     labelField.set(panel, label);
-                    Field checkbox = DownloadOverviewPanel.class.getDeclaredField("holeListe");
+                    Field checkbox = DownloadOverviewPanel.class.getDeclaredField("fetchList");
                     checkbox.setAccessible(true);
                     ((JCheckBox) checkbox.get(panel)).setSelected(true);
                 } catch (ReflectiveOperationException e) {
@@ -200,7 +200,7 @@ public class DownloadOverviewPanelThreadingTest {
             }
             Thread.sleep(50);
         }
-        fail("Label zeigt nicht " + expected + ": " + text.get());
+        fail("Label does not show " + expected + ": " + text.get());
     }
 
     private static class PartListCore implements AutoCloseable {

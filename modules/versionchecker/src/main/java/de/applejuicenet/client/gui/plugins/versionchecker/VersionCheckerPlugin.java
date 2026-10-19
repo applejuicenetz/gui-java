@@ -2,10 +2,10 @@ package de.applejuicenet.client.gui.plugins.versionchecker;
 
 import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.fassade.entity.Upload;
-import de.applejuicenet.client.fassade.listener.CoreStatusListener;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Download;
+import de.applejuicenet.client.facade.entity.Upload;
+import de.applejuicenet.client.facade.listener.CoreStatusListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 import de.applejuicenet.client.gui.plugins.versionchecker.panels.MainPanel;
 import javax.swing.*;
@@ -15,16 +15,16 @@ import java.util.Properties;
 
 public class VersionCheckerPlugin extends PluginConnector implements CoreStatusListener {
     private final MainPanel mainPanel = new MainPanel();
-    private final ApplejuiceFassade facade;
+    private final ApplejuiceFacade facade;
     private boolean listening;
 
     public VersionCheckerPlugin(Properties properties, Map<String, Properties> languages, ImageIcon icon,
                                 Map<String, ImageIcon> icons) {
-        this(properties, languages, icon, icons, AppleJuiceClient.getAjFassade());
+        this(properties, languages, icon, icons, AppleJuiceClient.getAjFacade());
     }
 
     VersionCheckerPlugin(Properties properties, Map<String, Properties> languages, ImageIcon icon,
-                         Map<String, ImageIcon> icons, ApplejuiceFassade facade) {
+                         Map<String, ImageIcon> icons, ApplejuiceFacade facade) {
         super(properties, languages, icon, icons);
         this.facade = facade;
         setLayout(new BorderLayout());
@@ -36,7 +36,7 @@ public class VersionCheckerPlugin extends PluginConnector implements CoreStatusL
         if (listening || facade == null) return;
         facade.addDataUpdateListener(this, DATALISTENER_TYPE.DOWNLOAD_CHANGED);
         facade.addDataUpdateListener(this, DATALISTENER_TYPE.UPLOAD_CHANGED);
-        ApplejuiceFassade.addCoreStatusListener(this);
+        ApplejuiceFacade.addCoreStatusListener(this);
         listening = true;
     }
 
@@ -45,7 +45,7 @@ public class VersionCheckerPlugin extends PluginConnector implements CoreStatusL
         if (listening) {
             facade.removeDataUpdateListener(this, DATALISTENER_TYPE.DOWNLOAD_CHANGED);
             facade.removeDataUpdateListener(this, DATALISTENER_TYPE.UPLOAD_CHANGED);
-            ApplejuiceFassade.removeCoreStatusListener(this);
+            ApplejuiceFacade.removeCoreStatusListener(this);
             listening = false;
         }
         super.removeNotify();

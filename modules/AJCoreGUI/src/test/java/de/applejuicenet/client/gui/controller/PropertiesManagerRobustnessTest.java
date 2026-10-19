@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
-/** Ein einzelner ungueltiger Wert darf weder die Anwendung beenden noch die Datei zuruecksetzen. */
+/** A single invalid value must neither terminate the application nor reset the file. */
 public class PropertiesManagerRobustnessTest {
     @Rule
     public TemporaryFolder files = new TemporaryFolder();
@@ -60,7 +60,7 @@ public class PropertiesManagerRobustnessTest {
                 + "options_columns_download_column1_width=222\n");
         PropertiesManager manager = manager(file);
         manager.getRemoteSettings();
-        assertEquals("deutsch", manager.getSprache());
+        assertEquals("deutsch", manager.getLanguage());
         assertFalse(manager.isSoundEnabled());
         String content = Files.readString(file.toPath());
         assertTrue(content, content.contains("options_columns_download_column1_width=222"));

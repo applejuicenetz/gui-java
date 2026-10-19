@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.download.DownloadController;
@@ -27,8 +27,8 @@ import java.util.Set;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/RegisterPanel.java,v 1.65 2009/01/14 17:05:33 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r [aj@tkl-soft.de]
@@ -56,7 +56,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
       }
       catch(Exception e)
       {
-         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+         logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
       }
    }
 
@@ -146,7 +146,7 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
 
       for(PluginConnector curPlugin : plugins)
       {
-         if(curPlugin.istReiter())
+         if(curPlugin.isTab())
          {
             ImageIcon icon  = curPlugin.getIcon();
             int       index = getTabCount() + 1;
@@ -168,16 +168,16 @@ public class RegisterPanel extends JTabbedPane implements LanguageListener
       {
          LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-         setTitleAt(0, languageSelector.getFirstAttrbuteByTagName("mainform.homesheet.caption") + " [Ctrl+1]");
-         setTitleAt(1, languageSelector.getFirstAttrbuteByTagName("mainform.sharesheet.caption") + " [2]");
-         setTitleAt(2, languageSelector.getFirstAttrbuteByTagName("mainform.seachsheet.caption") + " [3]");
-         setTitleAt(3, languageSelector.getFirstAttrbuteByTagName("mainform.queuesheet.caption") + " [4]");
-         setTitleAt(4, languageSelector.getFirstAttrbuteByTagName("mainform.uploadsheet.caption") + " [5]");
-         setTitleAt(5, languageSelector.getFirstAttrbuteByTagName("mainform.serversheet.caption") + " [6]");
+         setTitleAt(0, languageSelector.getFirstAttributeByTagName("mainform.homesheet.caption") + " [Ctrl+1]");
+         setTitleAt(1, languageSelector.getFirstAttributeByTagName("mainform.sharesheet.caption") + " [2]");
+         setTitleAt(2, languageSelector.getFirstAttributeByTagName("mainform.searchsheet.caption") + " [3]");
+         setTitleAt(3, languageSelector.getFirstAttributeByTagName("mainform.queuesheet.caption") + " [4]");
+         setTitleAt(4, languageSelector.getFirstAttributeByTagName("mainform.uploadsheet.caption") + " [5]");
+         setTitleAt(5, languageSelector.getFirstAttributeByTagName("mainform.serversheet.caption") + " [6]");
       }
       catch(Exception e)
       {
-         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+         logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
       }
    }
 }

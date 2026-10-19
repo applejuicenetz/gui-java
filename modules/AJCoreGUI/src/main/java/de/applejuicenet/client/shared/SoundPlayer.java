@@ -24,8 +24,8 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * <p>Dateien werden in einem eigenen Thread geladen und abgespielt, nie im Aufrufer (EDT, Poller).
@@ -35,17 +35,17 @@ import java.util.function.Supplier;
  * @author Maj0r <aj@tkl-soft.de>
  */
 public class SoundPlayer {
-    public static final int ABGEBROCHEN = 0;
-    public static final int SUCHEN = 1;
-    public static final int VERBINDEN = 2;
-    public static final int GESPEICHERT = 3;
-    public static final int KOMPLETT = 4;
-    public static final int LADEN = 5;
+    public static final int CANCELLED = 0;
+    public static final int SEARCH = 1;
+    public static final int CONNECT = 2;
+    public static final int SAVED = 3;
+    public static final int COMPLETE_SOUND = 4;
+    public static final int LOADING = 5;
     public static final int POWER = 6;
-    public static final int VERWEIGERT = 7;
-    public static final int KONKRETISIEREN = 8;
-    public static final int ZUGANG_GEWAEHRT = 9;
-    public static final int GESTARTET = 10;
+    public static final int DENIED = 7;
+    public static final int SPECIFY = 8;
+    public static final int ACCESS_GRANTED = 9;
+    public static final int STARTED = 10;
 
     static final int MAX_ACTIVE_SOUNDS = 4;
     private static final int MAX_QUEUED_SOUNDS = 8;
@@ -55,11 +55,11 @@ public class SoundPlayer {
             "pwdl.wav", "verweigert.wav", "konkretisieren.wav", "zuganggestattet.wav", "gestartet.wav"
     };
 
-    /** Ein geoeffneter, abspielbarer und schliessbarer Ton. */
+    /** An opened, playable and closeable sound. */
     interface Playback {
         long durationMillis();
 
-        /** Startet die Wiedergabe; {@code onFinished} wird nach dem Ende aufgerufen. */
+        /** Starts playback; {@code onFinished} is called after the end. */
         void start(Runnable onFinished);
 
         void close();
@@ -114,9 +114,9 @@ public class SoundPlayer {
         return instance;
     }
 
-    /** Hoerprobe: spielt auch dann, wenn die normalen Toene ausgeschaltet sind. */
+    /** Preview: plays even when the normal sounds are switched off. */
     public void playPreview() {
-        playSound(GESPEICHERT, true);
+        playSound(SAVED, true);
     }
 
     public void playSound(int sound) {
@@ -130,16 +130,16 @@ public class SoundPlayer {
             }
 
             if (sound < 0 || sound >= FILE_NAMES.length) {
-                logger.error("SoundPlayer::playSound() ungueltiger Parameter: " + sound);
+                logger.error("SoundPlayer::playSound() invalid parameter: " + sound);
                 return;
             }
 
-            // Soundpack erst jetzt lesen, damit ein Packwechsel ohne Neustart wirkt
+            // Read the sound pack only now so a pack change takes effect without a restart
             Path file = soundBase.get().resolve(soundPack.get()).resolve(FILE_NAMES[sound]);
 
             if (active.incrementAndGet() > MAX_ACTIVE_SOUNDS) {
                 active.decrementAndGet();
-                logger.debug("Zu viele gleichzeitige Toene, " + file.getFileName() + " wird nicht gespielt");
+                logger.debug("Zu viele gleichzeitige Toene, " + file.getFileName() + " is not played");
                 return;
             }
 
@@ -147,10 +147,10 @@ public class SoundPlayer {
                 executor.execute(() -> play(file));
             } catch (RejectedExecutionException e) {
                 active.decrementAndGet();
-                logger.debug("Soundwarteschlange voll, " + file.getFileName() + " wird nicht gespielt");
+                logger.debug("Soundwarteschlange voll, " + file.getFileName() + " is not played");
             }
         } catch (Exception e) {
-            logger.error("Sound konnte nicht abgespielt werden", e);
+            logger.error("Sound could not be played", e);
         }
     }
 
@@ -175,7 +175,7 @@ public class SoundPlayer {
                         playback[0].close();
                     }
                 } catch (RuntimeException e) {
-                    logger.debug("Audioressource konnte nicht geschlossen werden", e);
+                    logger.debug("Audio resource could not be closed", e);
                 } finally {
                     active.decrementAndGet();
                 }
@@ -185,28 +185,28 @@ public class SoundPlayer {
 
         try {
             if (!Files.isRegularFile(file)) {
-                logger.error("Die Datei " + file.toAbsolutePath() + " konnte nicht gefunden werden.");
+                logger.error("The file " + file.toAbsolutePath() + " could not be found.");
                 return;
             }
 
             playback[0] = opener.open(file);
             playback[0].start(release);
             started = true;
-            // Faengt ein ausbleibendes Ende-Ereignis ab (Geraet entfernt, Sink haengt), sonst blieben Slots belegt
+            // Catches a missing end event (device removed, sink hangs), otherwise slots would stay occupied
             timeout[0] = watchdog.schedule(release, playback[0].durationMillis() + WATCHDOG_GRACE_MILLIS, TimeUnit.MILLISECONDS);
             if (finished.get()) {
                 timeout[0].cancel(false);
             }
         } catch (LineUnavailableException e) {
-            logger.info("Kein Audioausgabegeraet gefunden oder es ist belegt. Bitte Soundausgabe deaktivieren.", e);
+            logger.info("No audio output device found or it is busy. Please disable sound output.", e);
         } catch (UnsupportedAudioFileException e) {
-            logger.error("Die Datei " + file.toAbsolutePath() + " hat ein ungueltiges Format und kann nicht ausgegeben werden.");
+            logger.error("The file " + file.toAbsolutePath() + " has an invalid format and cannot be played.");
         } catch (IOException e) {
-            logger.error("Die Datei " + file.toAbsolutePath() + " konnte nicht gelesen werden.", e);
+            logger.error("The file " + file.toAbsolutePath() + " could not be read.", e);
         } catch (Exception | LinkageError e) {
-            logger.error("Sound konnte nicht abgespielt werden", e);
+            logger.error("Sound could not be played", e);
         } finally {
-            // Ohne gestartete Wiedergabe kommt nie ein Ende-Ereignis: sofort freigeben
+            // Without started playback no end event ever arrives: release immediately
             if (!started) {
                 release.run();
             }
@@ -228,7 +228,7 @@ public class SoundPlayer {
                 format = tmp;
             }
 
-            // Ohne feste Puffergroesse: manche Geraete lehnen die berechnete Groesse ab
+            // Without a fixed buffer size: some devices reject the calculated size
             Clip clip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class, format));
 
             try {
@@ -240,7 +240,7 @@ public class SoundPlayer {
 
             return new ClipPlayback(clip);
         } finally {
-            // Der Clip hat die Daten beim Oeffnen kopiert, der Stream wird nicht mehr gebraucht
+            // The clip copied the data when opening, the stream is no longer needed
             sound.close();
         }
     }
@@ -259,7 +259,7 @@ public class SoundPlayer {
 
         @Override
         public void start(Runnable onFinished) {
-            // Listener vor dem Start, sonst geht ein sehr kurzes STOP-Ereignis verloren
+            // Listener before the start, otherwise a very short STOP event is lost
             clip.addLineListener(e -> {
                 if (e.getType() == LineEvent.Type.STOP) {
                     onFinished.run();

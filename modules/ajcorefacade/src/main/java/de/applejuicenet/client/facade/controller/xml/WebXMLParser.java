@@ -1,0 +1,142 @@
+package de.applejuicenet.client.facade.controller.xml;
+
+import de.applejuicenet.client.facade.controller.CoreConnectionSettingsHolder;
+import de.applejuicenet.client.facade.exception.WebSiteNotFoundException;
+import de.applejuicenet.client.facade.shared.HtmlLoader;
+import de.applejuicenet.client.facade.shared.SecureXml;
+import de.applejuicenet.client.facade.shared.XMLDecoder;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
+
+/**
+ * $Header:
+ * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/controller/WebXMLParser.java,v
+ * 1.1 2004/12/03 07:57:12 maj0r Exp $
+ * 
+ * <p>
+ * Title: AppleJuice Client-GUI
+ * </p>
+ * <p>
+ * Description: Official GUI for the appleJuice core developed by muhviehstarr
+ * </p>
+ * <p>
+ * Copyright: General Public License
+ * </p>
+ * 
+ * @author Maj0r <aj@tkl-soft.de>
+ * 
+ */
+
+public abstract class WebXMLParser extends XMLDecoder {
+
+	private String xmlCommand;
+
+	private long timestamp = 0;
+
+	private boolean useTimestamp = false;
+
+	private String zipMode = "";
+
+	private CoreConnectionSettingsHolder coreHolder;
+
+	public WebXMLParser(CoreConnectionSettingsHolder coreHolder,
+			String xmlCommand, String parameters) {
+		this(coreHolder, xmlCommand, parameters, false);
+	}
+
+	public WebXMLParser(CoreConnectionSettingsHolder coreHolder,
+			String xmlCommand, String parameters, boolean useTimestamp) {
+		super();
+		init(coreHolder, xmlCommand, useTimestamp);
+	}
+
+	private void init(CoreConnectionSettingsHolder coreHolder,
+			String xmlCommand, boolean useTimestamp) {
+		this.useTimestamp = useTimestamp;
+		if (!coreHolder.isLocalhost()) {
+			zipMode = "mode=zip&";
+		}
+		this.xmlCommand = xmlCommand;
+		webXML = true;
+		this.coreHolder = coreHolder;
+	}
+
+	private String getCommand(String parameters) {
+		String command = xmlCommand + "?";
+		if (parameters.indexOf("mode=zip") == -1) {
+			command += zipMode;
+		}
+		if (useTimestamp) {
+			command += "password=" + coreHolder.getCorePassword()
+					+ "&timestamp=" + timestamp + parameters;
+		} else {
+			if (parameters.length() != 0) {
+				command += "password=" + coreHolder.getCorePassword() + "&"
+						+ parameters;
+			} else {
+				command += "password=" + coreHolder.getCorePassword();
+			}
+		}
+		return command;
+	}
+
+	public void reload(String parameters, boolean throwWebSiteNotFoundException)
+			throws Exception {
+		String xmlData = null;
+		try {
+			String command = getCommand(parameters);
+			xmlData = HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(),
+					coreHolder.getCorePort(), HtmlLoader.GET, command);
+			if (xmlData == null || xmlData.length() == 0
+					|| xmlData.startsWith("error:")) {
+				throw new IllegalArgumentException();
+			}
+		} catch (WebSiteNotFoundException ex) {
+			if (throwWebSiteNotFoundException) {
+				throw ex;
+			} else {
+				return;
+			}
+		}
+		try {
+			document = SecureXml.newDocumentBuilder()
+					.parse(new InputSource(new StringReader(xmlData)));
+			if (useTimestamp) {
+				timestamp = Long.parseLong(getFirstAttributeByTagName(
+						new String[] { "applejuice", "time" }, true));
+			}
+		} catch (Exception e) {
+			Exception x = e;
+			if (e.getClass() == SAXException.class) {
+				if (((SAXException) e).getException() != null) {
+					x = ((SAXException) e).getException();
+				}
+			}
+			String time = Long.toString(System.currentTimeMillis());
+			String path = System.getProperty("user.dir") + File.separator
+					+ "logs";
+			File aFile = new File(path);
+			if (!aFile.exists()) {
+				aFile.mkdir();
+			}
+			FileWriter fileWriter = null;
+			String filename = path + File.separator + time + ".exc";
+			try {
+				fileWriter = new FileWriter(filename);
+				fileWriter.write(xmlData);
+				fileWriter.close();
+			} catch (IOException ioE) {
+				throw new RuntimeException(ioE);
+			}
+			throw new RuntimeException("SAX-Exception -> content saved in "
+					+ filename, x);
+		}
+	}
+
+	public abstract void update();
+}

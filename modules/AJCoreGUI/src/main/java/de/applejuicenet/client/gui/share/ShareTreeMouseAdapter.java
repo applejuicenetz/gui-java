@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.share;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.share.tree.DirectoryNode;
 import de.applejuicenet.client.gui.share.tree.DirectoryTree;
 import org.slf4j.Logger;
@@ -14,8 +14,8 @@ import java.awt.event.MouseEvent;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareTreeMouseAdapter.java,v 1.4 2005/01/18 17:35:29 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -49,7 +49,7 @@ public class ShareTreeMouseAdapter extends MouseAdapter {
             }
             maybeShowPopup(me);
         } catch (Exception ex) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
         }
     }
 
@@ -58,7 +58,7 @@ public class ShareTreeMouseAdapter extends MouseAdapter {
             super.mouseReleased(e);
             maybeShowPopup(e);
         } catch (Exception ex) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
         }
     }
 
@@ -86,7 +86,7 @@ public class ShareTreeMouseAdapter extends MouseAdapter {
                 }
             }
         } catch (Exception ex) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
         }
     }
 }

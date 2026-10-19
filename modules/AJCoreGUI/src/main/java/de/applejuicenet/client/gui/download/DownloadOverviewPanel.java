@@ -7,20 +7,20 @@ package de.applejuicenet.client.gui.download;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/DownloadOverviewPanel.java,v 1.8 2009/02/01 14:49:17 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
  */
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.fassade.entity.DownloadSource;
-import de.applejuicenet.client.fassade.entity.PartList;
-import de.applejuicenet.client.fassade.exception.WebSiteNotFoundException;
-import de.applejuicenet.client.fassade.shared.RefreshIntervals;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Download;
+import de.applejuicenet.client.facade.entity.DownloadSource;
+import de.applejuicenet.client.facade.entity.PartList;
+import de.applejuicenet.client.facade.exception.WebSiteNotFoundException;
+import de.applejuicenet.client.facade.shared.RefreshIntervals;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import de.applejuicenet.client.shared.Settings;
@@ -35,17 +35,17 @@ import java.text.DecimalFormat;
 
 public class DownloadOverviewPanel extends JPanel implements LanguageListener {
     private DownloadPartListPanel actualDlOverviewTable;
-    private JLabel actualDLDateiName = new JLabel();
+    private JLabel actualDLFileName = new JLabel();
     private JLabel label5 = new JLabel();
     private JLabel label4 = new JLabel();
     private JLabel label3 = new JLabel();
     private JLabel label2 = new JLabel();
     private JLabel label1 = new JLabel();
     private final Logger logger;
-    private JCheckBox holeListe = new JCheckBox();
+    private JCheckBox fetchList = new JCheckBox();
     private PartListWorkerThread partListWorkerThread = null;
     private DownloadPanel downloadPanel;
-    private String verfuegbar;
+    private String available;
     private DecimalFormat decimalFormat = new DecimalFormat("#.##");
     private Object lastPartlistObject = null;
 
@@ -57,19 +57,19 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
             init();
             LanguageSelector.getInstance().addLanguageListener(this);
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
     private void init() {
-        holeListe.setSelected(Settings.getSettings().isDownloadUebersicht());
-        holeListe.addActionListener(e -> {
-            if (!holeListe.isSelected() && null != partListWorkerThread) {
+        fetchList.setSelected(Settings.getSettings().isDownloadOverview());
+        fetchList.addActionListener(e -> {
+            if (!fetchList.isSelected() && null != partListWorkerThread) {
                 partListWorkerThread.interrupt();
                 partListWorkerThread = null;
-                actualDLDateiName.setText(null);
+                actualDLFileName.setText(null);
                 actualDlOverviewTable.setPartList(null, null);
-            } else if (holeListe.isSelected() && null != lastPartlistObject) {
+            } else if (fetchList.isSelected() && null != lastPartlistObject) {
                 if (lastPartlistObject instanceof Download) {
                     setDownload((Download) lastPartlistObject);
                 } else {
@@ -79,7 +79,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
 
             Settings settings = Settings.getSettings();
 
-            settings.setDownloadUebersicht(holeListe.isSelected());
+            settings.setDownloadOverview(fetchList.isSelected());
             settings.save();
         });
         setLayout(new BorderLayout());
@@ -87,18 +87,18 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
 
         tempPanel1.setLayout(new FlowLayout());
 
-        JLabel gelb = new JLabel("     ");
+        JLabel yellow = new JLabel("     ");
 
-        gelb.setOpaque(true);
-        gelb.setBackground(Color.YELLOW);
-        tempPanel1.add(gelb);
+        yellow.setOpaque(true);
+        yellow.setBackground(Color.YELLOW);
+        tempPanel1.add(yellow);
         tempPanel1.add(label5);
 
-        JLabel blau = new JLabel("     ");
+        JLabel blue = new JLabel("     ");
 
-        blau.setOpaque(true);
-        blau.setBackground(Color.BLUE);
-        tempPanel1.add(blau);
+        blue.setOpaque(true);
+        blue.setBackground(Color.BLUE);
+        tempPanel1.add(blue);
         tempPanel1.add(label4);
 
         JLabel red = new JLabel("     ");
@@ -124,21 +124,21 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
 
         JPanel panel3 = new JPanel(new BorderLayout());
 
-        panel3.add(holeListe, BorderLayout.WEST);
+        panel3.add(fetchList, BorderLayout.WEST);
         panel3.add(tempPanel1, BorderLayout.CENTER);
 
         add(panel3, BorderLayout.NORTH);
-        actualDLDateiName.setPreferredSize(new Dimension(actualDLDateiName.getPreferredSize().width, 17));
+        actualDLFileName.setPreferredSize(new Dimension(actualDLFileName.getPreferredSize().width, 17));
         JPanel panel1 = new JPanel(new BorderLayout());
 
-        panel1.add(actualDLDateiName, BorderLayout.NORTH);
+        panel1.add(actualDLFileName, BorderLayout.NORTH);
         panel1.add(actualDlOverviewTable, BorderLayout.CENTER);
         add(panel1, BorderLayout.CENTER);
     }
 
     public void setDownload(Download download) {
         lastPartlistObject = download;
-        if (!holeListe.isSelected()) {
+        if (!fetchList.isSelected()) {
             return;
         }
 
@@ -165,18 +165,18 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
                 partListWorkerThread = null;
             }
 
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
-    /** Liefert die aktuell angezeigte Source oder null, wenn die Partliste einen Download oder nichts zeigt. */
+    /** Returns the currently shown source or null when the part list shows a download or nothing. */
     public DownloadSource getCurrentSource() {
         return lastPartlistObject instanceof DownloadSource source ? source : null;
     }
 
     public void setDownloadSource(DownloadSource downloadSource) {
         lastPartlistObject = downloadSource;
-        if (!holeListe.isSelected()) {
+        if (!fetchList.isSelected()) {
             return;
         }
 
@@ -199,7 +199,7 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
                 partListWorkerThread = null;
             }
 
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -207,15 +207,15 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-            label5.setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.aktiveuebertragung"));
-            label4.setText(languageSelector.getFirstAttrbuteByTagName("mainform.Label4.caption"));
-            label3.setText(languageSelector.getFirstAttrbuteByTagName("mainform.Label3.caption"));
-            label2.setText(languageSelector.getFirstAttrbuteByTagName("mainform.Label2.caption"));
-            label1.setText(languageSelector.getFirstAttrbuteByTagName("mainform.Label1.caption"));
-            holeListe.setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.partlisteanzeigen"));
-            verfuegbar = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.verfuegbar");
+            label5.setText(languageSelector.getFirstAttributeByTagName("javagui.downloadform.activetransfer"));
+            label4.setText(languageSelector.getFirstAttributeByTagName("mainform.Label4.caption"));
+            label3.setText(languageSelector.getFirstAttributeByTagName("mainform.Label3.caption"));
+            label2.setText(languageSelector.getFirstAttributeByTagName("mainform.Label2.caption"));
+            label1.setText(languageSelector.getFirstAttributeByTagName("mainform.Label1.caption"));
+            fetchList.setText(languageSelector.getFirstAttributeByTagName("javagui.downloadform.showpartlist"));
+            available = languageSelector.getFirstAttributeByTagName("javagui.downloadform.available");
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -244,8 +244,8 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
                 }
 
                 if (current instanceof Download download) {
-                    if (download.getStatus() == Download.PAUSIERT ||
-                            download.getStatus() == Download.SUCHEN_LADEN) {
+                    if (download.getStatus() == Download.PAUSED ||
+                            download.getStatus() == Download.SEARCHING_LOADING) {
                         shortPause = workDownloadDO(download);
                     } else {
                         objectDO = null;
@@ -274,14 +274,14 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
         }
 
         /**
-         * Veroeffentlicht Ergebnisse nur auf dem EDT und nur, solange dieser Worker noch der aktuelle ist.
-         * Abbruch und Austausch passieren ebenfalls auf dem EDT; ein verspaetetes Ergebnis einer frueheren
-         * Auswahl wird dadurch verworfen.
+         * Publishes results only on the EDT and only while this worker is still the current one.
+         * Cancelling and replacing also happen on the EDT; a late result of an earlier selection is
+         * thereby discarded.
          */
         private void publish(String text, PartList partList, Integer id) {
             SwingUtilities.invokeLater(() -> {
                 if (partListWorkerThread == this && !isInterrupted()) {
-                    actualDLDateiName.setText(text);
+                    actualDLFileName.setText(text);
                     actualDlOverviewTable.setPartList(partList, id);
                 }
             });
@@ -290,32 +290,32 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
         private void publishText(String text) {
             SwingUtilities.invokeLater(() -> {
                 if (partListWorkerThread == this && !isInterrupted()) {
-                    actualDLDateiName.setText(text);
+                    actualDLFileName.setText(text);
                 }
             });
         }
 
         private boolean workDownloadDO(Download download) {
-            if (download.getStatus() != Download.FERTIGSTELLEN && download.getStatus() != Download.FERTIG) {
-                String dateiNameText = " " + download.getFilename() + " (" + download.getTemporaryFileNumber() + ".data) ";
+            if (download.getStatus() != Download.FINISHING && download.getStatus() != Download.FINISHED) {
+                String fileNameText = " " + download.getFilename() + " (" + download.getTemporaryFileNumber() + ".data) ";
 
                 if (firstRun) {
-                    publishText(dateiNameText);
+                    publishText(fileNameText);
                 }
 
                 PartList partList = null;
 
                 try {
-                    partList = AppleJuiceClient.getAjFassade().getPartList(download);
+                    partList = AppleJuiceClient.getAjFacade().getPartList(download);
                 } catch (WebSiteNotFoundException wsnfE) {
-                    // Core ist wahrscheinlich zurzeit ueberlastet
+                    // the core is probably overloaded right now
                     partList = null;
                 }
 
                 if (partList != null && !isInterrupted()) {
-                    String tmp = verfuegbar.replaceFirst("%s", decimalFormat.format(partList.getProzentVerfuegbar()));
+                    String tmp = available.replaceFirst("%s", decimalFormat.format(partList.getPercentAvailable()));
 
-                    publish(dateiNameText + " - " + tmp, partList, Integer.valueOf(download.getId()));
+                    publish(fileNameText + " - " + tmp, partList, Integer.valueOf(download.getId()));
                 }
 
                 return true;
@@ -324,21 +324,21 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
             }
         }
 
-        private boolean workDownloadSourceDO(DownloadSource downloadSoure) {
+        private boolean workDownloadSourceDO(DownloadSource downloadSource) {
             PartList partList;
-            String tmp = downloadSoure.getFilename() + " (" + downloadSoure.getNickname() + ")";
+            String tmp = downloadSource.getFilename() + " (" + downloadSource.getNickname() + ")";
 
             publishText(tmp);
             try {
-                partList = AppleJuiceClient.getAjFassade().getPartList(downloadSoure);
+                partList = AppleJuiceClient.getAjFacade().getPartList(downloadSource);
             } catch (WebSiteNotFoundException ex) {
-                // Core ist wahrscheinlich zurzeit ueberlastet
+                // the core is probably overloaded right now
                 partList = null;
             }
 
             if (partList != null && !isInterrupted()) {
-                publish(tmp + " - " + verfuegbar.replaceFirst("%s", decimalFormat.format(partList.getProzentVerfuegbar())),
-                        partList, Integer.valueOf(downloadSoure.getId()));
+                publish(tmp + " - " + available.replaceFirst("%s", decimalFormat.format(partList.getPercentAvailable())),
+                        partList, Integer.valueOf(downloadSource.getId()));
             }
 
             return true;
@@ -354,18 +354,18 @@ public class DownloadOverviewPanel extends JPanel implements LanguageListener {
             }
         }
 
-        public void setDownloadSourceDO(DownloadSource downloadSoure) {
-            if (downloadSoure == null) {
+        public void setDownloadSourceDO(DownloadSource downloadSource) {
+            if (downloadSource == null) {
                 objectDO = null;
                 clear();
-            } else if (objectDO != downloadSoure) {
-                objectDO = downloadSoure;
+            } else if (objectDO != downloadSource) {
+                objectDO = downloadSource;
                 clear();
             }
         }
 
         private void clear() {
-            actualDLDateiName.setText("");
+            actualDLFileName.setText("");
             actualDlOverviewTable.setPartList(null, null);
         }
 

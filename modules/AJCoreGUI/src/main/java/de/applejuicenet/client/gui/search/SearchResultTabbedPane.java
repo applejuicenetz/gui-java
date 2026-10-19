@@ -5,9 +5,9 @@
 package de.applejuicenet.client.gui.search;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Search;
-import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Search;
+import de.applejuicenet.client.facade.exception.IllegalArgumentException;
 import de.applejuicenet.client.shared.IconManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +20,8 @@ import java.awt.event.MouseListener;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultTabbedPane.java,v 1.7 2009/01/28 09:44:09 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -67,11 +67,11 @@ public class SearchResultTabbedPane extends JTabbedPane implements MouseListener
             removeTabAt(tabNumber);
             try
             {
-               AppleJuiceClient.getAjFassade().cancelSearch(icon.getSearch());
+               AppleJuiceClient.getAjFacade().cancelSearch(icon.getSearch());
             }
             catch(IllegalArgumentException e1)
             {
-               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e1);
+               logger.error(ApplejuiceFacade.ERROR_MESSAGE, e1);
             }
          }
       }

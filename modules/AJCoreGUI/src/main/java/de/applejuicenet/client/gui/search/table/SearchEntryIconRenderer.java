@@ -4,8 +4,9 @@
 
 package de.applejuicenet.client.gui.search.table;
 
-import de.applejuicenet.client.fassade.entity.FileName;
-import de.applejuicenet.client.fassade.entity.SearchEntry;
+import de.applejuicenet.client.gui.controller.GuiText;
+import de.applejuicenet.client.facade.entity.FileName;
+import de.applejuicenet.client.facade.entity.SearchEntry;
 import de.applejuicenet.client.shared.IconManager;
 
 import javax.swing.*;
@@ -16,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SearchEntryIconRenderer extends DefaultTableCellRenderer
 {
-   // Wird vom Renderer (EDT) gelesen und vom Core-Thread gefuellt
+   // Read by the renderer (EDT) and filled by the core thread
    private static final Set<String> md5Sums = ConcurrentHashMap.newKeySet();
 
    @Override
@@ -24,13 +25,13 @@ public class SearchEntryIconRenderer extends DefaultTableCellRenderer
                                                   int column)
    {
       SearchEntry entry    = (SearchEntry) value;
-      String      filename = entry.getFileNames()[0].getDateiName();
+      String      filename = entry.getFileNames()[0].getFileName();
       JLabel      label    = (JLabel) super.getTableCellRendererComponent(table, filename, isSelected, hasFocus, row, column);
 
       label.setOpaque(true);
-      boolean wirdBereitsGeladen = entry.getChecksumme() != null && md5Sums.contains(entry.getChecksumme());
+      boolean isAlreadyLoaded = entry.getChecksum() != null && md5Sums.contains(entry.getChecksum());
 
-      if(wirdBereitsGeladen)
+      if(isAlreadyLoaded)
       {
          label.setBackground(Color.GREEN);
          label.setForeground(Color.BLACK);
@@ -41,30 +42,30 @@ public class SearchEntryIconRenderer extends DefaultTableCellRenderer
       }
 
       label.setIcon(IconManager.getInstance().getIcon((entry.getFileType().toString())));
-      StringBuilder tooltipp = new StringBuilder("<html><table><tr><th align=\"left\">Dateiname</th><th align=\"left\">Quellen</th></tr>");
+      StringBuilder tooltip = new StringBuilder("<html><table><tr><th align=\"left\">Dateiname</th><th align=\"left\">Quellen</th></tr>");
 
       for(FileName curFileName : entry.getFileNames())
       {
-         tooltipp.append("<tr><td>");
-         tooltipp.append(curFileName.getDateiName());
-         tooltipp.append("</td><td>");
-         tooltipp.append(curFileName.getHaeufigkeit());
-         tooltipp.append("</td>");
-         tooltipp.append("</tr>");
+         tooltip.append("<tr><td>");
+         tooltip.append(curFileName.getFileName());
+         tooltip.append("</td><td>");
+         tooltip.append(curFileName.getFrequency());
+         tooltip.append("</td>");
+         tooltip.append("</tr>");
       }
 
-      tooltipp.append("</table>");
-      if(wirdBereitsGeladen)
+      tooltip.append("</table>");
+      if(isAlreadyLoaded)
       {
-         tooltipp.append("<div align=\"center\" color=\"green\">wird herunter geladen bzw. bereits im Share...</div>");
+         tooltip.append("<div align=\"center\" color=\"green\">" + GuiText.text("javagui.searchform.tooltip.loaded") + "</div>");
       }
       else
       {
-         tooltipp.append("<div align=\"center\" color=\"red\">nicht im Download...</div>");
+         tooltip.append("<div align=\"center\" color=\"red\">" + GuiText.text("javagui.searchform.tooltip.notloaded") + "</div>");
       }
 
-      tooltipp.append("</html>");
-      label.setToolTipText(tooltipp.toString());
+      tooltip.append("</html>");
+      label.setToolTipText(tooltip.toString());
       return label;
    }
 

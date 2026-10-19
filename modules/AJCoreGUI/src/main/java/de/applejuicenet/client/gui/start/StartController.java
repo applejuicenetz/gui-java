@@ -5,10 +5,10 @@
 package de.applejuicenet.client.gui.start;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Information;
-import de.applejuicenet.client.fassade.entity.Server;
-import de.applejuicenet.client.fassade.shared.NetworkInfo;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Information;
+import de.applejuicenet.client.facade.entity.Server;
+import de.applejuicenet.client.facade.shared.NetworkInfo;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -19,8 +19,8 @@ import java.util.Map;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/start/StartController.java,v 1.13 2009/01/28 09:44:09 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -31,11 +31,11 @@ public class StartController extends GuiController {
     private boolean firstChange = true;
     private boolean firewalled = false;
     private String status2Text;
-    private String verbindungNachrichtText;
+    private String connectionMessageText;
     private NetworkInfo netInfo = null;
     private Information information = null;
     private String firewallWarningText;
-    private String keinServer = "";
+    private String noServer = "";
 
     private StartController() {
         super();
@@ -43,7 +43,7 @@ public class StartController extends GuiController {
         try {
             init();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -59,10 +59,10 @@ public class StartController extends GuiController {
         HyperlinkAdapter hyperlinkAdapter = new HyperlinkAdapter(startPanel.getServerMessagePane());
 
         startPanel.getServerMessagePane().addHyperlinkListener(hyperlinkAdapter);
-        startPanel.getNachrichtenPane().addHyperlinkListener(hyperlinkAdapter);
+        startPanel.getMessagesPane().addHyperlinkListener(hyperlinkAdapter);
 
-        AppleJuiceClient.getAjFassade().addDataUpdateListener(this, DATALISTENER_TYPE.NETINFO_CHANGED);
-        AppleJuiceClient.getAjFassade().addDataUpdateListener(this, DATALISTENER_TYPE.INFORMATION_CHANGED);
+        AppleJuiceClient.getAjFacade().addDataUpdateListener(this, DATALISTENER_TYPE.NETINFO_CHANGED);
+        AppleJuiceClient.getAjFacade().addDataUpdateListener(this, DATALISTENER_TYPE.INFORMATION_CHANGED);
         LanguageSelector.getInstance().addLanguageListener(this);
     }
 
@@ -92,25 +92,25 @@ public class StartController extends GuiController {
     protected void languageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-        keinServer = languageSelector.getFirstAttrbuteByTagName("javagui.mainform.keinserver");
-        status2Text = languageSelector.getFirstAttrbuteByTagName("mainform.status.status2");
+        noServer = languageSelector.getFirstAttributeByTagName("javagui.mainform.noserver");
+        status2Text = languageSelector.getFirstAttributeByTagName("mainform.status.status2");
         StringBuffer temp = new StringBuffer(status2Text);
         int pos;
 
         if (netInfo != null) {
             pos = temp.indexOf("%d");
             if (pos != -1) {
-                temp.replace(pos, pos + 2, netInfo.getAJUserGesamtAsStringWithPoints());
+                temp.replace(pos, pos + 2, netInfo.getAJTotalUsersAsStringWithPoints());
             }
 
             pos = temp.indexOf("%d");
             if (pos != -1) {
-                temp.replace(pos, pos + 2, netInfo.getAJAnzahlDateienAsStringWithPoints());
+                temp.replace(pos, pos + 2, netInfo.getAJFileCountAsStringWithPoints());
             }
 
             pos = temp.indexOf("%s");
             if (pos != -1) {
-                temp.replace(pos, pos + 2, netInfo.getAJGesamtShareWithPoints(0));
+                temp.replace(pos, pos + 2, netInfo.getAJTotalShareWithPoints(0));
             }
         } else {
             pos = temp.indexOf("%d");
@@ -130,27 +130,27 @@ public class StartController extends GuiController {
         }
 
         startPanel.getLblStatus().setText(temp.toString());
-        firewallWarningText = languageSelector.getFirstAttrbuteByTagName("mainform.firewallwarning.caption");
+        firewallWarningText = languageSelector.getFirstAttributeByTagName("mainform.firewallwarning.caption");
         if (firewalled) {
-            startPanel.getLblWarnung().setVisible(true);
-            startPanel.getLblWarnungIcon().setVisible(true);
+            startPanel.getLblWarning().setVisible(true);
+            startPanel.getLblWarningIcon().setVisible(true);
             startPanel.getLblFirewallWarning().setText(firewallWarningText);
         } else {
-            startPanel.getLblWarnung().setVisible(false);
-            startPanel.getLblWarnungIcon().setVisible(false);
+            startPanel.getLblWarning().setVisible(false);
+            startPanel.getLblWarningIcon().setVisible(false);
             startPanel.getLblFirewallWarning().setText("");
         }
 
-        verbindungNachrichtText = languageSelector.getFirstAttrbuteByTagName("mainform.html10");
-        temp = new StringBuffer(verbindungNachrichtText);
+        connectionMessageText = languageSelector.getFirstAttributeByTagName("mainform.html10");
+        temp = new StringBuffer(connectionMessageText);
         pos = temp.indexOf("%s");
         if (pos != -1) {
-            temp.replace(pos, pos + 2, keinServer);
+            temp.replace(pos, pos + 2, noServer);
         }
 
         pos = temp.indexOf("%d");
         if (pos != -1) {
-            Map<Integer, Server> servers = AppleJuiceClient.getAjFassade().getAllServer();
+            Map<Integer, Server> servers = AppleJuiceClient.getAjFacade().getAllServer();
             int count;
 
             if (servers != null) {
@@ -162,15 +162,15 @@ public class StartController extends GuiController {
             temp.replace(pos, pos + 2, Integer.toString(count));
         }
 
-        startPanel.getLblVerbindungsnachricht().setText(temp.toString());
-        startPanel.getLblNetzwerk()
-                .setText("<html><font><h2>" + languageSelector.getFirstAttrbuteByTagName("mainform.html7") + "</h2></font></html>");
-        startPanel.getLblNeuigkeiten()
-                .setText("<html><font><h2>" + languageSelector.getFirstAttrbuteByTagName("mainform.html13") + "</h2></font></html>");
-        startPanel.getLblDeinClient()
-                .setText("<html><font><h2>" + languageSelector.getFirstAttrbuteByTagName("mainform.html1") + "</h2></font></html>");
-        startPanel.getLblWarnung()
-                .setText("<html><font><h2>" + languageSelector.getFirstAttrbuteByTagName("mainform.html15") + "</h2></font></html>");
+        startPanel.getLblConnectionMessage().setText(temp.toString());
+        startPanel.getLblNetwork()
+                .setText("<html><font><h2>" + languageSelector.getFirstAttributeByTagName("mainform.html7") + "</h2></font></html>");
+        startPanel.getLblNews()
+                .setText("<html><font><h2>" + languageSelector.getFirstAttributeByTagName("mainform.html13") + "</h2></font></html>");
+        startPanel.getLblYourClient()
+                .setText("<html><font><h2>" + languageSelector.getFirstAttributeByTagName("mainform.html1") + "</h2></font></html>");
+        startPanel.getLblWarning()
+                .setText("<html><font><h2>" + languageSelector.getFirstAttributeByTagName("mainform.html15") + "</h2></font></html>");
     }
 
     protected void contentChanged(DATALISTENER_TYPE type, final Object content) {
@@ -180,7 +180,7 @@ public class StartController extends GuiController {
                     try {
                         if (firstChange) {
                             firstChange = false;
-                            new NachrichtenWorker(StartController.this, startPanel.getLblVersion(), startPanel.getNachrichtenPane()).start();
+                            new MessagesWorker(StartController.this, startPanel.getLblVersion(), startPanel.getMessagesPane()).start();
                         }
 
                         netInfo = (NetworkInfo) content;
@@ -188,24 +188,24 @@ public class StartController extends GuiController {
                         int pos = temp.indexOf("%d");
 
                         if (pos != -1) {
-                            temp.replace(pos, pos + 2, netInfo.getAJUserGesamtAsStringWithPoints());
+                            temp.replace(pos, pos + 2, netInfo.getAJTotalUsersAsStringWithPoints());
                         }
 
                         pos = temp.indexOf("%d");
                         if (pos != -1) {
-                            temp.replace(pos, pos + 2, netInfo.getAJAnzahlDateienAsStringWithPoints());
+                            temp.replace(pos, pos + 2, netInfo.getAJFileCountAsStringWithPoints());
                         }
 
                         pos = temp.indexOf("%s");
                         if (pos != -1) {
-                            temp.replace(pos, pos + 2, netInfo.getAJGesamtShareWithPoints(0));
+                            temp.replace(pos, pos + 2, netInfo.getAJTotalShareWithPoints(0));
                         }
 
                         startPanel.getLblStatus().setText(temp.toString());
                         if (netInfo.isFirewalled() != firewalled) {
                             firewalled = !firewalled;
-                            startPanel.getLblWarnung().setVisible(firewalled);
-                            startPanel.getLblWarnungIcon().setVisible(firewalled);
+                            startPanel.getLblWarning().setVisible(firewalled);
+                            startPanel.getLblWarningIcon().setVisible(firewalled);
                             if (firewalled) {
                                 startPanel.getLblFirewallWarning().setText(firewallWarningText);
                             } else {
@@ -222,7 +222,7 @@ public class StartController extends GuiController {
                             startPanel.getServerMessagePane().setCaretPosition(0);
                         }
                     } catch (Exception e) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                     }
                 }
             });
@@ -230,11 +230,11 @@ public class StartController extends GuiController {
             SwingUtilities.invokeLater(() -> {
                 try {
                     information = (Information) content;
-                    StringBuffer temp = new StringBuffer(verbindungNachrichtText);
+                    StringBuffer temp = new StringBuffer(connectionMessageText);
                     int pos = temp.indexOf("%s");
 
                     if (pos != -1) {
-                        if (information.getVerbindungsStatus() == Information.VERBUNDEN) {
+                        if (information.getConnectionStatus() == Information.CONNECTED) {
                             if (information.getServerName() == null || information.getServerName().length() == 0) {
                                 Server server = information.getServer();
 
@@ -249,18 +249,18 @@ public class StartController extends GuiController {
                                 temp.replace(pos, pos + 2, information.getServerName());
                             }
                         } else {
-                            temp.replace(pos, pos + 2, keinServer);
+                            temp.replace(pos, pos + 2, noServer);
                         }
 
                         pos = temp.indexOf("%d");
                         if (pos != -1) {
-                            temp.replace(pos, pos + 2, Integer.toString(AppleJuiceClient.getAjFassade().getAllServer().size()));
+                            temp.replace(pos, pos + 2, Integer.toString(AppleJuiceClient.getAjFacade().getAllServer().size()));
                         }
                     }
 
-                    startPanel.getLblVerbindungsnachricht().setText(temp.toString());
+                    startPanel.getLblConnectionMessage().setText(temp.toString());
                 } catch (Exception e) {
-                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                    logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                 }
             });
         }

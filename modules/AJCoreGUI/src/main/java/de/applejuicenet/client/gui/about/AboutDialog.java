@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui.about;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
@@ -19,8 +19,8 @@ import java.util.List;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/about/AboutDialog.java,v 1.14 2009/01/12 09:19:20 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r [aj@tkl-soft.de]
@@ -35,7 +35,7 @@ public class AboutDialog extends JDialog {
         try {
             init();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -43,7 +43,7 @@ public class AboutDialog extends JDialog {
         setResizable(false);
         LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-        setTitle(languageSelector.getFirstAttrbuteByTagName("mainform.aboutbtn.caption"));
+        setTitle(languageSelector.getFirstAttributeByTagName("mainform.aboutbtn.caption"));
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(backPanel, BorderLayout.CENTER);
         pack();
@@ -51,7 +51,7 @@ public class AboutDialog extends JDialog {
 
     class BackPanel extends JPanel {
         private Image backgroundImage;
-        private Image flagge;
+        private Image flag;
         private JLabel version = new JLabel();
         private List<CreditsEntry> credits = new ArrayList<CreditsEntry>();
         private Logger logger;
@@ -63,7 +63,7 @@ public class AboutDialog extends JDialog {
             try {
                 init();
             } catch (Exception e) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
             }
 
         }
@@ -77,7 +77,7 @@ public class AboutDialog extends JDialog {
             credits.add(new CreditsEntry(false, "muhviehstarr"));
 
             backgroundImage = IconManager.getInstance().getIcon("applejuiceinfobanner").getImage();
-            flagge = IconManager.getInstance().getIcon("deutsch").getImage();
+            flag = IconManager.getInstance().getIcon("deutsch").getImage();
             MediaTracker mt = new MediaTracker(this);
 
             mt.addImage(backgroundImage, 0);
@@ -85,7 +85,7 @@ public class AboutDialog extends JDialog {
                 mt.waitForAll();
             } catch (InterruptedException x) {
 
-                //kein Bild da, dann kack drauf ;-)
+                //no image available, so skip it ;-)
             }
 
             version.setText("Version " + AppleJuiceDialog.getVersion());
@@ -113,8 +113,8 @@ public class AboutDialog extends JDialog {
                 int imageY = (getHeight() - backgroundImage.getHeight(this)) / 2;
 
                 g.drawImage(backgroundImage, imageX, imageY, this);
-                if (flagge != null) {
-                    g.drawImage(flagge, backgroundImage.getWidth(this) - flagge.getWidth(this), 0, this);
+                if (flag != null) {
+                    g.drawImage(flag, backgroundImage.getWidth(this) - flag.getWidth(this), 0, this);
                 }
                 paintCredits(g);
             }
@@ -127,7 +127,7 @@ public class AboutDialog extends JDialog {
             int imageWidth = backgroundImage.getWidth(this);
             int imageX = (getWidth() - imageWidth) / 2;
             int left = imageX + imageWidth / 2 + 20;
-            int top = (flagge == null ? 0 : flagge.getHeight(this)) + 8;
+            int top = (flag == null ? 0 : flag.getHeight(this)) + 8;
             int right = imageX + imageWidth - 8;
             int bottom = getHeight() - footer.getPreferredSize().height - 8;
             return new Rectangle(left, top, Math.max(0, right - left), Math.max(0, bottom - top));
@@ -136,7 +136,7 @@ public class AboutDialog extends JDialog {
         private int getCreditsHeight() {
             int height = 0;
             for (CreditsEntry entry : credits) {
-                height += entry.isUeberschrift() ? 20 : 15;
+                height += entry.isHeading() ? 20 : 15;
             }
             return height;
         }
@@ -150,11 +150,11 @@ public class AboutDialog extends JDialog {
                 int textY = Math.max(fontPlain.getSize(), (bounds.height - getCreditsHeight()) / 2
                         + drawing.getFontMetrics(fontBold).getAscent());
                 for (CreditsEntry entry : credits) {
-                    drawing.setFont(entry.isUeberschrift() ? fontBold : fontPlain);
-                    drawing.setColor(entry.isUeberschrift() ? Color.BLUE : Color.BLACK);
-                    int width = drawing.getFontMetrics().stringWidth(entry.getAusgabetext());
-                    drawing.drawString(entry.getAusgabetext(), (bounds.width - width) / 2, textY);
-                    textY += entry.isUeberschrift() ? 20 : 15;
+                    drawing.setFont(entry.isHeading() ? fontBold : fontPlain);
+                    drawing.setColor(entry.isHeading() ? Color.BLUE : Color.BLACK);
+                    int width = drawing.getFontMetrics().stringWidth(entry.getOutputText());
+                    drawing.drawString(entry.getOutputText(), (bounds.width - width) / 2, textY);
+                    textY += entry.isHeading() ? 20 : 15;
                 }
             } finally {
                 drawing.dispose();
@@ -175,28 +175,28 @@ public class AboutDialog extends JDialog {
 
 
     class CreditsEntry {
-        private boolean ueberschrift;
-        private String ausgabetext;
+        private boolean heading;
+        private String outputText;
 
-        public CreditsEntry(boolean ueberschrift, String ausgabetext) {
-            this.ueberschrift = ueberschrift;
-            this.ausgabetext = ausgabetext;
+        public CreditsEntry(boolean heading, String outputText) {
+            this.heading = heading;
+            this.outputText = outputText;
         }
 
-        public boolean isUeberschrift() {
-            return ueberschrift;
+        public boolean isHeading() {
+            return heading;
         }
 
-        public void setUeberschrift(boolean ueberschrift) {
-            this.ueberschrift = ueberschrift;
+        public void setHeading(boolean heading) {
+            this.heading = heading;
         }
 
-        public String getAusgabetext() {
-            return ausgabetext;
+        public String getOutputText() {
+            return outputText;
         }
 
-        public void setAusgabetext(String ausgabetext) {
-            this.ausgabetext = ausgabetext;
+        public void setOutputText(String outputText) {
+            this.outputText = outputText;
         }
     }
 

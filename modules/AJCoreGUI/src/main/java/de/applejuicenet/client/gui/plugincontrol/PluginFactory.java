@@ -31,7 +31,7 @@ public abstract class PluginFactory {
 
             plugins = new HashSet<>();
 
-            Map<String, File> tempListe = new HashMap<>();
+            Map<String, File> tempList = new HashMap<>();
 
             String shippedPath = System.getProperty("user.dir") + File.separator + "plugins" + File.separator;
             String userPath = System.getProperty("user.home") + File.separator + "appleJuice" + File.separator + "gui" + File.separator + "plugins" + File.separator;
@@ -43,7 +43,7 @@ public abstract class PluginFactory {
             if (userPathFiles != null) {
                 for (File pathFile : userPathFiles) {
                     if (pathFile.isFile() && pathFile.getName().endsWith(".jar")) {
-                        tempListe.put(pathFile.getName(), pathFile);
+                        tempList.put(pathFile.getName(), pathFile);
                     }
                 }
             }
@@ -52,8 +52,8 @@ public abstract class PluginFactory {
             if (shippedPathFiles != null) {
                 for (File pathFile : shippedPathFiles) {
                     if (pathFile.isFile() && pathFile.getName().endsWith(".jar")) {
-                        if (!tempListe.containsKey(pathFile.getName())) {
-                            tempListe.put(pathFile.getName(), pathFile);
+                        if (!tempList.containsKey(pathFile.getName())) {
+                            tempList.put(pathFile.getName(), pathFile);
                         }
                     }
                 }
@@ -61,7 +61,7 @@ public abstract class PluginFactory {
 
             PluginJarClassLoader jarLoader;
 
-            for (Map.Entry<String, File> pluginFile : tempListe.entrySet()) {
+            for (Map.Entry<String, File> pluginFile : tempList.entrySet()) {
                 try {
                     boolean isPlugin;
 
@@ -78,11 +78,11 @@ public abstract class PluginFactory {
 
                     if (aPlugin != null) {
                         plugins.add(aPlugin);
-                        logger.info(String.format("Plugin %s (%s) geladen ...", aPlugin.getTitle(), aPlugin.getVersion()));
+                        logger.info(String.format("Plugin %s (%s) loaded ...", aPlugin.getTitle(), aPlugin.getVersion()));
                     }
                 } catch (Exception e) {
-                    //Von einem Plugin lassen wir uns nicht beirren! ;-)
-                    logger.error("Ein Plugin konnte nicht instanziert werden", e);
+                    //we do not let a plugin throw us off! ;-)
+                    logger.error("A plugin could not be instantiated", e);
                 }
             }
         }
@@ -103,9 +103,9 @@ public abstract class PluginFactory {
 
             if (null != plugin) {
                 thePlugins.add(plugin);
-                String nachricht = "Plugin " + plugin.getTitle() + " geladen...";
+                String message = "Plugin " + plugin.getTitle() + " loaded...";
 
-                logger.info(nachricht);
+                logger.info(message);
             }
         }
 
@@ -119,8 +119,8 @@ public abstract class PluginFactory {
 
             return testLoader.getPlugin();
         } catch (Throwable e) {
-            //Von einem Plugin lassen wir uns nicht beirren! ;-)
-            logger.error("Ein Plugin konnte nicht instanziert werden", e);
+            //we do not let a plugin throw us off! ;-)
+            logger.error("A plugin could not be instantiated", e);
         }
 
         return null;

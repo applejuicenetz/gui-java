@@ -18,7 +18,7 @@ public final class VersionStats {
     }
 
     public synchronized void observe(String key, String version, int system) {
-        String name = version == null || version.isBlank() ? "Unbekannt" : version.strip();
+        String name = version == null || version.isBlank() ? "Unknown" : version.strip();
         contacts.put(key, new Contact(name, system >= 1 && system <= 7 ? system : 0));
         while (contacts.size() > capacity) contacts.remove(contacts.keySet().iterator().next());
     }

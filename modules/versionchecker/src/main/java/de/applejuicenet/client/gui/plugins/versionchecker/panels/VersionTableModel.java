@@ -24,7 +24,7 @@ public class VersionTableModel extends AbstractTableModel {
     @Override public Object getValueAt(int row, int column) {
         var entry = rows.get(row);
         return switch (column) {
-            case 0 -> entry.version().equals("Unbekannt") ? GuiText.text("plugins.versions.unknown") : entry.version();
+            case 0 -> entry.version().equals("Unknown") ? GuiText.text("plugins.versions.unknown") : entry.version();
             case 1 -> entry.count();
             case 2 -> total == 0 ? 0.0 : entry.count() * 100.0 / total;
             case 3 -> entry.systems().entrySet().stream().sorted(java.util.Map.Entry.comparingByKey())

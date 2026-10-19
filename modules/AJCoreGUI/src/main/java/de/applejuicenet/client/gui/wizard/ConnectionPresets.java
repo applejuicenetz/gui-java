@@ -4,7 +4,7 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,12 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Liest die Verbindungsvorgaben des Wizards aus der <code>presets.json</code>
- * (Format des config-wizard-Repositories, <code>presets.json</code>).
+ * Reads the connection presets of the wizard from <code>presets.json</code> (format of the
+ * config-wizard repository, <code>presets.json</code>).
  */
 public class ConnectionPresets {
     public static final String FILE_NAME = "presets.json";
-    private static final int MAX_NEW_CONNECTIONS_PRO_10_SEK = 50;
+    private static final int MAX_NEW_CONNECTIONS_PER_10_SEC = 50;
     private static final Logger logger = LoggerFactory.getLogger(ConnectionPresets.class);
 
     private ConnectionPresets() {
@@ -34,7 +34,7 @@ public class ConnectionPresets {
         try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             return parse(reader);
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
             return null;
         }
     }
@@ -47,13 +47,13 @@ public class ConnectionPresets {
                 JsonObject object = item.asObject();
                 kinds.add(new ConnectionKind(object.getString("name", ""),
                         uploadKiBPerSecond(object.getInt("upload", 0)), 0,
-                        MAX_NEW_CONNECTIONS_PRO_10_SEK));
+                        MAX_NEW_CONNECTIONS_PER_10_SEC));
             }
         }
         return kinds.toArray(new ConnectionKind[0]);
     }
 
-    /** Upload in kbit/s -> KiB/s, wie bisher in der wizard.xml. */
+    /** Upload in kbit/s -> KiB/s, as before in wizard.xml. */
     static int uploadKiBPerSecond(int kbit) {
         return (int) Math.round(kbit * 1000.0 / 8 / 1024);
     }

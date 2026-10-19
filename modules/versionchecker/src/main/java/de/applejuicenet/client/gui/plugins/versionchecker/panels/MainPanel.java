@@ -1,8 +1,8 @@
 package de.applejuicenet.client.gui.plugins.versionchecker.panels;
 
 import de.applejuicenet.client.gui.controller.GuiText;
-import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.fassade.entity.Upload;
+import de.applejuicenet.client.facade.entity.Download;
+import de.applejuicenet.client.facade.entity.Upload;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -164,7 +164,7 @@ public class MainPanel extends JPanel {
                 if (download == null) continue;
                 for (var source : download.getSources()) {
                     if (source == null || source.getVersion() == null) continue;
-                    stats.observe("download:" + source.getId(), source.getVersion().getVersion(), source.getVersion().getBetriebsSystem());
+                    stats.observe("download:" + source.getId(), source.getVersion().getVersion(), source.getVersion().getOperatingSystem());
                 }
             }
         }
@@ -175,7 +175,7 @@ public class MainPanel extends JPanel {
         synchronized (uploads) {
             for (var upload : uploads.values()) {
                 if (upload == null || upload.getVersion() == null) continue;
-                stats.observe("upload:" + upload.getId(), upload.getVersion().getVersion(), upload.getVersion().getBetriebsSystem());
+                stats.observe("upload:" + upload.getId(), upload.getVersion().getVersion(), upload.getVersion().getOperatingSystem());
             }
         }
         SwingUtilities.invokeLater(this::refresh);

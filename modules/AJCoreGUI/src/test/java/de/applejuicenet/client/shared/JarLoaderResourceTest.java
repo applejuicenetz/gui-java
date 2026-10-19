@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
-/** Die Plugin-Loader duerfen nach dem Einlesen kein JAR-Handle offen halten. */
+/** The plugin loaders must not keep a JAR handle open after reading. */
 public class JarLoaderResourceTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
@@ -45,7 +45,7 @@ public class JarLoaderResourceTest {
                         count++;
                     }
                 } catch (IOException ignored) {
-                    // Handle wurde zwischenzeitlich geschlossen
+                    // handle was closed in the meantime
                 }
             }
         }
@@ -54,19 +54,19 @@ public class JarLoaderResourceTest {
 
     @Test
     public void pluginLoaderClosesTheJarEvenWhenThePluginIsInvalid() throws Exception {
-        org.junit.Assume.assumeTrue("nur mit /proc", Files.isDirectory(Path.of("/proc/self/fd")));
+        org.junit.Assume.assumeTrue("needs /proc", Files.isDirectory(Path.of("/proc/self/fd")));
         File jar = jarWith("kaputt.jar", "plugin.properties", "general.classname=gibt.es.nicht\n");
         long before = openHandlesOn(jar);
         for (int i = 0; i < 20; i++) {
             assertNull(new PluginJarClassLoader().getPlugin(jar));
         }
-        assertEquals("JAR-Handle nach dem Laden noch offen", before, openHandlesOn(jar));
-        assertEquals("JAR-Handle nach dem Laden noch offen", before, openHandlesOn(jar));
+        assertEquals("JAR handle still open after loading", before, openHandlesOn(jar));
+        assertEquals("JAR handle still open after loading", before, openHandlesOn(jar));
     }
 
     @Test
     public void pluginLoaderSurvivesManyLoadsWithoutLeakingHandles() throws Exception {
-        org.junit.Assume.assumeTrue("nur mit /proc", Files.isDirectory(Path.of("/proc/self/fd")));
+        org.junit.Assume.assumeTrue("needs /proc", Files.isDirectory(Path.of("/proc/self/fd")));
         File jar = jarWith("viele.jar", "plugin.properties", "general.classname=x.Y\n", "language_deutsch.properties", "language=deutsch\n");
         long handlesBefore;
         try (Stream<Path> fds = Files.list(Path.of("/proc/self/fd"))) {
@@ -75,7 +75,7 @@ public class JarLoaderResourceTest {
         for (int i = 0; i < 200; i++) {
             new PluginJarClassLoader().getPlugin(jar);
         }
-        // kein System.gc(): ein vergessenes close() soll sichtbar bleiben
+        // no System.gc(): a forgotten close() should stay visible
         long handlesAfter;
         try (Stream<Path> fds = Files.list(Path.of("/proc/self/fd"))) {
             handlesAfter = fds.count();

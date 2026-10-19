@@ -15,8 +15,8 @@ import java.awt.event.*;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/IncomingDirSelectionDialog.java,v 1.7 2009/01/12 09:19:20 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -25,7 +25,7 @@ import java.awt.event.*;
 public class IncomingDirSelectionDialog extends JDialog
 {
    private String[]    selectionValues;
-   private JButton   schliessen        = new JButton();
+   private JButton   close        = new JButton();
    private JComboBox incomingDirs      = new JComboBox();
    private boolean     somethingSelected = false;
 
@@ -50,15 +50,15 @@ public class IncomingDirSelectionDialog extends JDialog
          }
       };
 
-      schliessen.addKeyListener(disposeKeyAdapter);
+      close.addKeyListener(disposeKeyAdapter);
       incomingDirs.addKeyListener(disposeKeyAdapter);
       incomingDirs.getEditor().getEditorComponent().addKeyListener(disposeKeyAdapter);
       addKeyListener(disposeKeyAdapter);
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      setTitle(languageSelector.getFirstAttrbuteByTagName("mainform.changetarget.caption"));
-      schliessen.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Button1.caption"));
-      schliessen.addActionListener(new ActionListener()
+      setTitle(languageSelector.getFirstAttributeByTagName("mainform.changetarget.caption"));
+      close.setText(languageSelector.getFirstAttributeByTagName("einstform.Button1.caption"));
+      close.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent ae)
             {
@@ -69,7 +69,7 @@ public class IncomingDirSelectionDialog extends JDialog
 
       JLabel label1 = new JLabel();
 
-      label1.setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.neuesverzeichnis"));
+      label1.setText(languageSelector.getFirstAttributeByTagName("javagui.downloadform.newdirectory"));
       for(int i = 0; i < selectionValues.length; i++)
       {
          incomingDirs.addItem(selectionValues[i]);
@@ -84,7 +84,7 @@ public class IncomingDirSelectionDialog extends JDialog
          {
             public void actionPerformed(ActionEvent ke)
             {
-               schliessen.doClick();
+               close.doClick();
             }
          });
       if(selected != null)
@@ -98,7 +98,7 @@ public class IncomingDirSelectionDialog extends JDialog
       getContentPane().setLayout(new BorderLayout());
       JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-      southPanel.add(schliessen);
+      southPanel.add(close);
       getContentPane().add(panel1, BorderLayout.NORTH);
       getContentPane().add(southPanel, BorderLayout.SOUTH);
       pack();

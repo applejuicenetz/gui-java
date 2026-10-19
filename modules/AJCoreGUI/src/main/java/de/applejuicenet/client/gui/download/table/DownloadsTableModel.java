@@ -3,8 +3,8 @@
  */
 package de.applejuicenet.client.gui.download.table;
 
-import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.fassade.entity.DownloadSource;
+import de.applejuicenet.client.facade.entity.Download;
+import de.applejuicenet.client.facade.entity.DownloadSource;
 import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -28,16 +28,16 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
                                                                            };
 
    //Download-Stati
-   public static String          suchen                  = "";
-   public static String          laden                   = "";
-   public static String          keinPlatz               = "";
-   public static String          fertigstellen           = "";
-   public static String          fehlerBeimFertigstellen = "";
-   public static String          fertig                  = "";
-   public static String          abbrechen               = "";
-   public static String          abgebrochen             = "";
-   public static String          dataWirdErstellt        = "";
-   public static String          pausiert                = "";
+   public static String          searchLabel                  = "";
+   public static String          load                   = "";
+   public static String          noSpace               = "";
+   public static String          complete           = "";
+   public static String          errorOnCompleting = "";
+   public static String          finished                  = "";
+   public static String          cancel               = "";
+   public static String          aborted             = "";
+   public static String          dataBeingCreated        = "";
+   public static String          paused                = "";
    private TableSorter<Download> sorter;
    private List<Download>        downloads               = new ArrayList<Download>();
 
@@ -82,40 +82,40 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
             return getStatusAsString(download);
 
          case 2:
-            return download.getGroesse();
+            return download.getSize();
 
          case 3:
-            if(download.getStatus() == Download.FERTIG || download.getStatus() == Download.FERTIGSTELLEN)
+            if(download.getStatus() == Download.FINISHED || download.getStatus() == Download.FINISHING)
             {
-               return download.getGroesse();
+               return download.getSize();
             }
 
-            return download.getBereitsGeladen();
+            return download.getAlreadyLoaded();
 
          case 4:
             return download.getSpeedInBytes();
 
          case 5:
-            return download.getRestZeitAsString();
+            return download.getRemainingTimeAsString();
 
          case 6:
-            if(download.getStatus() == Download.FERTIG || download.getStatus() == Download.FERTIGSTELLEN)
+            if(download.getStatus() == Download.FINISHED || download.getStatus() == Download.FINISHING)
             {
                return 100d;
             }
 
-            return download.getProzentGeladen();
+            return download.getPercentLoaded();
 
          case 7:
-            if(download.getStatus() == Download.FERTIG || download.getStatus() == Download.FERTIGSTELLEN)
+            if(download.getStatus() == Download.FINISHED || download.getStatus() == Download.FINISHING)
             {
                return 0L;
             }
 
-            return download.getGroesse() - download.getBereitsGeladen();
+            return download.getSize() - download.getAlreadyLoaded();
 
          case 8:
-            if(download.getStatus() == Download.FERTIG || download.getStatus() == Download.FERTIGSTELLEN)
+            if(download.getStatus() == Download.FINISHED || download.getStatus() == Download.FINISHING)
             {
                return -1;
             }
@@ -163,19 +163,19 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
       return change;
    }
 
-   public static String parseGroesse(long groesse)
+   public static String parseSize(long size)
    {
-      if(groesse == 0)
+      if(size == 0)
       {
          return "";
       }
-      if(groesse < 1024)
+      if(size < 1024)
       {
-         return groesse + " Bytes";
+         return size + " Bytes";
       }
 
       String[] units = {"Bytes", "KB", "MB", "GB", "TB", "PB", "EB"};
-      double share = groesse;
+      double share = size;
       int unit = 0;
       while(share >= 1024 && unit < units.length - 1)
       {
@@ -195,16 +195,16 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      suchen                  = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestatlook");
-      laden                   = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestattransfer");
-      keinPlatz               = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat1");
-      fertigstellen           = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat12");
-      fertig                  = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat14");
-      abbrechen               = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat15");
-      abgebrochen             = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat17");
-      fehlerBeimFertigstellen = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.fehlerbeimfertigstellen");
-      dataWirdErstellt        = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.datawirderstellt");
-      pausiert                = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat13");
+      searchLabel                  = languageSelector.getFirstAttributeByTagName("mainform.queue.queuestatlook");
+      load                   = languageSelector.getFirstAttributeByTagName("mainform.queue.queuestattransfer");
+      noSpace               = languageSelector.getFirstAttributeByTagName("mainform.queue.queuestat1");
+      complete           = languageSelector.getFirstAttributeByTagName("mainform.queue.queuestat12");
+      finished                  = languageSelector.getFirstAttributeByTagName("mainform.queue.queuestat14");
+      cancel               = languageSelector.getFirstAttributeByTagName("mainform.queue.queuestat15");
+      aborted             = languageSelector.getFirstAttributeByTagName("mainform.queue.queuestat17");
+      errorOnCompleting = languageSelector.getFirstAttributeByTagName("javagui.downloadform.errorfinalizing");
+      dataBeingCreated        = languageSelector.getFirstAttributeByTagName("javagui.downloadform.databeingcreated");
+      paused                = languageSelector.getFirstAttributeByTagName("mainform.queue.userstat13");
    }
 
    public static String getStatusAsString(Download download)
@@ -214,59 +214,59 @@ public class DownloadsTableModel extends AbstractTableModel implements LanguageL
          switch(download.getStatus())
          {
 
-            case Download.PAUSIERT:
-               return pausiert;
+            case Download.PAUSED:
+               return paused;
 
-            case Download.ABBRECHEN:
-               return abbrechen;
+            case Download.CANCEL:
+               return cancel;
 
-            case Download.ABGEGROCHEN:
-               return abgebrochen;
+            case Download.ABORTED_BY_PEER:
+               return aborted;
 
-            case Download.FERTIG:
-               return fertig;
+            case Download.FINISHED:
+               return finished;
 
-            case Download.FEHLER_BEIM_FERTIGSTELLEN:
-               return fehlerBeimFertigstellen;
+            case Download.ERROR_ON_COMPLETING:
+               return errorOnCompleting;
 
-            case Download.NICHT_GENUG_PLATZ_FEHLER:
-               return keinPlatz;
+            case Download.NOT_ENOUGH_SPACE_ERROR:
+               return noSpace;
 
-            case Download.DATA_WIRD_ERSTELLT:
-               return dataWirdErstellt;
+            case Download.DATA_BEING_CREATED:
+               return dataBeingCreated;
 
-            case Download.SUCHEN_LADEN:
+            case Download.SEARCHING_LOADING:
             {
                DownloadSource[] sources       = download.getSources();
                String           result        = "";
-               int              uebertragung  = 0;
-               int              warteschlange = 0;
+               int              transferText  = 0;
+               int              queue = 0;
                int              status;
 
                for(int i = 0; i < sources.length; i++)
                {
                   status = sources[i].getStatus();
-                  if(status == DownloadSource.UEBERTRAGUNG)
+                  if(status == DownloadSource.TRANSFER)
                   {
-                     uebertragung++;
-                     result = laden;
+                     transferText++;
+                     result = load;
                   }
-                  else if(status == DownloadSource.IN_WARTESCHLANGE)
+                  else if(status == DownloadSource.IN_QUEUE)
                   {
-                     warteschlange++;
+                     queue++;
                   }
                }
 
                if(result.length() == 0)
                {
-                  result = suchen;
+                  result = searchLabel;
                }
 
-               return result + " " + (warteschlange + uebertragung) + "/" + sources.length + " (" + uebertragung + ")";
+               return result + " " + (queue + transferText) + "/" + sources.length + " (" + transferText + ")";
             }
 
-            case Download.FERTIGSTELLEN:
-               return fertigstellen;
+            case Download.FINISHING:
+               return complete;
 
             default:
                return "";

@@ -4,8 +4,8 @@
 
 package de.applejuicenet.client.gui.download;
 
-import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.fassade.entity.DownloadSource;
+import de.applejuicenet.client.facade.entity.Download;
+import de.applejuicenet.client.facade.entity.DownloadSource;
 
 public class DownloadPartListWatcher
 {
@@ -24,7 +24,7 @@ public class DownloadPartListWatcher
          return;
       }
 
-      if(download.getStatus() != Download.SUCHEN_LADEN && download.getStatus() != Download.PAUSIERT)
+      if(download.getStatus() != Download.SEARCHING_LOADING && download.getStatus() != Download.PAUSED)
       {
          download = null;
       }
@@ -40,7 +40,7 @@ public class DownloadPartListWatcher
          return;
       }
 
-      if(downloadSource.getStatus() == DownloadSource.IN_WARTESCHLANGE && downloadSource.getQueuePosition() > 20)
+      if(downloadSource.getStatus() == DownloadSource.IN_QUEUE && downloadSource.getQueuePosition() > 20)
       {
          ((DownloadPanel) downloadController.getComponent()).getDownloadOverviewPanel().setDownload(null);
       }

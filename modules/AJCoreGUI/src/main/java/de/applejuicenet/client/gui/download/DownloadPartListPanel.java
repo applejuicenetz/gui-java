@@ -4,12 +4,12 @@
 
 package de.applejuicenet.client.gui.download;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.fassade.entity.DownloadSource;
-import de.applejuicenet.client.fassade.entity.Part;
-import de.applejuicenet.client.fassade.entity.PartList;
-import de.applejuicenet.client.fassade.shared.ZeichenErsetzer;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Download;
+import de.applejuicenet.client.facade.entity.DownloadSource;
+import de.applejuicenet.client.facade.entity.Part;
+import de.applejuicenet.client.facade.entity.PartList;
+import de.applejuicenet.client.facade.shared.CharacterReplacer;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import org.slf4j.Logger;
@@ -27,11 +27,10 @@ import java.awt.image.BufferedImage;
  * 1.33 2004/07/09 12:42:01 loevenwong Exp $
  *
  * <p>
- * Titel: AppleJuice Client-GUI
+ * Title: AppleJuice Client-GUI
  * </p>
  * <p>
- * Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten
- * appleJuice-Core
+ * Description: Official GUI for the appleJuice core developed by muhviehstarr
  * </p>
  * <p>
  * Copyright: General Public License
@@ -46,16 +45,16 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
     private BufferedImage image = null;
     private int width;
     private int height;
-    private long fertigSeit = -1;
+    private long finishedSince = -1;
     private boolean miniFile = false;
-    private String ueberprueft;
-    private String nichtVorhanden;
-    private String vorhanden;
-    private String quellen;
-    private String uebertragen;
+    private String checked;
+    private String notPresent;
+    private String present;
+    private String sourcesText;
+    private String transferText;
     private MouseEvent savedMouseEvent = null;
     private Integer id = null;
-    private int zeilenHoehe;
+    private int rowHeight;
     private long pixelSize;
     private BufferedImage lineImage;
 
@@ -156,33 +155,33 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
             partList = newPartList;
             height = getSize().height;
             width = getSize().width;
-            if (partList != null && width > 0 && height >= 15 && partList.getGroesse() > 0 && partList.getParts().length > 0) {
+            if (partList != null && width > 0 && height >= 15 && partList.getSize() > 0 && partList.getParts().length > 0) {
                 Part[] parts = partList.getParts();
 
-                zeilenHoehe = 15;
-                int zeilen = height / zeilenHoehe;
+                rowHeight = 15;
+                int rows = height / rowHeight;
 
                 miniFile = false;
-                pixelSize = partList.getGroesse() / ((long) zeilen * width);
+                pixelSize = partList.getSize() / ((long) rows * width);
                 if (pixelSize == 0) {
-                    pixelSize = ((long) zeilen * width) / partList.getGroesse();
+                    pixelSize = ((long) rows * width) / partList.getSize();
                     miniFile = true;
                 }
 
-                lineImage = new BufferedImage(width * zeilen, 15, BufferedImage.TYPE_INT_ARGB);
+                lineImage = new BufferedImage(width * rows, 15, BufferedImage.TYPE_INT_ARGB);
                 Graphics graphics = lineImage.getGraphics();
-                int obenLinks = 0;
-                int breite = 0;
+                int topLeft = 0;
+                int rectWidth = 0;
 
-                fertigSeit = -1;
+                finishedSince = -1;
                 for (int i = 0; i < parts.length - 1; i++) {
                     drawPart(false, (partList.getPartListType() == PartList.MAIN_PARTLIST), graphics, pixelSize, parts[i].getType(),
-                            zeilenHoehe, parts[i].getFromPosition(), parts[i + 1].getFromPosition());
+                            rowHeight, parts[i].getFromPosition(), parts[i + 1].getFromPosition());
                 }
 
                 drawPart(true, (partList.getPartListType() == PartList.MAIN_PARTLIST), graphics, pixelSize,
-                        parts[parts.length - 1].getType(), zeilenHoehe, parts[parts.length - 1].getFromPosition(),
-                        partList.getGroesse());
+                        parts[parts.length - 1].getType(), rowHeight, parts[parts.length - 1].getFromPosition(),
+                        partList.getSize());
                 BufferedImage imgWithSources = insertSources(partList, lineImage);
 
                 if (savedMouseEvent != null) {
@@ -193,7 +192,7 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
                 savedMouseEvent = null;
             }
         } catch (Exception e) {
-            logger.debug(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.debug(ApplejuiceFacade.ERROR_MESSAGE, e);
             partList = null;
             lineImage = null;
             image = null;
@@ -207,117 +206,117 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
         BufferedImage imageWithSources = new BufferedImage(sourceImage.getWidth(), 15, BufferedImage.TYPE_INT_ARGB);
         Graphics graphics = imageWithSources.getGraphics();
 
-        graphics.drawImage(sourceImage.getSubimage(0, 0, sourceImage.getWidth(), zeilenHoehe), 0, 0, null);
-        int obenLinks;
-        int breite;
+        graphics.drawImage(sourceImage.getSubimage(0, 0, sourceImage.getWidth(), rowHeight), 0, 0, null);
+        int topLeft;
+        int rectWidth;
 
         if (partList.getPartListType() == PartList.MAIN_PARTLIST) {
             Download download = (Download) partList.getValueObject();
 
-            if (download.getStatus() == Download.SUCHEN_LADEN) {
+            if (download.getStatus() == Download.SEARCHING_LOADING) {
                 for (DownloadSource curSource : download.getSources()) {
-                    if (curSource.getStatus() == DownloadSource.UEBERTRAGUNG) {
+                    if (curSource.getStatus() == DownloadSource.TRANSFER) {
                         if (!miniFile) {
-                            obenLinks = (int) (curSource.getDownloadFrom() / pixelSize);
-                            breite = (int) (curSource.getDownloadTo() / pixelSize) - obenLinks;
+                            topLeft = (int) (curSource.getDownloadFrom() / pixelSize);
+                            rectWidth = (int) (curSource.getDownloadTo() / pixelSize) - topLeft;
                         } else {
-                            obenLinks = (int) (curSource.getDownloadFrom() * pixelSize);
-                            breite = (int) (curSource.getDownloadTo() * pixelSize) - obenLinks;
+                            topLeft = (int) (curSource.getDownloadFrom() * pixelSize);
+                            rectWidth = (int) (curSource.getDownloadTo() * pixelSize) - topLeft;
                         }
 
                         graphics.setColor(getColorByPercent(curSource.getReadyPercent()));
-                        graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
+                        graphics.fillRect(topLeft, 0, rectWidth, rowHeight);
                     }
                 }
             }
         } else {
             DownloadSource downloadSource = (DownloadSource) partList.getValueObject();
 
-            if (downloadSource.getStatus() == DownloadSource.UEBERTRAGUNG) {
+            if (downloadSource.getStatus() == DownloadSource.TRANSFER) {
                 if (!miniFile) {
-                    obenLinks = (int) (downloadSource.getDownloadFrom() / pixelSize);
-                    breite = (int) (downloadSource.getDownloadTo() / pixelSize) - obenLinks;
+                    topLeft = (int) (downloadSource.getDownloadFrom() / pixelSize);
+                    rectWidth = (int) (downloadSource.getDownloadTo() / pixelSize) - topLeft;
                 } else {
-                    obenLinks = (int) (downloadSource.getDownloadFrom() * pixelSize);
-                    breite = (int) (downloadSource.getDownloadTo() * pixelSize) - obenLinks;
+                    topLeft = (int) (downloadSource.getDownloadFrom() * pixelSize);
+                    rectWidth = (int) (downloadSource.getDownloadTo() * pixelSize) - topLeft;
                 }
 
                 graphics.setColor(getColorByPercent(downloadSource.getReadyPercent()));
-                graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
+                graphics.fillRect(topLeft, 0, rectWidth, rowHeight);
             }
         }
 
         image = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics g = image.getGraphics();
         int x = 0;
-        int zeilen = height / zeilenHoehe;
+        int rows = height / rowHeight;
 
-        for (int i = 0; i < zeilen; i++) {
-            g.drawImage(imageWithSources.getSubimage(x, 0, width, zeilenHoehe), 0, i * zeilenHoehe, null);
+        for (int i = 0; i < rows; i++) {
+            g.drawImage(imageWithSources.getSubimage(x, 0, width, rowHeight), 0, i * rowHeight, null);
             x += width;
         }
 
         return imageWithSources;
     }
 
-    private void drawPart(boolean forceDraw, boolean isMainList, Graphics graphics, long pixelSize, int partType, int zeilenHoehe,
+    private void drawPart(boolean forceDraw, boolean isMainList, Graphics graphics, long pixelSize, int partType, int rowHeight,
                           long currentFrom, long nextFrom) {
-        int obenLinks = 0;
-        int breite = 0;
+        int topLeft = 0;
+        int rectWidth = 0;
 
         if (isMainList) {
             if (partType == -1 && !forceDraw) {
-                if (fertigSeit != -1) {
+                if (finishedSince != -1) {
                     return;
                 } else {
-                    fertigSeit = currentFrom;
+                    finishedSince = currentFrom;
                 }
             } else {
-                if (fertigSeit != -1) {
-                    obenLinks = (int) (fertigSeit / pixelSize);
-                    long mbCount = (currentFrom - fertigSeit) / 1048576;
+                if (finishedSince != -1) {
+                    topLeft = (int) (finishedSince / pixelSize);
+                    long mbCount = (currentFrom - finishedSince) / 1048576;
 
-                    breite = (int) (mbCount * 1048576 / pixelSize);
-                    graphics.setColor(PartList.COLOR_TYPE_UEBERPRUEFT);
-                    graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
-                    obenLinks += breite;
-                    breite = (int) (currentFrom / pixelSize) - obenLinks;
+                    rectWidth = (int) (mbCount * 1048576 / pixelSize);
+                    graphics.setColor(PartList.COLOR_TYPE_CHECKED);
+                    graphics.fillRect(topLeft, 0, rectWidth, rowHeight);
+                    topLeft += rectWidth;
+                    rectWidth = (int) (currentFrom / pixelSize) - topLeft;
                     if (partType == -1 || forceDraw) {
-                        graphics.setColor(PartList.COLOR_TYPE_UEBERPRUEFT);
+                        graphics.setColor(PartList.COLOR_TYPE_CHECKED);
                     } else {
                         graphics.setColor(PartList.COLOR_TYPE_OK);
                     }
 
-                    graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
-                    obenLinks = (int) (currentFrom / pixelSize);
-                    breite = (int) (nextFrom / pixelSize) - obenLinks;
+                    graphics.fillRect(topLeft, 0, rectWidth, rowHeight);
+                    topLeft = (int) (currentFrom / pixelSize);
+                    rectWidth = (int) (nextFrom / pixelSize) - topLeft;
                     graphics.setColor(getColorByType(partType));
-                    graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
-                    fertigSeit = -1;
+                    graphics.fillRect(topLeft, 0, rectWidth, rowHeight);
+                    finishedSince = -1;
                 } else {
                     if (!miniFile) {
-                        obenLinks = (int) (currentFrom / pixelSize);
-                        breite = (int) (nextFrom / pixelSize) - obenLinks;
+                        topLeft = (int) (currentFrom / pixelSize);
+                        rectWidth = (int) (nextFrom / pixelSize) - topLeft;
                     } else {
-                        obenLinks = (int) (currentFrom * pixelSize);
-                        breite = (int) (nextFrom * pixelSize) - obenLinks;
+                        topLeft = (int) (currentFrom * pixelSize);
+                        rectWidth = (int) (nextFrom * pixelSize) - topLeft;
                     }
 
                     graphics.setColor(getColorByType(partType));
-                    graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
+                    graphics.fillRect(topLeft, 0, rectWidth, rowHeight);
                 }
             }
         } else {
             if (!miniFile) {
-                obenLinks = (int) (currentFrom / pixelSize);
-                breite = (int) (nextFrom / pixelSize) - obenLinks;
+                topLeft = (int) (currentFrom / pixelSize);
+                rectWidth = (int) (nextFrom / pixelSize) - topLeft;
             } else {
-                obenLinks = (int) (currentFrom * pixelSize);
-                breite = (int) (nextFrom * pixelSize) - obenLinks;
+                topLeft = (int) (currentFrom * pixelSize);
+                rectWidth = (int) (nextFrom * pixelSize) - topLeft;
             }
 
             graphics.setColor(getColorByType(partType));
-            graphics.fillRect(obenLinks, 0, breite, zeilenHoehe);
+            graphics.fillRect(topLeft, 0, rectWidth, rowHeight);
         }
     }
 
@@ -392,44 +391,44 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
             try {
                 int rgb = image.getRGB((int) p.getX(), (int) p.getY());
 
-                if (rgb == PartList.COLOR_TYPE_UEBERPRUEFT.getRGB()) {
-                    setToolTipText(ueberprueft);
+                if (rgb == PartList.COLOR_TYPE_CHECKED.getRGB()) {
+                    setToolTipText(checked);
                 } else if (rgb == PartList.COLOR_TYPE_0.getRGB()) {
-                    setToolTipText(nichtVorhanden);
+                    setToolTipText(notPresent);
                 } else if (rgb == PartList.COLOR_TYPE_OK.getRGB()) {
-                    setToolTipText(vorhanden);
+                    setToolTipText(present);
                 } else if (rgb == PartList.COLOR_TYPE_1.getRGB()) {
-                    setToolTipText("1" + quellen);
+                    setToolTipText("1" + sourcesText);
                 } else if (rgb == PartList.COLOR_TYPE_2.getRGB()) {
-                    setToolTipText("2" + quellen);
+                    setToolTipText("2" + sourcesText);
                 } else if (rgb == PartList.COLOR_TYPE_3.getRGB()) {
-                    setToolTipText("3" + quellen);
+                    setToolTipText("3" + sourcesText);
                 } else if (rgb == PartList.COLOR_TYPE_4.getRGB()) {
-                    setToolTipText("4" + quellen);
+                    setToolTipText("4" + sourcesText);
                 } else if (rgb == PartList.COLOR_TYPE_5.getRGB()) {
-                    setToolTipText("5" + quellen);
+                    setToolTipText("5" + sourcesText);
                 } else if (rgb == PartList.COLOR_TYPE_6.getRGB()) {
-                    setToolTipText("6" + quellen);
+                    setToolTipText("6" + sourcesText);
                 } else if (rgb == PartList.COLOR_TYPE_7.getRGB()) {
-                    setToolTipText("7" + quellen);
+                    setToolTipText("7" + sourcesText);
                 } else if (rgb == PartList.COLOR_TYPE_8.getRGB()) {
-                    setToolTipText("8" + quellen);
+                    setToolTipText("8" + sourcesText);
                 } else if (rgb == PartList.COLOR_TYPE_9.getRGB()) {
-                    setToolTipText("9" + quellen);
+                    setToolTipText("9" + sourcesText);
                 } else if (rgb == PartList.COLOR_TYPE_10.getRGB()) {
-                    setToolTipText("10+" + quellen);
+                    setToolTipText("10+" + sourcesText);
                 } else if (rgb == PartList.COLOR_READY_10.getRGB()) {
-                    setToolTipText("0-10" + uebertragen);
+                    setToolTipText("0-10" + transferText);
                 } else if (rgb == PartList.COLOR_READY_30.getRGB()) {
-                    setToolTipText("10-30" + uebertragen);
+                    setToolTipText("10-30" + transferText);
                 } else if (rgb == PartList.COLOR_READY_50.getRGB()) {
-                    setToolTipText("30-50" + uebertragen);
+                    setToolTipText("30-50" + transferText);
                 } else if (rgb == PartList.COLOR_READY_70.getRGB()) {
-                    setToolTipText("50-70" + uebertragen);
+                    setToolTipText("50-70" + transferText);
                 } else if (rgb == PartList.COLOR_READY_90.getRGB()) {
-                    setToolTipText("70-90" + uebertragen);
+                    setToolTipText("70-90" + transferText);
                 } else if (rgb == PartList.COLOR_READY_100.getRGB()) {
-                    setToolTipText("90-100" + uebertragen);
+                    setToolTipText("90-100" + transferText);
                 } else {
                     setToolTipText(null);
                 }
@@ -445,13 +444,13 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-            vorhanden = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.Label4.caption"));
-            nichtVorhanden = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.Label3.caption"));
-            ueberprueft = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("mainform.Label1.caption"));
-            quellen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.quellen"));
-            uebertragen = ZeichenErsetzer.korrigiereUmlaute(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.uebertragen"));
+            present = CharacterReplacer.fixUmlauts(languageSelector.getFirstAttributeByTagName("mainform.Label4.caption"));
+            notPresent = CharacterReplacer.fixUmlauts(languageSelector.getFirstAttributeByTagName("mainform.Label3.caption"));
+            checked = CharacterReplacer.fixUmlauts(languageSelector.getFirstAttributeByTagName("mainform.Label1.caption"));
+            sourcesText = CharacterReplacer.fixUmlauts(languageSelector.getFirstAttributeByTagName("javagui.downloadform.sources"));
+            transferText = CharacterReplacer.fixUmlauts(languageSelector.getFirstAttributeByTagName("javagui.downloadform.transferred"));
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 }

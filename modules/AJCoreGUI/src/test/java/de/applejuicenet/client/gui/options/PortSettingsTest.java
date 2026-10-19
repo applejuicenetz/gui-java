@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.options;
 
-import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.facade.shared.AJSettings;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import org.junit.BeforeClass;

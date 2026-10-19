@@ -18,8 +18,8 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r [aj@tkl-soft.de]
@@ -65,7 +65,7 @@ public class IconManager {
                 icons.put(key, result);
             }
         } catch (Exception e) {
-            logger.info("Icon " + key + ".png nicht gefunden", e);
+            logger.info("Icon " + key + ".png not found", e);
         }
 
         return result;

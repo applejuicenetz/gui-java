@@ -9,8 +9,8 @@ import java.awt.*;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManagerImpl.java,v 1.5 2009/02/12 13:03:34 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -131,9 +131,9 @@ public class PositionManagerImpl implements PositionManager
       propertiesManager.setDownloadColumnIndex(column, index);
    }
 
-   public int[] getDownloadColumnIndizes()
+   public int[] getDownloadColumnIndices()
    {
-      return propertiesManager.getDownloadColumnIndizes();
+      return propertiesManager.getDownloadColumnIndices();
    }
 
    public void setUploadColumnIndex(int column, int index)
@@ -141,9 +141,9 @@ public class PositionManagerImpl implements PositionManager
       propertiesManager.setUploadColumnIndex(column, index);
    }
 
-   public int[] getUploadColumnIndizes()
+   public int[] getUploadColumnIndices()
    {
-      return propertiesManager.getUploadColumnIndizes();
+      return propertiesManager.getUploadColumnIndices();
    }
 
    public int[] getUploadWaitingWidths()
@@ -157,9 +157,9 @@ public class PositionManagerImpl implements PositionManager
 
    }
 
-   public int[] getUploadWaitingColumnIndizes()
+   public int[] getUploadWaitingColumnIndices()
    {
-      return propertiesManager.getUploadWaitingColumnIndizes();
+      return propertiesManager.getUploadWaitingColumnIndices();
    }
 
    public boolean[] getUploadWaitingColumnVisibilities()
@@ -177,9 +177,9 @@ public class PositionManagerImpl implements PositionManager
       propertiesManager.setUploadWaitingColumnVisible(column, visible);
    }
 
-   public int[] getDownloadSourcesColumnIndizes()
+   public int[] getDownloadSourcesColumnIndices()
    {
-      return propertiesManager.getDownloadSourcesColumnIndizes();
+      return propertiesManager.getDownloadSourcesColumnIndices();
    }
 
    public int[] getDownloadSourcesWidths()
@@ -236,9 +236,9 @@ public class PositionManagerImpl implements PositionManager
       return propertiesManager.getUploadSort();
    }
 
-   public void setDownlodSourcesSort(int column, boolean ascent)
+   public void setDownloadSourcesSort(int column, boolean ascent)
    {
-      propertiesManager.setDownlodSourcesSort(column, ascent);
+      propertiesManager.setDownloadSourcesSort(column, ascent);
 
    }
 

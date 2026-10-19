@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui.search;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
@@ -24,8 +24,8 @@ import java.awt.event.*;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchPanel.java,v 1.16 2009/02/12 09:11:24 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r [aj@tkl-soft.de]
@@ -35,10 +35,10 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
 {
    private SearchResultTabbedPane resultPanel        = new SearchResultTabbedPane();
    private JButton              btnStartStopSearch = new JButton();
-   private JTextField           suchbegriff        = new JTextField();
-   private JLabel               suchen             = new JLabel();
-   private JLabel               bearbeitung        = new JLabel();
-   private JMenuItem              einfuegen;
+   private JTextField           searchTerm        = new JTextField();
+   private JLabel               searchLabel             = new JLabel();
+   private JLabel               processing        = new JLabel();
+   private JMenuItem              paste;
    private JPopupMenu             menu;
    private final Logger logger;
 
@@ -52,7 +52,7 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
       }
       catch(Exception e)
       {
-         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+         logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
       }
    }
 
@@ -61,14 +61,14 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
       return btnStartStopSearch;
    }
 
-   public JTextField getSuchbegriffTxt()
+   public JTextField getSearchTermTxt()
    {
-      return suchbegriff;
+      return searchTerm;
    }
 
-   public JLabel getBearbeitungLbl()
+   public JLabel getProcessingLbl()
    {
-      return bearbeitung;
+      return processing;
    }
 
    public SearchResultTabbedPane getSearchResultTabbedPane()
@@ -76,9 +76,9 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
       return resultPanel;
    }
 
-   public JMenuItem getMnuEinfuegen()
+   public JMenuItem getMnuPaste()
    {
-      return einfuegen;
+      return paste;
    }
 
    private void init() throws Exception
@@ -97,15 +97,15 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
       constraints.gridy      = 0;
       constraints.gridwidth  = 1;
       constraints.gridheight = 1;
-      panel3.add(suchen, constraints);
+      panel3.add(searchLabel, constraints);
       constraints.gridx = 1;
-      panel3.add(suchbegriff, constraints);
+      panel3.add(searchTerm, constraints);
       constraints.gridy = 1;
       panel3.add(btnStartStopSearch, constraints);
       JPanel panel2 = new JPanel();
 
       panel2.setLayout(new FlowLayout());
-      panel2.add(bearbeitung);
+      panel2.add(processing);
       constraints.gridx     = 0;
       constraints.gridy     = 2;
       constraints.gridwidth = 2;
@@ -116,7 +116,7 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
 
       add(resultPanel, BorderLayout.CENTER);
 
-      suchbegriff.addKeyListener(new KeyAdapter()
+      searchTerm.addKeyListener(new KeyAdapter()
          {
             public void keyPressed(KeyEvent ke)
             {
@@ -129,17 +129,17 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
       menu = new JPopupMenu();
       IconManager im = IconManager.getInstance();
 
-      einfuegen = new JMenuItem();
-      einfuegen.setIcon(im.getIcon("clipboard"));
-      einfuegen.addActionListener(new ActionListener()
+      paste = new JMenuItem();
+      paste.setIcon(im.getIcon("clipboard"));
+      paste.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent e)
             {
                linkMenuActionPerformed(e);
             }
          });
-      menu.add(einfuegen);
-      suchbegriff.addMouseListener(new MouseAdapter()
+      menu.add(paste);
+      searchTerm.addMouseListener(new MouseAdapter()
          {
             public void mouseClicked(MouseEvent e)
             {
@@ -153,7 +153,7 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
 
    private void showLinkMenu(int x, int y)
    {
-      menu.show(suchbegriff, x, y);
+      menu.show(searchTerm, x, y);
    }
 
    private void linkMenuActionPerformed(ActionEvent e)
@@ -168,11 +168,11 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
          try
          {
             data = (String) transferable.getTransferData(DataFlavor.stringFlavor);
-            suchbegriff.setText(data);
+            searchTerm.setText(data);
          }
          catch(Exception ex)
          {
-            suchbegriff.setText("Error");
+            searchTerm.setText("Error");
          }
       }
    }
@@ -183,38 +183,38 @@ public class SearchPanel extends TklPanel implements LanguageListener, RegisterI
       {
          LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-         suchen.setText(languageSelector.getFirstAttrbuteByTagName("mainform.searchlbl.caption") + ": ");
-         btnStartStopSearch.setText(languageSelector.getFirstAttrbuteByTagName("mainform.searchbtn.searchcaption"));
+         searchLabel.setText(languageSelector.getFirstAttributeByTagName("mainform.searchlbl.caption") + ": ");
+         btnStartStopSearch.setText(languageSelector.getFirstAttributeByTagName("mainform.searchbtn.searchcaption"));
 
-         String[] resultTexte = new String[10];
+         String[] resultTexts = new String[10];
 
-         resultTexte[0] = languageSelector.getFirstAttrbuteByTagName("javagui.searchform.offenesuchen");
-         resultTexte[1] = languageSelector.getFirstAttrbuteByTagName("javagui.searchform.gefundenedateien");
-         resultTexte[2] = languageSelector.getFirstAttrbuteByTagName("javagui.searchform.durchsuchteclients");
-         resultTexte[3] = languageSelector.getFirstAttrbuteByTagName("mainform.Getlink3.caption");
-         resultTexte[4] = languageSelector.getFirstAttrbuteByTagName("mainform.cancelsearch.caption");
-         resultTexte[5] = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.bereitsgeladen");
-         resultTexte[6] = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.falscherlink");
-         resultTexte[7] = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.sonstigerlinkfehlerlang");
-         resultTexte[8] = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
-         resultTexte[9] = languageSelector.getFirstAttrbuteByTagName("releaseinfo.menu");
+         resultTexts[0] = languageSelector.getFirstAttributeByTagName("javagui.searchform.opensearches");
+         resultTexts[1] = languageSelector.getFirstAttributeByTagName("javagui.searchform.foundfiles");
+         resultTexts[2] = languageSelector.getFirstAttributeByTagName("javagui.searchform.searchedclients");
+         resultTexts[3] = languageSelector.getFirstAttributeByTagName("mainform.Getlink3.caption");
+         resultTexts[4] = languageSelector.getFirstAttributeByTagName("mainform.cancelsearch.caption");
+         resultTexts[5] = languageSelector.getFirstAttributeByTagName("javagui.downloadform.alreadyloaded");
+         resultTexts[6] = languageSelector.getFirstAttributeByTagName("javagui.downloadform.invalidlink");
+         resultTexts[7] = languageSelector.getFirstAttributeByTagName("javagui.downloadform.otherlinkerrorlong");
+         resultTexts[8] = languageSelector.getFirstAttributeByTagName("mainform.caption");
+         resultTexts[9] = languageSelector.getFirstAttributeByTagName("releaseinfo.menu");
 
          String[] columns = new String[3];
 
-         columns[0] = languageSelector.getFirstAttrbuteByTagName("mainform.searchs.col0caption");
-         columns[1] = languageSelector.getFirstAttrbuteByTagName("mainform.searchs.col1caption");
-         columns[2] = languageSelector.getFirstAttrbuteByTagName("mainform.searchs.col2caption");
+         columns[0] = languageSelector.getFirstAttributeByTagName("mainform.searchs.col0caption");
+         columns[1] = languageSelector.getFirstAttributeByTagName("mainform.searchs.col1caption");
+         columns[2] = languageSelector.getFirstAttributeByTagName("mainform.searchs.col2caption");
 
-         SearchResultPanel.setTexte(resultTexte, columns);
+         SearchResultPanel.setTexts(resultTexts, columns);
 
          for(int i = 0; i < resultPanel.getComponentCount(); i++)
          {
-            ((SearchResultPanel) resultPanel.getComponentAt(i)).aendereSprache();
+            ((SearchResultPanel) resultPanel.getComponentAt(i)).changeLanguage();
          }
       }
       catch(Exception e)
       {
-         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+         logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
       }
    }
 }

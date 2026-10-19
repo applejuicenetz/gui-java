@@ -37,10 +37,10 @@ public class LogEntryTableTest {
                     entry(3, LogParser.Level.ERROR, "kaputt", "java.io.IOException: x")));
             assertTrue(table.detailText().contains("java.io.IOException: x"));
             assertTrue(table.detailText().contains("kaputt"));
-            table.setEntries(List.of(entry(1, LogParser.Level.INFO, "nur info", "")));
+            table.setEntries(List.of(entry(1, LogParser.Level.INFO, "info only", "")));
             assertEquals("", table.detailText());
             table.selectRow(0);
-            assertTrue(table.detailText().contains("nur info"));
+            assertTrue(table.detailText().contains("info only"));
             table.setEntries(List.of());
             assertEquals("", table.detailText());
         });

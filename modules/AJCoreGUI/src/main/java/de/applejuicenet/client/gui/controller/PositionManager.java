@@ -9,8 +9,8 @@ import java.awt.*;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/PositionManager.java,v 1.12 2009/02/12 13:03:34 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General  License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -62,7 +62,7 @@ public interface PositionManager
 
    int[] getDownloadSort();
 
-   void setDownlodSourcesSort(int column, boolean ascent);
+   void setDownloadSourcesSort(int column, boolean ascent);
 
    int[] getDownloadSourcesSort();
    
@@ -98,15 +98,15 @@ public interface PositionManager
 
    void setDownloadSourcesColumnIndex(int column, int index);
 
-   int[] getDownloadColumnIndizes();
+   int[] getDownloadColumnIndices();
 
-   int[] getDownloadSourcesColumnIndizes();
+   int[] getDownloadSourcesColumnIndices();
 
    void setUploadColumnIndex(int column, int index);
 
-   int[] getUploadColumnIndizes();
+   int[] getUploadColumnIndices();
 
    void setUploadWaitingColumnIndex(int column, int index);
 
-   int[] getUploadWaitingColumnIndizes();
+   int[] getUploadWaitingColumnIndices();
 }

@@ -4,9 +4,9 @@
 
 package de.applejuicenet.client.gui.download.table;
 
-import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.fassade.entity.DownloadSource;
-import de.applejuicenet.client.fassade.entity.Version;
+import de.applejuicenet.client.facade.entity.Download;
+import de.applejuicenet.client.facade.entity.DownloadSource;
+import de.applejuicenet.client.facade.entity.Version;
 import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -30,22 +30,22 @@ public class DownloadSourcesTableModel extends AbstractTableModel implements Lan
                                                                            };
 
    //Source-Stati
-   public static String                ungefragt                    = "";
-   public static String                versucheZuVerbinden          = "";
-   public static String                ggstZuAlteVersion            = "";
-   public static String                kannDateiNichtOeffnen        = "";
-   public static String                warteschlange                = "";
-   public static String                keineBrauchbarenParts        = "";
-   public static String                uebertragung                 = "";
-   public static String                nichtGenugPlatz              = "";
-   public static String                fertiggestellt               = "";
-   public static String                keineVerbindungMoeglich      = "";
-   public static String                pausiert                     = "";
+   public static String                unasked                    = "";
+   public static String                tryingToConnect          = "";
+   public static String                peerHasOldVersion            = "";
+   public static String                cannotOpenFile        = "";
+   public static String                queue                = "";
+   public static String                noUsableParts        = "";
+   public static String                transferText                 = "";
+   public static String                notEnoughSpace              = "";
+   public static String                completed               = "";
+   public static String                noConnectionPossible      = "";
+   public static String                paused                     = "";
    public static String                position                     = "";
-   public static String                versucheIndirekt             = "";
-   public static String                warteschlangeVoll            = "";
-   public static String                eigenesLimitErreicht         = "";
-   public static String                indirekteVerbindungAbgelehnt = "";
+   public static String                tryingIndirect             = "";
+   public static String                queueFull            = "";
+   public static String                ownLimitReached         = "";
+   public static String                indirectConnectionRejected = "";
    private TableSorter<DownloadSource> sorter;
    private List<DownloadSource>        sources                      = new ArrayList<DownloadSource>();
    private Download                    curDownload                  = null;
@@ -97,19 +97,19 @@ public class DownloadSourcesTableModel extends AbstractTableModel implements Lan
             return source.getSize();
 
          case 4:
-            return source.getBereitsGeladen();
+            return source.getAlreadyLoaded();
 
          case 5:
             return source.getSpeed();
 
          case 6:
-            return source.getRestZeitAsString();
+            return source.getRemainingTimeAsString();
 
          case 7:
             return source.getReadyPercent();
 
          case 8:
-            return source.getNochZuLaden();
+            return source.getRemainingToLoad();
 
          case 9:
             return source.getPowerDownload();
@@ -191,50 +191,50 @@ public class DownloadSourcesTableModel extends AbstractTableModel implements Lan
       switch(downloadSource.getStatus())
       {
 
-         case DownloadSource.UNGEFRAGT:
-            return ungefragt;
+         case DownloadSource.UNASKED:
+            return unasked;
 
-         case DownloadSource.VERSUCHE_ZU_VERBINDEN:
-            return versucheZuVerbinden;
+         case DownloadSource.TRYING_TO_CONNECT:
+            return tryingToConnect;
 
-         case DownloadSource.GEGENSTELLE_HAT_ZU_ALTE_VERSION:
-            return ggstZuAlteVersion;
+         case DownloadSource.PEER_HAS_OLD_VERSION:
+            return peerHasOldVersion;
 
-         case DownloadSource.GEGENSTELLE_KANN_DATEI_NICHT_OEFFNEN:
-            return kannDateiNichtOeffnen;
+         case DownloadSource.PEER_CANNOT_OPEN_FILE:
+            return cannotOpenFile;
 
-         case DownloadSource.IN_WARTESCHLANGE:
+         case DownloadSource.IN_QUEUE:
             return position.replaceFirst("%d", Integer.toString(downloadSource.getQueuePosition()));
 
-         case DownloadSource.KEINE_BRAUCHBAREN_PARTS:
-            return keineBrauchbarenParts;
+         case DownloadSource.NO_USABLE_PARTS:
+            return noUsableParts;
 
-         case DownloadSource.UEBERTRAGUNG:
-            return uebertragung;
+         case DownloadSource.TRANSFER:
+            return transferText;
 
-         case DownloadSource.NICHT_GENUEGEND_PLATZ_AUF_DER_PLATTE:
-            return nichtGenugPlatz;
+         case DownloadSource.NOT_ENOUGH_SPACE_ON_DISK:
+            return notEnoughSpace;
 
-         case DownloadSource.FERTIGGESTELLT:
-            return fertiggestellt;
+         case DownloadSource.COMPLETED:
+            return completed;
 
-         case DownloadSource.KEINE_VERBINDUNG_MOEGLICH:
-            return keineVerbindungMoeglich;
+         case DownloadSource.NO_CONNECTION_POSSIBLE:
+            return noConnectionPossible;
 
-         case DownloadSource.PAUSIERT:
-            return pausiert;
+         case DownloadSource.PAUSED:
+            return paused;
 
-         case DownloadSource.VERSUCHE_INDIREKT:
-            return versucheIndirekt;
+         case DownloadSource.TRYING_INDIRECT:
+            return tryingIndirect;
 
-         case DownloadSource.WARTESCHLANGE_VOLL:
-            return warteschlangeVoll;
+         case DownloadSource.QUEUE_FULL:
+            return queueFull;
 
-         case DownloadSource.EIGENES_LIMIT_ERREICHT:
-            return eigenesLimitErreicht;
+         case DownloadSource.OWN_LIMIT_REACHED:
+            return ownLimitReached;
 
-         case DownloadSource.INDIREKTE_VERBINDUNG_ABGELEHNT:
-            return indirekteVerbindungAbgelehnt;
+         case DownloadSource.INDIRECT_CONNECTION_REJECTED:
+            return indirectConnectionRejected;
 
          default:
             return "";
@@ -245,22 +245,22 @@ public class DownloadSourcesTableModel extends AbstractTableModel implements Lan
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      ungefragt                    = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat1");
-      versucheZuVerbinden          = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat2");
-      ggstZuAlteVersion            = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat3");
-      kannDateiNichtOeffnen        = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat4");
-      warteschlange                = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat5");
-      keineBrauchbarenParts        = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat6");
-      uebertragung                 = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat7");
-      nichtGenugPlatz              = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat8");
-      fertiggestellt               = languageSelector.getFirstAttrbuteByTagName("mainform.queue.queuestat14");
-      keineVerbindungMoeglich      = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.verbindungunmoeglich");
-      pausiert                     = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat13");
-      position                     = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat51");
-      versucheIndirekt             = languageSelector.getFirstAttrbuteByTagName("mainform.queue.userstat10");
-      eigenesLimitErreicht         = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.eigeneslimiterreicht");
-      indirekteVerbindungAbgelehnt = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.indverbindungabgelehnt");
-      warteschlangeVoll            = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.warteschlangevoll");
+      unasked                    = languageSelector.getFirstAttributeByTagName("mainform.queue.userstat1");
+      tryingToConnect          = languageSelector.getFirstAttributeByTagName("mainform.queue.userstat2");
+      peerHasOldVersion            = languageSelector.getFirstAttributeByTagName("mainform.queue.userstat3");
+      cannotOpenFile        = languageSelector.getFirstAttributeByTagName("mainform.queue.userstat4");
+      queue                = languageSelector.getFirstAttributeByTagName("mainform.queue.userstat5");
+      noUsableParts        = languageSelector.getFirstAttributeByTagName("mainform.queue.userstat6");
+      transferText                 = languageSelector.getFirstAttributeByTagName("mainform.queue.userstat7");
+      notEnoughSpace              = languageSelector.getFirstAttributeByTagName("mainform.queue.userstat8");
+      completed               = languageSelector.getFirstAttributeByTagName("mainform.queue.queuestat14");
+      noConnectionPossible      = languageSelector.getFirstAttributeByTagName("javagui.downloadform.connectionimpossible");
+      paused                     = languageSelector.getFirstAttributeByTagName("mainform.queue.userstat13");
+      position                     = languageSelector.getFirstAttributeByTagName("mainform.queue.userstat51");
+      tryingIndirect             = languageSelector.getFirstAttributeByTagName("mainform.queue.userstat10");
+      ownLimitReached         = languageSelector.getFirstAttributeByTagName("javagui.downloadform.ownlimitreached");
+      indirectConnectionRejected = languageSelector.getFirstAttributeByTagName("javagui.downloadform.indirectconnectionrejected");
+      queueFull            = languageSelector.getFirstAttributeByTagName("javagui.downloadform.queuefull");
    }
 
    public void forceResort()

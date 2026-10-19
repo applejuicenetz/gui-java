@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.share;
 
-import de.applejuicenet.client.fassade.entity.Share;
+import de.applejuicenet.client.facade.entity.Share;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -41,13 +41,13 @@ public class ShareListFormatTest {
                 java.nio.file.Paths.get("../../resources/language/deutsch.properties")
                         .toAbsolutePath().normalize().toString());
         javax.swing.SwingUtilities.invokeAndWait(() -> {
-            DateiListeDialog dialog = new DateiListeDialog(null, false);
+            FileListDialog dialog = new FileListDialog(null, false);
             try {
-                java.lang.reflect.Field field = DateiListeDialog.class.getDeclaredField("table");
+                java.lang.reflect.Field field = FileListDialog.class.getDeclaredField("table");
                 field.setAccessible(true);
                 javax.swing.JTable table = (javax.swing.JTable) field.get(dialog);
-                ((de.applejuicenet.client.gui.share.table.DateiListeTableModel) table.getModel()).setDescending(true);
-                DateiListeDialog.SpeichernMouseAdapter adapter = dialog.new SpeichernMouseAdapter();
+                ((de.applejuicenet.client.gui.share.table.FileListTableModel) table.getModel()).setDescending(true);
+                FileListDialog.SaveMouseAdapter adapter = dialog.new SaveMouseAdapter();
                 java.lang.reflect.Method method = adapter.getClass().getDeclaredMethod("sortShares", Share[].class);
                 method.setAccessible(true);
                 Share[] sorted = (Share[]) method.invoke(adapter,
@@ -69,7 +69,7 @@ public class ShareListFormatTest {
             public String getShortfilename() { return name; }
             public long getSize() { return size; }
             public String getCheckSum() { return hash; }
-            public int getPrioritaet() { return 1; }
+            public int getPriority() { return 1; }
             public long getAskCount() { return 0; }
             public long getLastAsked() { return 0; }
             public long getSearchCount() { return 0; }

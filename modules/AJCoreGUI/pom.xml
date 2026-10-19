@@ -48,7 +48,7 @@
         </dependency>
         <dependency>
             <groupId>de.applejuicenet.client.gui</groupId>
-            <artifactId>ajcorefassade</artifactId>
+            <artifactId>ajcorefacade</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>

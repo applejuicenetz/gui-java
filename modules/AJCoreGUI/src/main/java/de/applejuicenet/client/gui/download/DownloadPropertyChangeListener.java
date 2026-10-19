@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.download;
 
-import de.applejuicenet.client.fassade.event.DataPropertyChangeEvent;
-import de.applejuicenet.client.fassade.listener.DataPropertyChangeListener;
+import de.applejuicenet.client.facade.event.DataPropertyChangeEvent;
+import de.applejuicenet.client.facade.listener.DataPropertyChangeListener;
 import de.applejuicenet.client.gui.components.GuiController;
 
 public class DownloadPropertyChangeListener implements DataPropertyChangeListener{

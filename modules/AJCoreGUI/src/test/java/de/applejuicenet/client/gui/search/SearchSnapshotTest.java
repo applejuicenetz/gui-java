@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.search;
 
-import de.applejuicenet.client.fassade.entity.Search;
+import de.applejuicenet.client.facade.entity.Search;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import org.junit.Test;
 
@@ -13,11 +13,11 @@ import static org.junit.Assert.*;
 
 public class SearchSnapshotTest {
     private Search search(String text) throws Exception {
-        Class<?> type = Class.forName("de.applejuicenet.client.fassade.controller.xml.SearchDO");
+        Class<?> type = Class.forName("de.applejuicenet.client.facade.controller.xml.SearchDO");
         Constructor<?> constructor = type.getDeclaredConstructor(int.class);
         constructor.setAccessible(true);
         Search search = (Search) constructor.newInstance(1);
-        Method setter = type.getDeclaredMethod("setSuchText", String.class);
+        Method setter = type.getDeclaredMethod("setSearchText", String.class);
         setter.setAccessible(true);
         setter.invoke(search, text);
         return search;

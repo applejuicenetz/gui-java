@@ -20,11 +20,11 @@ public class SizeTableCellRenderer extends DefaultTableCellRenderer
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
                                                   int column)
    {
-      return super.getTableCellRendererComponent(table, parseGroesse(((Number) value).longValue()), isSelected, hasFocus, row, column);
+      return super.getTableCellRendererComponent(table, parseSize(((Number) value).longValue()), isSelected, hasFocus, row, column);
    }
 
-   public String parseGroesse(long groesse)
+   public String parseSize(long size)
    {
-      return de.applejuicenet.client.gui.download.table.DownloadsTableModel.parseGroesse(groesse);
+      return de.applejuicenet.client.gui.download.table.DownloadsTableModel.parseSize(size);
    }
 }

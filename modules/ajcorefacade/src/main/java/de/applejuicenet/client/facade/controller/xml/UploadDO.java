@@ -1,0 +1,240 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+package de.applejuicenet.client.facade.controller.xml;
+
+import de.applejuicenet.client.facade.entity.Upload;
+
+/**
+ * $Header:
+ * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/UploadDO.java,v
+ * 1.1 2004/12/03 07:57:12 maj0r Exp $
+ *
+ * <p>
+ * Title: AppleJuice Client-GUI
+ * </p>
+ * <p>
+ * Description: Official GUI for the appleJuice core developed by muhviehstarr
+ * </p>
+ * <p>
+ * Copyright: General Public License
+ * </p>
+ *
+ * @author Maj0r <aj@tkl-soft.de>
+ *
+ */
+class UploadDO extends Upload implements Cloneable
+{
+   UploadDO snapshot()
+   {
+      try
+      {
+         UploadDO copy = (UploadDO) super.clone();
+         copy.version = version == null ? null : version.snapshot();
+         return copy;
+      }
+      catch(CloneNotSupportedException ex)
+      {
+         throw new AssertionError(ex);
+      }
+   }
+
+   private final int uploadID;
+   private String    fileName;
+   private int       shareFileID;
+   private VersionDO version                    = null;
+   private int       status;
+   private String    nick;
+   private long      uploadFrom;
+   private long      uploadTo;
+   private long      actualUploadPosition;
+   private int       speed;
+   private int       priority;
+   private int       directstate;
+   private long      lastConnection;
+   private boolean   progressChanged            = false;
+   private boolean   wholeLoadedProgressChanged = false;
+   private boolean   versionChanged             = false;
+   private double    loaded;
+
+   public UploadDO(int uploadID)
+   {
+      this.uploadID                             = uploadID;
+   }
+
+   public UploadDO(int uploadID, int shareFileID, VersionDO version, String status, String nick, long uploadFrom, long uploadTo,
+                   long actualUploadPosition, int speed, int priority, int directstate, long lastConnection, double loaded)
+   {
+      this.uploadID             = uploadID;
+      this.shareFileID          = shareFileID;
+      this.version              = version;
+      this.status               = Integer.parseInt(status);
+      this.nick                 = nick;
+      this.uploadFrom           = uploadFrom;
+      this.uploadTo             = uploadTo;
+      this.actualUploadPosition = actualUploadPosition;
+      this.speed                = speed;
+      this.priority           = priority;
+      this.directstate          = directstate;
+      this.lastConnection       = lastConnection;
+      this.setLoaded(loaded);
+      progressChanged = true;
+      versionChanged  = true;
+   }
+
+   public int getId()
+   {
+      return uploadID;
+   }
+
+   public int getShareFileID()
+   {
+      return shareFileID;
+   }
+
+   public void setShareFileID(int shareFileID)
+   {
+      this.shareFileID = shareFileID;
+   }
+
+   public VersionDO getVersion()
+   {
+      return version;
+   }
+
+   public void setVersion(VersionDO version)
+   {
+      this.version   = version;
+      versionChanged = true;
+   }
+
+   public int getStatus()
+   {
+      return status;
+   }
+
+   public int getDirectState()
+   {
+      return directstate;
+   }
+
+   public void setDirectState(int directstate)
+   {
+      this.directstate = directstate;
+   }
+
+   public void setStatus(int status)
+   {
+      this.status = status;
+   }
+
+   public String getNick()
+   {
+      return nick;
+   }
+
+   public void setNick(String nick)
+   {
+      this.nick = nick;
+   }
+
+   public long getUploadFrom()
+   {
+      return uploadFrom;
+   }
+
+   public void setUploadFrom(long uploadFrom)
+   {
+      this.uploadFrom = uploadFrom;
+      progressChanged = true;
+   }
+
+   public long getUploadTo()
+   {
+      return uploadTo;
+   }
+
+   public void setUploadTo(long uploadTo)
+   {
+      this.uploadTo   = uploadTo;
+      progressChanged = true;
+   }
+
+   public long getActualUploadPosition()
+   {
+      return actualUploadPosition;
+   }
+
+   public void setActualUploadPosition(long actualUploadPosition)
+   {
+      this.actualUploadPosition = actualUploadPosition;
+      progressChanged           = true;
+   }
+
+   public int getSpeed()
+   {
+      return speed;
+   }
+
+   public void setPriority(int priority)
+   {
+      this.priority = priority;
+   }
+
+   public int getPriority()
+   {
+      return priority;
+   }
+
+   public void setSpeed(int speed)
+   {
+      this.speed = speed;
+   }
+
+   public String getFileName()
+   {
+      return fileName;
+   }
+
+   public long getLastConnection()
+   {
+      return lastConnection;
+   }
+
+   public double getLoaded()
+   {
+      return loaded < 0 ? 0 : loaded;
+   }
+
+   public void setFileName(String fileName)
+   {
+      this.fileName = fileName;
+   }
+
+   public void setLastConnection(long lastConnection)
+   {
+      this.lastConnection = lastConnection;
+   }
+
+   public void setLoaded(double newValue)
+   {
+      if(newValue == -1)
+      {
+         if(newValue != loaded)
+         {
+            wholeLoadedProgressChanged = true;
+            loaded                     = -1;
+         }
+      }
+      else
+      {
+         double tmp = newValue * 100;
+
+         if(tmp != loaded)
+         {
+            wholeLoadedProgressChanged = true;
+            loaded                     = tmp;
+         }
+      }
+   }
+}

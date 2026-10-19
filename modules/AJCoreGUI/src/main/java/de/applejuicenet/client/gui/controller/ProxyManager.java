@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.controller;
 
-import de.applejuicenet.client.fassade.shared.ProxySettings;
+import de.applejuicenet.client.facade.shared.ProxySettings;
 
 public interface ProxyManager {
     public ProxySettings getProxySettings();

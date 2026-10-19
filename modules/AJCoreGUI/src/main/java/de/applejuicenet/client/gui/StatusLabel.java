@@ -6,8 +6,8 @@ import java.awt.FontMetrics;
 import java.awt.Insets;
 
 /**
- * Statusleisten-Feld: waechst nur, schrumpft nie und hat eine Mindestbreite in Ziffernbreiten,
- * damit wechselnde Werte die Nachbarfelder nicht verschieben.
+ * Status bar field: only grows, never shrinks and has a minimum width in digit widths so changing
+ * values do not shift the neighbouring fields.
  */
 class StatusLabel extends JLabel {
     private final int minChars;

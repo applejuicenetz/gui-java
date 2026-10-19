@@ -13,7 +13,7 @@ public class ajfspURIHandler implements OpenURIHandler {
     public void openURI(OpenURIEvent e) {
         String ajfsp = e.getURI().toString();
         Logger logger = LoggerFactory.getLogger(getClass());
-        logger.debug("ajfsp Link gefunden: " + ajfsp);
+        logger.debug("ajfsp link found: " + ajfsp);
 
         AppleJuiceClient.linkListener.processLink(ajfsp, "");
     }

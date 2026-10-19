@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.share.table;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Share;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Share;
 import org.junit.Test;
 import de.applejuicenet.client.gui.components.treetable.DefaultTreeTableCellRenderer;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
@@ -56,7 +56,7 @@ public class ShareTableRefreshTest {
             public String getShortfilename() { return name.substring(name.lastIndexOf('/') + 1); }
             public long getSize() { return 1024; }
             public String getCheckSum() { return "hash"; }
-            public int getPrioritaet() { return 1; }
+            public int getPriority() { return 1; }
             public long getAskCount() { return 0; }
             public long getLastAsked() { return 0; }
             public long getSearchCount() { return 0; }
@@ -66,8 +66,8 @@ public class ShareTableRefreshTest {
 
     @Test
     public void refreshRebuildsTreeAndNotifiesSwingOnEventThread() throws Exception {
-        String oldSeparator = ApplejuiceFassade.separator;
-        ApplejuiceFassade.separator = "/";
+        String oldSeparator = ApplejuiceFacade.separator;
+        ApplejuiceFacade.separator = "/";
         try {
             SwingUtilities.invokeAndWait(() -> {
                 ShareTableModel model = new ShareTableModel(new ShareNode(null, null));
@@ -94,14 +94,14 @@ public class ShareTableRefreshTest {
                 assertEquals(3, changes.get());
             });
         } finally {
-            ApplejuiceFassade.separator = oldSeparator;
+            ApplejuiceFacade.separator = oldSeparator;
         }
     }
 
     @Test
     public void addingDirectoryInvalidatesSortedChildren() {
-        String oldSeparator = ApplejuiceFassade.separator;
-        ApplejuiceFassade.separator = "/";
+        String oldSeparator = ApplejuiceFacade.separator;
+        ApplejuiceFacade.separator = "/";
         try {
             ShareNode root = new ShareNode(null, null);
             root.addChild(share(1, "/first/file.bin"));
@@ -109,7 +109,7 @@ public class ShareTableRefreshTest {
             root.addChild(share(2, "/second/file.bin"));
             assertEquals(2, root.getChildren().length);
         } finally {
-            ApplejuiceFassade.separator = oldSeparator;
+            ApplejuiceFacade.separator = oldSeparator;
         }
     }
 
@@ -143,8 +143,8 @@ public class ShareTableRefreshTest {
 
     @Test
     public void refreshPreservesMultipleSelectedPathsAndScrollPosition() throws Exception {
-        String oldSeparator = ApplejuiceFassade.separator;
-        ApplejuiceFassade.separator = "/";
+        String oldSeparator = ApplejuiceFacade.separator;
+        ApplejuiceFacade.separator = "/";
         AtomicReference<JTreeTable> tableReference = new AtomicReference<>();
         AtomicReference<JScrollPane> scrollReference = new AtomicReference<>();
         try {
@@ -178,13 +178,13 @@ public class ShareTableRefreshTest {
                 assertEquals(new Point(0, 200), scrollReference.get().getViewport().getViewPosition());
             });
         } finally {
-            ApplejuiceFassade.separator = oldSeparator;
+            ApplejuiceFacade.separator = oldSeparator;
         }
     }
 
     private void verifyTreeState(Collection<Share> refreshedShares, String[] expectedSelection) throws Exception {
-        String oldSeparator = ApplejuiceFassade.separator;
-        ApplejuiceFassade.separator = "/";
+        String oldSeparator = ApplejuiceFacade.separator;
+        ApplejuiceFacade.separator = "/";
         AtomicReference<JTreeTable> tableReference = new AtomicReference<>();
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -219,7 +219,7 @@ public class ShareTableRefreshTest {
                 }
             });
         } finally {
-            ApplejuiceFassade.separator = oldSeparator;
+            ApplejuiceFacade.separator = oldSeparator;
         }
     }
 

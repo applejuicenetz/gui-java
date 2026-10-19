@@ -9,9 +9,8 @@ import java.awt.event.FocusEvent;
 import java.util.Locale;
 
 /**
- * Eingabefeld fuer Geschwindigkeiten. Der Core arbeitet in kb/s; angezeigt
- * werden kann wahlweise kb/s oder MB/s (1 MB = 1024 kb). Die gewaehlte
- * Einheit wird je Feld gespeichert.
+ * Input field for speeds. The core works in kb/s; either kb/s or MB/s can be displayed (1 MB = 1024
+ * kb). The chosen unit is stored per field.
  */
 public class SpeedInputField extends JPanel {
     private static final String[] UNITS = {"kb/s", "MB/s"};
@@ -48,7 +47,7 @@ public class SpeedInputField extends JPanel {
         text.setText(shown);
     }
 
-    /** Wert in kb/s; bei ungueltiger Eingabe der zuletzt gueltige Wert. */
+    /** Value in kb/s; on invalid input the last valid value. */
     public long getKb() {
         String current = text.getText();
         if (current.equals(shown)) {

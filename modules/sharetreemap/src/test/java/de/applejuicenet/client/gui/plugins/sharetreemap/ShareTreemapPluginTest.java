@@ -1,8 +1,8 @@
 package de.applejuicenet.client.gui.plugins.sharetreemap;
 
 import de.applejuicenet.client.gui.plugins.PluginConnector;
-import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE;
-import de.applejuicenet.client.fassade.entity.Share;
+import de.applejuicenet.client.facade.listener.DataUpdateListener.DATALISTENER_TYPE;
+import de.applejuicenet.client.facade.entity.Share;
 import org.junit.Test;
 import javax.swing.*;
 import java.lang.reflect.Proxy;

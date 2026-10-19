@@ -32,7 +32,7 @@ public class AboutDialogTest {
             try (DialogFixture fixture = new DialogFixture("modern")) {
                 @SuppressWarnings("unchecked")
                 List<AboutDialog.CreditsEntry> entries = (List<AboutDialog.CreditsEntry>) field(fixture.panel, "credits");
-                List<String> names = entries.stream().map(AboutDialog.CreditsEntry::getAusgabetext)
+                List<String> names = entries.stream().map(AboutDialog.CreditsEntry::getOutputText)
                         .collect(Collectors.toList());
                 assertTrue(names.contains("Maj0r"));
                 assertTrue(names.contains("loevenwong"));

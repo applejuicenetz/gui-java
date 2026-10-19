@@ -5,9 +5,9 @@
 package de.applejuicenet.client.gui.upload;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Share;
-import de.applejuicenet.client.fassade.entity.Upload;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Share;
+import de.applejuicenet.client.facade.entity.Upload;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
 import de.applejuicenet.client.gui.components.table.HeaderListener;
@@ -43,9 +43,9 @@ public class UploadController extends GuiController {
     private final UploadPanel uploadPanel;
     private boolean componentSelected = false;
     private boolean initialized = false;
-    private int anzahlClients = 0;
+    private int clientCount = 0;
     private String clientText;
-    private String warteschlangeVoll = "";
+    private String queueFull = "";
 
     private UploadController() {
         super();
@@ -53,9 +53,9 @@ public class UploadController extends GuiController {
         try {
             init();
             LanguageSelector.getInstance().addLanguageListener(this);
-            AppleJuiceClient.getAjFassade().addDataUpdateListener(this, DATALISTENER_TYPE.UPLOAD_CHANGED);
+            AppleJuiceClient.getAjFacade().addDataUpdateListener(this, DATALISTENER_TYPE.UPLOAD_CHANGED);
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -150,7 +150,7 @@ public class UploadController extends GuiController {
         Upload upload = uploadPanel.getUploadActiveTableModel().getRow(selected);
 
         Integer shareFileId = upload.getShareFileID();
-        Map<Integer, Share> share = AppleJuiceClient.getAjFassade().getShare(false);
+        Map<Integer, Share> share = AppleJuiceClient.getAjFacade().getShare(false);
 
         if (share.containsKey(shareFileId)) {
             return share.get(shareFileId);
@@ -281,7 +281,7 @@ public class UploadController extends GuiController {
     public void componentSelected() {
         try {
             componentSelected = true;
-            AppleJuiceClient.getAjFassade().setUploadPolling(true);
+            AppleJuiceClient.getAjFacade().setUploadPolling(true);
             if (!initialized) {
                 initialized = true;
                 TableColumnModel headerModelActive = uploadPanel.getUploadActiveTable().getTableHeader().getColumnModel();
@@ -296,15 +296,15 @@ public class UploadController extends GuiController {
                 int[] uploadWaitingSort = null;
 
                 if (pm.isLegal()) {
-                    boolean[] uploadActiveVisibilies = pm.getUploadColumnVisibilities();
-                    int[] indizesActive = pm.getUploadColumnIndizes();
+                    boolean[] uploadActiveVisibilities = pm.getUploadColumnVisibilities();
+                    int[] indicesActive = pm.getUploadColumnIndices();
 
                     uploadActiveSort = pm.getUploadSort();
                     ArrayList<TableColumn> visibleColumnsActive = new ArrayList<TableColumn>();
 
                     for (int i = 0; i < columnsActive.length; i++) {
                         uploadPanel.getUploadActiveTable().removeColumn(columnsActive[i]);
-                        if (uploadActiveVisibilies[i]) {
+                        if (uploadActiveVisibilities[i]) {
                             visibleColumnsActive.add(columnsActive[i]);
                         }
                     }
@@ -313,7 +313,7 @@ public class UploadController extends GuiController {
 
                     for (int i = 0; i < visibleColumnsActive.size(); i++) {
                         for (int x = 0; x < columnsActive.length; x++) {
-                            if (visibleColumnsActive.contains(columnsActive[x]) && indizesActive[x] == pos + 1) {
+                            if (visibleColumnsActive.contains(columnsActive[x]) && indicesActive[x] == pos + 1) {
                                 uploadPanel.getUploadActiveTable().addColumn(columnsActive[x]);
                                 pos++;
                                 break;
@@ -321,15 +321,15 @@ public class UploadController extends GuiController {
                         }
                     }
 
-                    boolean[] uploadWaitingVisibilies = pm.getUploadWaitingColumnVisibilities();
-                    int[] indizesWaiting = pm.getUploadWaitingColumnIndizes();
+                    boolean[] uploadWaitingVisibilities = pm.getUploadWaitingColumnVisibilities();
+                    int[] indicesWaiting = pm.getUploadWaitingColumnIndices();
 
                     uploadWaitingSort = pm.getUploadWaitingSort();
                     ArrayList<TableColumn> visibleColumnsWaiting = new ArrayList<TableColumn>();
 
                     for (int i = 0; i < columnsWaiting.length; i++) {
                         uploadPanel.getUploadWaitingTable().removeColumn(columnsWaiting[i]);
-                        if (uploadWaitingVisibilies[i]) {
+                        if (uploadWaitingVisibilities[i]) {
                             visibleColumnsWaiting.add(columnsWaiting[i]);
                         }
                     }
@@ -338,7 +338,7 @@ public class UploadController extends GuiController {
 
                     for (int i = 0; i < visibleColumnsWaiting.size(); i++) {
                         for (int x = 0; x < columnsWaiting.length; x++) {
-                            if (visibleColumnsWaiting.contains(columnsWaiting[x]) && indizesWaiting[x] == pos + 1) {
+                            if (visibleColumnsWaiting.contains(columnsWaiting[x]) && indicesWaiting[x] == pos + 1) {
                                 uploadPanel.getUploadWaitingTable().addColumn(columnsWaiting[x]);
                                 pos++;
                                 break;
@@ -377,30 +377,30 @@ public class UploadController extends GuiController {
             uploadPanel.getUploadWaitingTable().revalidate();
             uploadPanel.getUploadWaitingTable().repaint();
         } catch (Exception ex) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
         }
     }
 
     public void componentLostSelection() {
         componentSelected = false;
-        AppleJuiceClient.getAjFassade().setUploadPolling(false);
+        AppleJuiceClient.getAjFacade().setUploadPolling(false);
     }
 
     protected void languageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-        clientText = languageSelector.getFirstAttrbuteByTagName("mainform.uplcounttext");
-        uploadPanel.getUploadListeLabel().setText(clientText.replaceAll("%d", Integer.toString(anzahlClients)));
+        clientText = languageSelector.getFirstAttributeByTagName("mainform.uplcounttext");
+        uploadPanel.getUploadListLabel().setText(clientText.replaceAll("%d", Integer.toString(clientCount)));
         String[] columnsText = new String[8];
 
-        columnsText[0] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col0caption");
-        columnsText[1] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col1caption");
-        columnsText[2] = languageSelector.getFirstAttrbuteByTagName("javagui.uploadform.columnchunksize");
-        columnsText[3] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col2caption");
-        columnsText[4] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
-        columnsText[5] = languageSelector.getFirstAttrbuteByTagName("javagui.uploadform.columnwasserstand");
-        columnsText[6] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col4caption");
-        columnsText[7] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col5caption");
+        columnsText[0] = languageSelector.getFirstAttributeByTagName("mainform.uploads.col0caption");
+        columnsText[1] = languageSelector.getFirstAttributeByTagName("mainform.uploads.col1caption");
+        columnsText[2] = languageSelector.getFirstAttributeByTagName("javagui.uploadform.columnchunksize");
+        columnsText[3] = languageSelector.getFirstAttributeByTagName("mainform.uploads.col2caption");
+        columnsText[4] = languageSelector.getFirstAttributeByTagName("mainform.queue.col6caption");
+        columnsText[5] = languageSelector.getFirstAttributeByTagName("javagui.uploadform.columnwatermark");
+        columnsText[6] = languageSelector.getFirstAttributeByTagName("mainform.uploads.col4caption");
+        columnsText[7] = languageSelector.getFirstAttributeByTagName("mainform.uploads.col5caption");
         TableColumn[] columns = uploadPanel.getTableActiveColumns();
 
         for (int i = 0; i < columns.length; i++) {
@@ -411,13 +411,13 @@ public class UploadController extends GuiController {
 
         columnsText = new String[7];
 
-        columnsText[0] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col0caption");
-        columnsText[1] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col3caption");
-        columnsText[2] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col1caption");
-        columnsText[3] = languageSelector.getFirstAttrbuteByTagName("javagui.uploadform.columnwasserstand");
-        columnsText[4] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col4caption");
-        columnsText[5] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.colletzteverbindung");
-        columnsText[6] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col5caption");
+        columnsText[0] = languageSelector.getFirstAttributeByTagName("mainform.uploads.col0caption");
+        columnsText[1] = languageSelector.getFirstAttributeByTagName("mainform.uploads.col3caption");
+        columnsText[2] = languageSelector.getFirstAttributeByTagName("mainform.uploads.col1caption");
+        columnsText[3] = languageSelector.getFirstAttributeByTagName("javagui.uploadform.columnwatermark");
+        columnsText[4] = languageSelector.getFirstAttributeByTagName("mainform.uploads.col4caption");
+        columnsText[5] = languageSelector.getFirstAttributeByTagName("mainform.uploads.collastconnection");
+        columnsText[6] = languageSelector.getFirstAttributeByTagName("mainform.uploads.col5caption");
         columns = uploadPanel.getTableWaitingColumns();
 
         for (int i = 0; i < columns.length; i++) {
@@ -426,9 +426,9 @@ public class UploadController extends GuiController {
 
         columns[0].setPreferredWidth(100);
 
-        warteschlangeVoll = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.warteschlangevoll");
-        uploadPanel.getMnuCopyToClipboard().setText(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption"));
-        uploadPanel.getMnuReleaseInfo().setText(languageSelector.getFirstAttrbuteByTagName("releaseinfo.menu"));
+        queueFull = languageSelector.getFirstAttributeByTagName("javagui.downloadform.queuefull");
+        uploadPanel.getMnuCopyToClipboard().setText(languageSelector.getFirstAttributeByTagName("mainform.getlink1.caption"));
+        uploadPanel.getMnuReleaseInfo().setText(languageSelector.getFirstAttributeByTagName("releaseinfo.menu"));
     }
 
     protected void contentChanged(DATALISTENER_TYPE type, final Object content) {
@@ -446,16 +446,16 @@ public class UploadController extends GuiController {
                             change = true;
                         }
 
-                        anzahlClients = uploadPanel.getUploadActiveTableModel().getRowCount() +
+                        clientCount = uploadPanel.getUploadActiveTableModel().getRowCount() +
                                 uploadPanel.getUploadWaitingTableModel().getRowCount();
-                        String tmp = clientText.replaceAll("%d", Integer.toString(anzahlClients));
-                        long maxUploadPos = AppleJuiceClient.getAjFassade().getInformation().getMaxUploadPositions();
+                        String tmp = clientText.replaceAll("%d", Integer.toString(clientCount));
+                        long maxUploadPos = AppleJuiceClient.getAjFacade().getInformation().getMaxUploadPositions();
 
-                        if (anzahlClients >= maxUploadPos) {
-                            tmp += " (" + warteschlangeVoll + ")";
+                        if (clientCount >= maxUploadPos) {
+                            tmp += " (" + queueFull + ")";
                         }
 
-                        uploadPanel.getUploadListeLabel().setText(tmp);
+                        uploadPanel.getUploadListLabel().setText(tmp);
                         if (componentSelected && change) {
                             TableColumnSettings.refreshCompact(uploadPanel.getUploadActiveTable());
                             TableColumnSettings.refreshCompact(uploadPanel.getUploadWaitingTable());
@@ -471,7 +471,7 @@ public class UploadController extends GuiController {
                             TableSelection.selectOnlyRow(uploadPanel.getUploadWaitingTable());
                         }
                     } catch (Exception ex) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
                     }
                 }
             });

@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui.plugincontrol;
 
-import de.applejuicenet.client.fassade.controller.xml.XMLValueHolder;
+import de.applejuicenet.client.facade.controller.xml.XMLValueHolder;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 import javax.swing.*;
@@ -47,7 +47,7 @@ public abstract class TestLoader
       {
          Properties      props;
          FileInputStream fiS;
-         String          sprache;
+         String          language;
 
          for(String curFilename : filenames)
          {
@@ -56,9 +56,9 @@ public abstract class TestLoader
 
             props.load(fiS);
             fiS.close();
-            sprache = props.getProperty("language");
+            language = props.getProperty("language");
 
-            languageProperties.put(sprache, props);
+            languageProperties.put(language, props);
          }
       }
 

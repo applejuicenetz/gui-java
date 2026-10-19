@@ -2,10 +2,10 @@ package de.applejuicenet.client.gui.plugins.sharetreemap;
 
 import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Share;
-import de.applejuicenet.client.fassade.entity.Upload;
-import de.applejuicenet.client.fassade.listener.CoreStatusListener;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Share;
+import de.applejuicenet.client.facade.entity.Upload;
+import de.applejuicenet.client.facade.listener.CoreStatusListener;
 import de.applejuicenet.client.gui.plugins.PluginConnector;
 
 import javax.swing.*;
@@ -18,17 +18,17 @@ import java.util.Properties;
 public class ShareTreemapPlugin extends PluginConnector implements CoreStatusListener {
     private final TreemapView view = new TreemapView();
     private final UploadActivity activity = new UploadActivity();
-    private final ApplejuiceFassade facade;
+    private final ApplejuiceFacade facade;
     private boolean listening;
     private volatile boolean selected;
 
     public ShareTreemapPlugin(Properties properties, Map<String, Properties> languages,
                               ImageIcon icon, Map<String, ImageIcon> icons) {
-        this(properties, languages, icon, icons, AppleJuiceClient.getAjFassade());
+        this(properties, languages, icon, icons, AppleJuiceClient.getAjFacade());
     }
 
     ShareTreemapPlugin(Properties properties, Map<String, Properties> languages,
-                       ImageIcon icon, Map<String, ImageIcon> icons, ApplejuiceFassade facade) {
+                       ImageIcon icon, Map<String, ImageIcon> icons, ApplejuiceFacade facade) {
         super(properties, languages, icon, icons);
         this.facade = facade;
         setLayout(new BorderLayout()); add(view, BorderLayout.CENTER);
@@ -39,7 +39,7 @@ public class ShareTreemapPlugin extends PluginConnector implements CoreStatusLis
         if (listening || facade == null) return;
         facade.addDataUpdateListener(this, DATALISTENER_TYPE.SHARE_CHANGED);
         facade.addDataUpdateListener(this, DATALISTENER_TYPE.UPLOAD_CHANGED);
-        ApplejuiceFassade.addCoreStatusListener(this);
+        ApplejuiceFacade.addCoreStatusListener(this);
         listening = true;
     }
 
@@ -49,7 +49,7 @@ public class ShareTreemapPlugin extends PluginConnector implements CoreStatusLis
         if (listening) {
             facade.removeDataUpdateListener(this, DATALISTENER_TYPE.SHARE_CHANGED);
             facade.removeDataUpdateListener(this, DATALISTENER_TYPE.UPLOAD_CHANGED);
-            ApplejuiceFassade.removeCoreStatusListener(this);
+            ApplejuiceFacade.removeCoreStatusListener(this);
             listening = false;
         }
         activity.clear();

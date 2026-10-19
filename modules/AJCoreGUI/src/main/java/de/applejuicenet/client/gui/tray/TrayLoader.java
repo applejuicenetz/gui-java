@@ -24,8 +24,8 @@ import java.util.Locale;
 
 public class TrayLoader implements AutoCloseable {
     private static final Logger logger = LoggerFactory.getLogger(TrayLoader.class);
-    private String zeigen = "Anzeigen";
-    private String verstecken = "Verstecken";
+    private String showText = "Anzeigen";
+    private String hide = "Verstecken";
     private TrayIcon trayIcon;
     private Tray nativeTray;
     private SwingTrayMenu nativeMenu;
@@ -33,8 +33,8 @@ public class TrayLoader implements AutoCloseable {
     private SwingTrayPopup awtPopup;
     private AppleJuiceDialog dialog;
     private JMenuItem showHideItem;
-    private Icon zeigenIcon;
-    private Icon versteckenIcon;
+    private Icon showIcon;
+    private Icon hideIcon;
     private final WindowStateListener windowStateListener = event -> updateVisibilityLabel();
     private final ComponentAdapter visibilityListener = new ComponentAdapter() {
         @Override public void componentShown(ComponentEvent event) { updateVisibilityLabel(); }
@@ -42,11 +42,11 @@ public class TrayLoader implements AutoCloseable {
     };
 
     public boolean makeTray(String title, AppleJuiceDialog dialog, JMenuItem showHideItem,
-                            Icon zeigenIcon, Icon versteckenIcon, JPopupMenu popup) {
+                            Icon showIcon, Icon hideIcon, JPopupMenu popup) {
         this.dialog = dialog;
         this.showHideItem = showHideItem;
-        this.zeigenIcon = TrayMenuIcon.fit(zeigenIcon);
-        this.versteckenIcon = TrayMenuIcon.fit(versteckenIcon);
+        this.showIcon = TrayMenuIcon.fit(showIcon);
+        this.hideIcon = TrayMenuIcon.fit(hideIcon);
         updateVisibilityLabel();
         dialog.addComponentListener(visibilityListener);
         dialog.addWindowStateListener(windowStateListener);
@@ -72,10 +72,10 @@ public class TrayLoader implements AutoCloseable {
         }, this::showTrayPopup));
         try {
             SystemTray.getSystemTray().add(trayIcon);
-            if (awtMenu != null) logger.info("macOS-Tray mit nativem AWT-Kontextmenue gestartet");
+            if (awtMenu != null) logger.info("macOS tray started with native AWT context menu");
             return true;
         } catch (AWTException e) {
-            logger.info("AWT-Tray nicht verfügbar", e);
+            logger.info("AWT tray not available", e);
             close();
             return false;
         }
@@ -108,10 +108,10 @@ public class TrayLoader implements AutoCloseable {
                 if (event instanceof TrayEvent.MenuItemSelected selected) menu.select(selected.id());
                 else if (event instanceof TrayEvent.Activated) SwingUtilities.invokeLater(() -> showHideItem.doClick());
             });
-            logger.info("Linux-Tray mit libtray/StatusNotifierItem gestartet");
+            logger.info("Linux tray started with libtray/StatusNotifierItem");
             return true;
         } catch (Exception | LinkageError e) {
-            logger.info("libtray nicht verfügbar; versuche AWT-Tray", e);
+            logger.info("libtray not available; trying AWT tray", e);
             if (nativeTray != null) nativeTray.close();
             if (nativeMenu != null) nativeMenu.close();
             nativeTray = null;
@@ -123,15 +123,15 @@ public class TrayLoader implements AutoCloseable {
     private void updateVisibilityLabel() {
         if (showHideItem != null) {
             boolean shown = dialog.isVisible() && (dialog.getExtendedState() & Frame.ICONIFIED) == 0;
-            showHideItem.setText(shown ? verstecken : zeigen);
-            showHideItem.setIcon(shown ? versteckenIcon : zeigenIcon);
+            showHideItem.setText(shown ? hide : showText);
+            showHideItem.setIcon(shown ? hideIcon : showIcon);
         }
     }
 
-    public void setTextZeigen(String text) { zeigen = text; updateVisibilityLabel(); }
-    public void setTextVerstecken(String text) { verstecken = text; updateVisibilityLabel(); }
+    public void setShowText(String text) { showText = text; updateVisibilityLabel(); }
+    public void setHideText(String text) { hide = text; updateVisibilityLabel(); }
 
-    public void showBallon(String caption, String message) {
+    public void showBalloon(String caption, String message) {
         if (trayIcon != null && (caption != null || message != null))
             trayIcon.displayMessage(caption, message, TrayIcon.MessageType.INFO);
     }

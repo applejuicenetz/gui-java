@@ -3,8 +3,8 @@ package de.applejuicenet.client.gui.wizard;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/ConnectionKind.java,v 1.6 2004/10/15 13:34:48 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -12,17 +12,17 @@ package de.applejuicenet.client.gui.wizard;
  */
 
 public class ConnectionKind {
-    private String bezeichnung;
+    private String caption;
     private int maxUpload;
     private int maxDownload;
-    private int maxNewConnectionsPro10Sek;
+    private int maxNewConnectionsPer10Sec;
 
-    public ConnectionKind(String bezeichnung, int maxUpload, int maxDownload,
-                          int maxNewConnectionsPro10Sek) {
-        this.bezeichnung = bezeichnung;
+    public ConnectionKind(String caption, int maxUpload, int maxDownload,
+                          int maxNewConnectionsPer10Sec) {
+        this.caption = caption;
         this.maxUpload = maxUpload;
         this.maxDownload = maxDownload;
-        this.maxNewConnectionsPro10Sek = maxNewConnectionsPro10Sek;
+        this.maxNewConnectionsPer10Sec = maxNewConnectionsPer10Sec;
     }
 
     public int getMaxUpload() {
@@ -33,15 +33,15 @@ public class ConnectionKind {
         return maxDownload;
     }
 
-    public String getBezeichnung() {
-        return bezeichnung;
+    public String getLabel() {
+        return caption;
     }
 
     public String toString() {
-        return bezeichnung;
+        return caption;
     }
 
-    public int getMaxNewConnectionsPro10Sek() {
-        return maxNewConnectionsPro10Sek;
+    public int getMaxNewConnectionsPer10Sec() {
+        return maxNewConnectionsPer10Sec;
     }
 }

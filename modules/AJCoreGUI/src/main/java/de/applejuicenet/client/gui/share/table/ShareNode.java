@@ -5,10 +5,10 @@
 package de.applejuicenet.client.gui.share.table;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Share;
-import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
-import de.applejuicenet.client.fassade.shared.FileType;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Share;
+import de.applejuicenet.client.facade.exception.IllegalArgumentException;
+import de.applejuicenet.client.facade.shared.FileType;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
 import org.slf4j.Logger;
@@ -22,8 +22,8 @@ import java.util.Map;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareNode.java,v 1.10 2009/01/18 22:57:48 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r [aj@tkl-soft.de]
@@ -54,25 +54,25 @@ public class ShareNode implements Node
       path        = "";
       if(parent != null)
       {
-         String bisherigerPath = getCompletePath();
+         String previousPath = getCompletePath();
          String restPath       = share.getFilename();
 
-         while(restPath.indexOf(ApplejuiceFassade.separator) == 0)
+         while(restPath.indexOf(ApplejuiceFacade.separator) == 0)
          {
             restPath = restPath.substring(1);
          }
 
-         if(bisherigerPath.length() != 0 && restPath.substring(0, bisherigerPath.length()).compareTo(bisherigerPath) == 0)
+         if(previousPath.length() != 0 && restPath.substring(0, previousPath.length()).compareTo(previousPath) == 0)
          {
-            restPath = restPath.substring(bisherigerPath.length());
+            restPath = restPath.substring(previousPath.length());
          }
 
-         if(restPath.substring(0, 1).compareTo(ApplejuiceFassade.separator) == 0)
+         if(restPath.substring(0, 1).compareTo(ApplejuiceFacade.separator) == 0)
          {
             restPath = restPath.substring(1);
          }
 
-         int pos = restPath.indexOf(ApplejuiceFassade.separator);
+         int pos = restPath.indexOf(ApplejuiceFacade.separator);
 
          if(pos != -1)
          {
@@ -112,7 +112,7 @@ public class ShareNode implements Node
          }
          else
          {
-            return parentPath + ApplejuiceFassade.separator + path;
+            return parentPath + ApplejuiceFacade.separator + path;
          }
       }
       else
@@ -140,21 +140,21 @@ public class ShareNode implements Node
 
    public ShareNode addChild(Share shareToAdd)
    {
-      String bisherigerPath = getCompletePath();
+      String previousPath = getCompletePath();
       String restPath       = shareToAdd.getFilename();
 
-      while(restPath.indexOf(ApplejuiceFassade.separator) == 0)
+      while(restPath.indexOf(ApplejuiceFacade.separator) == 0)
       {
          restPath = restPath.substring(1);
       }
 
-      restPath = restPath.substring(bisherigerPath.length());
-      int pos = restPath.indexOf(ApplejuiceFassade.separator);
+      restPath = restPath.substring(previousPath.length());
+      int pos = restPath.indexOf(ApplejuiceFacade.separator);
 
       while(pos == 0)
       {
          restPath = restPath.substring(pos + 1);
-         pos      = restPath.indexOf(ApplejuiceFassade.separator);
+         pos      = restPath.indexOf(ApplejuiceFacade.separator);
       }
 
       ShareNode childNode = null;
@@ -284,17 +284,17 @@ public class ShareNode implements Node
    }
 
    @SuppressWarnings("unchecked")
-   public void setPriority(int prio)
+   public void setPriority(int priorityTotal)
    {
       if(isLeaf())
       {
          try
          {
-            AppleJuiceClient.getAjFassade().setPrioritaet(share, Integer.valueOf(prio));
+            AppleJuiceClient.getAjFacade().setPriority(share, Integer.valueOf(priorityTotal));
          }
          catch(IllegalArgumentException e)
          {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
          }
       }
       else
@@ -303,7 +303,7 @@ public class ShareNode implements Node
 
          while(it.hasNext())
          {
-            ((ShareNode) it.next()).setPriority(prio);
+            ((ShareNode) it.next()).setPriority(priorityTotal);
          }
       }
    }

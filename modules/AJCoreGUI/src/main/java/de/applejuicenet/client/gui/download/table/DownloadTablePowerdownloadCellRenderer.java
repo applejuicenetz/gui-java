@@ -23,18 +23,18 @@ public class DownloadTablePowerdownloadCellRenderer extends DefaultTableCellRend
       return super.getTableCellRendererComponent(table, powerdownload((Integer) value), isSelected, hasFocus, row, column);
    }
 
-   public String powerdownload(int pwdl)
+   public String powerdownload(int powerdownload)
    {
-      if(pwdl == 0)
+      if(powerdownload == 0)
       {
          return "1:1,0";
       }
-      else if(pwdl == -1)
+      else if(powerdownload == -1)
       {
          return null;
       }
 
-      double power = pwdl;
+      double power = powerdownload;
 
       power = power / 10 + 1;
       String temp = Double.toString(power);

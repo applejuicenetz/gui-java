@@ -7,8 +7,8 @@ import javax.swing.text.PlainDocument;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/NumberInputVerifier.java,v 1.12 2004/11/22 16:25:25 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -42,9 +42,9 @@ public class NumberInputVerifier
         try {
             Integer.parseInt(str);
             if (limits) {
-                int gesamt = Integer.parseInt(old.substring(0, offset) + str +
+                int total = Integer.parseInt(old.substring(0, offset) + str +
                                               old.substring(offset));
-                if (gesamt < min || gesamt > max) {
+                if (total < min || total > max) {
                     return;
                 }
             }

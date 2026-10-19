@@ -4,7 +4,8 @@
 
 package de.applejuicenet.client.gui.options;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.gui.controller.GuiText;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.connect.QuickConnectionSettingsDialog;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ConnectionSettings;
@@ -23,8 +24,8 @@ import java.awt.event.KeyEvent;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODConnectionPanel.java,v 1.10 2009/01/12 09:19:20 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -38,7 +39,7 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
    private JLabel                        label4;
    private JTextField                  host                          = new JTextField();
    private JTextField                  port                          = new JTextField();
-   private JPasswordField                passwortNeu                   = new JPasswordField();
+   private JPasswordField                passwordNew                   = new JPasswordField();
    private ConnectionSettings            remote;
    private boolean                       showPort                      = false;
    private QuickConnectionSettingsDialog quickConnectionSettingsDialog;
@@ -57,7 +58,7 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
       }
       catch(Exception e)
       {
-         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+         logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
       }
    }
 
@@ -79,14 +80,14 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
 
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      label1 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.remote.host"));
-      label3 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.remote.passwortNeu"));
-      menuText = languageSelector.getFirstAttrbuteByTagName("einstform.pwsheet.caption");
-      label4   = new JLabel("Port");
+      label1 = new JLabel(languageSelector.getFirstAttributeByTagName("javagui.options.remote.host"));
+      label3 = new JLabel(languageSelector.getFirstAttributeByTagName("javagui.options.remote.newpassword"));
+      menuText = languageSelector.getFirstAttributeByTagName("einstform.pwsheet.caption");
+      label4   = new JLabel(GuiText.text("javagui.options.remote.port"));
 
       host.setText(remote.getHost());
       host.addFocusListener(new HostFocusListener());
-      passwortNeu.addFocusListener(new PasswortNeuFocusListener());
+      passwordNew.addFocusListener(new PasswordNewFocusListener());
 
       KeyAdapter keyAdapter = new ShortcutKeyListener();
 
@@ -94,7 +95,7 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
       {
          host.addKeyListener(keyAdapter);
          port.addKeyListener(keyAdapter);
-         passwortNeu.addKeyListener(keyAdapter);
+         passwordNew.addKeyListener(keyAdapter);
       }
 
       port.setDocument(new NumberInputVerifier());
@@ -143,7 +144,7 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
 
       constraints.gridy = gridy;
       gridy++;
-      panel1.add(passwortNeu, constraints);
+      panel1.add(passwordNew, constraints);
 
       constraints.gridy = gridy;
       gridy++;
@@ -154,13 +155,13 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
       add(panel1, BorderLayout.NORTH);
       if(quickConnectionSettingsDialog != null)
       {
-         label3.setText(languageSelector.getFirstAttrbuteByTagName("einstform.pwsheet.caption"));
+         label3.setText(languageSelector.getFirstAttributeByTagName("einstform.pwsheet.caption"));
       }
    }
 
    public void setFocusOnPassword()
    {
-      this.passwortNeu.requestFocus();
+      this.passwordNew.requestFocus();
    }
 
    public boolean isDirty()
@@ -171,7 +172,7 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
    public void enableControls(boolean enable)
    {
       host.setEnabled(enable);
-      passwortNeu.setEnabled(enable);
+      passwordNew.setEnabled(enable);
       label1.setEnabled(enable);
       label3.setEnabled(enable);
    }
@@ -206,7 +207,7 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
 
    public String getPassword()
    {
-      return new String(passwortNeu.getPassword());
+      return new String(passwordNew.getPassword());
    }
 
    public String getHost()
@@ -238,12 +239,12 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
             dirty = true;
             remote.setHost(host.getText());
             remote.setXmlPort(Integer.parseInt(port.getText()));
-            remote.setNewPassword(new String(passwortNeu.getPassword()));
+            remote.setNewPassword(new String(passwordNew.getPassword()));
             quickConnectionSettingsDialog.pressOK();
          }
          else if(ke.getKeyCode() == KeyEvent.VK_ESCAPE)
          {
-            quickConnectionSettingsDialog.pressAbbrechen();
+            quickConnectionSettingsDialog.pressCancel();
          }
          else
          {
@@ -253,12 +254,12 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
    }
 
 
-   class PasswortNeuFocusListener extends FocusAdapter
+   class PasswordNewFocusListener extends FocusAdapter
    {
       public void focusLost(FocusEvent e)
       {
          dirty = true;
-         remote.setNewPassword(new String(passwortNeu.getPassword()));
+         remote.setNewPassword(new String(passwordNew.getPassword()));
       }
    }
 

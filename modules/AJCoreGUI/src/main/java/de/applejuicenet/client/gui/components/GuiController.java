@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.components;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.listener.DataUpdateListener;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.listener.DataUpdateListener;
 import de.applejuicenet.client.gui.components.util.Value;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import org.slf4j.Logger;
@@ -12,8 +12,8 @@ import javax.swing.*;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/GuiController.java,v 1.8 2005/01/19 16:22:19 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -44,7 +44,7 @@ public abstract class GuiController implements LanguageListener, DataUpdateListe
         try {
             languageChanged();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -52,7 +52,7 @@ public abstract class GuiController implements LanguageListener, DataUpdateListe
         try {
             contentChanged(type, content);
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 

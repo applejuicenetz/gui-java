@@ -28,12 +28,22 @@ public final class GuiText {
 
     public static Locale locale() {
         return "deutsch".equalsIgnoreCase(LanguageSelector.getInstance()
-                .getFirstAttrbuteByTagName("Languageinfo.name")) ? Locale.GERMANY : Locale.ENGLISH;
+                .getFirstAttributeByTagName("Languageinfo.name")) ? Locale.GERMANY : Locale.ENGLISH;
     }
 
     public static String text(String key, Object... arguments) {
-        String pattern = LanguageSelector.getInstance().getFirstAttrbuteByTagName(key);
+        String pattern = LanguageSelector.getInstance().getFirstAttributeByTagName(key);
         return arguments.length == 0 ? pattern : new MessageFormat(pattern, locale()).format(arguments);
+    }
+
+    /** Looks up a language key and falls back to {@code fallback} when it is missing or the language is unavailable. */
+    public static String textOr(String key, String fallback) {
+        try {
+            String value = LanguageSelector.getInstance().getFirstAttributeByTagName(key);
+            return value == null || value.isBlank() ? fallback : value;
+        } catch (RuntimeException | Error e) {
+            return fallback;
+        }
     }
 
     public static JLabel label(String key) {

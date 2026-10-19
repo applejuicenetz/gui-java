@@ -4,8 +4,9 @@
 
 package de.applejuicenet.client.gui.upload.table;
 
-import de.applejuicenet.client.fassade.entity.Upload;
-import de.applejuicenet.client.fassade.entity.Version;
+import de.applejuicenet.client.gui.controller.GuiText;
+import de.applejuicenet.client.facade.entity.Upload;
+import de.applejuicenet.client.facade.entity.Version;
 import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -19,10 +20,11 @@ import java.util.Map;
 
 public class UploadActiveTableModel extends AbstractTableModel implements LanguageListener, SortableTableModel<Upload>
 {
+   static final String[] COL_KEYS = {"mainform.uploads.col0caption", "mainform.uploads.col1caption", "javagui.uploadform.columnchunksize", "mainform.uploads.col2caption", "mainform.queue.col6caption", "javagui.uploadform.columntotalloaded", "mainform.uploads.col4caption", "mainform.uploads.col5caption"};
    final static String[] COL_NAMES = 
                                      {
-                                        "Dateiname", "Nickname", "Chunk", "Geschwindigkeit", "Prozent geladen",
-                                        "Gesamt geladen", "Prioritaet", "Client"
+                                        "File name", "Nickname", "Chunk", "Speed", "Percent loaded",
+                                        "Total loaded", "Priority", "Client"
                                      };
    @SuppressWarnings("unchecked")
    public static final Class[] CLASS_TYPES                               = 
@@ -33,7 +35,7 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
                                                                            };
    private List<Upload>        uploads      = new ArrayList<Upload>();
    private SimpleDateFormat    formatter    = new SimpleDateFormat("HH:mm:ss");
-   private String              uebertragung;
+   private String              transferText;
    private TableSorter<Upload> sorter       = null;
 
    public UploadActiveTableModel()
@@ -56,7 +58,7 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
 
       for(Upload curUpload : uploadMap.values())
       {
-         if(!(curUpload.getStatus() == Upload.AKTIVE_UEBERTRAGUNG))
+         if(!(curUpload.getStatus() == Upload.ACTIVE_TRANSFER))
          {
             continue;
          }
@@ -76,7 +78,7 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
          for(int x = count - 1; x >= 0; x--)
          {
             anUpload = uploads.get(x);
-            if(anUpload.getStatus() != Upload.AKTIVE_UEBERTRAGUNG || !uploadMap.containsKey(anUpload.getId()))
+            if(anUpload.getStatus() != Upload.ACTIVE_TRANSFER || !uploadMap.containsKey(anUpload.getId()))
             {
                uploads.remove(x);
                change = true;
@@ -90,7 +92,7 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
    @Override
    public String getColumnName(int column)
    {
-      return COL_NAMES[column];
+      return GuiText.textOr(COL_KEYS[column], COL_NAMES[column]);
    }
 
    @Override
@@ -135,13 +137,13 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
             return upload.getLoaded();
 
          case 6:
-            return upload.getPrioritaet();
+            return upload.getPriority();
 
          case 7:
             return upload.getVersion();
 
          default:
-            return "Fehler";
+            return GuiText.textOr("javagui.error", "Error");
       }
    }
 
@@ -149,7 +151,7 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      uebertragung = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.uplstat1");
+      transferText = languageSelector.getFirstAttributeByTagName("mainform.uploads.uplstat1");
    }
 
    public Upload getRow(int selected)
@@ -166,7 +168,7 @@ public class UploadActiveTableModel extends AbstractTableModel implements Langua
    {
       if(column == 0)
       {
-         return ((Upload) getValueAt(row, column)).getDateiName();
+         return ((Upload) getValueAt(row, column)).getFileName();
       }
 
       return getValueAt(row, column);

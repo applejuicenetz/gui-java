@@ -4,8 +4,9 @@
 
 package de.applejuicenet.client.gui.upload.table;
 
-import de.applejuicenet.client.fassade.entity.Upload;
-import de.applejuicenet.client.fassade.entity.Version;
+import de.applejuicenet.client.gui.controller.GuiText;
+import de.applejuicenet.client.facade.entity.Upload;
+import de.applejuicenet.client.facade.entity.Version;
 import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
@@ -20,7 +21,8 @@ import java.util.Map;
 
 public class UploadWaitingTableModel extends AbstractTableModel implements LanguageListener, SortableTableModel<Upload>
 {
-   final static String[] COL_NAMES = {"Dateiname", "Status", "Nickname", "Wasserstand", "Prioritaet", "letzte Verbindung", "Client"};
+   static final String[] COL_KEYS = {"mainform.uploads.col0caption", "mainform.uploads.col3caption", "mainform.uploads.col1caption", "javagui.uploadform.columnwatermark", "mainform.uploads.col4caption", "mainform.uploads.collastconnection", "mainform.uploads.col5caption"};
+   final static String[] COL_NAMES = {"File name", "Status", "Nickname", "Water level", "Priority", "Last connection", "Client"};
    @SuppressWarnings("unchecked")
    public static final Class[] CLASS_TYPES                               = 
                                                                            {
@@ -29,7 +31,7 @@ public class UploadWaitingTableModel extends AbstractTableModel implements Langu
                                                                            };
    private List<Upload>        uploads      = new ArrayList<Upload>();
    private SimpleDateFormat    formatter    = new SimpleDateFormat("HH:mm:ss");
-   private String              uebertragung;
+   private String              transferText;
    private TableSorter<Upload> sorter       = null;
 
    public UploadWaitingTableModel()
@@ -52,7 +54,7 @@ public class UploadWaitingTableModel extends AbstractTableModel implements Langu
 
       for(Upload curUpload : uploadMap.values())
       {
-         if(curUpload.getStatus() == Upload.AKTIVE_UEBERTRAGUNG)
+         if(curUpload.getStatus() == Upload.ACTIVE_TRANSFER)
          {
             continue;
          }
@@ -72,7 +74,7 @@ public class UploadWaitingTableModel extends AbstractTableModel implements Langu
          for(int x = count - 1; x >= 0; x--)
          {
             anUpload = uploads.get(x);
-            if(anUpload.getStatus() == Upload.AKTIVE_UEBERTRAGUNG || !uploadMap.containsKey(anUpload.getId()))
+            if(anUpload.getStatus() == Upload.ACTIVE_TRANSFER || !uploadMap.containsKey(anUpload.getId()))
             {
                uploads.remove(x);
                change = true;
@@ -86,7 +88,7 @@ public class UploadWaitingTableModel extends AbstractTableModel implements Langu
    @Override
    public String getColumnName(int column)
    {
-      return COL_NAMES[column];
+      return GuiText.textOr(COL_KEYS[column], COL_NAMES[column]);
    }
 
    @Override
@@ -113,7 +115,7 @@ public class UploadWaitingTableModel extends AbstractTableModel implements Langu
       {
 
          case 0:
-            return upload.getDateiName();
+            return upload.getFileName();
 
          case 1:
             return upload.getDirectState();
@@ -125,7 +127,7 @@ public class UploadWaitingTableModel extends AbstractTableModel implements Langu
             return upload.getLoaded();
 
          case 4:
-            return upload.getPrioritaet();
+            return upload.getPriority();
 
          case 5:
             return upload.getLastConnection() > 0 ? new Date(upload.getLastConnection()) : null;
@@ -134,7 +136,7 @@ public class UploadWaitingTableModel extends AbstractTableModel implements Langu
             return upload.getVersion();
 
          default:
-            return "Fehler";
+            return GuiText.textOr("javagui.error", "Error");
       }
    }
 
@@ -142,7 +144,7 @@ public class UploadWaitingTableModel extends AbstractTableModel implements Langu
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      uebertragung = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.uplstat1");
+      transferText = languageSelector.getFirstAttributeByTagName("mainform.uploads.uplstat1");
    }
 
    public Upload getRow(int selected)

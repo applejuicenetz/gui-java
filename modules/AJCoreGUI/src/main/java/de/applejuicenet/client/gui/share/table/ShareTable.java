@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import de.applejuicenet.client.fassade.entity.Share;
+import de.applejuicenet.client.facade.entity.Share;
 
 public class ShareTable
     extends JTreeTable {
@@ -95,10 +95,10 @@ public class ShareTable
         }
         else if (count > 1) {
             result = new Object[count];
-            int[] indizes = getSelectedRows();
-            for (int i = 0; i < indizes.length; i++) {
+            int[] indices = getSelectedRows();
+            for (int i = 0; i < indices.length; i++) {
                 result[i] = ( (TreeTableModelAdapter) getModel()).nodeForRow(
-                    indizes[i]);
+                    indices[i]);
             }
         }
         return result;

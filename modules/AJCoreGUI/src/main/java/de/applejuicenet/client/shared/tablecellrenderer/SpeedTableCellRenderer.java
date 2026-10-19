@@ -32,6 +32,6 @@ public class SpeedTableCellRenderer extends DefaultTableCellRenderer
          return "";
       }
 
-      return DownloadsTableModel.parseGroesse(speed.longValue()) + "/s";
+      return DownloadsTableModel.parseSize(speed.longValue()) + "/s";
    }
 }

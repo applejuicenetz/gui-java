@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.plugins;
 
-import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE;
-import de.applejuicenet.client.fassade.listener.CoreStatusListener.STATUS;
+import de.applejuicenet.client.facade.listener.DataUpdateListener.DATALISTENER_TYPE;
+import de.applejuicenet.client.facade.listener.CoreStatusListener.STATUS;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;

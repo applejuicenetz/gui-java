@@ -7,9 +7,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-/**
- * Nicht-modaler Dialog „JavaGUI Memory Monitor“. Zeigt den RAM-Verbrauch der JavaGUI.
- */
+/** Non-modal dialog "JavaGUI Memory Monitor". Shows the RAM usage of the JavaGUI. */
 public class MemoryMonitorDialog
     extends JDialog {
 

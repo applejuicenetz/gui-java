@@ -7,8 +7,8 @@ package de.applejuicenet.client.gui.wizard;
 import de.applejuicenet.client.gui.DialogLocation;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.shared.AJSettings;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.gui.listener.LanguageListener;
@@ -26,24 +26,24 @@ import java.awt.event.WindowEvent;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/WizardDialog.java,v 1.10 2009/01/12 09:19:20 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
  */
 public class WizardDialog extends JDialog implements LanguageListener {
     private Logger logger;
-    private WizardPanel aktuellesPanel;
-    private WizardPanel schritt1 = new Schritt1Panel();
-    private WizardPanel schritt2 = new Schritt2Panel();
-    private WizardPanel schritt3;
-    private WizardPanel schritt4 = new Schritt4Panel();
-    private WizardPanel schritt5 = new Schritt5Panel();
+    private WizardPanel currentPanel;
+    private WizardPanel step1 = new Step1Panel();
+    private WizardPanel step2 = new Step2Panel();
+    private WizardPanel step3;
+    private WizardPanel step4 = new Step4Panel();
+    private WizardPanel step5 = new Step5Panel();
     private JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    private JButton zurueck = new JButton();
-    private JButton weiter = new JButton();
-    private JButton ende = new JButton();
+    private JButton back = new JButton();
+    private JButton nextButton = new JButton();
+    private JButton end = new JButton();
     private AJSettings ajSettings;
     private boolean regularClosed = false;
 
@@ -56,7 +56,7 @@ public class WizardDialog extends JDialog implements LanguageListener {
 
             ls.addLanguageListener(this);
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -70,59 +70,59 @@ public class WizardDialog extends JDialog implements LanguageListener {
 
             ls.addLanguageListener(this);
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
     private void init() {
         if (ajSettings == null) {
-            ajSettings = AppleJuiceClient.getAjFassade().getAJSettings();
+            ajSettings = AppleJuiceClient.getAjFacade().getAJSettings();
         }
 
-        schritt3 = new Schritt3Panel(this, ajSettings);
+        step3 = new Step3Panel(this, ajSettings);
         getContentPane().setLayout(new BorderLayout());
         ImageIcon icon1 = IconManager.getInstance().getIcon("wizardbanner");
         JLabel label1 = new JLabel(icon1);
 
-        schritt1.setVorherigesPanel(null);
-        schritt1.setNaechstesPanel(schritt2);
-        schritt2.setVorherigesPanel(schritt1);
-        schritt2.setNaechstesPanel(schritt3);
-        schritt3.setVorherigesPanel(schritt2);
-        schritt3.setNaechstesPanel(schritt4);
-        schritt4.setVorherigesPanel(schritt3);
-        schritt4.setNaechstesPanel(schritt5);
-        schritt5.setVorherigesPanel(schritt4);
-        schritt5.setNaechstesPanel(null);
+        step1.setPreviousPanel(null);
+        step1.setNextPanel(step2);
+        step2.setPreviousPanel(step1);
+        step2.setNextPanel(step3);
+        step3.setPreviousPanel(step2);
+        step3.setNextPanel(step4);
+        step4.setPreviousPanel(step3);
+        step4.setNextPanel(step5);
+        step5.setPreviousPanel(step4);
+        step5.setNextPanel(null);
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
                 LanguageSelector.getInstance().removeLanguageListener(WizardDialog.this);
-                OptionsManagerImpl.getInstance().setErsterStart(false);
+                OptionsManagerImpl.getInstance().setFirstStart(false);
                 dispose();
             }
         });
-        zurueck.addActionListener(new ActionListener() {
+        back.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                if (aktuellesPanel.getVorherigesPanel() != null) {
-                    getContentPane().remove(aktuellesPanel);
-                    aktuellesPanel = aktuellesPanel.getVorherigesPanel();
-                    getContentPane().add(aktuellesPanel, BorderLayout.CENTER);
-                    weiter.setEnabled(true);
-                    if (aktuellesPanel.getVorherigesPanel() == null) {
-                        zurueck.setEnabled(false);
+                if (currentPanel.getPreviousPanel() != null) {
+                    getContentPane().remove(currentPanel);
+                    currentPanel = currentPanel.getPreviousPanel();
+                    getContentPane().add(currentPanel, BorderLayout.CENTER);
+                    nextButton.setEnabled(true);
+                    if (currentPanel.getPreviousPanel() == null) {
+                        back.setEnabled(false);
                     } else {
-                        zurueck.setEnabled(true);
+                        back.setEnabled(true);
                     }
 
-                    if (aktuellesPanel == schritt3) {
-                        if (((Schritt3Panel) schritt3).isValidNickname()) {
-                            setWeiterEnabled(true);
+                    if (currentPanel == step3) {
+                        if (((Step3Panel) step3).isValidNickname()) {
+                            setNextEnabled(true);
                         } else {
-                            setWeiterEnabled(false);
+                            setNextEnabled(false);
                         }
                     } else {
-                        setWeiterEnabled(true);
+                        setNextEnabled(true);
                     }
 
                     WizardDialog.this.validate();
@@ -130,24 +130,24 @@ public class WizardDialog extends JDialog implements LanguageListener {
                 }
             }
         });
-        weiter.addActionListener(new ActionListener() {
+        nextButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                if (aktuellesPanel.getNaechstesPanel() != null) {
-                    getContentPane().remove(aktuellesPanel);
-                    aktuellesPanel = aktuellesPanel.getNaechstesPanel();
-                    getContentPane().add(aktuellesPanel, BorderLayout.CENTER);
-                    zurueck.setEnabled(true);
-                    if (aktuellesPanel.getNaechstesPanel() == null) {
-                        weiter.setEnabled(false);
+                if (currentPanel.getNextPanel() != null) {
+                    getContentPane().remove(currentPanel);
+                    currentPanel = currentPanel.getNextPanel();
+                    getContentPane().add(currentPanel, BorderLayout.CENTER);
+                    back.setEnabled(true);
+                    if (currentPanel.getNextPanel() == null) {
+                        nextButton.setEnabled(false);
                     } else {
-                        if (aktuellesPanel == schritt3) {
-                            if (((Schritt3Panel) schritt3).isValidNickname()) {
-                                setWeiterEnabled(true);
+                        if (currentPanel == step3) {
+                            if (((Step3Panel) step3).isValidNickname()) {
+                                setNextEnabled(true);
                             } else {
-                                setWeiterEnabled(false);
+                                setNextEnabled(false);
                             }
                         } else {
-                            setWeiterEnabled(true);
+                            setNextEnabled(true);
                         }
                     }
 
@@ -156,20 +156,20 @@ public class WizardDialog extends JDialog implements LanguageListener {
                 }
             }
         });
-        ende.addActionListener(new ActionListener() {
+        end.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 regularClosed = true;
                 close();
             }
         });
-        buttons.add(zurueck);
-        buttons.add(weiter);
-        buttons.add(ende);
-        zurueck.setEnabled(false);
+        buttons.add(back);
+        buttons.add(nextButton);
+        buttons.add(end);
+        back.setEnabled(false);
 
         getContentPane().add(label1, BorderLayout.NORTH);
-        getContentPane().add(schritt1, BorderLayout.CENTER);
-        aktuellesPanel = schritt1;
+        getContentPane().add(step1, BorderLayout.CENTER);
+        currentPanel = step1;
         getContentPane().add(buttons, BorderLayout.SOUTH);
         setSize(icon1.getIconWidth(), icon1.getIconHeight() + 180 + buttons.getPreferredSize().height);
         setResizable(false);
@@ -183,43 +183,43 @@ public class WizardDialog extends JDialog implements LanguageListener {
     private void close() {
         LanguageSelector.getInstance().removeLanguageListener(this);
         int result = JOptionPane.showConfirmDialog(DialogLocation.getReference(this),
-                LanguageSelector.getInstance().getFirstAttrbuteByTagName("connect.remember.caption") +
+                LanguageSelector.getInstance().getFirstAttributeByTagName("connect.remember.caption") +
                         " ?", "appleJuice Client", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
         if (result == JOptionPane.YES_OPTION) {
-            if (((Schritt3Panel) schritt3).isValidNickname()) {
-                ConnectionKind connection = ((Schritt4Panel) schritt4).getVerbindungsart();
+            if (((Step3Panel) step3).isValidNickname()) {
+                ConnectionKind connection = ((Step4Panel) step4).getConnectionType();
 
-                ajSettings.setNick(((Schritt3Panel) schritt3).getNickname());
+                ajSettings.setNick(((Step3Panel) step3).getNickname());
                 ajSettings.setMaxUpload(connection.getMaxUpload() * 1024);
                 ajSettings.setMaxDownload(connection.getMaxDownload() * 1024);
-                ajSettings.setMaxNewConnectionsPerTurn(connection.getMaxNewConnectionsPro10Sek());
-                AppleJuiceClient.getAjFassade().saveAJSettings(ajSettings);
+                ajSettings.setMaxNewConnectionsPerTurn(connection.getMaxNewConnectionsPer10Sec());
+                AppleJuiceClient.getAjFacade().saveAJSettings(ajSettings);
             }
         } else {
             regularClosed = false;
         }
 
-        OptionsManagerImpl.getInstance().setErsterStart(false);
+        OptionsManagerImpl.getInstance().setFirstStart(false);
         dispose();
     }
 
-    public void setWeiterEnabled(boolean enabled) {
-        weiter.setEnabled(enabled);
+    public void setNextEnabled(boolean enabled) {
+        nextButton.setEnabled(enabled);
     }
 
     public void fireLanguageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-        setTitle(languageSelector.getFirstAttrbuteByTagName("javagui.wizard.titel"));
-        zurueck.setText(languageSelector.getFirstAttrbuteByTagName("javagui.wizard.zurueck"));
-        weiter.setText(languageSelector.getFirstAttrbuteByTagName("javagui.wizard.weiter"));
-        ende.setText(languageSelector.getFirstAttrbuteByTagName("javagui.wizard.ende"));
-        schritt1.fireLanguageChanged();
-        schritt2.fireLanguageChanged();
-        schritt3.fireLanguageChanged();
-        schritt4.fireLanguageChanged();
-        schritt5.fireLanguageChanged();
+        setTitle(languageSelector.getFirstAttributeByTagName("javagui.wizard.title"));
+        back.setText(languageSelector.getFirstAttributeByTagName("javagui.wizard.back"));
+        nextButton.setText(languageSelector.getFirstAttributeByTagName("javagui.wizard.next"));
+        end.setText(languageSelector.getFirstAttributeByTagName("javagui.wizard.finish"));
+        step1.fireLanguageChanged();
+        step2.fireLanguageChanged();
+        step3.fireLanguageChanged();
+        step4.fireLanguageChanged();
+        step5.fireLanguageChanged();
         repaint();
     }
 }

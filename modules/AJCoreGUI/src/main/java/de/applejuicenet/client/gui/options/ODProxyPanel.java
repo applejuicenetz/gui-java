@@ -4,8 +4,8 @@
 
 package de.applejuicenet.client.gui.options;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.ProxySettings;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.shared.ProxySettings;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.ProxyManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
@@ -21,8 +21,8 @@ import java.awt.event.FocusEvent;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODProxyPanel.java,v 1.7 2009/01/12 09:19:20 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -36,7 +36,7 @@ public class ODProxyPanel extends JPanel implements OptionsRegister {
     private JTextField host = new JTextField();
     private JTextField port = new JTextField();
     private JTextField user = new JTextField();
-    private JPasswordField passwort = new JPasswordField();
+    private JPasswordField password = new JPasswordField();
     private JCheckBox use = new JCheckBox();
     private ProxySettings proxySettings;
     private Logger logger;
@@ -48,7 +48,7 @@ public class ODProxyPanel extends JPanel implements OptionsRegister {
         try {
             init();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -67,12 +67,12 @@ public class ODProxyPanel extends JPanel implements OptionsRegister {
 
         proxySettings = ProxyManagerImpl.getInstance().getProxySettings();
 
-        label1 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.host"));
-        label2 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.port"));
-        label3 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.benutzername"));
-        label4 = new JLabel(languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.passwort"));
-        use.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.verwenden"));
-        menuText = languageSelector.getFirstAttrbuteByTagName("javagui.options.proxy.caption");
+        label1 = new JLabel(languageSelector.getFirstAttributeByTagName("javagui.options.proxy.host"));
+        label2 = new JLabel(languageSelector.getFirstAttributeByTagName("javagui.options.proxy.port"));
+        label3 = new JLabel(languageSelector.getFirstAttributeByTagName("javagui.options.proxy.username"));
+        label4 = new JLabel(languageSelector.getFirstAttributeByTagName("javagui.options.proxy.password"));
+        use.setText(languageSelector.getFirstAttributeByTagName("javagui.options.proxy.use"));
+        menuText = languageSelector.getFirstAttributeByTagName("javagui.options.proxy.caption");
         host.setText(proxySettings.getHost());
         host.addFocusListener(new HostFocusListener());
         port.setDocument(new NumberInputVerifier());
@@ -82,7 +82,7 @@ public class ODProxyPanel extends JPanel implements OptionsRegister {
 
         port.addFocusListener(new PortFocusListener());
         user.addFocusListener(new UserFocusListener());
-        passwort.addFocusListener(new PasswortFocusListener());
+        password.addFocusListener(new PasswordFocusListener());
         use.setSelected(proxySettings.isUse());
         use.addChangeListener(e -> dirty = true);
 
@@ -119,7 +119,7 @@ public class ODProxyPanel extends JPanel implements OptionsRegister {
         panel1.add(user, constraints);
 
         constraints.gridy = 3;
-        panel1.add(passwort, constraints);
+        panel1.add(password, constraints);
 
         constraints.gridy = 4;
         constraints.gridx = 0;
@@ -142,7 +142,7 @@ public class ODProxyPanel extends JPanel implements OptionsRegister {
                 proxySettings.setPort(Integer.parseInt(tmpPort));
             }
 
-            proxySettings.setUserpass(user.getText(), new String(passwort.getPassword()));
+            proxySettings.setUserpass(user.getText(), new String(password.getPassword()));
         }
 
         return proxySettings;
@@ -165,7 +165,7 @@ public class ODProxyPanel extends JPanel implements OptionsRegister {
         // nothing to do...
     }
 
-    class PasswortFocusListener extends FocusAdapter {
+    class PasswordFocusListener extends FocusAdapter {
         public void focusLost(FocusEvent e) {
             dirty = true;
         }

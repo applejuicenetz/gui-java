@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.DesktopTools;
 import org.slf4j.Logger;
@@ -17,65 +17,68 @@ import java.awt.event.MouseEvent;
 import java.net.URI;
 
 /**
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
  */
 public class UpdateInformationDialog extends JDialog {
-    private final JButton schliessen = new JButton();
-    private final String titel;
-    private final String nachricht;
-    private final String linkBeschriftung;
+    private final JButton close = new JButton();
+    private final String title;
+    private final String message;
+    private final String linkCaption;
     private final String releaseLink;
     private final Logger logger;
 
-    public UpdateInformationDialog(JFrame parentFrame, String aktuellsteVersion, String releaseLink) {
-        this(parentFrame, LanguageSelector.getInstance().getFirstAttrbuteByTagName("javagui.startup.newversiontitel"),
-                LanguageSelector.getInstance().getFirstAttrbuteByTagName("javagui.startup.newversionnachricht")
-                        .replaceFirst("%s", aktuellsteVersion),
-                LanguageSelector.getInstance().getFirstAttrbuteByTagName("javagui.startup.newversion"), releaseLink);
+    public UpdateInformationDialog(JFrame parentFrame, String latestVersion, String releaseLink) {
+        this(parentFrame, LanguageSelector.getInstance().getFirstAttributeByTagName("javagui.startup.newversiontitle"),
+                LanguageSelector.getInstance().getFirstAttributeByTagName("javagui.startup.newversionmessage")
+                        .replaceFirst("%s", latestVersion),
+                LanguageSelector.getInstance().getFirstAttributeByTagName("javagui.startup.newversion"), releaseLink);
     }
 
-    private UpdateInformationDialog(JFrame parentFrame, String titel, String nachricht, String linkBeschriftung,
+    private UpdateInformationDialog(JFrame parentFrame, String title, String message, String linkCaption,
                                     String link) {
         super(parentFrame, true);
         logger = LoggerFactory.getLogger(getClass());
-        this.titel = titel;
-        this.nachricht = nachricht;
-        this.linkBeschriftung = linkBeschriftung;
+        this.title = title;
+        this.message = message;
+        this.linkCaption = linkCaption;
         this.releaseLink = link;
         try {
             init();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
-    /** Hinweis "keine neuere Version" mit Link auf das Repository. */
+    /** Notice "no newer version" with a link to the repository. */
     public static UpdateInformationDialog noNewVersion(JFrame parentFrame) {
         LanguageSelector ls = LanguageSelector.getInstance();
 
-        return new UpdateInformationDialog(parentFrame, ls.getFirstAttrbuteByTagName("mainform.checkupdate.caption"),
-                ls.getFirstAttrbuteByTagName("javagui.checkupdate.keineNeueVersion"), "GitHub",
+        return new UpdateInformationDialog(parentFrame, ls.getFirstAttributeByTagName("mainform.checkupdate.caption"),
+                ls.getFirstAttributeByTagName("javagui.checkupdate.noNewVersion"), "GitHub",
                 UpdateChecker.REPOSITORY_URL);
     }
 
-    /** Hinweis "Pruefung fehlgeschlagen" (kein Netz, ungueltige Antwort, unbekannte eigene Version) mit Repository-Link. */
+    /**
+     * Notice "check failed" (no network, invalid answer, unknown own version) with a repository
+     * link.
+     */
     public static UpdateInformationDialog checkFailed(JFrame parentFrame) {
         LanguageSelector ls = LanguageSelector.getInstance();
 
-        return new UpdateInformationDialog(parentFrame, ls.getFirstAttrbuteByTagName("mainform.checkupdate.caption"),
-                ls.getFirstAttrbuteByTagName("javagui.checkupdate.fehler"), "GitHub", UpdateChecker.REPOSITORY_URL);
+        return new UpdateInformationDialog(parentFrame, ls.getFirstAttributeByTagName("mainform.checkupdate.caption"),
+                ls.getFirstAttributeByTagName("javagui.checkupdate.error"), "GitHub", UpdateChecker.REPOSITORY_URL);
     }
 
     private void init() {
         LanguageSelector ls = LanguageSelector.getInstance();
 
-        schliessen.addActionListener(ae -> UpdateInformationDialog.this.dispose());
-        schliessen.setText(ls.getFirstAttrbuteByTagName("javagui.options.plugins.schliessen"));
-        setTitle(titel);
+        close.addActionListener(ae -> UpdateInformationDialog.this.dispose());
+        close.setText(ls.getFirstAttributeByTagName("javagui.options.plugins.close"));
+        setTitle(title);
         JPanel panel1 = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
 
@@ -87,13 +90,13 @@ public class UpdateInformationDialog extends JDialog {
         constraints.insets.left = 5;
         constraints.insets.top = 5;
         constraints.insets.right = 5;
-        panel1.add(new JLabel(nachricht), constraints);
+        panel1.add(new JLabel(message), constraints);
         constraints.insets.right = 0;
         constraints.gridwidth = 1;
         constraints.gridy = 1;
         JLabel label1 = new JLabel();
 
-        label1.setText(linkBeschriftung + ": ");
+        label1.setText(linkCaption + ": ");
         JLabel linkWin = new JLabel("<html><font><u>" + releaseLink + "</u></font></html>");
 
         panel1.add(label1, constraints);
@@ -128,7 +131,7 @@ public class UpdateInformationDialog extends JDialog {
         getContentPane().add(panel1, BorderLayout.CENTER);
         JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-        southPanel.add(schliessen);
+        southPanel.add(close);
         getContentPane().add(southPanel, BorderLayout.SOUTH);
         pack();
         DialogLocation.center(this);
@@ -138,7 +141,7 @@ public class UpdateInformationDialog extends JDialog {
         try {
             DesktopTools.browse(new URI(link));
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 }

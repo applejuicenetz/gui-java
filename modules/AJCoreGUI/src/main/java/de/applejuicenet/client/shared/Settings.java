@@ -8,8 +8,8 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/shared/Settings.java,v 1.13 2009/02/01 14:45:03 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -18,15 +18,15 @@ import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 public class Settings
 {
    private boolean dirty;
-   private boolean downloadUebersicht             = true;
+   private boolean downloadOverview             = true;
    private boolean loadPlugins                    = true;
    private boolean enableToolTip                  = true;
 
-   public Settings(Boolean downloadUebersicht, Boolean loadPlugins, Boolean enableToolTip)
+   public Settings(Boolean downloadOverview, Boolean loadPlugins, Boolean enableToolTip)
    {
-      if(downloadUebersicht != null)
+      if(downloadOverview != null)
       {
-         this.downloadUebersicht = downloadUebersicht.booleanValue();
+         this.downloadOverview = downloadOverview.booleanValue();
       }
 
       if(loadPlugins != null)
@@ -61,17 +61,17 @@ public class Settings
       return false;
    }
 
-   public boolean isDownloadUebersicht()
+   public boolean isDownloadOverview()
    {
-      return downloadUebersicht;
+      return downloadOverview;
    }
 
-   public void setDownloadUebersicht(boolean downloadUebersicht)
+   public void setDownloadOverview(boolean downloadOverview)
    {
-      if(this.downloadUebersicht != downloadUebersicht)
+      if(this.downloadOverview != downloadOverview)
       {
          dirty                   = true;
-         this.downloadUebersicht = downloadUebersicht;
+         this.downloadOverview = downloadOverview;
       }
    }
 

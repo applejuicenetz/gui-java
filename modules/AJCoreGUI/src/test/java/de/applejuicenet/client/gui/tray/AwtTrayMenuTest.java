@@ -19,19 +19,19 @@ public class AwtTrayMenuTest {
     public void keepsNativeLabelsEnabledStateAndSeparatorsInSync() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             JPopupMenu source = new JPopupMenu();
-            JMenuItem show = new JMenuItem("Zeigen");
+            JMenuItem show = new JMenuItem("Show");
             source.add(show);
             source.addSeparator();
             source.add(new JMenuItem("Optionen"));
             try (AwtTrayMenu menu = new AwtTrayMenu(source)) {
                 assertEquals(3, menu.getPopupMenu().getItemCount());
-                assertEquals("Zeigen", menu.getPopupMenu().getItem(0).getLabel());
+                assertEquals("Show", menu.getPopupMenu().getItem(0).getLabel());
                 assertEquals("-", menu.getPopupMenu().getItem(1).getLabel());
-                show.setText("Verstecken");
-                assertEquals("Verstecken", menu.getPopupMenu().getItem(0).getLabel());
+                show.setText("Hide");
+                assertEquals("Hide", menu.getPopupMenu().getItem(0).getLabel());
                 show.setEnabled(false);
                 assertFalse(menu.getPopupMenu().getItem(0).isEnabled());
-                source.add(new JMenuItem("Über"));
+                source.add(new JMenuItem("About"));
                 assertEquals(4, menu.getPopupMenu().getItemCount());
             }
         });

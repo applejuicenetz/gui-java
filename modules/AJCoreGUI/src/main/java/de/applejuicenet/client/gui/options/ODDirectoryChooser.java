@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui.options;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.components.tree.WaitNode;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.options.directorytree.DirectoryChooserNode;
@@ -22,16 +22,16 @@ import java.awt.event.ActionListener;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODDirectoryChooser.java,v 1.8 2009/01/12 09:19:20 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
  */
 public class ODDirectoryChooser extends JDialog {
     private JTree folderTree = new JTree();
-    private JButton uebernehmen = new JButton();
-    private JButton abbrechen = new JButton();
+    private JButton apply = new JButton();
+    private JButton cancel = new JButton();
     private boolean change = false;
     private String path;
     private Logger logger;
@@ -43,7 +43,7 @@ public class ODDirectoryChooser extends JDialog {
             setTitle(title);
             init();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -55,7 +55,7 @@ public class ODDirectoryChooser extends JDialog {
         folderTree.setModel(new DefaultTreeModel(new WaitNode()));
         folderTree.setCellRenderer(new DirectoryChooserTreeCellRenderer());
         folderTree.setRowHeight(0);
-        uebernehmen.setEnabled(false);
+        apply.setEnabled(false);
         new SwingWorker<DirectoryChooserTreeModel, Void>() {
             protected DirectoryChooserTreeModel doInBackground() {
                 return new DirectoryChooserTreeModel();
@@ -65,24 +65,24 @@ public class ODDirectoryChooser extends JDialog {
                 try {
                     folderTree.setModel(get());
                     folderTree.setRootVisible(false);
-                    uebernehmen.setEnabled(true);
+                    apply.setEnabled(true);
                 } catch (Exception e) {
-                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                    logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                 }
             }
         }.execute();
         JPanel aPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-        aPanel.add(uebernehmen);
-        aPanel.add(abbrechen);
-        uebernehmen.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Button1.caption"));
-        uebernehmen.addActionListener(new ActionListener() {
+        aPanel.add(apply);
+        aPanel.add(cancel);
+        apply.setText(languageSelector.getFirstAttributeByTagName("einstform.Button1.caption"));
+        apply.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                uebernehmen();
+                apply();
             }
         });
-        abbrechen.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Button2.caption"));
-        abbrechen.addActionListener(new ActionListener() {
+        cancel.setText(languageSelector.getFirstAttributeByTagName("einstform.Button2.caption"));
+        cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
             }
@@ -100,7 +100,7 @@ public class ODDirectoryChooser extends JDialog {
         return path;
     }
 
-    private void uebernehmen() {
+    private void apply() {
         try {
             if (folderTree.getSelectionCount() != 0) {
                 change = true;
@@ -111,7 +111,7 @@ public class ODDirectoryChooser extends JDialog {
 
             dispose();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 }

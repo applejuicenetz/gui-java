@@ -7,13 +7,13 @@ package de.applejuicenet.client.gui.share;
 import de.applejuicenet.client.gui.DialogLocation;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Information;
-import de.applejuicenet.client.fassade.entity.Server;
-import de.applejuicenet.client.fassade.entity.Share;
-import de.applejuicenet.client.fassade.entity.ShareEntry;
-import de.applejuicenet.client.fassade.entity.ShareEntry.SHAREMODE;
-import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Information;
+import de.applejuicenet.client.facade.entity.Server;
+import de.applejuicenet.client.facade.entity.Share;
+import de.applejuicenet.client.facade.entity.ShareEntry;
+import de.applejuicenet.client.facade.entity.ShareEntry.SHAREMODE;
+import de.applejuicenet.client.facade.shared.AJSettings;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
@@ -47,8 +47,8 @@ import java.util.Vector;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/ShareController.java,v 1.24 2009/02/12 09:11:24 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -56,30 +56,30 @@ import java.util.Vector;
  */
 public class ShareController extends GuiController
 {
-   private static final int       PRIORITAET_AUFHEBEN            = 0;
-   private static final int       PRIORITAET_SETZEN              = 1;
+   private static final int       CLEAR_PRIORITY            = 0;
+   private static final int       SET_PRIORITY              = 1;
    private static final int       REFRESH                        = 2;
    private static final int       STOP_SHARECHECK                = 99;
    private static final String    STOP_SHARECHECK_MIN_VERSION    = "0.35.186.1";
-   private static final int       SHARE_ERNEUERN                 = 3;
+   private static final int       SHARE_REFRESH                 = 3;
    private static final int       NOT_SHARED                     = 4;
    private static final int       SHARE_WITHOUT_SUB              = 5;
    private static final int       SHARE_WITH_SUB                 = 6;
    private static final int       COPY_TO_CLIPBOARD              = 7;
    private static final int       COPY_TO_CLIPBOARD_WITH_SOURCES = 8;
    private static final int       COPY_TO_CLIPBOARD_AS_UBB_CODE  = 9;
-   private static final int       NEUE_LISTE                     = 10;
+   private static final int       NEW_LIST                     = 10;
    private static final int       OPEN_WITH_STANDARD_PROGRAM     = 12;
    private static final int       RELEASE_INFO                   = 13;
-   private static final int       DATEILISTE_AUS_ORDNER           = 14;
+   private static final int       FILELIST_FROM_FOLDER           = 14;
    private static ShareController instance                       = null;
    private SharePanel             sharePanel;
-   private String                 dateiGroesse;
-   private String                 eintraege;
-   private int                    prio                           = 0;
-   private int                    anzahlDateien                  = 0;
+   private String                 fileSize;
+   private String                 entriesText;
+   private int                    priorityTotal                           = 0;
+   private int                    fileCount                  = 0;
    private boolean                initialized                    = false;
-   private boolean                treeInitialisiert              = false;
+   private boolean                treeInitialized              = false;
    private ShareTreeMouseAdapter  shareTreeMouseAdapter;
 
    private ShareController()
@@ -112,11 +112,11 @@ public class ShareController extends GuiController
 
    private void init()
    {
-      sharePanel.getBtnPrioritaetAufheben().addActionListener(new GuiControllerActionListener(this, PRIORITAET_AUFHEBEN));
-      sharePanel.getBtnPrioritaetSetzen().addActionListener(new GuiControllerActionListener(this, PRIORITAET_SETZEN));
+      sharePanel.getBtnClearPriority().addActionListener(new GuiControllerActionListener(this, CLEAR_PRIORITY));
+      sharePanel.getBtnSetPriority().addActionListener(new GuiControllerActionListener(this, SET_PRIORITY));
       sharePanel.getBtnRefresh().addActionListener(new GuiControllerActionListener(this, REFRESH));
       sharePanel.getBtnStopShareCheck().addActionListener(new GuiControllerActionListener(this, STOP_SHARECHECK));
-      sharePanel.getBtnNeuLaden().addActionListener(new GuiControllerActionListener(this, SHARE_ERNEUERN));
+      sharePanel.getBtnReload().addActionListener(new GuiControllerActionListener(this, SHARE_REFRESH));
       sharePanel.getMnuNotShared().addActionListener(new GuiControllerActionListener(this, NOT_SHARED));
       sharePanel.getMnuSharedWithoutSub().addActionListener(new GuiControllerActionListener(this, SHARE_WITHOUT_SUB));
       sharePanel.getMnuSharedWithSub().addActionListener(new GuiControllerActionListener(this, SHARE_WITH_SUB));
@@ -126,8 +126,8 @@ public class ShareController extends GuiController
       .addActionListener(new GuiControllerActionListener(this, COPY_TO_CLIPBOARD_WITH_SOURCES));
       sharePanel.getMnuCopyToClipboardAsUBBCode()
       .addActionListener(new GuiControllerActionListener(this, COPY_TO_CLIPBOARD_AS_UBB_CODE));
-      sharePanel.getBtnNeueListe().addActionListener(new GuiControllerActionListener(this, NEUE_LISTE));
-      sharePanel.getMnuCreateFileList().addActionListener(new GuiControllerActionListener(this, DATEILISTE_AUS_ORDNER));
+      sharePanel.getBtnNewList().addActionListener(new GuiControllerActionListener(this, NEW_LIST));
+      sharePanel.getMnuCreateFileList().addActionListener(new GuiControllerActionListener(this, FILELIST_FROM_FOLDER));
 
       shareTreeMouseAdapter = new ShareTreeMouseAdapter(sharePanel.getDirectoryTree(), sharePanel.getPopupMenu(),
                                                         sharePanel.getMnuSharedWithSub(), sharePanel.getMnuSharedWithoutSub(),
@@ -135,7 +135,7 @@ public class ShareController extends GuiController
       sharePanel.getShareTable().addMouseListener(new ShareTableMouseAdapter(sharePanel.getShareTable(),
             sharePanel.getPopupMenu2(), sharePanel.getFolderPopupMenu()));
 
-      if(AppleJuiceClient.getAjFassade().isLocalhost())
+      if(AppleJuiceClient.getAjFacade().isLocalhost())
       {
          if(DesktopTools.isAdvancedSupported())
          {
@@ -158,15 +158,15 @@ public class ShareController extends GuiController
       switch(actionId)
       {
 
-         case PRIORITAET_AUFHEBEN:
+         case CLEAR_PRIORITY:
          {
-            prioritaetAufheben();
+            clearPriority();
             break;
          }
 
-         case PRIORITAET_SETZEN:
+         case SET_PRIORITY:
          {
-            prioritaetSetzen();
+            applyPriority();
             break;
          }
 
@@ -182,27 +182,27 @@ public class ShareController extends GuiController
             break;
          }
 
-         case SHARE_ERNEUERN:
+         case SHARE_REFRESH:
          {
-            shareNeuLaden();
+            reloadShare();
             break;
          }
 
          case NOT_SHARED:
          {
-            nichtSharen();
+            doNotShare();
             break;
          }
 
          case SHARE_WITHOUT_SUB:
          {
-            ohneUnterverzeichnisSharen();
+            shareWithoutSubdirectory();
             break;
          }
 
          case SHARE_WITH_SUB:
          {
-            mitUnterverzeichnisSharen();
+            shareWithSubdirectory();
             break;
          }
 
@@ -224,25 +224,25 @@ public class ShareController extends GuiController
             break;
          }
 
-         case NEUE_LISTE:
+         case NEW_LIST:
          {
-            neueListe();
+            newList();
             break;
          }
 
-         case DATEILISTE_AUS_ORDNER:
+         case FILELIST_FROM_FOLDER:
          {
             Object[] selected = sharePanel.getShareTable().getSelectedItems();
             if(selected != null && selected.length == 1 && !((ShareNode) selected[0]).isLeaf())
             {
-               neueListe((ShareNode) selected[0]);
+               newList((ShareNode) selected[0]);
             }
             break;
          }
 
          case OPEN_WITH_STANDARD_PROGRAM:
          {
-            mitStandardProgrammOeffnen();
+            openWithDefaultProgram();
             break;
          }
 
@@ -269,7 +269,7 @@ public class ShareController extends GuiController
       }
    }
 
-   private void mitStandardProgrammOeffnen()
+   private void openWithDefaultProgram()
    {
       Object[] obj = sharePanel.getShareTable().getSelectedItems();
 
@@ -282,12 +282,12 @@ public class ShareController extends GuiController
       }
    }
 
-   private void neueListe(ShareNode... initialNodes)
+   private void newList(ShareNode... initialNodes)
    {
-      DateiListeDialog dateiListeDialog = new DateiListeDialog(AppleJuiceDialog.getApp(), false, initialNodes);
+      FileListDialog fileListDialog = new FileListDialog(AppleJuiceDialog.getApp(), false, initialNodes);
 
       sharePanel.getShareTable().setDragEnabled(true);
-      dateiListeDialog.setVisible(true);
+      fileListDialog.setVisible(true);
    }
 
    private void copyToClipboardWithSources()
@@ -306,14 +306,14 @@ public class ShareController extends GuiController
          toCopy.append(share.getCheckSum());
          toCopy.append("|");
          toCopy.append(share.getSize());
-         long        port        = AppleJuiceClient.getAjFassade().getAJSettings().getPort();
-         Information information = AppleJuiceClient.getAjFassade().getInformation();
+         long        port        = AppleJuiceClient.getAjFacade().getAJSettings().getPort();
+         Information information = AppleJuiceClient.getAjFacade().getInformation();
 
          toCopy.append("|");
-         toCopy.append(information.getExterneIP());
+         toCopy.append(information.getExternalIP());
          toCopy.append(":");
          toCopy.append(port);
-         if(information.getVerbindungsStatus() == Information.VERBUNDEN)
+         if(information.getConnectionStatus() == Information.CONNECTED)
          {
             Server server = information.getServer();
 
@@ -381,7 +381,7 @@ public class ShareController extends GuiController
       }
    }
 
-   private void mitUnterverzeichnisSharen()
+   private void shareWithSubdirectory()
    {
       DirectoryNode node = (DirectoryNode) sharePanel.getDirectoryTree().getLastSelectedPathComponent();
 
@@ -391,13 +391,13 @@ public class ShareController extends GuiController
          List<String> entries = new Vector<String>();
 
          entries.add(path);
-         AppleJuiceClient.getAjFassade().addShareEntry(entries, SHAREMODE.SUBDIRECTORY);
-         DirectoryNode.setShareDirs(AppleJuiceClient.getAjFassade().getAJSettings().getShareDirs());
+         AppleJuiceClient.getAjFacade().addShareEntry(entries, SHAREMODE.SUBDIRECTORY);
+         DirectoryNode.setShareDirs(AppleJuiceClient.getAjFacade().getAJSettings().getShareDirs());
          sharePanel.getDirectoryTree().repaint();
       }
    }
 
-   private void ohneUnterverzeichnisSharen()
+   private void shareWithoutSubdirectory()
    {
       DirectoryNode node = (DirectoryNode) sharePanel.getDirectoryTree().getLastSelectedPathComponent();
 
@@ -407,15 +407,15 @@ public class ShareController extends GuiController
          List<String> entries = new Vector<String>();
 
          entries.add(path);
-         AppleJuiceClient.getAjFassade().addShareEntry(entries, SHAREMODE.SINGLEDIRECTORY);
-         DirectoryNode.setShareDirs(AppleJuiceClient.getAjFassade().getAJSettings().getShareDirs());
+         AppleJuiceClient.getAjFacade().addShareEntry(entries, SHAREMODE.SINGLEDIRECTORY);
+         DirectoryNode.setShareDirs(AppleJuiceClient.getAjFacade().getAJSettings().getShareDirs());
          sharePanel.getDirectoryTree().repaint();
       }
    }
 
-   private void nichtSharen()
+   private void doNotShare()
    {
-      Set<ShareEntry> shares = AppleJuiceClient.getAjFassade().getAJSettings().getShareDirs();
+      Set<ShareEntry> shares = AppleJuiceClient.getAjFacade().getAJSettings().getShareDirs();
       DirectoryNode   node = (DirectoryNode) sharePanel.getDirectoryTree().getLastSelectedPathComponent();
 
       if(node != null)
@@ -424,20 +424,20 @@ public class ShareController extends GuiController
          List<String> entries = new Vector<String>();
 
          entries.add(path);
-         AppleJuiceClient.getAjFassade().removeShareEntry(entries);
-         DirectoryNode.setShareDirs(AppleJuiceClient.getAjFassade().getAJSettings().getShareDirs());
+         AppleJuiceClient.getAjFacade().removeShareEntry(entries);
+         DirectoryNode.setShareDirs(AppleJuiceClient.getAjFacade().getAJSettings().getShareDirs());
          sharePanel.getDirectoryTree().repaint();
       }
    }
 
-   private void prioritaetAufheben()
+   private void clearPriority()
    {
       changePriority(1);
    }
 
-   private void prioritaetSetzen()
+   private void applyPriority()
    {
-      changePriority((Integer) sharePanel.getCmbPrioritaet().getSelectedItem());
+      changePriority((Integer) sharePanel.getCmbPriority().getSelectedItem());
    }
 
    private void changePriority(int priority)
@@ -447,9 +447,9 @@ public class ShareController extends GuiController
       {
          return;
       }
-      sharePanel.getBtnPrioritaetAufheben().setEnabled(false);
-      sharePanel.getBtnPrioritaetSetzen().setEnabled(false);
-      sharePanel.getBtnNeuLaden().setEnabled(false);
+      sharePanel.getBtnClearPriority().setEnabled(false);
+      sharePanel.getBtnSetPriority().setEnabled(false);
+      sharePanel.getBtnReload().setEnabled(false);
       new javax.swing.SwingWorker<Void, Void>()
       {
          protected Void doInBackground()
@@ -469,11 +469,11 @@ public class ShareController extends GuiController
             }
             catch(Exception e)
             {
-               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+               logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
             }
             finally
             {
-               shareNeuLaden();
+               reloadShare();
             }
          }
       }.execute();
@@ -483,7 +483,7 @@ public class ShareController extends GuiController
    {
       try
       {
-         de.applejuicenet.client.fassade.entity.Version version = AppleJuiceClient.getAjFassade().getCoreVersion();
+         de.applejuicenet.client.facade.entity.Version version = AppleJuiceClient.getAjFacade().getCoreVersion();
 
          return version != null && version.compareTo(STOP_SHARECHECK_MIN_VERSION) >= 0;
       }
@@ -501,11 +501,11 @@ public class ShareController extends GuiController
          {
             try
             {
-               AppleJuiceClient.getAjFassade().stopShareCheck();
+               AppleJuiceClient.getAjFacade().stopShareCheck();
             }
             catch(Exception e)
             {
-               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+               logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
             }
 
             return null;
@@ -522,13 +522,13 @@ public class ShareController extends GuiController
          {
             try
             {
-               Set<ShareEntry> shares = AppleJuiceClient.getAjFassade().getAJSettings().getShareDirs();
+               Set<ShareEntry> shares = AppleJuiceClient.getAjFacade().getAJSettings().getShareDirs();
 
-               AppleJuiceClient.getAjFassade().setShare(shares);
+               AppleJuiceClient.getAjFacade().setShare(shares);
             }
             catch(Exception e)
             {
-               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+               logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
             }
 
             return null;
@@ -543,27 +543,27 @@ public class ShareController extends GuiController
       worker.execute();
    }
 
-   private void shareNeuLaden()
+   private void reloadShare()
    {
       if(!SwingUtilities.isEventDispatchThread())
       {
-         SwingUtilities.invokeLater(this::shareNeuLaden);
+         SwingUtilities.invokeLater(this::reloadShare);
          return;
       }
-      sharePanel.getBtnPrioritaetAufheben().setEnabled(false);
-      sharePanel.getBtnPrioritaetSetzen().setEnabled(false);
-      sharePanel.getBtnNeuLaden().setEnabled(false);
+      sharePanel.getBtnClearPriority().setEnabled(false);
+      sharePanel.getBtnSetPriority().setEnabled(false);
+      sharePanel.getBtnReload().setEnabled(false);
       final javax.swing.SwingWorker<List<Share>, Void> worker = new javax.swing.SwingWorker<List<Share>, Void>()
       {
          protected List<Share> doInBackground()
          {
             try
             {
-               return new ArrayList<Share>(AppleJuiceClient.getAjFassade().getShare(true).values());
+               return new ArrayList<Share>(AppleJuiceClient.getAjFacade().getShare(true).values());
             }
             catch(Exception e)
             {
-               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+               logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                return null;
             }
          }
@@ -578,42 +578,42 @@ public class ShareController extends GuiController
                   return;
                }
                sharePanel.getShareTable().setShares(shares);
-               anzahlDateien = 0;
+               fileCount = 0;
                long size = 0;
 
-               prio = 0;
+               priorityTotal = 0;
                for(Share curShare : shares)
                {
                   size += curShare.getSize();
-                  if(curShare.getPrioritaet() > 1)
+                  if(curShare.getPriority() > 1)
                   {
-                     prio += curShare.getPrioritaet();
+                     priorityTotal += curShare.getPriority();
                   }
 
-                  anzahlDateien++;
+                  fileCount++;
                }
 
-               dateiGroesse = ShareSizeFormatter.format(size);
-               String temp = eintraege;
+               fileSize = ShareSizeFormatter.format(size);
+               String temp = entriesText;
 
-               temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));
-               temp = temp.replaceFirst("%s", dateiGroesse);
+               temp = temp.replaceFirst("%i", Integer.toString(fileCount));
+               temp = temp.replaceFirst("%s", fileSize);
                StringBuffer tmp = new StringBuffer(temp);
 
                tmp.append(" - Prio: ");
-               tmp.append(prio);
+               tmp.append(priorityTotal);
                tmp.append("/1000");
-               sharePanel.getLblDateien().setText(tmp.toString());
+               sharePanel.getLblFiles().setText(tmp.toString());
             }
             catch(Exception e)
             {
-               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+               logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
             }
             finally
             {
-               sharePanel.getBtnPrioritaetAufheben().setEnabled(true);
-               sharePanel.getBtnPrioritaetSetzen().setEnabled(true);
-               sharePanel.getBtnNeuLaden().setEnabled(true);
+               sharePanel.getBtnClearPriority().setEnabled(true);
+               sharePanel.getBtnSetPriority().setEnabled(true);
+               sharePanel.getBtnReload().setEnabled(true);
             }
          }
       };
@@ -655,14 +655,14 @@ public class ShareController extends GuiController
             TableColumnSettings.installCompact(sharePanel.getShareTable(), "share", columns);
          }
 
-         if(!treeInitialisiert)
+         if(!treeInitialized)
          {
-            treeInitialisiert = true;
+            treeInitialized = true;
             new javax.swing.SwingWorker<AJSettings, Void>()
             {
                   protected AJSettings doInBackground()
                   {
-                     return AppleJuiceClient.getAjFassade().getAJSettings();
+                     return AppleJuiceClient.getAjFacade().getAJSettings();
                   }
 
                   protected void done()
@@ -674,17 +674,17 @@ public class ShareController extends GuiController
                      }
                      catch(Exception e)
                      {
-                        treeInitialisiert = false;
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                        treeInitialized = false;
+                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                      }
-                     sharePanel.getBtnPrioritaetAufheben().setEnabled(true);
-                     sharePanel.getBtnPrioritaetSetzen().setEnabled(true);
-                     sharePanel.getBtnNeuLaden().setEnabled(true);
+                     sharePanel.getBtnClearPriority().setEnabled(true);
+                     sharePanel.getBtnSetPriority().setEnabled(true);
+                     sharePanel.getBtnReload().setEnabled(true);
                      sharePanel.getBtnRefresh().setEnabled(true);
                      sharePanel.getBtnStopShareCheck().setEnabled(isStopShareCheckSupported());
-                     if(treeInitialisiert)
+                     if(treeInitialized)
                      {
-                        shareNeuLaden();
+                        reloadShare();
                      }
                   }
             }.execute();
@@ -692,7 +692,7 @@ public class ShareController extends GuiController
       }
       catch(Exception e)
       {
-         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+         logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
       }
    }
 
@@ -716,8 +716,8 @@ public class ShareController extends GuiController
             }
             catch(Exception e)
             {
-               treeInitialisiert = false;
-               logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+               treeInitialized = false;
+               logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
             }
          }
       };
@@ -735,45 +735,45 @@ public class ShareController extends GuiController
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      sharePanel.getFolderTreeBolder().setTitle(languageSelector.getFirstAttrbuteByTagName("mainform.dirssheet.caption"));
-      sharePanel.getMainPanelBolder().setTitle(languageSelector.getFirstAttrbuteByTagName("mainform.filessheet.caption"));
-      sharePanel.getMnuSharedWithSub().setText(languageSelector.getFirstAttrbuteByTagName("mainform.addwsubdirsbtn.caption"));
-      sharePanel.getMnuSharedWithoutSub().setText(languageSelector.getFirstAttrbuteByTagName("mainform.addosubdirsbtn.caption"));
-      sharePanel.getMnuNotShared().setText(languageSelector.getFirstAttrbuteByTagName("mainform.deldirbtn.caption"));
-      sharePanel.getMnuReleaseInfo().setText(languageSelector.getFirstAttrbuteByTagName("releaseinfo.menu"));
-      sharePanel.getMnuCopyToClipboard().setText(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption"));
+      sharePanel.getFolderTreeBolder().setTitle(languageSelector.getFirstAttributeByTagName("mainform.dirssheet.caption"));
+      sharePanel.getMainPanelBolder().setTitle(languageSelector.getFirstAttributeByTagName("mainform.filessheet.caption"));
+      sharePanel.getMnuSharedWithSub().setText(languageSelector.getFirstAttributeByTagName("mainform.addwsubdirsbtn.caption"));
+      sharePanel.getMnuSharedWithoutSub().setText(languageSelector.getFirstAttributeByTagName("mainform.addosubdirsbtn.caption"));
+      sharePanel.getMnuNotShared().setText(languageSelector.getFirstAttributeByTagName("mainform.deldirbtn.caption"));
+      sharePanel.getMnuReleaseInfo().setText(languageSelector.getFirstAttributeByTagName("releaseinfo.menu"));
+      sharePanel.getMnuCopyToClipboard().setText(languageSelector.getFirstAttributeByTagName("mainform.getlink1.caption"));
       sharePanel.getMnuCopyToClipboardAsUBBCode()
-      .setText(languageSelector.getFirstAttrbuteByTagName("javagui.shareform.linkalsubbcode"));
+      .setText(languageSelector.getFirstAttributeByTagName("javagui.shareform.linkasubbcode"));
       sharePanel.getMnuCopyToClipboardWithSources()
-      .setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.getlinkwithsources"));
+      .setText(languageSelector.getFirstAttributeByTagName("javagui.downloadform.getlinkwithsources"));
       sharePanel.getMnuOpenWithStandardProgram()
-      .setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.startemitstandard"));
-      sharePanel.getMnuOpenWithStandardProgram().setToolTipText(AppleJuiceClient.getAjFassade().isLocalhost() ? null
-            : languageSelector.getFirstAttrbuteByTagName("javagui.remotecore.hint"));
-      sharePanel.getBtnRefresh().setText(languageSelector.getFirstAttrbuteByTagName("mainform.startsharecheck.caption"));
-      sharePanel.getBtnRefresh().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.startsharecheck.hint"));
-      sharePanel.getBtnStopShareCheck().setText(languageSelector.getFirstAttrbuteByTagName("mainform.stopsharecheck.caption"));
-      sharePanel.getBtnStopShareCheck().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.stopsharecheck.hint"));
-      sharePanel.getBtnNeueListe().setText(languageSelector.getFirstAttrbuteByTagName("mainform.newfilelist.caption"));
-      sharePanel.getMnuCreateFileList().setText(languageSelector.getFirstAttrbuteByTagName("mainform.createfilelist.caption"));
-      sharePanel.getBtnNeueListe().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.newfilelist.hint"));
-      sharePanel.getBtnNeuLaden().setText(languageSelector.getFirstAttrbuteByTagName("mainform.sharereload.caption"));
-      sharePanel.getBtnNeuLaden().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.sharereload.hint"));
-      sharePanel.getBtnPrioritaetSetzen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.setprio.caption"));
-      sharePanel.getBtnPrioritaetSetzen().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.setprio.hint"));
-      sharePanel.getBtnPrioritaetAufheben().setText(languageSelector.getFirstAttrbuteByTagName("mainform.clearprio.caption"));
-      sharePanel.getBtnPrioritaetAufheben().setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.clearprio.hint"));
-      sharePanel.getSearchField().setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.shareform.filter.hint"));
-      sharePanel.getSearchField().putClientProperty("JTextField.placeholderText", languageSelector.getFirstAttrbuteByTagName("javagui.shareform.filter.hint"));
+      .setText(languageSelector.getFirstAttributeByTagName("javagui.options.standard.startwithdefault"));
+      sharePanel.getMnuOpenWithStandardProgram().setToolTipText(AppleJuiceClient.getAjFacade().isLocalhost() ? null
+            : languageSelector.getFirstAttributeByTagName("javagui.remotecore.hint"));
+      sharePanel.getBtnRefresh().setText(languageSelector.getFirstAttributeByTagName("mainform.startsharecheck.caption"));
+      sharePanel.getBtnRefresh().setToolTipText(languageSelector.getFirstAttributeByTagName("mainform.startsharecheck.hint"));
+      sharePanel.getBtnStopShareCheck().setText(languageSelector.getFirstAttributeByTagName("mainform.stopsharecheck.caption"));
+      sharePanel.getBtnStopShareCheck().setToolTipText(languageSelector.getFirstAttributeByTagName("mainform.stopsharecheck.hint"));
+      sharePanel.getBtnNewList().setText(languageSelector.getFirstAttributeByTagName("mainform.newfilelist.caption"));
+      sharePanel.getMnuCreateFileList().setText(languageSelector.getFirstAttributeByTagName("mainform.createfilelist.caption"));
+      sharePanel.getBtnNewList().setToolTipText(languageSelector.getFirstAttributeByTagName("mainform.newfilelist.hint"));
+      sharePanel.getBtnReload().setText(languageSelector.getFirstAttributeByTagName("mainform.sharereload.caption"));
+      sharePanel.getBtnReload().setToolTipText(languageSelector.getFirstAttributeByTagName("mainform.sharereload.hint"));
+      sharePanel.getBtnSetPriority().setText(languageSelector.getFirstAttributeByTagName("mainform.setprio.caption"));
+      sharePanel.getBtnSetPriority().setToolTipText(languageSelector.getFirstAttributeByTagName("mainform.setprio.hint"));
+      sharePanel.getBtnClearPriority().setText(languageSelector.getFirstAttributeByTagName("mainform.clearprio.caption"));
+      sharePanel.getBtnClearPriority().setToolTipText(languageSelector.getFirstAttributeByTagName("mainform.clearprio.hint"));
+      sharePanel.getSearchField().setToolTipText(languageSelector.getFirstAttributeByTagName("javagui.shareform.filter.hint"));
+      sharePanel.getSearchField().putClientProperty("JTextField.placeholderText", languageSelector.getFirstAttributeByTagName("javagui.shareform.filter.hint"));
 
       String[] tableColumns = new String[6];
 
-      tableColumns[0] = languageSelector.getFirstAttrbuteByTagName("mainform.sfiles.col0caption");
-      tableColumns[1] = languageSelector.getFirstAttrbuteByTagName("mainform.sfiles.col1caption");
-      tableColumns[2] = languageSelector.getFirstAttrbuteByTagName("mainform.sfiles.col2caption");
-      tableColumns[3] = languageSelector.getFirstAttrbuteByTagName("javagui.shareform.letzteanfrage");
-      tableColumns[4] = languageSelector.getFirstAttrbuteByTagName("javagui.shareform.downloadanfragen");
-      tableColumns[5] = languageSelector.getFirstAttrbuteByTagName("javagui.shareform.suchanfragen");
+      tableColumns[0] = languageSelector.getFirstAttributeByTagName("mainform.sfiles.col0caption");
+      tableColumns[1] = languageSelector.getFirstAttributeByTagName("mainform.sfiles.col1caption");
+      tableColumns[2] = languageSelector.getFirstAttributeByTagName("mainform.sfiles.col2caption");
+      tableColumns[3] = languageSelector.getFirstAttributeByTagName("javagui.shareform.lastrequest");
+      tableColumns[4] = languageSelector.getFirstAttributeByTagName("javagui.shareform.downloadrequests");
+      tableColumns[5] = languageSelector.getFirstAttributeByTagName("javagui.shareform.searchrequests");
 
       TableColumnModel tcm = sharePanel.getShareTable().getColumnModel();
 
@@ -782,23 +782,23 @@ public class ShareController extends GuiController
          tcm.getColumn(i).setHeaderValue(tableColumns[tcm.getColumn(i).getModelIndex()]);
       }
 
-      eintraege = languageSelector.getFirstAttrbuteByTagName("javagui.shareform.anzahlShare");
-      if(anzahlDateien > 0)
+      entriesText = languageSelector.getFirstAttributeByTagName("javagui.shareform.sharecount");
+      if(fileCount > 0)
       {
-         String temp = eintraege;
+         String temp = entriesText;
 
-         temp = temp.replaceFirst("%i", Integer.toString(anzahlDateien));
-         temp = temp.replaceFirst("%s", dateiGroesse);
+         temp = temp.replaceFirst("%i", Integer.toString(fileCount));
+         temp = temp.replaceFirst("%s", fileSize);
          StringBuffer tmp = new StringBuffer(temp);
 
          tmp.append(" - Prio: ");
-         tmp.append(prio);
+         tmp.append(priorityTotal);
          tmp.append("/1000");
-         sharePanel.getLblDateien().setText(tmp.toString());
+         sharePanel.getLblFiles().setText(tmp.toString());
       }
       else
       {
-         sharePanel.getLblDateien().setText("");
+         sharePanel.getLblFiles().setText("");
       }
    }
 

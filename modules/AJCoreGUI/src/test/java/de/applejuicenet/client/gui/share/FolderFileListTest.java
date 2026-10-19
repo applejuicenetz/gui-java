@@ -1,9 +1,9 @@
 package de.applejuicenet.client.gui.share;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Share;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Share;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
-import de.applejuicenet.client.gui.share.table.DateiListeTableModel;
+import de.applejuicenet.client.gui.share.table.FileListTableModel;
 import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.gui.share.table.ShareTable;
 import de.applejuicenet.client.gui.share.table.ShareTableModel;
@@ -36,17 +36,17 @@ public class FolderFileListTest {
 
     @Test
     public void folderDialogContainsNestedFilesAndOpensInsideRightEdge() throws Exception {
-        String previousSeparator = ApplejuiceFassade.separator;
-        ApplejuiceFassade.separator = "/";
+        String previousSeparator = ApplejuiceFacade.separator;
+        ApplejuiceFacade.separator = "/";
         try {
             SwingUtilities.invokeAndWait(() -> {
                 ShareNode root = root();
                 ShareNode folder = (ShareNode) root.getChildrenMap().get("folder");
                 JFrame owner = new JFrame();
-                DateiListeDialog dialog = new DateiListeDialog(owner, false, folder);
-                DateiListeDialog emptyDialog = new DateiListeDialog(owner, false);
+                FileListDialog dialog = new FileListDialog(owner, false, folder);
+                FileListDialog emptyDialog = new FileListDialog(owner, false);
                 try {
-                    DateiListeTableModel model = (DateiListeTableModel) findTable(dialog).getModel();
+                    FileListTableModel model = (FileListTableModel) findTable(dialog).getModel();
                     assertEquals(2, model.getRowCount());
                     assertEquals(Set.of("alpha.bin", "beta.bin"), Arrays.stream(model.getShares())
                             .map(Share::getShortfilename).collect(Collectors.toSet()));
@@ -64,14 +64,14 @@ public class FolderFileListTest {
                 }
             });
         } finally {
-            ApplejuiceFassade.separator = previousSeparator;
+            ApplejuiceFacade.separator = previousSeparator;
         }
     }
 
     @Test
     public void folderRightClickUsesFolderMenuAndFileUsesExistingMenu() throws Exception {
-        String previousSeparator = ApplejuiceFassade.separator;
-        ApplejuiceFassade.separator = "/";
+        String previousSeparator = ApplejuiceFacade.separator;
+        ApplejuiceFacade.separator = "/";
         try {
             SwingUtilities.invokeAndWait(() -> {
                 ShareTable table = new ShareTable(new ShareTableModel(root()));
@@ -103,7 +103,7 @@ public class FolderFileListTest {
                 assertEquals(1, filePopup.shown);
             });
         } finally {
-            ApplejuiceFassade.separator = previousSeparator;
+            ApplejuiceFacade.separator = previousSeparator;
         }
     }
 
@@ -115,19 +115,19 @@ public class FolderFileListTest {
 
     @Test
     public void fileListFormatsLargeSizesAndFitsColumnsWithoutChangingDragHandlers() throws Exception {
-        String previousSeparator = ApplejuiceFassade.separator;
-        ApplejuiceFassade.separator = "/";
+        String previousSeparator = ApplejuiceFacade.separator;
+        ApplejuiceFacade.separator = "/";
         try {
-            final DateiListeDialog[] dialog = new DateiListeDialog[1];
+            final FileListDialog[] dialog = new FileListDialog[1];
             final JTable[] table = new JTable[1];
             SwingUtilities.invokeAndWait(() -> {
-                dialog[0] = new DateiListeDialog(null, false);
+                dialog[0] = new FileListDialog(null, false);
                 table[0] = findTable(dialog[0]);
                 table[0].setSize(800, 300);
                 table[0].getParent().setSize(800, 300);
                 ShareNode initial = new ShareNode(null, null);
                 initial.addChild(share(10, "large.bin", 5L << 30));
-                ((DateiListeTableModel) table[0].getModel()).addNodes(initial);
+                ((FileListTableModel) table[0].getModel()).addNodes(initial);
             });
             try {
                 SwingUtilities.invokeAndWait(() -> {
@@ -145,7 +145,7 @@ public class FolderFileListTest {
                     assertFalse(files.getDragEnabled());
                     ShareNode larger = new ShareNode(null, null);
                     larger.addChild(share(11, "larger.bin", 999L << 40));
-                    ((DateiListeTableModel) files.getModel()).addNodes(larger);
+                    ((FileListTableModel) files.getModel()).addNodes(larger);
                 });
                 SwingUtilities.invokeAndWait(() -> {
                     JTable files = table[0];
@@ -159,7 +159,7 @@ public class FolderFileListTest {
                 SwingUtilities.invokeAndWait(() -> dialog[0].dispose());
             }
         } finally {
-            ApplejuiceFassade.separator = previousSeparator;
+            ApplejuiceFacade.separator = previousSeparator;
         }
     }
 
@@ -197,7 +197,7 @@ public class FolderFileListTest {
             public String getShortfilename() { return name.substring(name.lastIndexOf('/') + 1); }
             public long getSize() { return size; }
             public String getCheckSum() { return "hash"; }
-            public int getPrioritaet() { return 1; }
+            public int getPriority() { return 1; }
             public long getAskCount() { return 0; }
             public long getLastAsked() { return 0; }
             public long getSearchCount() { return 0; }

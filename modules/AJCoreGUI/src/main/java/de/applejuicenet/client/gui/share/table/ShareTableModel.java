@@ -11,13 +11,13 @@ import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Collection;
-import de.applejuicenet.client.fassade.entity.Share;
+import de.applejuicenet.client.facade.entity.Share;
 
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/table/ShareTableModel.java,v 1.1 2009/01/27 07:55:55 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -112,7 +112,7 @@ public class ShareTableModel extends AbstractTreeTableModel
             {
                if(shareNode.isLeaf() && shareNode != getRoot())
                {
-                  return DownloadsTableModel.parseGroesse(shareNode.getShare().getSize());
+                  return DownloadsTableModel.parseSize(shareNode.getShare().getSize());
                }
                else
                {
@@ -124,7 +124,7 @@ public class ShareTableModel extends AbstractTreeTableModel
             {
                if(shareNode.isLeaf() && shareNode != getRoot())
                {
-                  return shareNode.getShare().getPrioritaet();
+                  return shareNode.getShare().getPriority();
                }
                else
                {

@@ -2,8 +2,8 @@ package de.applejuicenet.client.gui.plugins;
 
 import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.listener.CoreStatusListener;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.listener.CoreStatusListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,7 @@ public class SpeedGraphPlugin extends PluginConnector implements CoreStatusListe
     private final SpeedHistory history = new SpeedHistory(3600000, 20000);
     private final Properties settings = new Properties();
     private final Path settingsFile;
-    private final ApplejuiceFassade facade;
+    private final ApplejuiceFacade facade;
     private final GraphPanel view;
     private final Timer refreshTimer;
     private boolean listening;
@@ -29,17 +29,17 @@ public class SpeedGraphPlugin extends PluginConnector implements CoreStatusListe
     public SpeedGraphPlugin(Properties pluginsProperties, Map<String, Properties> languageFiles,
                             ImageIcon icon, Map<String, ImageIcon> availableIcons) {
         this(pluginsProperties, languageFiles, icon, availableIcons,
-                Path.of(System.getProperty("user.home"), "appleJuice", "gui", "speedgraph.properties"), AppleJuiceClient.getAjFassade());
+                Path.of(System.getProperty("user.home"), "appleJuice", "gui", "speedgraph.properties"), AppleJuiceClient.getAjFacade());
     }
 
     SpeedGraphPlugin(Properties pluginsProperties, Map<String, Properties> languageFiles,
-                     ImageIcon icon, Map<String, ImageIcon> availableIcons, Path settingsFile, ApplejuiceFassade facade) {
+                     ImageIcon icon, Map<String, ImageIcon> availableIcons, Path settingsFile, ApplejuiceFacade facade) {
         super(pluginsProperties, languageFiles, icon, availableIcons);
         this.settingsFile = settingsFile;
         this.facade = facade;
         if (Files.isRegularFile(settingsFile)) {
             try (var input = Files.newInputStream(settingsFile)) { settings.load(input); }
-            catch (IOException | IllegalArgumentException e) { LOGGER.warn("SpeedGraph-Einstellungen nicht lesbar", e); }
+            catch (IOException | IllegalArgumentException e) { LOGGER.warn("SpeedGraph settings not readable", e); }
         }
         setLayout(new BorderLayout());
         view = new GraphPanel(history, settings, this::saveSettings);
@@ -52,7 +52,7 @@ public class SpeedGraphPlugin extends PluginConnector implements CoreStatusListe
         if (listening) return;
         if (facade != null) {
             facade.addDataUpdateListener(this, DATALISTENER_TYPE.SPEED_CHANGED);
-            ApplejuiceFassade.addCoreStatusListener(this);
+            ApplejuiceFacade.addCoreStatusListener(this);
             listening = true;
         }
     }
@@ -67,7 +67,7 @@ public class SpeedGraphPlugin extends PluginConnector implements CoreStatusListe
         refreshTimer.stop();
         if (listening) {
             facade.removeDataUpdateListener(this, DATALISTENER_TYPE.SPEED_CHANGED);
-            ApplejuiceFassade.removeCoreStatusListener(this);
+            ApplejuiceFacade.removeCoreStatusListener(this);
             listening = false;
         }
         super.removeNotify();
@@ -104,7 +104,7 @@ public class SpeedGraphPlugin extends PluginConnector implements CoreStatusListe
         try {
             Files.createDirectories(settingsFile.getParent());
             try (var output = Files.newOutputStream(settingsFile)) { settings.store(output, "SpeedGraph"); }
-        } catch (IOException e) { LOGGER.warn("SpeedGraph-Einstellungen nicht gespeichert", e); }
+        } catch (IOException e) { LOGGER.warn("SpeedGraph settings not saved", e); }
         refresh();
     }
 

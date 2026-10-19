@@ -130,11 +130,11 @@ public class LogViewerPlugin extends PluginConnector {
             deleted = result.deleted();
             failed = result.failed();
         } catch (IOException e) {
-            LOGGER.warn("LogViewer: Logordner nicht lesbar: {}", directory, e);
+            LOGGER.warn("LogViewer: log folder not readable: {}", directory, e);
         }
         files.clear();
         remaining.stream().sorted((a, b) -> Long.compare(b.lastModified(), a.lastModified())).forEach(files::addElement);
-        if (deleted > 0) LOGGER.info("LogViewer: {} ältere Logdateien gelöscht, {} behalten", deleted, files.size());
+        if (deleted > 0) LOGGER.info("LogViewer: deleted {} older log files, kept {}", deleted, files.size());
         if (deleted > 0) GuiText.setText(notice, "plugins.logviewer.retentiondeleted", deleted, MAX_LOG_FILES);
         else if (failed > 0) GuiText.setText(notice, "plugins.logviewer.retentionfailed", failed);
         else GuiText.setText(notice, "plugins.logviewer.retention", MAX_LOG_FILES);
@@ -162,7 +162,7 @@ public class LogViewerPlugin extends PluginConnector {
                 } catch (Exception e) {
                     entries.setEntries(List.of());
                     GuiText.setText(summary, "plugins.logviewer.unreadable", file.getName());
-                    LOGGER.warn("LogViewer: Lesen fehlgeschlagen: {}", file, e);
+                    LOGGER.warn("LogViewer: reading failed: {}", file, e);
                 }
             }
         };

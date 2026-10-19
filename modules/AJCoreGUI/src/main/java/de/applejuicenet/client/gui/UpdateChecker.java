@@ -2,7 +2,7 @@ package de.applejuicenet.client.gui;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
-import de.applejuicenet.client.fassade.shared.WebsiteContentLoader;
+import de.applejuicenet.client.facade.shared.WebsiteContentLoader;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ public class UpdateChecker {
 
     static final String REPOSITORY_URL = "https://github.com/applejuicenetz/gui-java";
 
-    /** Ergebnisse der Pruefung; wird vom Aufrufer auf dem EDT angezeigt. */
+    /** Results of the check; shown by the caller on the EDT. */
     interface Ui {
         void newVersion(String version, String releaseLink);
 
@@ -28,14 +28,14 @@ public class UpdateChecker {
         void failed();
     }
 
-    /** Pruefung beim Start: meldet nur eine neue Version, sonst nichts. */
+    /** Check at startup: only reports a new version, nothing else. */
     public static void check() {
         check(true);
     }
 
     /**
-     * @param silent {@code true}: nur eine neue Version melden (Start). {@code false}: auch melden, wenn keine neue
-     *               Version vorliegt oder die Pruefung fehlschlaegt (Menue "Update pruefen").
+     * @param silent {@code true}: only report a new version (startup). {@code false}: also report
+     * when there is no new version or the check fails (menu "Check for update").
      */
     public static void check(boolean silent) {
         Thread.ofVirtual().name("UpdateChecker").start(() -> run(silent,
@@ -48,7 +48,7 @@ public class UpdateChecker {
     }
 
     static void run(boolean silent, Loader loader, String currentVersion, Ui ui) {
-        logger.debug("VersionWorkerThread gestartet.");
+        logger.debug("VersionWorkerThread started.");
 
         try {
             String downloadData = loader.load();
@@ -58,21 +58,21 @@ public class UpdateChecker {
             }
 
             JsonObject jsonObject = Json.parse(downloadData).asObject();
-            String aktuellsteVersion = jsonObject.get("tag_name").asString();
+            String latestVersion = jsonObject.get("tag_name").asString();
 
-            logger.info("aktuelle Version " + currentVersion + " | letzte veröffentlichte Version: " + aktuellsteVersion);
+            logger.info("current version " + currentVersion + " | latest released version: " + latestVersion);
 
             if (currentVersion == null) {
-                throw new IllegalStateException("eigene Version unbekannt");
+                throw new IllegalStateException("own version unknown");
             }
 
-            if (compareVersion(aktuellsteVersion, currentVersion) == 1) {
-                ui.newVersion(aktuellsteVersion, jsonObject.get("html_url").asString());
+            if (compareVersion(latestVersion, currentVersion) == 1) {
+                ui.newVersion(latestVersion, jsonObject.get("html_url").asString());
             } else if (!silent) {
                 ui.noNewVersion();
             }
         } catch (Exception e) {
-            logger.info("Aktualisierungsinformationen konnten nicht geladen werden.", e);
+            logger.info("Update information could not be loaded.", e);
             if (!silent) {
                 ui.failed();
             }

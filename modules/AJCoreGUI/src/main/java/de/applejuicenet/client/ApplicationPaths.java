@@ -14,7 +14,7 @@ final class ApplicationPaths {
             Path workingDirectory = Path.of(System.getProperty("user.dir"));
             System.setProperty("user.dir", resourceDirectory(location, workingDirectory, args).toString());
         } catch (URISyntaxException e) {
-            throw new IllegalStateException("GUI-Ressourcenpfad kann nicht bestimmt werden", e);
+            throw new IllegalStateException("Cannot determine the GUI resource path", e);
         }
     }
 

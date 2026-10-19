@@ -17,10 +17,10 @@ public class ConnectionPresetsTest {
                 + "{\"group\":\"B\",\"items\":[{\"name\":\"DSL 384\",\"download\":384,\"upload\":128,\"ram\":128}]}]";
         ConnectionKind[] kinds = ConnectionPresets.parse(new StringReader(json));
         assertEquals(2, kinds.length);
-        assertEquals("Fiber 1.000", kinds[0].getBezeichnung());
+        assertEquals("Fiber 1.000", kinds[0].getLabel());
         assertEquals(6104, kinds[0].getMaxUpload());
         assertEquals(0, kinds[0].getMaxDownload());
-        assertEquals(50, kinds[0].getMaxNewConnectionsPro10Sek());
+        assertEquals(50, kinds[0].getMaxNewConnectionsPer10Sec());
         assertEquals(16, kinds[1].getMaxUpload());
     }
 
@@ -34,6 +34,6 @@ public class ConnectionPresetsTest {
                 return;
             }
         }
-        throw new AssertionError("resources/presets.json nicht gefunden");
+        throw new AssertionError("resources/presets.json not found");
     }
 }

@@ -8,10 +8,10 @@ import de.applejuicenet.client.gui.controller.GuiText;
 import de.applejuicenet.client.gui.DialogLocation;
 
 import ch.qos.logback.classic.Level;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.controller.CoreConnectionSettingsHolder;
-import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
-import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.controller.CoreConnectionSettingsHolder;
+import de.applejuicenet.client.facade.exception.IllegalArgumentException;
+import de.applejuicenet.client.facade.shared.AJSettings;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.UpdateChecker;
 import de.applejuicenet.client.gui.components.listener.KeyStates;
@@ -41,8 +41,8 @@ import java.util.Locale;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClient.java,v 1.109 2009/02/12 13:11:40 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r [aj@tkl-soft.de]
@@ -50,7 +50,7 @@ import java.util.Locale;
 public class AppleJuiceClient {
     public static Splash splash = null;
     private static Logger logger;
-    private static ApplejuiceFassade ajFassade = null;
+    private static ApplejuiceFacade ajFacade = null;
     private static CoreConnectionSettingsHolder conn = null;
     private static String rootDirectory = null;
 
@@ -63,19 +63,19 @@ public class AppleJuiceClient {
         return getRootDirectory();
     }
 
-    public static synchronized ApplejuiceFassade getAjFassade() {
-        if (ajFassade == null) {
+    public static synchronized ApplejuiceFacade getAjFacade() {
+        if (ajFacade == null) {
             ConnectionSettings rm = OptionsManagerImpl.getInstance().getRemoteSettings();
 
             try {
                 conn = new CoreConnectionSettingsHolder(rm.getHost(), rm.getXmlPort(), rm.getOldPassword(), false);
-                ajFassade = new ApplejuiceFassade(conn);
+                ajFacade = new ApplejuiceFacade(conn);
             } catch (IllegalArgumentException e) {
                 logger.error("connection failed", e);
             }
         }
 
-        return ajFassade;
+        return ajFacade;
     }
 
     public static CoreConnectionSettingsHolder getCoreConnectionSettingsHolder() {
@@ -92,7 +92,7 @@ public class AppleJuiceClient {
             Level logLevel = OptionsManagerImpl.getInstance().getLogLevel();
             AppleJuiceClient.setLogLevel(logLevel);
         } catch (IllegalStateException e) {
-            logger.error("Start wegen nicht geladener Einstellungen abgebrochen");
+            logger.error("Startup aborted because the settings were not loaded");
             return;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -104,7 +104,7 @@ public class AppleJuiceClient {
         }
 
         AppleJuiceClientTG tg = new AppleJuiceClientTG();
-        // Virtuelle Threads gehoeren keiner ThreadGroup an und wuerden sonst am Standardhandler landen
+        // Virtual threads do not belong to a ThreadGroup and would otherwise end up at the default handler
         Thread.setDefaultUncaughtExceptionHandler((thread, error) -> AppleJuiceClientTG.handle(error));
         final String[] myargs = args;
         Runnable runnable = () -> AppleJuiceClient.runmain(myargs);
@@ -164,7 +164,7 @@ public class AppleJuiceClient {
         try {
             linkListener = new LinkListener();
         } catch (IOException ex) {
-            //bereits ein GUI vorhanden, also GUI schliessen
+            //a GUI already exists, so close this GUI
             doubleInstance = true;
         }
 
@@ -178,38 +178,38 @@ public class AppleJuiceClient {
 
         if (args != null && args.length > 0) {
             try {
-                boolean hilfeAusgegeben = false;
+                boolean helpPrinted = false;
 
                 for (String curArg : args) {
                     if (curArg.compareTo("-help") == 0) {
-                        if (hilfeAusgegeben) {
+                        if (helpPrinted) {
                             continue;
                         }
 
                         System.out.println();
                         System.out.println(" -help                       Diese Übersicht.");
-                        System.out.println(" -path=<pfad>                Ausführpfad setzen. Alles im GUI ist relativ zu diesem.");
-                        System.out.println(" -link=<md5Passwort|link>    ajfsp-Link ans GUI übergeben. Das GUI wird ggf gestartet.");
+                        System.out.println(" -path=<path>                Set the working path. Everything in the GUI is relative to it.");
+                        System.out.println(" -link=<md5Password|link>    Pass an ajfsp link to the GUI. The GUI is started if necessary.");
                         System.out.println();
-                        hilfeAusgegeben = true;
+                        helpPrinted = true;
                     } else if (curArg.contains("-command=")) {
                         if (linkListener == null) {
                             try {
                                 linkListener = new LinkListener();
                             } catch (IOException ex) {
-                                //bereits ein GUI vorhanden, also GUI schliessen
+                                //a GUI already exists, so close this GUI
                                 doubleInstance = true;
                             }
                         }
 
                         if (doubleInstance) {
                             int PORT = OptionsManagerImpl.getInstance().getLinkListenerPort();
-                            String passwort = OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword();
+                            String password = OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword();
                             Socket socket = new Socket("localhost", PORT);
                             PrintStream out = new PrintStream(socket.getOutputStream(), true, StandardCharsets.UTF_8);
                             DataInputStream in = new DataInputStream(socket.getInputStream());
 
-                            out.println(passwort + "|" + curArg);
+                            out.println(password + "|" + curArg);
                             BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
                             String line = reader.readLine();
 
@@ -217,7 +217,7 @@ public class AppleJuiceClient {
                             socket.close();
                             System.exit(1);
                         } else {
-                            System.out.println("appleJuice-JavaGUI nicht gestartet");
+                            System.out.println("appleJuice JavaGUI not started");
                             System.exit(1);
                         }
                     } else if (curArg.startsWith("ajfsp://") || curArg.startsWith("web+ajfsp://") || (curArg.contains("-link=") && curArg.length() > "-link=".length() + 1)) {
@@ -230,7 +230,7 @@ public class AppleJuiceClient {
                             linkListener.processLink(link, "");
                         }
                     } else if (curArg.toLowerCase(Locale.ROOT).endsWith(".ajl")) {
-                        logger.info(".ajl Datei argument gefunden: " + curArg);
+                        logger.info(".ajl file argument found: " + curArg);
 
                         File inputFile = new File(curArg);
 
@@ -242,12 +242,12 @@ public class AppleJuiceClient {
                                 linkListener.processAjl(inputFile, "");
                             }
                         } else {
-                            logger.info("kann .ajl Datei nicht öffnen: " + curArg);
+                            logger.info("cannot open .ajl file: " + curArg);
                         }
                     }
                 }
             } catch (IOException ioE) {
-                //Keine bisherige GUI-Instanz vorhanden, also GUI oeffnen
+                //no previous GUI instance exists, so open the GUI
                 processLink = true;
             } catch (Exception e) {
                 System.exit(1);
@@ -258,7 +258,7 @@ public class AppleJuiceClient {
             try {
                 linkListener = new LinkListener();
             } catch (IOException ex) {
-                //bereits ein GUI vorhanden, also GUI schliessen
+                //a GUI already exists, so close this GUI
                 doubleInstance = true;
             }
         }
@@ -269,7 +269,7 @@ public class AppleJuiceClient {
         }
 
         if (doubleInstance) {
-            //bereits ein GUI vorhanden, also GUI schliessen
+            //a GUI already exists, so close this GUI
             JOptionPane.showMessageDialog(new Frame(), GuiText.text("javagui.instance.running"), "appleJuice Client", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }
@@ -289,7 +289,7 @@ public class AppleJuiceClient {
         }
 
         try {
-            String nachricht = "appleJuice-GUI " + AppleJuiceDialog.getVersion() + " wird gestartet...";
+            String message = "appleJuice-GUI " + AppleJuiceDialog.getVersion() + " is starting...";
             ConnectFrame connectFrame = new ConnectFrame();
 
             KeyStates ks = new KeyStates();
@@ -301,19 +301,19 @@ public class AppleJuiceClient {
             });
 
             if (logger.isInfoEnabled()) {
-                logger.info(nachricht);
+                logger.info(message);
             }
 
-            System.out.println(nachricht);
+            System.out.println(message);
 
             if (logger.isInfoEnabled()) {
-                nachricht = "erkanntes GUI-OS: " + System.getProperty("os.name");
-                logger.info(nachricht);
-                nachricht = "erkannte Java-Version: " + System.getProperty("java.version");
-                logger.info(nachricht);
+                message = "erkanntes GUI-OS: " + System.getProperty("os.name");
+                logger.info(message);
+                message = "erkannte Java-Version: " + System.getProperty("java.version");
+                logger.info(message);
             }
 
-            String titel = null;
+            String title = null;
             LanguageSelector languageSelector = LanguageSelector.getInstance();
             QuickConnectionSettingsDialog remoteDialog;
 
@@ -328,41 +328,41 @@ public class AppleJuiceClient {
             }
 
             boolean firstTry = keyDown ? false : true;
-            int erreichbarkeit = 2;
+            int reachability = 2;
 
-            if (ajFassade == null) {
-                getAjFassade();
+            if (ajFacade == null) {
+                getAjFacade();
             }
-            while (showDialog || (erreichbarkeit = ajFassade.isCoreAvailable()) != 0) {
+            while (showDialog || (reachability = ajFacade.isCoreAvailable()) != 0) {
                 SwingUtilities.invokeAndWait(() -> splash.setVisible(false));
                 if (!showDialog) {
-                    if (erreichbarkeit == 2) {
-                        titel = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
-                        nachricht = languageSelector.getFirstAttrbuteByTagName("javagui.startup.fehlversuch");
-                        SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
-                        JOptionPane.showMessageDialog(connectFrame, nachricht, titel, JOptionPane.ERROR_MESSAGE);
+                    if (reachability == 2) {
+                        title = languageSelector.getFirstAttributeByTagName("mainform.caption");
+                        message = languageSelector.getFirstAttributeByTagName("javagui.startup.connectionfailed");
+                        SoundPlayer.getInstance().playSound(SoundPlayer.DENIED);
+                        JOptionPane.showMessageDialog(connectFrame, message, title, JOptionPane.ERROR_MESSAGE);
                     } else {
-                        titel = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
-                        nachricht = languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext3");
-                        SoundPlayer.getInstance().playSound(SoundPlayer.VERWEIGERT);
-                        JOptionPane.showMessageDialog(connectFrame, nachricht, titel, JOptionPane.ERROR_MESSAGE);
+                        title = languageSelector.getFirstAttributeByTagName("mainform.caption");
+                        message = languageSelector.getFirstAttributeByTagName("mainform.msgdlgtext3");
+                        SoundPlayer.getInstance().playSound(SoundPlayer.DENIED);
+                        JOptionPane.showMessageDialog(connectFrame, message, title, JOptionPane.ERROR_MESSAGE);
                     }
                 }
 
                 showDialog = false;
                 remoteDialog = new QuickConnectionSettingsDialog(connectFrame);
-                if (firstTry && OptionsManagerImpl.getInstance().isErsterStart()) {
+                if (firstTry && OptionsManagerImpl.getInstance().isFirstStart()) {
                     firstTry = false;
-                    remoteDialog.setNieWiederAnzeigen();
+                    remoteDialog.setNeverShowAgain();
                     remoteDialog.pressOK();
                 } else {
                     remoteDialog.setVisible(true);
-                    if (remoteDialog.getResult() == QuickConnectionSettingsDialog.ABGEBROCHEN) {
-                        nachricht = languageSelector.getFirstAttrbuteByTagName("javagui.startup.verbindungsfehler");
-                        nachricht = nachricht.replaceFirst("%s", OptionsManagerImpl.getInstance().getRemoteSettings().getHost());
-                        JOptionPane.showMessageDialog(connectFrame, nachricht, titel, JOptionPane.OK_OPTION);
-                        logger.error(nachricht);
-                        System.out.println("Fehler: " + nachricht);
+                    if (remoteDialog.getResult() == QuickConnectionSettingsDialog.CANCELLED) {
+                        message = languageSelector.getFirstAttributeByTagName("javagui.startup.connectionerror");
+                        message = message.replaceFirst("%s", OptionsManagerImpl.getInstance().getRemoteSettings().getHost());
+                        JOptionPane.showMessageDialog(connectFrame, message, title, JOptionPane.OK_OPTION);
+                        logger.error(message);
+                        System.out.println("Error: " + message);
                         System.exit(-1);
                     }
                 }
@@ -370,7 +370,7 @@ public class AppleJuiceClient {
                 SwingUtilities.invokeAndWait(() -> splash.setVisible(true));
             }
 
-            SoundPlayer.getInstance().playSound(SoundPlayer.ZUGANG_GEWAEHRT);
+            SoundPlayer.getInstance().playSound(SoundPlayer.ACCESS_GRANTED);
 
             SwingUtilities.invokeLater(() -> {
                 final AppleJuiceDialog theApp = new AppleJuiceDialog();
@@ -387,13 +387,13 @@ public class AppleJuiceClient {
                 lm.setMainDimension(restoredBounds.getSize());
                 theApp.setBounds(restoredBounds);
                 theApp.showMainWindow();
-                String nachricht1 = "appleJuice-GUI gestartet...";
+                String message1 = "appleJuice GUI started...";
 
-                logger.info(nachricht1);
+                logger.info(message1);
 
-                System.out.println(nachricht1);
+                System.out.println(message1);
                 splash.dispose();
-                if (OptionsManagerImpl.getInstance().isErsterStart()) {
+                if (OptionsManagerImpl.getInstance().isFirstStart()) {
                     showConnectionWizard(theApp);
                 }
 

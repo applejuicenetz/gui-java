@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui.upload.table;
 
-import de.applejuicenet.client.fassade.entity.Upload;
+import de.applejuicenet.client.facade.entity.Upload;
 import de.applejuicenet.client.shared.IconManager;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ public class UploadTableFilenameCellRenderer extends DefaultTableCellRenderer
                                                   int column)
    {
       Upload upload = (Upload) value;
-      JLabel label = (JLabel) super.getTableCellRendererComponent(table, upload.getDateiName(), isSelected, hasFocus, row, column);
+      JLabel label = (JLabel) super.getTableCellRendererComponent(table, upload.getFileName(), isSelected, hasFocus, row, column);
 
       label.setIcon(IconManager.getInstance().getIcon("treeUebertrage"));
       return label;

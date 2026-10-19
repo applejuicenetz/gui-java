@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.search;
 
-import de.applejuicenet.client.fassade.entity.Upload;
+import de.applejuicenet.client.facade.entity.Upload;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.upload.table.UploadActiveTableModel;
 import de.applejuicenet.client.gui.upload.table.UploadWaitingTableModel;
@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 public class SnapshotTableTest {
     private Upload upload(int status, int speed) throws Exception {
-        Class<?> type = Class.forName("de.applejuicenet.client.fassade.controller.xml.UploadDO");
+        Class<?> type = Class.forName("de.applejuicenet.client.facade.controller.xml.UploadDO");
         Constructor<?> constructor = type.getDeclaredConstructor(int.class);
         constructor.setAccessible(true);
         Upload upload = (Upload) constructor.newInstance(1);
@@ -33,8 +33,8 @@ public class SnapshotTableTest {
                 .toAbsolutePath().normalize().toString());
         UploadActiveTableModel active = new UploadActiveTableModel();
         UploadWaitingTableModel waiting = new UploadWaitingTableModel();
-        active.setUploads(Map.of(1, upload(Upload.AKTIVE_UEBERTRAGUNG, 100)));
-        Upload next = upload(Upload.AKTIVE_UEBERTRAGUNG, 200);
+        active.setUploads(Map.of(1, upload(Upload.ACTIVE_TRANSFER, 100)));
+        Upload next = upload(Upload.ACTIVE_TRANSFER, 200);
         active.setUploads(Map.of(1, next));
         assertSame(next, active.getContent().get(0));
         Upload queued = upload(0, 0);

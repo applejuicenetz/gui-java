@@ -7,12 +7,12 @@ package de.applejuicenet.client.gui.server;
 import de.applejuicenet.client.gui.DialogLocation;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Information;
-import de.applejuicenet.client.fassade.entity.Server;
-import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
-import de.applejuicenet.client.fassade.listener.DataUpdateListener;
-import de.applejuicenet.client.fassade.shared.NetworkInfo;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Information;
+import de.applejuicenet.client.facade.entity.Server;
+import de.applejuicenet.client.facade.exception.IllegalArgumentException;
+import de.applejuicenet.client.facade.listener.DataUpdateListener;
+import de.applejuicenet.client.facade.shared.NetworkInfo;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.RegisterI;
 import de.applejuicenet.client.gui.components.table.HeaderListener;
@@ -54,11 +54,10 @@ import java.util.Vector;
  * 1.57 2004/06/11 09:24:30 maj0r Exp $
  *
  * <p>
- * Titel: AppleJuice Client-GUI
+ * Title: AppleJuice Client-GUI
  * </p>
  * <p>
- * Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten
- * appleJuice-Core
+ * Description: Official GUI for the appleJuice core developed by muhviehstarr
  * </p>
  * <p>
  * Copyright: General Public License
@@ -69,25 +68,25 @@ import java.util.Vector;
 public class ServerPanel extends JPanel implements LanguageListener, DataUpdateListener, RegisterI {
     private static ServerPanel instance;
     private AutoRowHeightTable serverTable;
-    private JButton sucheServer = new JButton();
+    private JButton searchServer = new JButton();
     private JPopupMenu popup = new JPopupMenu();
     private JPopupMenu popup2 = new JPopupMenu();
     private JPopupMenu popup3 = new JPopupMenu();
-    private JMenuItem verbinden;
-    private JMenuItem loeschen1;
-    private JMenuItem hinzufuegen2;
-    private JMenuItem hinzufuegen3;
-    private JMenuItem hinzufuegen1;
-    private JMenuItem loeschen2;
+    private JMenuItem connectingText;
+    private JMenuItem delete1;
+    private JMenuItem add2;
+    private JMenuItem add3;
+    private JMenuItem add1;
+    private JMenuItem delete2;
     private JMenuItem itemCopyToClipboard;
-    private JLabel verbunden = new JLabel();
-    private JLabel versucheZuVerbinden = new JLabel();
-    private JLabel aelter24h = new JLabel();
-    private JLabel juenger24h = new JLabel();
+    private JLabel connectedText = new JLabel();
+    private JLabel tryingToConnect = new JLabel();
+    private JLabel older24h = new JLabel();
+    private JLabel younger24h = new JLabel();
     private Logger logger;
     private boolean initialized = false;
-    private String warnungTitel;
-    private String warnungNachricht;
+    private String warningTitle;
+    private String warningMessage;
     private boolean tabSelected;
 
     private ServerPanel() {
@@ -95,7 +94,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         try {
             init();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -113,57 +112,56 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
 
         IconManager im = IconManager.getInstance();
 
-        verbinden = new JMenuItem();
-        verbinden.setIcon(im.getIcon("serververbinden"));
-        hinzufuegen1 = new JMenuItem();
-        hinzufuegen1.setIcon(im.getIcon("serverneu"));
-        loeschen1 = new JMenuItem();
-        loeschen1.setIcon(im.getIcon("serverloeschen"));
-        hinzufuegen2 = new JMenuItem();
-        hinzufuegen2.setIcon(im.getIcon("serverneu"));
-        hinzufuegen3 = new JMenuItem();
-        hinzufuegen3.setIcon(im.getIcon("serverneu"));
-        loeschen2 = new JMenuItem();
-        loeschen2.setIcon(im.getIcon("serverloeschen"));
+        connectingText = new JMenuItem();
+        connectingText.setIcon(im.getIcon("serververbinden"));
+        add1 = new JMenuItem();
+        add1.setIcon(im.getIcon("serverneu"));
+        delete1 = new JMenuItem();
+        delete1.setIcon(im.getIcon("serverloeschen"));
+        add2 = new JMenuItem();
+        add2.setIcon(im.getIcon("serverneu"));
+        add3 = new JMenuItem();
+        add3.setIcon(im.getIcon("serverneu"));
+        delete2 = new JMenuItem();
+        delete2.setIcon(im.getIcon("serverloeschen"));
         itemCopyToClipboard = new JMenuItem();
         itemCopyToClipboard.setIcon(im.getIcon("clipboard"));
 
-        popup.add(verbinden);
-        popup.add(hinzufuegen3);
+        popup.add(connectingText);
+        popup.add(add3);
         popup.add(itemCopyToClipboard);
-        popup.add(loeschen1);
-        popup2.add(hinzufuegen2);
-        popup3.add(hinzufuegen1);
-        popup3.add(loeschen2);
-        verbinden.addActionListener(new ActionListener() {
+        popup.add(delete1);
+        popup2.add(add2);
+        popup3.add(add1);
+        popup3.add(delete2);
+        connectingText.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 int selected = serverTable.getSelectedRow();
                 Server server = (Server) ((ServerTableModel) serverTable.getModel()).getRow(selected);
-                ApplejuiceFassade af = AppleJuiceClient.getAjFassade();
+                ApplejuiceFacade af = AppleJuiceClient.getAjFacade();
 
-                if (af.getInformation().getVerbindungsStatus() == Information.VERBUNDEN) {
+                if (af.getInformation().getConnectionStatus() == Information.CONNECTED) {
                     NetworkInfo netInfo = af.getNetworkInfo();
                     long timestamp = af.getLastCoreTimestamp().longValue();
 
                     if (timestamp == 0) {
-                        /*
-                         * Es wurden noch keine Referenzdaten geholt. Wir nehmen
-                         * die eigene Zeit, in der Hoffnung, dass die
-                         * uebereinstimmen.
+                        /**
+                         * No reference data has been fetched yet. We use our own time, hoping that
+                         * they match.
                          */
                         timestamp = System.currentTimeMillis();
                     }
 
                     long timeDiff = timestamp - netInfo.getConnectionTime();
-                    int minuten = (int) (timeDiff / 60000);
+                    int minutes = (int) (timeDiff / 60000);
 
-                    if (minuten < 0) {
-                        minuten = 0;
+                    if (minutes < 0) {
+                        minutes = 0;
                     }
 
-                    if (minuten <= 30) {
-                        String tmp = warnungNachricht.replaceAll("%s", Integer.toString(minuten));
-                        int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(), tmp, warnungTitel,
+                    if (minutes <= 30) {
+                        String tmp = warningMessage.replaceAll("%s", Integer.toString(minutes));
+                        int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(), tmp, warningTitle,
                                 JOptionPane.YES_NO_OPTION);
 
                         if (result != JOptionPane.YES_OPTION) {
@@ -172,19 +170,19 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                     }
                 }
 
-                // Core-Aufruf blockiert bei langsamem Core: nicht auf dem EDT
+                // Core call blocks on a slow core: not on the EDT
                 Thread.ofVirtual().name("ConnectToServer").start(() -> {
                     try {
                         af.connectToServer(server);
-                        SoundPlayer.getInstance().playSound(SoundPlayer.VERBINDEN);
+                        SoundPlayer.getInstance().playSound(SoundPlayer.CONNECT);
                     } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                     }
                 });
             }
         });
 
-        ActionListener loescheServerListener = new ActionListener() {
+        ActionListener deleteServerListener = new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 int[] selected = serverTable.getSelectedRows();
 
@@ -200,9 +198,9 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                     }
 
                     try {
-                        AppleJuiceClient.getAjFassade().entferneServer(toRemove);
+                        AppleJuiceClient.getAjFacade().removeServer(toRemove);
                     } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                     }
                 }
             }
@@ -229,8 +227,8 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         };
 
         itemCopyToClipboard.addActionListener(clipboardListener);
-        loeschen1.addActionListener(loescheServerListener);
-        loeschen2.addActionListener(loescheServerListener);
+        delete1.addActionListener(deleteServerListener);
+        delete2.addActionListener(deleteServerListener);
         ActionListener newServerListener = new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 NewServerDialog newServerDialog = new NewServerDialog(AppleJuiceDialog.getApp(), true);
@@ -241,18 +239,18 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
 
                     Thread.ofVirtual().name("AddServer").start(() -> {
                         try {
-                            AppleJuiceClient.getAjFassade().processLink(link, "");
+                            AppleJuiceClient.getAjFacade().processLink(link, "");
                         } catch (IllegalArgumentException e) {
-                            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                         }
                     });
                 }
             }
         };
 
-        hinzufuegen2.addActionListener(newServerListener);
-        hinzufuegen3.addActionListener(newServerListener);
-        hinzufuegen1.addActionListener(newServerListener);
+        add2.addActionListener(newServerListener);
+        add3.addActionListener(newServerListener);
+        add1.addActionListener(newServerListener);
 
         JPanel panel1 = new JPanel();
 
@@ -264,10 +262,10 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         constraints.gridx = 0;
         constraints.gridy = 0;
 
-        sucheServer.addActionListener(ae -> {
+        searchServer.addActionListener(ae -> {
             Thread.ofVirtual().name("SearchServers").start(() -> {
                 String ServerListURL = OptionsManagerImpl.getInstance().getServerListURL();
-                ApplejuiceFassade af = AppleJuiceClient.getAjFassade();
+                ApplejuiceFacade af = AppleJuiceClient.getAjFacade();
                 String[] server = af.getNetworkKnownServers(ServerListURL);
 
                 if (server == null || server.length == 0) {
@@ -278,12 +276,12 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                     try {
                         af.processLink(server[i], "");
                     } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                     }
                 }
             });
         });
-        panel1.add(sucheServer, constraints);
+        panel1.add(searchServer, constraints);
         constraints.gridx = 1;
         constraints.weightx = 1;
         panel1.add(new JLabel(), constraints);
@@ -371,7 +369,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         aScrollPane.addMouseListener(popupMouseAdapter);
         serverTable.addMouseListener(popupMouseAdapter);
         add(aScrollPane, BorderLayout.CENTER);
-        JPanel legende = new JPanel(new FlowLayout());
+        JPanel legend = new JPanel(new FlowLayout());
         ImageIcon icon1 = im.getIcon("serververbunden");
         ImageIcon icon2 = im.getIcon("serverversuche");
         ImageIcon icon3 = im.getIcon("aelter24h");
@@ -381,16 +379,16 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         JLabel label3 = new JLabel(icon3);
         JLabel label4 = new JLabel(icon4);
 
-        legende.add(label1);
-        legende.add(verbunden);
-        legende.add(label2);
-        legende.add(versucheZuVerbinden);
-        legende.add(label3);
-        legende.add(aelter24h);
-        legende.add(label4);
-        legende.add(juenger24h);
-        add(legende, BorderLayout.SOUTH);
-        AppleJuiceClient.getAjFassade().addDataUpdateListener(this, DATALISTENER_TYPE.SERVER_CHANGED);
+        legend.add(label1);
+        legend.add(connectedText);
+        legend.add(label2);
+        legend.add(tryingToConnect);
+        legend.add(label3);
+        legend.add(older24h);
+        legend.add(label4);
+        legend.add(younger24h);
+        add(legend, BorderLayout.SOUTH);
+        AppleJuiceClient.getAjFacade().addDataUpdateListener(this, DATALISTENER_TYPE.SERVER_CHANGED);
     }
 
     public void registerSelected() {
@@ -421,7 +419,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
             TableColumnSettings.refreshCompact(serverTable);
             TableSelection.selectOnlyRow(serverTable);
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -455,27 +453,27 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
         try {
             LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-            sucheServer.setText(languageSelector.getFirstAttrbuteByTagName("mainform.Label11.caption"));
+            searchServer.setText(languageSelector.getFirstAttributeByTagName("mainform.Label11.caption"));
             String[] columns = new String[5];
 
-            columns[0] = languageSelector.getFirstAttrbuteByTagName("mainform.serverlist.col0caption");
-            columns[1] = languageSelector.getFirstAttrbuteByTagName("mainform.serverlist.col1caption");
-            columns[2] = languageSelector.getFirstAttrbuteByTagName("mainform.serverlist.col3caption");
-            columns[3] = languageSelector.getFirstAttrbuteByTagName("javagui.serverform.col4caption");
-            columns[4] = languageSelector.getFirstAttrbuteByTagName("mainform.serverlist.col5caption");
-            verbinden.setText(languageSelector.getFirstAttrbuteByTagName("mainform.connserv.caption"));
-            loeschen1.setText(languageSelector.getFirstAttrbuteByTagName("mainform.delserv.caption"));
-            hinzufuegen2.setText(languageSelector.getFirstAttrbuteByTagName("mainform.addserv.caption"));
-            hinzufuegen3.setText(languageSelector.getFirstAttrbuteByTagName("mainform.addserv.caption"));
-            hinzufuegen1.setText(languageSelector.getFirstAttrbuteByTagName("mainform.addserv.caption"));
-            loeschen2.setText(languageSelector.getFirstAttrbuteByTagName("mainform.delserv.caption"));
-            verbunden.setText(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.verbunden"));
-            versucheZuVerbinden.setText(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.verbinden"));
-            aelter24h.setText(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.aelter24h"));
-            juenger24h.setText(languageSelector.getFirstAttrbuteByTagName("javagui.serverform.juenger24h"));
-            warnungTitel = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
-            warnungNachricht = languageSelector.getFirstAttrbuteByTagName("javagui.serverform.warnungnachricht");
-            itemCopyToClipboard.setText(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption"));
+            columns[0] = languageSelector.getFirstAttributeByTagName("mainform.serverlist.col0caption");
+            columns[1] = languageSelector.getFirstAttributeByTagName("mainform.serverlist.col1caption");
+            columns[2] = languageSelector.getFirstAttributeByTagName("mainform.serverlist.col3caption");
+            columns[3] = languageSelector.getFirstAttributeByTagName("javagui.serverform.col4caption");
+            columns[4] = languageSelector.getFirstAttributeByTagName("mainform.serverlist.col5caption");
+            connectingText.setText(languageSelector.getFirstAttributeByTagName("mainform.connserv.caption"));
+            delete1.setText(languageSelector.getFirstAttributeByTagName("mainform.delserv.caption"));
+            add2.setText(languageSelector.getFirstAttributeByTagName("mainform.addserv.caption"));
+            add3.setText(languageSelector.getFirstAttributeByTagName("mainform.addserv.caption"));
+            add1.setText(languageSelector.getFirstAttributeByTagName("mainform.addserv.caption"));
+            delete2.setText(languageSelector.getFirstAttributeByTagName("mainform.delserv.caption"));
+            connectedText.setText(languageSelector.getFirstAttributeByTagName("javagui.serverform.connected"));
+            tryingToConnect.setText(languageSelector.getFirstAttributeByTagName("javagui.serverform.connecting"));
+            older24h.setText(languageSelector.getFirstAttributeByTagName("javagui.serverform.older24h"));
+            younger24h.setText(languageSelector.getFirstAttributeByTagName("javagui.serverform.younger24h"));
+            warningTitle = languageSelector.getFirstAttributeByTagName("mainform.caption");
+            warningMessage = languageSelector.getFirstAttributeByTagName("javagui.serverform.warningmessage");
+            itemCopyToClipboard.setText(languageSelector.getFirstAttributeByTagName("mainform.getlink1.caption"));
 
             TableColumnModel tcm = serverTable.getColumnModel();
 
@@ -483,7 +481,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                 tcm.getColumn(i).setHeaderValue(columns[i]);
             }
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 

@@ -2,7 +2,7 @@ package de.applejuicenet.client.gui.download;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE;
+import de.applejuicenet.client.facade.listener.DataUpdateListener.DATALISTENER_TYPE;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -103,13 +103,13 @@ public class PowerDownloadPanelLayoutTest {
 
     private static void removeListeners(PowerDownloadPanel panel) {
         LanguageSelector.getInstance().removeLanguageListener(panel);
-        AppleJuiceClient.getAjFassade().removeDataUpdateListener(panel, DATALISTENER_TYPE.INFORMATION_CHANGED);
-        AppleJuiceClient.getAjFassade().removeDataUpdateListener(panel, DATALISTENER_TYPE.DOWNLOAD_CHANGED);
+        AppleJuiceClient.getAjFacade().removeDataUpdateListener(panel, DATALISTENER_TYPE.INFORMATION_CHANGED);
+        AppleJuiceClient.getAjFacade().removeDataUpdateListener(panel, DATALISTENER_TYPE.DOWNLOAD_CHANGED);
     }
 
     private static void addHintAndArrowIcons(PowerDownloadPanel panel) throws Exception {
         ImageIcon icon = new ImageIcon(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB));
-        for (String name : new String[] {"btnHint", "btnHint2", "btnPdlUp", "btnPdlDown"}) {
+        for (String name : new String[] {"btnHint", "btnHint2", "btnPowerdownloadUp", "btnPowerdownloadDown"}) {
             Field field = PowerDownloadPanel.class.getDeclaredField(name);
             field.setAccessible(true);
             ((JLabel) field.get(panel)).setIcon(icon);

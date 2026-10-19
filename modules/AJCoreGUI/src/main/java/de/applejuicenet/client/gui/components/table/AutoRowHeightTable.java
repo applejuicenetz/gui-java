@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui.components.table;
 
 import com.formdev.flatlaf.util.UIScale;
-import de.applejuicenet.client.fassade.shared.FileType;
+import de.applejuicenet.client.facade.shared.FileType;
 import de.applejuicenet.client.shared.IconManager;
 
 import javax.swing.*;

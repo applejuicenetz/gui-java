@@ -6,9 +6,9 @@ package de.applejuicenet.client.gui.download;
 
 import de.applejuicenet.client.gui.DialogLocation;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Download;
-import de.applejuicenet.client.fassade.entity.DownloadSource;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Download;
+import de.applejuicenet.client.facade.entity.DownloadSource;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 
 import javax.swing.*;
@@ -22,8 +22,8 @@ import java.util.HashSet;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/download/RenameDownloadDialog.java,v 1.10 2009/01/12 09:19:20 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -32,7 +32,7 @@ import java.util.HashSet;
 public class RenameDownloadDialog extends JDialog
 {
    private Download    download;
-   private JButton     schliessen        = new JButton();
+   private JButton     close        = new JButton();
    private JComboBox possibleNames     = new JComboBox();
    private boolean     somethingSelected = false;
 
@@ -59,10 +59,10 @@ public class RenameDownloadDialog extends JDialog
 
       LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-      setTitle(languageSelector.getFirstAttrbuteByTagName("mainform.renamefile.caption"));
-      schliessen.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Button1.caption"));
-      schliessen.addKeyListener(disposeKeyAdapter);
-      schliessen.addActionListener(new ActionListener()
+      setTitle(languageSelector.getFirstAttributeByTagName("mainform.renamefile.caption"));
+      close.setText(languageSelector.getFirstAttributeByTagName("einstform.Button1.caption"));
+      close.addKeyListener(disposeKeyAdapter);
+      close.addActionListener(new ActionListener()
          {
             public void actionPerformed(ActionEvent ae)
             {
@@ -73,7 +73,7 @@ public class RenameDownloadDialog extends JDialog
 
       JLabel label1 = new JLabel();
 
-      label1.setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.neuerdateiname"));
+      label1.setText(languageSelector.getFirstAttributeByTagName("javagui.downloadform.newfilename"));
       HashSet<String> set = new HashSet<String>();
 
       set.add(download.getFilename());
@@ -96,7 +96,7 @@ public class RenameDownloadDialog extends JDialog
          {
             public void actionPerformed(ActionEvent ke)
             {
-               schliessen.doClick();
+               close.doClick();
             }
          });
       possibleNames.getEditor().getEditorComponent().addKeyListener(disposeKeyAdapter);
@@ -108,7 +108,7 @@ public class RenameDownloadDialog extends JDialog
       getContentPane().setLayout(new BorderLayout());
       JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-      southPanel.add(schliessen);
+      southPanel.add(close);
       getContentPane().add(panel1, BorderLayout.NORTH);
       getContentPane().add(southPanel, BorderLayout.SOUTH);
       pack();
@@ -122,19 +122,19 @@ public class RenameDownloadDialog extends JDialog
    {
       if(somethingSelected)
       {
-         String neuerName = ((String) possibleNames.getSelectedItem()).trim();
+         String newName = ((String) possibleNames.getSelectedItem()).trim();
 
-         if(neuerName.indexOf(File.separator) == 0 || neuerName.indexOf(ApplejuiceFassade.separator) == 0)
+         if(newName.indexOf(File.separator) == 0 || newName.indexOf(ApplejuiceFacade.separator) == 0)
          {
-            neuerName = neuerName.substring(1);
+            newName = newName.substring(1);
          }
 
-         if(neuerName.length() == 0)
+         if(newName.length() == 0)
          {
-            neuerName = null;
+            newName = null;
          }
 
-         StringBuffer tempLink = new StringBuffer(neuerName);
+         StringBuffer tempLink = new StringBuffer(newName);
 
          for(int i = 0; i < tempLink.length(); i++)
          {

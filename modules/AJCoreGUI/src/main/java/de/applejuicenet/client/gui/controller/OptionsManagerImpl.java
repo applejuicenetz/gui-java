@@ -1,8 +1,8 @@
 package de.applejuicenet.client.gui.controller;
 
 import ch.qos.logback.classic.Level;
-import de.applejuicenet.client.fassade.listener.DataUpdateListener;
-import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.facade.listener.DataUpdateListener;
+import de.applejuicenet.client.facade.shared.AJSettings;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.LookAFeel;
 import de.applejuicenet.client.shared.Settings;
@@ -10,8 +10,8 @@ import de.applejuicenet.client.shared.Settings;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/OptionsManagerImpl.java,v 1.6 2005/01/18 17:35:28 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -41,8 +41,8 @@ public class OptionsManagerImpl implements OptionsManager{
         propertiesManager.addConnectionSettingsListener(listener);
     }
 
-    public String getSprache() {
-        return propertiesManager.getSprache();
+    public String getLanguage() {
+        return propertiesManager.getLanguage();
     }
 
     public boolean getUpdateInfo() {
@@ -53,12 +53,12 @@ public class OptionsManagerImpl implements OptionsManager{
         propertiesManager.setUpdateInfo(UpdateInfo);
     }
 
-    public boolean isErsterStart() {
-        return propertiesManager.isErsterStart();
+    public boolean isFirstStart() {
+        return propertiesManager.isFirstStart();
     }
 
-    public void setErsterStart(boolean ersterStart) {
-        propertiesManager.setErsterStart(ersterStart);
+    public void setFirstStart(boolean firstStart) {
+        propertiesManager.setFirstStart(firstStart);
     }
 
     public boolean isSoundEnabled() {
@@ -69,8 +69,8 @@ public class OptionsManagerImpl implements OptionsManager{
         propertiesManager.enableSound(enable);
     }
 
-    public void setSprache(String sprache) {
-        propertiesManager.setSprache(sprache);
+    public void setLanguage(String language) {
+        propertiesManager.setLanguage(language);
     }
 
     public Level getLogLevel() {

@@ -1,8 +1,8 @@
 package de.applejuicenet.client.gui.options.directorytree;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.entity.Directory;
-import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.facade.entity.Directory;
+import de.applejuicenet.client.facade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.components.tree.ApplejuiceNode;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
@@ -16,8 +16,8 @@ import java.util.List;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/directorytree/DirectoryChooserNode.java,v 1.7 2006/05/03 14:52:22 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -42,7 +42,7 @@ public class DirectoryChooserNode extends DefaultMutableTreeNode implements Node
       children = new ArrayList<DirectoryChooserNode>();
       try
       {
-         List<Directory> directories = AppleJuiceClient.getAjFassade().getDirectories(null);
+         List<Directory> directories = AppleJuiceClient.getAjFacade().getDirectories(null);
 
          for(Directory curDirectory : directories)
          {
@@ -52,7 +52,7 @@ public class DirectoryChooserNode extends DefaultMutableTreeNode implements Node
       catch(IllegalArgumentException e)
       {
 
-         // sollte nicht passieren
+         // should not happen
          throw new RuntimeException(e);
       }
    }
@@ -90,13 +90,13 @@ public class DirectoryChooserNode extends DefaultMutableTreeNode implements Node
          case Directory.TYPE_DISKETTE:
             return im.getIcon("diskette");
 
-         case Directory.TYPE_LAUFWERK:
+         case Directory.TYPE_DRIVE:
             return im.getIcon("laufwerk");
 
-         case Directory.TYPE_ORDNER:
+         case Directory.TYPE_FOLDER:
             return im.getIcon("tree");
 
-         case Directory.TYPE_RECHNER:
+         case Directory.TYPE_COMPUTER:
             return im.getIcon("server");
 
          default:
@@ -174,7 +174,7 @@ public class DirectoryChooserNode extends DefaultMutableTreeNode implements Node
 
          try
          {
-            directories = AppleJuiceClient.getAjFassade().getDirectories(directory.getPath());
+            directories = AppleJuiceClient.getAjFacade().getDirectories(directory.getPath());
             for(Directory curDirectory : directories)
             {
                addChild(curDirectory);
@@ -185,7 +185,7 @@ public class DirectoryChooserNode extends DefaultMutableTreeNode implements Node
          catch(IllegalArgumentException e)
          {
 
-            // sollte nicht passieren
+            // should not happen
             throw new RuntimeException(e);
          }
       }

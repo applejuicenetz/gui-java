@@ -1,0 +1,241 @@
+/*
+ * Copyright 2006 TKLSoft.de   All rights reserved.
+ */
+
+package de.applejuicenet.client.facade.controller.xml;
+
+import de.applejuicenet.client.facade.entity.DownloadSource;
+
+/**
+ * $Header:
+ * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/DownloadSourceDO.java,v
+ * 1.1 2004/12/03 07:57:12 maj0r Exp $
+ *
+ * <p>
+ * Title: AppleJuice Client-GUI
+ * </p>
+ * <p>
+ * Description: Official GUI for the appleJuice core developed by muhviehstarr
+ * </p>
+ * <p>
+ * Copyright: General Public License
+ * </p>
+ *
+ * @author Maj0r [aj@tkl-soft.de]
+ *
+ */
+class DownloadSourceDO extends DownloadSource implements Cloneable
+{
+   DownloadSourceDO snapshot()
+   {
+      try
+      {
+         DownloadSourceDO copy = (DownloadSourceDO) super.clone();
+         copy.version = version == null ? null : version.snapshot();
+         return copy;
+      }
+      catch(CloneNotSupportedException ex)
+      {
+         throw new AssertionError(ex);
+      }
+   }
+
+   private final int id;
+   private int       status;
+   private int       directstate;
+   private long       downloadFrom;
+   private long       downloadTo;
+   private long       actualDownloadPosition;
+   private int       speed;
+   private VersionDO version                = null;
+   private int       queuePosition;
+   private int       powerDownload;
+   private String    filename;
+   private String    nickname;
+   private int       downloadId;
+   private long       oldSize;
+   private String    sizeAsString;
+   private long       oldAlreadyLoaded;
+   private String    alreadyLoadedAsString;
+   private long       oldRemainingToLoad;
+   private String    remainingToLoadAsString;
+   private boolean   progressChanged        = false;
+   private boolean   versionChanged         = false;
+   private int       origin;
+
+   public DownloadSourceDO(int id)
+   {
+      this.id = id;
+   }
+
+   public DownloadSourceDO(int id, int status, int directstate, long downloadFrom, long downloadTo, long actualDownloadPosition,
+                           int speed, VersionDO version, int queuePosition, int powerDownload, String filename, String nickname,
+                           int downloadId, int origin)
+   {
+      this.id                     = id;
+      this.status                 = status;
+      this.directstate            = directstate;
+      this.downloadFrom           = downloadFrom;
+      this.downloadTo             = downloadTo;
+      this.actualDownloadPosition = actualDownloadPosition;
+      this.speed                  = speed;
+      this.version                = version;
+      this.queuePosition          = queuePosition;
+      this.powerDownload          = powerDownload;
+      this.filename               = filename;
+      this.nickname               = nickname;
+      this.downloadId             = downloadId;
+      progressChanged             = true;
+      versionChanged              = true;
+      this.origin               = origin;
+   }
+
+   public int getStatus()
+   {
+      return status;
+   }
+
+   public long getSize()
+   {
+      if(downloadTo == -1 || downloadFrom == -1)
+      {
+         return 0;
+      }
+
+      return downloadTo - downloadFrom;
+   }
+
+   public void setStatus(int status)
+   {
+      this.status = status;
+   }
+
+   public int getOrigin()
+   {
+      return origin;
+   }
+
+   public void setOrigin(int origin)
+   {
+      this.origin = origin;
+   }
+
+   public int getDirectstate()
+   {
+      return directstate;
+   }
+
+   public void setDirectstate(int directstate)
+   {
+      this.directstate = directstate;
+   }
+
+   public long getDownloadFrom()
+   {
+      return downloadFrom;
+   }
+
+   public void setDownloadFrom(long downloadFrom)
+   {
+      this.downloadFrom = downloadFrom;
+      progressChanged   = true;
+   }
+
+   public long getDownloadTo()
+   {
+      return downloadTo;
+   }
+
+   public void setDownloadTo(long downloadTo)
+   {
+      this.downloadTo = downloadTo;
+      progressChanged = true;
+   }
+
+   public long getActualDownloadPosition()
+   {
+      return actualDownloadPosition;
+   }
+
+   public void setActualDownloadPosition(long actualDownloadPosition)
+   {
+      this.actualDownloadPosition = actualDownloadPosition;
+      progressChanged             = true;
+   }
+
+   public int getSpeed()
+   {
+      return speed;
+   }
+
+   public void setSpeed(int speed)
+   {
+      this.speed = speed;
+   }
+
+   public VersionDO getVersion()
+   {
+      return version;
+   }
+
+   public void setVersion(VersionDO version)
+   {
+      this.version   = version;
+      versionChanged = true;
+   }
+
+   public int getQueuePosition()
+   {
+      return queuePosition;
+   }
+
+   public void setQueuePosition(int queuePosition)
+   {
+      this.queuePosition = queuePosition;
+   }
+
+   public int getPowerDownload()
+   {
+      return powerDownload;
+   }
+
+   public void setPowerDownload(int powerDownload)
+   {
+      this.powerDownload = powerDownload;
+   }
+
+   public String getFilename()
+   {
+      return filename;
+   }
+
+   public void setFilename(String filename)
+   {
+      this.filename = filename;
+   }
+
+   public String getNickname()
+   {
+      return nickname;
+   }
+
+   public void setNickname(String nickname)
+   {
+      this.nickname = nickname;
+   }
+
+   public int getId()
+   {
+      return id;
+   }
+
+   public int getDownloadId()
+   {
+      return downloadId;
+   }
+
+   public void setDownloadId(int downloadId)
+   {
+      this.downloadId = downloadId;
+   }
+}

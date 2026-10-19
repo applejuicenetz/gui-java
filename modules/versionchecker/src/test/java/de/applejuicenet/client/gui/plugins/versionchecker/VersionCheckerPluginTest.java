@@ -4,8 +4,8 @@ import org.junit.Test;
 import javax.swing.*;
 import java.util.Map;
 import java.util.Properties;
-import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE;
-import de.applejuicenet.client.fassade.listener.CoreStatusListener.STATUS;
+import de.applejuicenet.client.facade.listener.DataUpdateListener.DATALISTENER_TYPE;
+import de.applejuicenet.client.facade.listener.CoreStatusListener.STATUS;
 import static org.junit.Assert.*;
 
 public class VersionCheckerPluginTest {

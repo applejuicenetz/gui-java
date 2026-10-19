@@ -9,9 +9,8 @@ import java.awt.geom.Path2D;
 import java.util.Locale;
 
 /**
- * Zeigt den Heap-Verbrauch der JavaGUI-JVM (nicht des Cores) als Verlauf.
- * Abtastung und Zeichnen laufen ausschließlich auf dem EDT; der Timer läuft nur,
- * solange die Komponente sichtbar ist.
+ * Shows the heap usage of the JavaGUI JVM (not of the core) as a history. Sampling and drawing run
+ * exclusively on the EDT; the timer only runs while the component is visible.
  */
 public class MemoryMonitor
     extends JPanel {

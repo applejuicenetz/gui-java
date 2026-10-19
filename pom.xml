@@ -11,7 +11,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>modules/ajcorefassade</module>
+        <module>modules/ajcorefacade</module>
         <module>modules/AJCoreGUI</module>
         <module>modules/logviewer</module>
         <module>modules/versionchecker</module>

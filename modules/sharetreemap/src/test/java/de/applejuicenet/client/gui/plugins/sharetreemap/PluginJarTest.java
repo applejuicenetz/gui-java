@@ -13,6 +13,6 @@ public class PluginJarTest {
         var plugin = new PluginJarClassLoader().getPlugin(new File(path));
         assertNotNull(plugin);
         assertEquals("Share-Treemap", plugin.getTitle());
-        assertTrue(plugin.istReiter());
+        assertTrue(plugin.isTab());
     }
 }

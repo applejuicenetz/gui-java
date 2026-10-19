@@ -72,7 +72,7 @@ public class UpdateCheckerTest {
         assertEquals(List.of("failed"), run(false, broken, "0.86.4").events);
         assertEquals(List.of(), run(true, () -> "", "0.86.4").events);
         assertEquals(List.of("failed"), run(false, () -> "", "0.86.4").events);
-        assertEquals(List.of("failed"), run(false, () -> "kein json", "0.86.4").events);
+        assertEquals(List.of("failed"), run(false, () -> "not json", "0.86.4").events);
         assertEquals(List.of("failed"), run(false, () -> "{\"name\":\"x\"}", "0.86.4").events);
     }
 

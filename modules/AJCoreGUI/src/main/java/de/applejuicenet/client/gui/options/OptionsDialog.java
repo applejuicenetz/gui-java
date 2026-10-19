@@ -5,8 +5,8 @@
 package de.applejuicenet.client.gui.options;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.shared.AJSettings;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
@@ -23,8 +23,8 @@ import java.awt.*;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/OptionsDialog.java,v 1.9 2009/01/12 09:19:20 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -34,16 +34,16 @@ public class OptionsDialog extends JDialog
 {
    private static final Logger logger = LoggerFactory.getLogger(OptionsDialog.class);
    private JFrame             parent;
-   private JButton            speichern;
-   private JButton            abbrechen;
+   private JButton            saveButton;
+   private JButton            cancel;
    private AJSettings         ajSettings;
    private ConnectionSettings remote;
    private JList<Object>          menuList;
    private ODStandardPanel    standardPanel;
-   private ODVerbindungPanel  verbindungPanel;
+   private ODCoreConnectionPanel  coreConnectionPanel;
    private ODConnectionPanel  connectionPanel;
    private ODProxyPanel       proxyPanel;
-   private ODAnsichtPanel     ansichtPanel;
+   private ODViewPanel     viewPanel;
    private ODPluginPanel      pluginPanel;
    private OptionsRegister[]  optionPanels;
    private CardLayout         registerLayout = new CardLayout();
@@ -55,12 +55,12 @@ public class OptionsDialog extends JDialog
       try
       {
          this.parent = parent;
-         ajSettings  = AppleJuiceClient.getAjFassade().getAJSettings();
+         ajSettings  = AppleJuiceClient.getAjFacade().getAJSettings();
          init();
       }
       catch(Exception e)
       {
-         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+         logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
       }
    }
 
@@ -70,28 +70,28 @@ public class OptionsDialog extends JDialog
 
       remote = OptionsManagerImpl.getInstance().getRemoteSettings();
 
-      setTitle(languageSelector.getFirstAttrbuteByTagName("einstform.caption"));
+      setTitle(languageSelector.getFirstAttributeByTagName("einstform.caption"));
       standardPanel   = new ODStandardPanel(this, ajSettings, remote);
-      verbindungPanel = new ODVerbindungPanel(this, ajSettings);
+      coreConnectionPanel = new ODCoreConnectionPanel(this, ajSettings);
       connectionPanel = new ODConnectionPanel(remote, null);
       proxyPanel      = new ODProxyPanel();
-      ansichtPanel    = new ODAnsichtPanel();
+      viewPanel    = new ODViewPanel();
       pluginPanel     = new ODPluginPanel(this);
 
-      // Abschnitt 1: Einstellungen, die an den Core gehen
-      OptionsRegister[] coreSection = {standardPanel, verbindungPanel, connectionPanel};
-      // Abschnitt 2: Einstellungen, die nur das JavaGUI betreffen
-      OptionsRegister[] guiSection = {ansichtPanel, proxyPanel, pluginPanel};
+      // Section 1: settings that are sent to the core
+      OptionsRegister[] coreSection = {standardPanel, coreConnectionPanel, connectionPanel};
+      // Section 2: settings that only affect the JavaGUI
+      OptionsRegister[] guiSection = {viewPanel, proxyPanel, pluginPanel};
 
       DefaultListModel<Object> model = new DefaultListModel<>();
 
-      model.addElement(new SectionHeader(languageSelector.getFirstAttrbuteByTagName("javagui.options.section.core")));
+      model.addElement(new SectionHeader(languageSelector.getFirstAttributeByTagName("javagui.options.section.core")));
       for(OptionsRegister r : coreSection)
       {
          model.addElement(r);
       }
 
-      model.addElement(new SectionHeader(languageSelector.getFirstAttrbuteByTagName("javagui.options.section.gui")));
+      model.addElement(new SectionHeader(languageSelector.getFirstAttributeByTagName("javagui.options.section.gui")));
       for(OptionsRegister r : guiSection)
       {
          model.addElement(r);
@@ -117,7 +117,7 @@ public class OptionsDialog extends JDialog
             registerLayout.show(registerPanel, ((OptionsRegister) selected).getMenuText());
          }
       });
-      // Ueberschriften nicht auswaehlbar
+      // headings are not selectable
       menuList.setSelectionModel(new DefaultListSelectionModel()
          {
             @Override
@@ -131,18 +131,18 @@ public class OptionsDialog extends JDialog
          });
       menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       menuList.setSelectedValue(standardPanel, true);
-      speichern = new JButton(languageSelector.getFirstAttrbuteByTagName("einstform.Button1.caption"));
-      abbrechen = new JButton(languageSelector.getFirstAttrbuteByTagName("einstform.Button2.caption"));
-      abbrechen.addActionListener(e -> dispose());
-      speichern.addActionListener(e -> speichern());
+      saveButton = new JButton(languageSelector.getFirstAttributeByTagName("einstform.Button1.caption"));
+      cancel = new JButton(languageSelector.getFirstAttributeByTagName("einstform.Button2.caption"));
+      cancel.addActionListener(e -> dispose());
+      saveButton.addActionListener(e -> saveButton());
 
       JPanel     panel = new JPanel();
       FlowLayout flowL = new FlowLayout();
 
       flowL.setAlignment(FlowLayout.RIGHT);
       panel.setLayout(flowL);
-      panel.add(speichern);
-      panel.add(abbrechen);
+      panel.add(saveButton);
+      panel.add(cancel);
       getContentPane().add(registerPanel, BorderLayout.CENTER);
       getContentPane().add(panel, BorderLayout.SOUTH);
       getContentPane().add(new JScrollPane(menuList), BorderLayout.WEST);
@@ -151,31 +151,31 @@ public class OptionsDialog extends JDialog
 
    }
 
-   private void speichern()
+   private void saveButton()
    {
       try
       {
          OptionsManager om             = OptionsManagerImpl.getInstance();
-         boolean        etwasGeaendert = false;
+         boolean        somethingChanged = false;
 
-         // JavaGUI-Einstellungen
-         if(ansichtPanel.isDirty())
+         // JavaGUI settings
+         if(viewPanel.isDirty())
          {
-            ansichtPanel.save();
-            etwasGeaendert = true;
+            viewPanel.save();
+            somethingChanged = true;
          }
 
          if(proxyPanel.isDirty())
          {
             ProxyManagerImpl.getInstance().saveProxySettings(proxyPanel.getProxySettings());
-            etwasGeaendert = true;
+            somethingChanged = true;
          }
 
-         // Core-Einstellungen
-         if(standardPanel.isDirty() || verbindungPanel.isDirty())
+         // core settings
+         if(standardPanel.isDirty() || coreConnectionPanel.isDirty())
          {
             om.saveAJSettings(ajSettings);
-            etwasGeaendert = true;
+            somethingChanged = true;
          }
 
          if(connectionPanel.isDirty() || standardPanel.isXmlPortDirty())
@@ -183,26 +183,26 @@ public class OptionsDialog extends JDialog
             try
             {
                om.saveRemote(remote);
-               etwasGeaendert = true;
+               somethingChanged = true;
             }
             catch(InvalidPasswordException ex)
             {
                LanguageSelector languageSelector = LanguageSelector.getInstance();
-               String           titel = languageSelector.getFirstAttrbuteByTagName("javagui.eingabefehler");
-               String           nachricht = languageSelector.getFirstAttrbuteByTagName("javagui.options.remote.fehlertext");
+               String           title = languageSelector.getFirstAttributeByTagName("javagui.inputerror");
+               String           message = languageSelector.getFirstAttributeByTagName("javagui.options.remote.errortext");
 
-               JOptionPane.showMessageDialog(parent, nachricht, titel, JOptionPane.OK_OPTION);
+               JOptionPane.showMessageDialog(parent, message, title, JOptionPane.OK_OPTION);
             }
          }
 
-         if(etwasGeaendert)
+         if(somethingChanged)
          {
-            SoundPlayer.getInstance().playSound(SoundPlayer.GESPEICHERT);
+            SoundPlayer.getInstance().playSound(SoundPlayer.SAVED);
          }
       }
       catch(Exception e)
       {
-         logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+         logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
       }
 
       dispose();

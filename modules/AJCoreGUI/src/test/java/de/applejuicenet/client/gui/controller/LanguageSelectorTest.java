@@ -16,26 +16,26 @@ public class LanguageSelectorTest {
     @Test
     public void missingGermanKeysUseEnglish() {
         LanguageSelector german = language("deutsch");
-        assertEquals("01", german.getFirstAttrbuteByTagName("mainform.N11.caption"));
-        assertEquals("Deutsch", german.getFirstAttrbuteByTagName("Languageinfo.name"));
+        assertEquals("01", german.getFirstAttributeByTagName("mainform.N11.caption"));
+        assertEquals("Deutsch", german.getFirstAttributeByTagName("Languageinfo.name"));
     }
 
     @Test
     public void removedLanguagesUseEnglish() {
-        assertEquals("English", language("tuerkce").getFirstAttrbuteByTagName("Languageinfo.name"));
-        assertEquals("English", language("italiano").getFirstAttrbuteByTagName("Languageinfo.name"));
+        assertEquals("English", language("tuerkce").getFirstAttributeByTagName("Languageinfo.name"));
+        assertEquals("English", language("italiano").getFirstAttributeByTagName("Languageinfo.name"));
     }
 
     @Test
     public void missingLanguageFileUsesEnglish() {
         LanguageSelector missing = language("missing-language");
-        assertEquals("English", missing.getFirstAttrbuteByTagName("Languageinfo.name"));
-        assertEquals("Paste", missing.getFirstAttrbuteByTagName("javagui.downloadform.einfuegen"));
+        assertEquals("English", missing.getFirstAttributeByTagName("Languageinfo.name"));
+        assertEquals("Paste", missing.getFirstAttributeByTagName("javagui.downloadform.paste"));
     }
 
     @Test
     public void existingTranslationsKeepPriority() {
-        assertEquals("Einfügen", language("deutsch").getFirstAttrbuteByTagName("javagui.downloadform.einfuegen"));
+        assertEquals("Einfügen", language("deutsch").getFirstAttributeByTagName("javagui.downloadform.paste"));
     }
 
     @Test

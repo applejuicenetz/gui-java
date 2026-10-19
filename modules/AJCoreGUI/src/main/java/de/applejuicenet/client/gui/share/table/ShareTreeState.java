@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.share.table;
 
-import de.applejuicenet.client.fassade.entity.Share;
+import de.applejuicenet.client.facade.entity.Share;
 import de.applejuicenet.client.gui.components.treetable.JTreeTable;
 
 import javax.swing.JTree;

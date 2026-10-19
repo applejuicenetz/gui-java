@@ -1,7 +1,7 @@
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.fassade.entity.Information;
-import de.applejuicenet.client.fassade.entity.Server;
+import de.applejuicenet.client.facade.entity.Information;
+import de.applejuicenet.client.facade.entity.Server;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
@@ -44,7 +44,7 @@ public class ServerStatusTextTest {
     }
 
     private static Information information(Server server) throws Exception {
-        Class<?> type = Class.forName("de.applejuicenet.client.fassade.controller.xml.InformationDO");
+        Class<?> type = Class.forName("de.applejuicenet.client.facade.controller.xml.InformationDO");
         Constructor<?> constructor = type.getDeclaredConstructor();
         constructor.setAccessible(true);
         Information information = (Information) constructor.newInstance();
@@ -55,7 +55,7 @@ public class ServerStatusTextTest {
     }
 
     private static Server server(String name) throws Exception {
-        Class<?> type = Class.forName("de.applejuicenet.client.fassade.controller.xml.ServerDO");
+        Class<?> type = Class.forName("de.applejuicenet.client.facade.controller.xml.ServerDO");
         Constructor<?> constructor = type.getDeclaredConstructor(
                 int.class, String.class, String.class, String.class, long.class, int.class);
         constructor.setAccessible(true);

@@ -7,8 +7,8 @@ package de.applejuicenet.client.gui.options;
 import de.applejuicenet.client.gui.DialogLocation;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.shared.AJSettings;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.ConnectionSettings;
 import de.applejuicenet.client.shared.IconManager;
@@ -27,8 +27,8 @@ import java.awt.event.MouseEvent;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/ODStandardPanel.java,v 1.10 2009/01/14 15:54:31 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -68,7 +68,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
             this.ajSettings = ajSettings;
             init();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -89,18 +89,18 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         nick.addFocusListener(new NickFocusListener());
 
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        menuText = languageSelector.getFirstAttrbuteByTagName("einstform.standardsheet.caption");
+        menuText = languageSelector.getFirstAttributeByTagName("einstform.standardsheet.caption");
         setLayout(new BorderLayout());
         port.setHorizontalAlignment(JLabel.RIGHT);
         xmlPort.setHorizontalAlignment(JLabel.RIGHT);
         reloadSettings();
         JPanel panel6 = new JPanel(new GridBagLayout());
 
-        label1.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Label2.caption"));
-        label2.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Label7.caption"));
-        label3.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Label3.caption"));
-        label4.setText(languageSelector.getFirstAttrbuteByTagName("einstform.Label8.caption"));
-        label6.setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.xmlport"));
+        label1.setText(languageSelector.getFirstAttributeByTagName("einstform.Label2.caption"));
+        label2.setText(languageSelector.getFirstAttributeByTagName("einstform.Label7.caption"));
+        label3.setText(languageSelector.getFirstAttributeByTagName("einstform.Label3.caption"));
+        label4.setText(languageSelector.getFirstAttributeByTagName("einstform.Label8.caption"));
+        label6.setText(languageSelector.getFirstAttributeByTagName("javagui.options.standard.xmlport"));
 
         ImageIcon icon = im.getIcon("hint");
 
@@ -109,11 +109,11 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         hint3 = new HintLabel(icon);
         hint4 = new HintLabel(icon);
         hint6 = new HintLabel(icon);
-        hint1.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.ttipp_temp"));
-        hint2.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.ttipp_port"));
-        hint3.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.ttipp_nick"));
-        hint4.setToolTipText(languageSelector.getFirstAttrbuteByTagName("einstform.Label1.caption"));
-        hint6.setToolTipText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.ttipp_xmlport"));
+        hint1.setToolTipText(languageSelector.getFirstAttributeByTagName("javagui.options.standard.tooltip_temp"));
+        hint2.setToolTipText(languageSelector.getFirstAttributeByTagName("javagui.options.standard.tooltip_port"));
+        hint3.setToolTipText(languageSelector.getFirstAttributeByTagName("javagui.options.standard.tooltip_nick"));
+        hint4.setToolTipText(languageSelector.getFirstAttributeByTagName("einstform.Label1.caption"));
+        hint6.setToolTipText(languageSelector.getFirstAttributeByTagName("javagui.options.standard.tooltip_xmlport"));
 
         Icon icon2 = im.getIcon("folderopen");
         DirectoryChooserMouseAdapter dcMouseAdapter = new DirectoryChooserMouseAdapter();
@@ -206,7 +206,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
     }
 
     public void reloadSettings() {
-        AJSettings ajSettings2 = AppleJuiceClient.getAjFassade().getAJSettings();
+        AJSettings ajSettings2 = AppleJuiceClient.getAjFacade().getAJSettings();
 
         temp.setText(ajSettings2.getTempDir());
         incoming.setText(ajSettings2.getIncomingDir());

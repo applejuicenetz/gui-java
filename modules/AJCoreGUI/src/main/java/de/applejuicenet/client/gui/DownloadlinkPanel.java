@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 
@@ -106,7 +106,7 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
 
          String subdir = (String) obj;
 
-         return subdir.contains(File.separator) || subdir.indexOf(ApplejuiceFassade.separator) != -1 ||
+         return subdir.contains(File.separator) || subdir.indexOf(ApplejuiceFacade.separator) != -1 ||
                  subdir.contains("..") || subdir.contains(":");
       };
 
@@ -137,9 +137,8 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
    }
 
    /**
-    * Teilt Text mit mehreren Links (Whitespace, Zeilenumbrueche oder direkt
-    * aneinandergereiht) in einzelne Links auf. Jeder Link beginnt bei
-    * {@code ajfsp://} bzw. {@code web+ajfsp://}.
+    * Splits text containing several links (whitespace, line breaks or directly concatenated) into
+    * single links. Each link starts at {@code ajfsp://} or {@code web+ajfsp://}.
     */
    public static java.util.List<String> splitLinks(String text)
    {
@@ -186,12 +185,12 @@ public class DownloadlinkPanel extends JPanel implements LanguageListener
    public void fireLanguageChanged()
    {
       LanguageSelector languageSelector = LanguageSelector.getInstance();
-      String           text = languageSelector.getFirstAttrbuteByTagName("mainform.Label14.caption");
+      String           text = languageSelector.getFirstAttributeByTagName("mainform.Label14.caption");
 
       lblLink.setText(text);
-      btnStartDownload.setText(languageSelector.getFirstAttrbuteByTagName("mainform.downlajfsp.caption"));
-      btnStartDownload.setToolTipText(languageSelector.getFirstAttrbuteByTagName("mainform.downlajfsp.hint"));
-      lblTargetDir.setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.zielverzeichnis"));
+      btnStartDownload.setText(languageSelector.getFirstAttributeByTagName("mainform.downlajfsp.caption"));
+      btnStartDownload.setToolTipText(languageSelector.getFirstAttributeByTagName("mainform.downlajfsp.hint"));
+      lblTargetDir.setText(languageSelector.getFirstAttributeByTagName("javagui.downloadform.targetdirectory"));
 
    }
 }

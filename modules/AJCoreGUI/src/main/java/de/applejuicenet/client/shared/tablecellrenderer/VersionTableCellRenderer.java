@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.shared.tablecellrenderer;
 
-import de.applejuicenet.client.fassade.entity.Version;
+import de.applejuicenet.client.facade.entity.Version;
 import de.applejuicenet.client.shared.IconManager;
 
 import javax.swing.*;
@@ -42,7 +42,7 @@ public class VersionTableCellRenderer extends DefaultTableCellRenderer
 
    private ImageIcon getVersionIcon(Version version)
    {
-      switch(version.getBetriebsSystem())
+      switch(version.getOperatingSystem())
       {
 
          case Version.WIN32:

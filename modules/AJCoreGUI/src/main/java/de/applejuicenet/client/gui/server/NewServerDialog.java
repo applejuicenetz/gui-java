@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui.server;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.NumberInputVerifier;
 import de.applejuicenet.client.shared.SoundPlayer;
@@ -18,8 +18,8 @@ import java.awt.event.*;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/NewServerDialog.java,v 1.5 2009/01/12 09:19:20 maj0r Exp $
  *
- * <p>Titel: AppleJuice Core-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Core-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -38,7 +38,7 @@ public class NewServerDialog extends JDialog {
         try {
             init();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -51,8 +51,8 @@ public class NewServerDialog extends JDialog {
 
         LanguageSelector languageSelector = LanguageSelector.getInstance();
 
-        setTitle(languageSelector.getFirstAttrbuteByTagName("addserverform.caption"));
-        ok.setText(languageSelector.getFirstAttrbuteByTagName("addserverform.okbtn.caption"));
+        setTitle(languageSelector.getFirstAttributeByTagName("addserverform.caption"));
+        ok.setText(languageSelector.getFirstAttributeByTagName("addserverform.okbtn.caption"));
         dyn.setColumns(15);
         port.setColumns(5);
         port.setDocument(new NumberInputVerifier());
@@ -65,9 +65,9 @@ public class NewServerDialog extends JDialog {
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.insets.left = 5;
-        panel2.add(new JLabel(languageSelector.getFirstAttrbuteByTagName("addserverform.serverlbl.caption") + ": "), constraints);
+        panel2.add(new JLabel(languageSelector.getFirstAttributeByTagName("addserverform.serverlbl.caption") + ": "), constraints);
         constraints.gridy = 1;
-        panel2.add(new JLabel(languageSelector.getFirstAttrbuteByTagName("addserverform.portlbl.caption") + ": "), constraints);
+        panel2.add(new JLabel(languageSelector.getFirstAttributeByTagName("addserverform.portlbl.caption") + ": "), constraints);
         constraints.insets.left = 0;
         constraints.gridx = 1;
         constraints.gridy = 0;
@@ -97,7 +97,7 @@ public class NewServerDialog extends JDialog {
                 }
             }
         });
-        SoundPlayer.getInstance().playSound(SoundPlayer.KONKRETISIEREN);
+        SoundPlayer.getInstance().playSound(SoundPlayer.SPECIFY);
     }
 
     private void close() {

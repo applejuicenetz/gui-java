@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.controller;
 
-import de.applejuicenet.client.fassade.listener.CoreStatusListener.STATUS;
+import de.applejuicenet.client.facade.listener.CoreStatusListener.STATUS;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;

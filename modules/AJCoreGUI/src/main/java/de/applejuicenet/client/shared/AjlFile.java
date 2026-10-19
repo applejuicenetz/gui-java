@@ -17,13 +17,13 @@ public final class AjlFile {
             String line;
             while ((line = reader.readLine()) != null && !line.equals("100")) { }
             if (line == null) {
-                throw new IOException("AJL-Datei enthält keinen Formatmarker 100");
+                throw new IOException("AJL file does not contain format marker 100");
             }
             while ((line = reader.readLine()) != null) {
                 String checksum = reader.readLine();
                 String size = reader.readLine();
                 if (checksum == null || size == null) {
-                    throw new IOException("AJL-Datei enthält einen unvollständigen Eintrag");
+                    throw new IOException("AJL file contains an incomplete entry");
                 }
                 links.add("ajfsp://file|" + line + "|" + checksum + "|" + size + "/");
             }

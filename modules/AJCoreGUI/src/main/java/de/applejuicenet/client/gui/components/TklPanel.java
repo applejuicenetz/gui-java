@@ -9,8 +9,8 @@ import javax.swing.*;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/TklPanel.java,v 1.3 2004/11/22 16:25:26 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -24,7 +24,7 @@ public class TklPanel extends JPanel implements RegisterI {
 	
 	public TklPanel(GuiController guiController){
 		if (null == guiController){
-			throw new RuntimeException("Ungueltiger GuiController");
+			throw new RuntimeException("Invalid GuiController");
 		}
 		logger = LoggerFactory.getLogger(getClass());
 		this.guiController = guiController;

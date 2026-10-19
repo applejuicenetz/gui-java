@@ -5,10 +5,10 @@
 package de.applejuicenet.client.gui.download;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.*;
-import de.applejuicenet.client.fassade.event.DownloadDataPropertyChangeEvent;
-import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.*;
+import de.applejuicenet.client.facade.event.DownloadDataPropertyChangeEvent;
+import de.applejuicenet.client.facade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.GuiControllerActionListener;
@@ -46,18 +46,18 @@ import java.util.Map;
 
 public class DownloadController extends GuiController {
     private static DownloadController instance = null;
-    private static final int ABBRECHEN = 0;
+    private static final int CANCEL = 0;
     private static final int COPY_TO_CLIPBOARD = 1;
     private static final int COPY_TO_CLIPBOARD_WITH_SOURCES = 2;
     private static final int OPEN_WITH_DEFAULT_PROGRAM = 16;
     private static final int PAUSE = 4;
-    private static final int FORTSETZEN = 5;
-    private static final int UMBENENNEN = 6;
-    private static final int ZIELORDNER_AENDERN = 7;
-    private static final int FERTIGE_ENTFERNEN = 8;
-    private static final int PARTLISTE_ANZEIGEN = 9;
+    private static final int RESUME = 5;
+    private static final int RENAME = 6;
+    private static final int CHANGE_TARGET_FOLDER = 7;
+    private static final int REMOVE_FINISHED = 8;
+    private static final int SHOW_PARTLIST = 9;
     private static final int START_DOWNLOAD = 10;
-    private static final int PARTLISTE_ANZEIGEN_PER_BUTTON = 11;
+    private static final int SHOW_PARTLIST_PER_BUTTON = 11;
     private static final int START_POWERDOWNLOAD = 12;
     private static final int HEADER_DOWNLOAD_POPUP = 13;
     private static final int HEADER_DOWNLOAD_SOURCES_POPUP = 14;
@@ -66,8 +66,8 @@ public class DownloadController extends GuiController {
     private static final int RELEASE_INFO = 18;
     private DownloadPanel downloadPanel;
     private boolean initialized = false;
-    private String dialogTitel;
-    private String downloadAbbrechen;
+    private String dialogTitle;
+    private String cancelDownload;
     private DownloadPartListWatcher downloadPartListWatcher;
     private boolean firstUpdate = true;
     private boolean isFirstDownloadPropertyChanged = true;
@@ -83,10 +83,10 @@ public class DownloadController extends GuiController {
         downloadPanel = new DownloadPanel(this);
         try {
             init();
-            AppleJuiceClient.getAjFassade().addDataUpdateListener(this, DATALISTENER_TYPE.DOWNLOAD_CHANGED);
+            AppleJuiceClient.getAjFacade().addDataUpdateListener(this, DATALISTENER_TYPE.DOWNLOAD_CHANGED);
 
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -99,18 +99,18 @@ public class DownloadController extends GuiController {
     }
 
     private void init() {
-        downloadPanel.getMnuAbbrechen().addActionListener(new GuiControllerActionListener(this, ABBRECHEN));
+        downloadPanel.getMnuCancel().addActionListener(new GuiControllerActionListener(this, CANCEL));
         downloadPanel.getMnuCopyToClipboard().addActionListener(new GuiControllerActionListener(this, COPY_TO_CLIPBOARD));
         downloadPanel.getMnuCopyToClipboardWithSources()
                 .addActionListener(new GuiControllerActionListener(this, COPY_TO_CLIPBOARD_WITH_SOURCES));
         downloadPanel.getMnuPause().addActionListener(new GuiControllerActionListener(this, PAUSE));
-        downloadPanel.getMnuFortsetzen().addActionListener(new GuiControllerActionListener(this, FORTSETZEN));
-        downloadPanel.getMnuUmbenennen().addActionListener(new GuiControllerActionListener(this, UMBENENNEN));
-        downloadPanel.getMnuZielordner().addActionListener(new GuiControllerActionListener(this, ZIELORDNER_AENDERN));
-        downloadPanel.getMnuFertigeEntfernen().addActionListener(new GuiControllerActionListener(this, FERTIGE_ENTFERNEN));
+        downloadPanel.getMnuResume().addActionListener(new GuiControllerActionListener(this, RESUME));
+        downloadPanel.getMnuRename().addActionListener(new GuiControllerActionListener(this, RENAME));
+        downloadPanel.getMnuTargetFolder().addActionListener(new GuiControllerActionListener(this, CHANGE_TARGET_FOLDER));
+        downloadPanel.getMnuRemoveFinished().addActionListener(new GuiControllerActionListener(this, REMOVE_FINISHED));
         downloadPanel.getMnuReleaseInfo().addActionListener(new GuiControllerActionListener(this, RELEASE_INFO));
         downloadPanel.getBtnPowerDownload().addActionListener(new GuiControllerActionListener(this, START_POWERDOWNLOAD));
-        if (AppleJuiceClient.getAjFassade().isLocalhost()) {
+        if (AppleJuiceClient.getAjFacade().isLocalhost()) {
             if (DesktopTools.isAdvancedSupported()) {
                 downloadPanel.getMnuOpenWithDefaultProgram()
                         .addActionListener(new GuiControllerActionListener(this, OPEN_WITH_DEFAULT_PROGRAM));
@@ -164,12 +164,12 @@ public class DownloadController extends GuiController {
                     }
 
                     case KeyEvent.VK_F5: {
-                        pausieren();
+                        pause();
                         break;
                     }
 
                     case KeyEvent.VK_F6: {
-                        fortsetzen();
+                        resume();
                         break;
                     }
 
@@ -236,8 +236,8 @@ public class DownloadController extends GuiController {
                 break;
             }
 
-            case ABBRECHEN: {
-                downloadAbbrechen();
+            case CANCEL: {
+                cancelDownload();
                 break;
             }
 
@@ -257,26 +257,26 @@ public class DownloadController extends GuiController {
             }
 
             case PAUSE: {
-                pausieren();
+                pause();
                 break;
             }
 
-            case FORTSETZEN: {
-                fortsetzen();
+            case RESUME: {
+                resume();
                 break;
             }
 
-            case UMBENENNEN: {
+            case RENAME: {
                 renameDownload();
                 break;
             }
 
-            case ZIELORDNER_AENDERN: {
+            case CHANGE_TARGET_FOLDER: {
                 changeTargetDir();
                 break;
             }
 
-            case FERTIGE_ENTFERNEN: {
+            case REMOVE_FINISHED: {
                 clearReadyDownloads();
                 break;
             }
@@ -305,7 +305,7 @@ public class DownloadController extends GuiController {
 
         Download curDownload = selectedItems[0];
 
-        ReleaseInfo.handle(curDownload.getFilename(), curDownload.getHash(), (long) curDownload.getGroesse());
+        ReleaseInfo.handle(curDownload.getFilename(), curDownload.getHash(), (long) curDownload.getSize());
     }
 
     private void headerDownloadsDragged() {
@@ -371,9 +371,9 @@ public class DownloadController extends GuiController {
     }
 
     private void clearReadyDownloads() {
-        Thread.ofVirtual().name("CleanDownloadList").start(() -> AppleJuiceClient.getAjFassade().cleanDownloadList());
-        downloadPanel.getPowerDownloadPanel().getBtnPdl().setEnabled(false);
-        downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
+        Thread.ofVirtual().name("CleanDownloadList").start(() -> AppleJuiceClient.getAjFacade().cleanDownloadList());
+        downloadPanel.getPowerDownloadPanel().getBtnPowerdownload().setEnabled(false);
+        downloadPanel.getPowerDownloadPanel().setPowerdownloadValue(0);
         downloadPanel.getDownloadTable().getSelectionModel().clearSelection();
         autoPartListId = -1;
         downloadPartListWatcher.setDownloadNode((Download) null);
@@ -386,13 +386,13 @@ public class DownloadController extends GuiController {
     private void downloadClicked(Download download) {
         tryGetPartList(download);
 
-        if (!downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive()) {
-            downloadPanel.getPowerDownloadPanel().getBtnPdl().setEnabled(true);
-            if (download.getStatus() == Download.SUCHEN_LADEN || download.getStatus() == Download.PAUSIERT) {
-                downloadPanel.getPowerDownloadPanel().setPwdlValue(download.getPowerDownload());
+        if (!downloadPanel.getPowerDownloadPanel().isAutomaticPowerdownloadActive()) {
+            downloadPanel.getPowerDownloadPanel().getBtnPowerdownload().setEnabled(true);
+            if (download.getStatus() == Download.SEARCHING_LOADING || download.getStatus() == Download.PAUSED) {
+                downloadPanel.getPowerDownloadPanel().setPowerdownloadValue(download.getPowerDownload());
             } else {
-                downloadPanel.getPowerDownloadPanel().getBtnPdl().setEnabled(false);
-                downloadPanel.getPowerDownloadPanel().setPwdlValue(0);
+                downloadPanel.getPowerDownloadPanel().getBtnPowerdownload().setEnabled(false);
+                downloadPanel.getPowerDownloadPanel().setPowerdownloadValue(0);
             }
         }
     }
@@ -404,14 +404,14 @@ public class DownloadController extends GuiController {
             if (selectedDownloads != null && selectedDownloads.length != 0) {
                 int powerDownload = 0;
 
-                if (!downloadPanel.getBtnPowerDownloadInaktiv().isSelected()) {
+                if (!downloadPanel.getBtnPowerDownloadInactive().isSelected()) {
                     String temp = downloadPanel.getRatioField().getText();
                     double power = 2.2;
 
                     try {
                         power = Double.parseDouble(temp);
                     } catch (NumberFormatException nfE) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, nfE);
+                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, nfE);
 
                         downloadPanel.getRatioField().setText("2.2");
                     }
@@ -422,18 +422,18 @@ public class DownloadController extends GuiController {
                 List<Download> temp = new ArrayList<Download>();
 
                 for (Download curDownload : selectedDownloads) {
-                    if (curDownload.getStatus() == Download.PAUSIERT || curDownload.getStatus() == Download.SUCHEN_LADEN) {
+                    if (curDownload.getStatus() == Download.PAUSED || curDownload.getStatus() == Download.SEARCHING_LOADING) {
                         temp.add(curDownload);
                     }
                 }
 
-                AppleJuiceClient.getAjFassade().setPowerDownload(temp, Integer.valueOf(powerDownload));
-                if (downloadPanel.getBtnPowerDownloadAktiv().isSelected()) {
+                AppleJuiceClient.getAjFacade().setPowerDownload(temp, Integer.valueOf(powerDownload));
+                if (downloadPanel.getBtnPowerDownloadActive().isSelected()) {
                     SoundPlayer.getInstance().playSound(SoundPlayer.POWER);
                 }
             }
         } catch (Exception ex) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, ex);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
         }
     }
 
@@ -450,23 +450,23 @@ public class DownloadController extends GuiController {
             selectedDownloads[i] = downloadPanel.getDownloadTableModel().getRow(selected[i]);
         }
 
-        boolean pausiert = false;
-        boolean laufend = false;
+        boolean paused = false;
+        boolean running = false;
 
-        downloadPanel.getMnuZielordner().setEnabled(true);
+        downloadPanel.getMnuTargetFolder().setEnabled(true);
         for (Download curDownload : selectedDownloads) {
-            if (curDownload.getStatus() == Download.SUCHEN_LADEN) {
-                laufend = true;
-            } else if (curDownload.getStatus() == Download.PAUSIERT) {
-                pausiert = true;
+            if (curDownload.getStatus() == Download.SEARCHING_LOADING) {
+                running = true;
+            } else if (curDownload.getStatus() == Download.PAUSED) {
+                paused = true;
             }
         }
 
-        downloadPanel.getMnuUmbenennen().setEnabled(selected.length == 1);
+        downloadPanel.getMnuRename().setEnabled(selected.length == 1);
         downloadPanel.getMnuCopyToClipboard().setEnabled(selected.length == 1);
         downloadPanel.getMnuCopyToClipboardWithSources().setEnabled(selected.length == 1);
-        downloadPanel.getMnuPause().setEnabled(laufend);
-        downloadPanel.getMnuFortsetzen().setEnabled(pausiert);
+        downloadPanel.getMnuPause().setEnabled(running);
+        downloadPanel.getMnuResume().setEnabled(paused);
         downloadPanel.getPopup().show(downloadPanel.getDownloadTable(), e.getX(), e.getY());
     }
 
@@ -494,7 +494,7 @@ public class DownloadController extends GuiController {
 
             return selectedDownloads;
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
 
             return new Download[0];
         }
@@ -508,66 +508,66 @@ public class DownloadController extends GuiController {
             RenameDownloadDialog renameDownloadDialog = new RenameDownloadDialog(AppleJuiceDialog.getApp(), curDownload);
 
             renameDownloadDialog.setVisible(true);
-            String neuerName = renameDownloadDialog.getNewName();
+            String newName = renameDownloadDialog.getNewName();
 
-            if (neuerName == null) {
+            if (newName == null) {
                 return;
             } else {
-                if (curDownload.getFilename().compareTo(neuerName) != 0) {
+                if (curDownload.getFilename().compareTo(newName) != 0) {
                     try {
-                        AppleJuiceClient.getAjFassade().renameDownload(curDownload, neuerName);
+                        AppleJuiceClient.getAjFacade().renameDownload(curDownload, newName);
                     } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                     }
                 }
             }
         }
     }
 
-    private void pausieren() {
+    private void pause() {
         Download[] selectedDownloads = getSelectedDownloads();
 
         if (selectedDownloads != null && selectedDownloads.length != 0 &&
-                !downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive()) {
-            final List<Download> pausieren = new ArrayList<Download>();
+                !downloadPanel.getPowerDownloadPanel().isAutomaticPowerdownloadActive()) {
+            final List<Download> pause = new ArrayList<Download>();
 
             for (Download curDownload : selectedDownloads) {
-                if (curDownload.getStatus() == Download.SUCHEN_LADEN) {
-                    pausieren.add(curDownload);
+                if (curDownload.getStatus() == Download.SEARCHING_LOADING) {
+                    pause.add(curDownload);
                 }
             }
 
-            if (pausieren.size() > 0) {
+            if (pause.size() > 0) {
                 Thread.ofVirtual().name("PauseDownload").start(() -> {
                     try {
-                        AppleJuiceClient.getAjFassade().pauseDownload(pausieren);
+                        AppleJuiceClient.getAjFacade().pauseDownload(pause);
                     } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                     }
                 });
             }
         }
     }
 
-    private void fortsetzen() {
+    private void resume() {
         Download[] selectedDownloads = getSelectedDownloads();
 
         if (selectedDownloads != null && selectedDownloads.length != 0 &&
-                !downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive()) {
-            final List<Download> fortsetzen = new ArrayList<Download>();
+                !downloadPanel.getPowerDownloadPanel().isAutomaticPowerdownloadActive()) {
+            final List<Download> resume = new ArrayList<Download>();
 
             for (Download curDownload : selectedDownloads) {
-                if (curDownload.getStatus() == Download.PAUSIERT) {
-                    fortsetzen.add(curDownload);
+                if (curDownload.getStatus() == Download.PAUSED) {
+                    resume.add(curDownload);
                 }
             }
 
-            if (fortsetzen.size() > 0) {
+            if (resume.size() > 0) {
                 Thread.ofVirtual().name("ResumeDownload").start(() -> {
                     try {
-                        AppleJuiceClient.getAjFassade().resumeDownload(fortsetzen);
+                        AppleJuiceClient.getAjFacade().resumeDownload(resume);
                     } catch (IllegalArgumentException e) {
-                        logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                        logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                     }
                 });
             }
@@ -590,35 +590,35 @@ public class DownloadController extends GuiController {
             }
         }
 
-        String[] dirs = AppleJuiceClient.getAjFassade().getCurrentIncomingDirs();
+        String[] dirs = AppleJuiceClient.getAjFacade().getCurrentIncomingDirs();
         IncomingDirSelectionDialog incomingDirSelectionDialog = new IncomingDirSelectionDialog(AppleJuiceDialog.getApp(), dirs,
                 selectedDir);
 
         incomingDirSelectionDialog.setVisible(true);
-        String neuerName = incomingDirSelectionDialog.getSelectedIncomingDir();
+        String newName = incomingDirSelectionDialog.getSelectedIncomingDir();
 
-        if (neuerName == null) {
+        if (newName == null) {
             return;
         } else {
-            neuerName = neuerName.trim();
-            if (neuerName.indexOf(File.separator) == 0 || neuerName.indexOf(ApplejuiceFassade.separator) == 0) {
-                neuerName = neuerName.substring(1);
+            newName = newName.trim();
+            if (newName.indexOf(File.separator) == 0 || newName.indexOf(ApplejuiceFacade.separator) == 0) {
+                newName = newName.substring(1);
             }
         }
 
         List<Download> toChange = new ArrayList<Download>();
 
         for (Download curDownload : selectedDownloads) {
-            if (!neuerName.equals(curDownload.getTargetDirectory())) {
+            if (!newName.equals(curDownload.getTargetDirectory())) {
                 toChange.add(curDownload);
             }
         }
 
         if (toChange.size() > 0) {
             try {
-                AppleJuiceClient.getAjFassade().setTargetDir(toChange, neuerName);
+                AppleJuiceClient.getAjFacade().setTargetDir(toChange, newName);
             } catch (IllegalArgumentException e) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
             }
         }
     }
@@ -631,7 +631,7 @@ public class DownloadController extends GuiController {
                 Integer shareId = curDownload.getShareId();
 
                 try {
-                    Share share = (Share) AppleJuiceClient.getAjFassade().getObjectById(shareId);
+                    Share share = (Share) AppleJuiceClient.getAjFacade().getObjectById(shareId);
 
                     if (share != null) {
                         String filename = share.getFilename();
@@ -639,7 +639,7 @@ public class DownloadController extends GuiController {
                         DesktopTools.open(new File(filename));
                     }
                 } catch (IllegalArgumentException e) {
-                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                    logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                 }
             }
         }
@@ -656,18 +656,18 @@ public class DownloadController extends GuiController {
             toCopy.append("ajfsp://file|");
             boolean copyToClipboard = false;
 
-            toCopy.append(curDownload.getFilename() + "|" + curDownload.getHash() + "|" + curDownload.getGroesse());
+            toCopy.append(curDownload.getFilename() + "|" + curDownload.getHash() + "|" + curDownload.getSize());
             copyToClipboard = true;
 
             if (copyToClipboard) {
-                long port = AppleJuiceClient.getAjFassade().getAJSettings().getPort();
-                Information information = AppleJuiceClient.getAjFassade().getInformation();
+                long port = AppleJuiceClient.getAjFacade().getAJSettings().getPort();
+                Information information = AppleJuiceClient.getAjFacade().getInformation();
 
                 toCopy.append("|");
-                toCopy.append(information.getExterneIP());
+                toCopy.append(information.getExternalIP());
                 toCopy.append(":");
                 toCopy.append(port);
-                if (information.getVerbindungsStatus() == Information.VERBUNDEN) {
+                if (information.getConnectionStatus() == Information.CONNECTED) {
                     Server server = information.getServer();
 
                     if (server != null) {
@@ -695,32 +695,32 @@ public class DownloadController extends GuiController {
             StringBuffer toCopy = new StringBuffer();
 
             toCopy.append("ajfsp://file|");
-            toCopy.append(curDownload.getFilename() + "|" + curDownload.getHash() + "|" + curDownload.getGroesse() + "/");
+            toCopy.append(curDownload.getFilename() + "|" + curDownload.getHash() + "|" + curDownload.getSize() + "/");
             StringSelection contents = new StringSelection(toCopy.toString());
 
             cb.setContents(contents, null);
         }
     }
 
-    private void downloadAbbrechen() {
+    private void cancelDownload() {
         Download[] selectedDownloads = getSelectedDownloads();
 
         if (selectedDownloads.length != 0) {
-            int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(), downloadAbbrechen, dialogTitel,
+            int result = JOptionPane.showConfirmDialog(AppleJuiceDialog.getApp(), cancelDownload, dialogTitle,
                     JOptionPane.YES_NO_OPTION);
 
             if (result == JOptionPane.YES_OPTION) {
-                final List<Download> abbrechen = new ArrayList<Download>();
+                final List<Download> cancel = new ArrayList<Download>();
 
-                Collections.addAll(abbrechen, selectedDownloads);
+                Collections.addAll(cancel, selectedDownloads);
 
-                if (abbrechen.size() > 0) {
+                if (cancel.size() > 0) {
                     Thread.ofVirtual().name("CancelDownload").start(() -> {
                         try {
-                            AppleJuiceClient.getAjFassade().cancelDownload(abbrechen);
-                            SoundPlayer.getInstance().playSound(SoundPlayer.ABGEBROCHEN);
+                            AppleJuiceClient.getAjFacade().cancelDownload(cancel);
+                            SoundPlayer.getInstance().playSound(SoundPlayer.CANCELLED);
                         } catch (IllegalArgumentException e) {
-                            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                         }
                     });
                 }
@@ -729,8 +729,8 @@ public class DownloadController extends GuiController {
     }
 
     public void updateDownloadPolling() {
-        AppleJuiceClient.getAjFassade()
-                .setDownloadPolling(selected || downloadPanel.getPowerDownloadPanel().isAutomaticPwdlActive());
+        AppleJuiceClient.getAjFacade()
+                .setDownloadPolling(selected || downloadPanel.getPowerDownloadPanel().isAutomaticPowerdownloadActive());
     }
 
     public void componentSelected() {
@@ -749,13 +749,13 @@ public class DownloadController extends GuiController {
                 int[] sortDownloadSources = {2, 1};
 
                 if (pm.isLegal()) {
-                    boolean[] visibilies = pm.getDownloadColumnVisibilities();
-                    int[] indizes = pm.getDownloadColumnIndizes();
+                    boolean[] visibilities = pm.getDownloadColumnVisibilities();
+                    int[] indices = pm.getDownloadColumnIndices();
                     ArrayList<TableColumn> visibleColumns = new ArrayList<TableColumn>();
 
                     for (int i = 0; i < columnsDownload.length; i++) {
                         downloadPanel.getDownloadTable().removeColumn(columnsDownload[i]);
-                        if (visibilies[i]) {
+                        if (visibilities[i]) {
                             visibleColumns.add(columnsDownload[i]);
                         }
                     }
@@ -764,7 +764,7 @@ public class DownloadController extends GuiController {
 
                     for (int i = 0; i < visibleColumns.size(); i++) {
                         for (int x = 0; x < columnsDownload.length; x++) {
-                            if (visibleColumns.contains(columnsDownload[x]) && indizes[x] == pos + 1) {
+                            if (visibleColumns.contains(columnsDownload[x]) && indices[x] == pos + 1) {
                                 downloadPanel.getDownloadTable().addColumn(columnsDownload[x]);
                                 pos++;
                                 break;
@@ -772,15 +772,15 @@ public class DownloadController extends GuiController {
                         }
                     }
 
-                    visibilies = pm.getDownloadSourcesColumnVisibilities();
-                    indizes = pm.getDownloadSourcesColumnIndizes();
+                    visibilities = pm.getDownloadSourcesColumnVisibilities();
+                    indices = pm.getDownloadSourcesColumnIndices();
                     sortDownloads = pm.getDownloadSort();
 
                     visibleColumns = new ArrayList<TableColumn>();
 
                     for (int i = 0; i < columnsDownloadSources.length; i++) {
                         downloadPanel.getDownloadSourceTable().removeColumn(columnsDownloadSources[i]);
-                        if (visibilies[i]) {
+                        if (visibilities[i]) {
                             visibleColumns.add(columnsDownloadSources[i]);
                         }
                     }
@@ -790,7 +790,7 @@ public class DownloadController extends GuiController {
                     sortDownloadSources = pm.getDownloadSourcesSort();
                     for (int i = 0; i < visibleColumns.size(); i++) {
                         for (int x = 0; x < columnsDownloadSources.length; x++) {
-                            if (visibleColumns.contains(columnsDownloadSources[x]) && indizes[x] == pos + 1) {
+                            if (visibleColumns.contains(columnsDownloadSources[x]) && indices[x] == pos + 1) {
                                 downloadPanel.getDownloadSourceTable().addColumn(columnsDownloadSources[x]);
                                 pos++;
                                 break;
@@ -838,7 +838,7 @@ public class DownloadController extends GuiController {
                 downloadPanel.getDownloadSourceTable().repaint();
             }
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -856,7 +856,7 @@ public class DownloadController extends GuiController {
             return;
         }
         Download download = downloadPanel.getDownloadTableModel().getRow(0);
-        boolean partListEligible = download.getStatus() == Download.SUCHEN_LADEN || download.getStatus() == Download.PAUSIERT;
+        boolean partListEligible = download.getStatus() == Download.SEARCHING_LOADING || download.getStatus() == Download.PAUSED;
         boolean partListStale = autoPartListId != download.getId() || autoPartListEligible != partListEligible;
         if (newlySelected || partListStale || downloadPanel.getDownloadSourcesTableModel().getDownload() != download) {
             autoPartListId = download.getId();
@@ -872,21 +872,21 @@ public class DownloadController extends GuiController {
 
     protected void languageChanged() {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
-        String text = languageSelector.getFirstAttrbuteByTagName("mainform.Label14.caption");
+        String text = languageSelector.getFirstAttributeByTagName("mainform.Label14.caption");
 
-        dialogTitel = languageSelector.getFirstAttrbuteByTagName("mainform.caption");
-        downloadAbbrechen = languageSelector.getFirstAttrbuteByTagName("mainform.msgdlgtext5");
+        dialogTitle = languageSelector.getFirstAttributeByTagName("mainform.caption");
+        cancelDownload = languageSelector.getFirstAttributeByTagName("mainform.msgdlgtext5");
         String[] tableColumns = new String[DownloadsTableModel.CLASS_TYPES.length];
 
-        tableColumns[0] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col0caption");
-        tableColumns[1] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col1caption");
-        tableColumns[2] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col2caption");
-        tableColumns[3] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col3caption");
-        tableColumns[4] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col4caption");
-        tableColumns[5] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col5caption");
-        tableColumns[6] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
-        tableColumns[7] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col7caption");
-        tableColumns[8] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col8caption");
+        tableColumns[0] = languageSelector.getFirstAttributeByTagName("mainform.queue.col0caption");
+        tableColumns[1] = languageSelector.getFirstAttributeByTagName("mainform.queue.col1caption");
+        tableColumns[2] = languageSelector.getFirstAttributeByTagName("mainform.queue.col2caption");
+        tableColumns[3] = languageSelector.getFirstAttributeByTagName("mainform.queue.col3caption");
+        tableColumns[4] = languageSelector.getFirstAttributeByTagName("mainform.queue.col4caption");
+        tableColumns[5] = languageSelector.getFirstAttributeByTagName("mainform.queue.col5caption");
+        tableColumns[6] = languageSelector.getFirstAttributeByTagName("mainform.queue.col6caption");
+        tableColumns[7] = languageSelector.getFirstAttributeByTagName("mainform.queue.col7caption");
+        tableColumns[8] = languageSelector.getFirstAttributeByTagName("mainform.queue.col8caption");
         tableColumns[9] = "Zielverzeichnis";
         TableColumn[] columns = downloadPanel.getDownloadTableColumns();
         JCheckBoxMenuItem[] columnPopupItems = downloadPanel.getColumnDownloadPopupItems();
@@ -898,17 +898,17 @@ public class DownloadController extends GuiController {
 
         tableColumns = new String[DownloadSourcesTableModel.CLASS_TYPES.length];
 
-        tableColumns[0] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col0caption");
-        tableColumns[1] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col1caption");
-        tableColumns[2] = languageSelector.getFirstAttrbuteByTagName("mainform.uploads.col1caption");
-        tableColumns[3] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col2caption");
-        tableColumns[4] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col3caption");
-        tableColumns[5] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col4caption");
-        tableColumns[6] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col5caption");
-        tableColumns[7] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col6caption");
-        tableColumns[8] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col7caption");
-        tableColumns[9] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col8caption");
-        tableColumns[10] = languageSelector.getFirstAttrbuteByTagName("mainform.queue.col9caption");
+        tableColumns[0] = languageSelector.getFirstAttributeByTagName("mainform.queue.col0caption");
+        tableColumns[1] = languageSelector.getFirstAttributeByTagName("mainform.queue.col1caption");
+        tableColumns[2] = languageSelector.getFirstAttributeByTagName("mainform.uploads.col1caption");
+        tableColumns[3] = languageSelector.getFirstAttributeByTagName("mainform.queue.col2caption");
+        tableColumns[4] = languageSelector.getFirstAttributeByTagName("mainform.queue.col3caption");
+        tableColumns[5] = languageSelector.getFirstAttributeByTagName("mainform.queue.col4caption");
+        tableColumns[6] = languageSelector.getFirstAttributeByTagName("mainform.queue.col5caption");
+        tableColumns[7] = languageSelector.getFirstAttributeByTagName("mainform.queue.col6caption");
+        tableColumns[8] = languageSelector.getFirstAttributeByTagName("mainform.queue.col7caption");
+        tableColumns[9] = languageSelector.getFirstAttributeByTagName("mainform.queue.col8caption");
+        tableColumns[10] = languageSelector.getFirstAttributeByTagName("mainform.queue.col9caption");
 
         columns = downloadPanel.getDownloadSourcesTableColumns();
         columnPopupItems = downloadPanel.getColumnDownloadSourcesPopupItems();
@@ -917,26 +917,26 @@ public class DownloadController extends GuiController {
             columnPopupItems[i].setText(tableColumns[i]);
         }
 
-        downloadPanel.getMnuReleaseInfo().setText(languageSelector.getFirstAttrbuteByTagName("releaseinfo.menu"));
-        downloadPanel.getMnuAbbrechen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.canceldown.caption"));
-        downloadPanel.getMnuPause().setText(languageSelector.getFirstAttrbuteByTagName("mainform.pausedown.caption") + " [F5]");
-        downloadPanel.getMnuFortsetzen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.resumedown.caption") + " [F6]");
-        downloadPanel.getMnuUmbenennen().setText(languageSelector.getFirstAttrbuteByTagName("mainform.renamefile.caption") + " [F2]");
-        downloadPanel.getMnuZielordner().setText(languageSelector.getFirstAttrbuteByTagName("mainform.changetarget.caption") +
+        downloadPanel.getMnuReleaseInfo().setText(languageSelector.getFirstAttributeByTagName("releaseinfo.menu"));
+        downloadPanel.getMnuCancel().setText(languageSelector.getFirstAttributeByTagName("mainform.canceldown.caption"));
+        downloadPanel.getMnuPause().setText(languageSelector.getFirstAttributeByTagName("mainform.pausedown.caption") + " [F5]");
+        downloadPanel.getMnuResume().setText(languageSelector.getFirstAttributeByTagName("mainform.resumedown.caption") + " [F6]");
+        downloadPanel.getMnuRename().setText(languageSelector.getFirstAttributeByTagName("mainform.renamefile.caption") + " [F2]");
+        downloadPanel.getMnuTargetFolder().setText(languageSelector.getFirstAttributeByTagName("mainform.changetarget.caption") +
                 " [F3]");
-        downloadPanel.getMnuFertigeEntfernen()
-                .setText(languageSelector.getFirstAttrbuteByTagName("mainform.Clearfinishedentries1.caption"));
-        downloadPanel.getMnuCopyToClipboard().setText(languageSelector.getFirstAttrbuteByTagName("mainform.getlink1.caption"));
+        downloadPanel.getMnuRemoveFinished()
+                .setText(languageSelector.getFirstAttributeByTagName("mainform.Clearfinishedentries1.caption"));
+        downloadPanel.getMnuCopyToClipboard().setText(languageSelector.getFirstAttributeByTagName("mainform.getlink1.caption"));
         downloadPanel.getMnuCopyToClipboardWithSources()
-                .setText(languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.getlinkwithsources"));
+                .setText(languageSelector.getFirstAttributeByTagName("javagui.downloadform.getlinkwithsources"));
         downloadPanel.getMnuOpenWithDefaultProgram()
-                .setText(languageSelector.getFirstAttrbuteByTagName("javagui.options.standard.startemitstandard"));
-        String remoteHint = AppleJuiceClient.getAjFassade().isLocalhost() ? null
-                : languageSelector.getFirstAttrbuteByTagName("javagui.remotecore.hint");
+                .setText(languageSelector.getFirstAttributeByTagName("javagui.options.standard.startwithdefault"));
+        String remoteHint = AppleJuiceClient.getAjFacade().isLocalhost() ? null
+                : languageSelector.getFirstAttributeByTagName("javagui.remotecore.hint");
         downloadPanel.getMnuOpenWithDefaultProgram().setToolTipText(remoteHint);
-        alreadyLoaded = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.bereitsgeladen");
-        invalidLink = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.falscherlink");
-        linkFailure = languageSelector.getFirstAttrbuteByTagName("javagui.downloadform.sonstigerlinkfehlerlang");
+        alreadyLoaded = languageSelector.getFirstAttributeByTagName("javagui.downloadform.alreadyloaded");
+        invalidLink = languageSelector.getFirstAttributeByTagName("javagui.downloadform.invalidlink");
+        linkFailure = languageSelector.getFirstAttributeByTagName("javagui.downloadform.otherlinkerrorlong");
     }
 
     @SuppressWarnings("unchecked")
@@ -990,7 +990,7 @@ public class DownloadController extends GuiController {
         }
         Download parent = downloadPanel.getDownloadSourcesTableModel().getDownload();
 
-        if (parent == null || (parent.getStatus() != Download.SUCHEN_LADEN && parent.getStatus() != Download.PAUSIERT)) {
+        if (parent == null || (parent.getStatus() != Download.SEARCHING_LOADING && parent.getStatus() != Download.PAUSED)) {
             downloadPartListWatcher.setDownloadNode((Download) null);
             return;
         }

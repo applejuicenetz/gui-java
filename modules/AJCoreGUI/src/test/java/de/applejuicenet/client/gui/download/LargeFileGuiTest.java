@@ -1,6 +1,6 @@
 package de.applejuicenet.client.gui.download;
 
-import de.applejuicenet.client.fassade.entity.*;
+import de.applejuicenet.client.facade.entity.*;
 import de.applejuicenet.client.gui.components.table.TableSorter;
 import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
 import de.applejuicenet.client.gui.download.table.DownloadSourcesTableModel;
@@ -28,7 +28,7 @@ public class LargeFileGuiTest {
     }
 
     private Object entity(String type, int id) throws Exception {
-        Class<?> clazz = Class.forName("de.applejuicenet.client.fassade.controller.xml." + type);
+        Class<?> clazz = Class.forName("de.applejuicenet.client.facade.controller.xml." + type);
         Constructor<?> constructor = clazz.getDeclaredConstructor(int.class);
         constructor.setAccessible(true);
         return constructor.newInstance(id);
@@ -42,7 +42,7 @@ public class LargeFileGuiTest {
 
     private DownloadSource source(long from, long to, long ready) throws Exception {
         DownloadSource source = (DownloadSource) entity("DownloadSourceDO", 3);
-        set(source, "setStatus", int.class, DownloadSource.UEBERTRAGUNG);
+        set(source, "setStatus", int.class, DownloadSource.TRANSFER);
         set(source, "setDownloadFrom", long.class, from);
         set(source, "setDownloadTo", long.class, to);
         set(source, "setActualDownloadPosition", long.class, ready);
@@ -57,15 +57,15 @@ public class LargeFileGuiTest {
             assertEquals("5,0 GB", label.getText());
             label = (JLabel) renderer.getTableCellRendererComponent(new JTable(), 1024, false, false, 0, 0);
             assertEquals("1,0 KB", label.getText());
-            assertEquals("1,0 TB", renderer.parseGroesse(1L << 40));
-            assertEquals("8,0 EB", renderer.parseGroesse(Long.MAX_VALUE));
+            assertEquals("1,0 TB", renderer.parseSize(1L << 40));
+            assertEquals("8,0 EB", renderer.parseSize(Long.MAX_VALUE));
         });
     }
 
     @Test
     public void downloadTablesExposeLongByteColumns() throws Exception {
         Download download = (Download) entity("DownloadDO", 1);
-        set(download, "setGroesse", long.class, 5 * GIB);
+        set(download, "setSize", long.class, 5 * GIB);
         set(download, "setReady", long.class, 3 * GIB);
         DownloadsTableModel downloads = new DownloadsTableModel();
         downloads.setDownloads(Collections.singletonMap(1, download));
@@ -75,7 +75,7 @@ public class LargeFileGuiTest {
         assertEquals(5 * GIB, downloads.getValueAt(0, 2));
         assertEquals(3 * GIB, downloads.getValueAt(0, 3));
         assertEquals(2 * GIB, downloads.getValueAt(0, 7));
-        set(download, "setStatus", int.class, Download.FERTIG);
+        set(download, "setStatus", int.class, Download.FINISHED);
         assertEquals(0L, downloads.getValueAt(0, 7));
 
         DownloadSource source = source(3 * GIB, 7 * GIB, 4 * GIB);
@@ -107,7 +107,7 @@ public class LargeFileGuiTest {
                     DownloadSource source = source(size / 2, size, size * 3 / 4);
                     PartList list = new PartList() {
                         public int getPartListType() { return SOURCE_PARTLIST; }
-                        public long getGroesse() { return size; }
+                        public long getSize() { return size; }
                         public Part[] getParts() { return new Part[]{part(0, -1), part(size / 2, 0)}; }
                         public Object getValueObject() { return source; }
                     };
@@ -130,10 +130,10 @@ public class LargeFileGuiTest {
     @Test
     public void verifiedPartsBeyondIntBoundaryRenderAtCorrectPosition() throws Exception {
         Download download = (Download) entity("DownloadDO", 1);
-        set(download, "setStatus", int.class, Download.PAUSIERT);
+        set(download, "setStatus", int.class, Download.PAUSED);
         PartList list = new PartList() {
             public int getPartListType() { return MAIN_PARTLIST; }
-            public long getGroesse() { return 5 * GIB; }
+            public long getSize() { return 5 * GIB; }
             public Part[] getParts() { return new Part[]{part(0, -1), part(3 * GIB, 0), part(4 * GIB, 1)}; }
             public Object getValueObject() { return download; }
         };
@@ -146,7 +146,7 @@ public class LargeFileGuiTest {
                 imageField.setAccessible(true);
                 BufferedImage image = (BufferedImage) imageField.get(panel);
                 assertNotNull(image);
-                assertEquals(PartList.COLOR_TYPE_UEBERPRUEFT.getRGB(), image.getRGB(80, 5));
+                assertEquals(PartList.COLOR_TYPE_CHECKED.getRGB(), image.getRGB(80, 5));
                 assertEquals(PartList.COLOR_TYPE_0.getRGB(), image.getRGB(40, 20));
                 assertEquals(PartList.COLOR_TYPE_1.getRGB(), image.getRGB(80, 20));
             } catch (Exception e) {

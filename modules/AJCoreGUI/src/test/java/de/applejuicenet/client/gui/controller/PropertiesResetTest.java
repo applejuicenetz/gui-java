@@ -66,7 +66,7 @@ public class PropertiesResetTest {
         AtomicInteger prompts = new AtomicInteger();
         PropertiesManager manager = load(file, () -> { prompts.incrementAndGet(); return true; });
         assertEquals(1, prompts.get());
-        assertEquals("english", manager.getSprache());
+        assertEquals("english", manager.getLanguage());
         assertEquals(broken, Files.readString(file.resolveSibling(file.getFileName() + ".bak")));
         assertFalse(Files.readString(file).contains("ZZZZ"));
     }

@@ -4,9 +4,10 @@
 
 package de.applejuicenet.client.gui.search.table;
 
-import de.applejuicenet.client.fassade.entity.FileName;
-import de.applejuicenet.client.fassade.entity.Search;
-import de.applejuicenet.client.fassade.entity.SearchEntry;
+import de.applejuicenet.client.gui.controller.GuiText;
+import de.applejuicenet.client.facade.entity.FileName;
+import de.applejuicenet.client.facade.entity.Search;
+import de.applejuicenet.client.facade.entity.SearchEntry;
 import de.applejuicenet.client.gui.components.table.SortableTableModel;
 import de.applejuicenet.client.gui.components.table.TableSorter;
 import org.slf4j.Logger;
@@ -16,7 +17,8 @@ import java.util.List;
 
 public class SearchTableModel extends AbstractTableModel implements SortableTableModel<SearchEntry>
 {
-   final static String[]                                     COL_NAMES   = {"Dateiname", "Groesze", "Anzahl"};
+   static final String[] COL_KEYS = {"mainform.searchs.col0caption", "mainform.searchs.col1caption", "mainform.searchs.col2caption"};
+   final static String[]                                     COL_NAMES   = {"File name", "Size", "Count"};
    @SuppressWarnings("unchecked")
    public static final Class[]                               CLASS_TYPES = {SearchEntry.class, Long.class, Integer.class};
    private Search                                            search;
@@ -65,18 +67,18 @@ public class SearchTableModel extends AbstractTableModel implements SortableTabl
             return entry;
 
          case 1:
-            return entry.getGroesse();
+            return entry.getSize();
 
          case 2:
          {
-            long anzahl = 0;
+            long count = 0;
 
             for(FileName curFileName : entry.getFileNames())
             {
-               anzahl += curFileName.getHaeufigkeit();
+               count += curFileName.getFrequency();
             }
 
-            return anzahl;
+            return count;
          }
       }
 
@@ -108,7 +110,7 @@ public class SearchTableModel extends AbstractTableModel implements SortableTabl
       }
       else
       {
-         return ((SearchEntry) getValueAt(row, column)).getFileNames()[0].getDateiName();
+         return ((SearchEntry) getValueAt(row, column)).getFileNames()[0].getFileName();
       }
    }
 

@@ -5,11 +5,11 @@
 package de.applejuicenet.client.gui.controller;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.listener.DataUpdateListener;
-import de.applejuicenet.client.fassade.listener.DataUpdateListener.DATALISTENER_TYPE;
-import de.applejuicenet.client.fassade.shared.AJSettings;
-import de.applejuicenet.client.fassade.shared.ProxySettings;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.listener.DataUpdateListener;
+import de.applejuicenet.client.facade.listener.DataUpdateListener.DATALISTENER_TYPE;
+import de.applejuicenet.client.facade.shared.AJSettings;
+import de.applejuicenet.client.facade.shared.ProxySettings;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.download.table.DownloadSourcesTableModel;
 import de.applejuicenet.client.gui.download.table.DownloadsTableModel;
@@ -45,11 +45,10 @@ import java.util.Set;
  * 1.49 2004/07/09 11:34:00 loevenwong Exp $
  *
  * <p>
- * Titel: AppleJuice Client-GUI
+ * Title: AppleJuice Client-GUI
  * </p>
  * <p>
- * Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten
- * appleJuice-Core
+ * Description: Official GUI for the appleJuice core developed by muhviehstarr
  * </p>
  * <p>
  * Copyright: General Public License
@@ -60,7 +59,7 @@ import java.util.Set;
 public class PropertiesManager implements OptionsManager, PositionManager, ProxyManager {
     private final Map<String, Integer> tableColumnSettings = new HashMap<>();
     private static PropertiesManager instance = null;
-    private static final String PROPERTIES_ERROR = "Fehler beim Zugriff auf die ajgui.properties. Die Datei wird neu erstellt.";
+    private static final String PROPERTIES_ERROR = "Error accessing ajgui.properties. The file will be recreated.";
     private static final String PROPERTIES_ERROR_MESSAGE = "ajgui.properties neu erstellt";
     private static Logger logger;
     private static String path;
@@ -120,9 +119,9 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     private static boolean confirmPropertiesReset() {
         java.util.concurrent.FutureTask<Boolean> dialog = new java.util.concurrent.FutureTask<>(() ->
                 JOptionPane.showConfirmDialog(null,
-                        "ajgui.properties kann nicht gelesen werden.\n"
-                        + "Einstellungen sichern und auf Standardwerte zurücksetzen?\n"
-                        + "Bei Nein wird der Start abgebrochen; die Datei bleibt unverändert.",
+                        "ajgui.properties cannot be read.\n"
+                        + "Back up the settings and reset them to the defaults?\n"
+                        + "If you choose No, startup is aborted and the file stays unchanged.",
                         "appleJuice JavaGUI", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
                         == JOptionPane.YES_OPTION);
         if (SwingUtilities.isEventDispatchThread()) {
@@ -136,7 +135,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             Thread.currentThread().interrupt();
             throw new IllegalStateException("Einstellungsreset abgebrochen", ex);
         } catch (java.util.concurrent.ExecutionException ex) {
-            throw new IllegalStateException("Einstellungsdialog fehlgeschlagen", ex.getCause());
+            throw new IllegalStateException("Settings dialog failed", ex.getCause());
         }
     }
 
@@ -155,7 +154,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             }
             propertyHandler.save();
         } catch (IllegalArgumentException e) {
-            // Letzte gueltige Datei bleibt erhalten; kein Zuruecksetzen auf Standardwerte
+            // The last valid file is kept; no reset to the defaults
             logger.error(e.getMessage(), e);
         }
     }
@@ -203,7 +202,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         }
     }
 
-    public String getSprache() {
+    public String getLanguage() {
         try {
             String language = propertyHandler.get("options_sprache", "english");
             if (language.isBlank() || "italiano".equalsIgnoreCase(language) || "tuerkce".equalsIgnoreCase(language)) {
@@ -211,7 +210,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             }
             return language;
         } catch (Exception e) {
-            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getSprache nutzt den Standardwert", e);
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getLanguage uses the default value", e);
             return "english";
         }
     }
@@ -267,7 +266,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
                 lookAndFeels.add(new LookAFeel("Darcula", "com.formdev.flatlaf.FlatDarculaLaf"));
 
             } catch (Exception e) {
-                logger.warn("Themes konnten nicht vollstaendig geladen werden", e);
+                logger.warn("Themes could not be loaded completely", e);
             }
         }
 
@@ -296,24 +295,24 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         propertyHandler.put("options_lookandfeels_default_name", lookAFeel.getName());
     }
 
-    public boolean isErsterStart() {
+    public boolean isFirstStart() {
         try {
             return propertyHandler.getAsBoolean("options_firststart", true);
         } catch (Exception e) {
-            logger.warn(PROPERTIES_ERROR_MESSAGE + ": isErsterStart nutzt den Standardwert", e);
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": isFirstStart uses the default value", e);
             return true;
         }
     }
 
-    public void setErsterStart(boolean ersterStart) {
-        propertyHandler.put("options_firststart", ersterStart);
+    public void setFirstStart(boolean firstStart) {
+        propertyHandler.put("options_firststart", firstStart);
     }
 
     public boolean shouldLoadPluginsOnStartup() {
         try {
             return propertyHandler.getAsBoolean("options_loadplugins", true);
         } catch (Exception e) {
-            logger.warn(PROPERTIES_ERROR_MESSAGE + ": shouldLoadPluginsOnStartup nutzt den Standardwert", e);
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": shouldLoadPluginsOnStartup uses the default value", e);
             return true;
         }
     }
@@ -343,7 +342,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         try {
             return propertyHandler.getAsBoolean("options_sound", true);
         } catch (Exception e) {
-            logger.warn(PROPERTIES_ERROR_MESSAGE + ": isSoundEnabled nutzt den Standardwert", e);
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": isSoundEnabled uses the default value", e);
             return true;
         }
     }
@@ -352,15 +351,15 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         propertyHandler.put("options_sound", enable);
     }
 
-    public void setSprache(String sprache) {
-        propertyHandler.put("options_sprache", sprache.toLowerCase());
+    public void setLanguage(String language) {
+        propertyHandler.put("options_sprache", language.toLowerCase());
     }
 
     public boolean shouldShowConnectionDialogOnStartup() {
         try {
             return propertyHandler.getAsBoolean("options_dialogzeigen", true);
         } catch (Exception e) {
-            logger.warn(PROPERTIES_ERROR_MESSAGE + ": shouldShowConnectionDialogOnStartup nutzt den Standardwert", e);
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": shouldShowConnectionDialogOnStartup uses the default value", e);
             return true;
         }
     }
@@ -424,7 +423,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
             return result;
         } catch (Exception e) {
-            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getLogLevel nutzt den Standardwert", e);
+            logger.warn(PROPERTIES_ERROR_MESSAGE + ": getLogLevel uses the default value", e);
             return Level.INFO;
         }
     }
@@ -440,15 +439,15 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
                 settings = new Settings();
             }
 
-            boolean downloadUebersicht;
+            boolean downloadOverview;
             boolean loadPlugins;
             boolean enableToolTip;
-            downloadUebersicht = propertyHandler.getAsBoolean("options_download_uebersicht", true);
+            downloadOverview = propertyHandler.getAsBoolean("options_download_uebersicht", true);
             loadPlugins = propertyHandler.getAsBoolean("options_loadplugins", true);
             enableToolTip = propertyHandler.getAsBoolean("options_enableToolTip", true);
             settings.loadPluginsOnStartup(loadPlugins);
             settings.enableToolTipEnabled(enableToolTip);
-            settings.setDownloadUebersicht(downloadUebersicht);
+            settings.setDownloadOverview(downloadOverview);
             return settings;
         } catch (Exception e) {
             logger.warn(PROPERTIES_ERROR_MESSAGE + ": getSettings nutzt vorhandene Werte", e);
@@ -459,7 +458,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     public void saveSettings(Settings settings) {
         propertyHandler.put("options_loadplugins", settings.shouldLoadPluginsOnStartup());
         propertyHandler.put("options_enableToolTip", settings.isToolTipEnabled());
-        propertyHandler.put("options_download_uebersicht", settings.isDownloadUebersicht());
+        propertyHandler.put("options_download_uebersicht", settings.isDownloadOverview());
         saveFile();
         informSettingsListener(settings);
     }
@@ -471,17 +470,17 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             }
 
             String host;
-            String passwort;
+            String password;
             int xmlPort;
 
             host = propertyHandler.get("options_remote_host", "localhost");
-            passwort = propertyHandler.get("options_remote_passwort", "");
+            password = propertyHandler.get("options_remote_passwort", "");
             xmlPort = parseIntOr(propertyHandler.get("options_remote_port", "9851"), 9851);
             connectionSettings.setHost(host);
-            if (passwort.length() == 0) {
+            if (password.length() == 0) {
                 connectionSettings.setOldPassword("");
             } else {
-                connectionSettings.setOldMD5Password(passwort);
+                connectionSettings.setOldMD5Password(password);
             }
 
             connectionSettings.setXmlPort(xmlPort);
@@ -495,9 +494,9 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     public void saveRemote(ConnectionSettings remote) {
         propertyHandler.put("options_remote_host", remote.getHost());
         try {
-            AppleJuiceClient.getAjFassade().setPassword(remote.getNewPassword(), false);
-        } catch (de.applejuicenet.client.fassade.exception.IllegalArgumentException e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            AppleJuiceClient.getAjFacade().setPassword(remote.getNewPassword(), false);
+        } catch (de.applejuicenet.client.facade.exception.IllegalArgumentException e) {
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
 
         propertyHandler.put("options_remote_passwort", remote.getNewPassword());
@@ -513,10 +512,10 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
     }
 
     public void saveAJSettings(AJSettings ajSettings) {
-        AppleJuiceClient.getAjFassade().saveAJSettings(ajSettings);
+        AppleJuiceClient.getAjFacade().saveAJSettings(ajSettings);
     }
 
-    private boolean isVeraltet() {
+    private boolean isOutdated() {
         return false;
     }
 
@@ -524,12 +523,12 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         try {
             return Integer.parseInt(value.trim());
         } catch (NumberFormatException e) {
-            LoggerFactory.getLogger(PropertiesManager.class).warn("Ungueltiger Zahlenwert in den Einstellungen, Standard {} wird genutzt", fallback);
+            LoggerFactory.getLogger(PropertiesManager.class).warn("Invalid number in the settings, using default {}", fallback);
             return fallback;
         }
     }
 
-    /** Sichert die vorhandene Datei, bevor sie auf Standardwerte zurueckgesetzt wird. */
+    /** Backs up the existing file before it is reset to the defaults. */
     static void backupBeforeRestore(Path file) {
         try {
             if (Files.isRegularFile(file)) {
@@ -541,7 +540,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
                 Files.copy(file, backup);
             }
         } catch (IOException e) {
-            throw new IllegalStateException("Sicherung fehlgeschlagen; Einstellungen bleiben unverändert", e);
+            throw new IllegalStateException("Backup failed; settings stay unchanged", e);
         }
     }
 
@@ -643,16 +642,16 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             aPropertyHandler.put("options_proxy_userpass", "");
             aPropertyHandler.save();
         } catch (IllegalArgumentException e1) {
-            // sollte eigentlich nie passieren
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e1);
+            // should never happen
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e1);
         }
     }
 
     protected void init() {
         try {
             propertyHandler = new PropertyHandler(path, "appleJuice-Java-GUI Propertyfile", true);
-            if (isVeraltet()) {
-                throw new Exception("ajgui.properties hat altes Format. Wird neu erstellt.");
+            if (isOutdated()) {
+                throw new Exception("ajgui.properties has an old format. It will be recreated.");
             }
 
             String temp = propertyHandler.get("options_location_x", "");
@@ -779,7 +778,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             logger.error(PROPERTIES_ERROR_MESSAGE, e);
 
             if (!firstReadError || !confirmReset.getAsBoolean()) {
-                throw new IllegalStateException("Einstellungen nicht geladen; Datei bleibt unverändert", e);
+                throw new IllegalStateException("Settings not loaded; file stays unchanged", e);
             }
             firstReadError = false;
             restoreProperties(Path.of(path));
@@ -858,7 +857,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
             saveFile();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -957,7 +956,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         return uploadSort;
     }
 
-    public void setDownlodSourcesSort(int column, boolean ascent) {
+    public void setDownloadSourcesSort(int column, boolean ascent) {
         downloadSourcesSort = new int[]{column, ascent ? 1 : 0};
 
     }
@@ -990,7 +989,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
 
     }
 
-    public int[] getDownloadColumnIndizes() {
+    public int[] getDownloadColumnIndices() {
         return downloadIndex;
     }
 
@@ -998,7 +997,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         uploadIndex[column] = index;
     }
 
-    public int[] getUploadColumnIndizes() {
+    public int[] getUploadColumnIndices() {
         return uploadIndex;
     }
 
@@ -1044,7 +1043,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         }
     }
 
-    public int[] getUploadWaitingColumnIndizes() {
+    public int[] getUploadWaitingColumnIndices() {
         return uploadWaitingIndex;
     }
 
@@ -1062,7 +1061,7 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         }
     }
 
-    public int[] getDownloadSourcesColumnIndizes() {
+    public int[] getDownloadSourcesColumnIndices() {
         return downloadSourcesIndex;
     }
 

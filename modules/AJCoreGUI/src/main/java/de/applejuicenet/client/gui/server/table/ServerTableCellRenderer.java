@@ -3,7 +3,7 @@
  */
 package de.applejuicenet.client.gui.server.table;
 
-import de.applejuicenet.client.fassade.entity.Server;
+import de.applejuicenet.client.facade.entity.Server;
 import de.applejuicenet.client.shared.IconManager;
 
 import javax.swing.*;
@@ -13,8 +13,8 @@ import java.awt.*;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/server/table/ServerTableCellRenderer.java,v 1.4 2009/01/22 22:18:23 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -46,10 +46,10 @@ public class ServerTableCellRenderer extends DefaultTableCellRenderer
       }
       else
       {
-         long aktuelleZeit = System.currentTimeMillis();
+         long currentTime = System.currentTimeMillis();
          long tag          = 24 * 60 * 60 * 1000;
 
-         if(server.getTimeLastSeen() == 0 || server.getTimeLastSeen() < aktuelleZeit - tag)
+         if(server.getTimeLastSeen() == 0 || server.getTimeLastSeen() < currentTime - tag)
          {
             icon = IconManager.getInstance().getIcon("aelter24h");
          }
@@ -57,7 +57,7 @@ public class ServerTableCellRenderer extends DefaultTableCellRenderer
          {
             icon = IconManager.getInstance().getIcon("juenger24h");
 
-            //mehr Icons kommen, wenn der Core mehr kann
+            //more icons will follow when the core can do more
          }
       }
 

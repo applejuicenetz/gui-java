@@ -100,8 +100,8 @@ public class SoundPlayerTest {
     @Test(timeout = 20000)
     public void callerNeverOpensOrPlaysTheFile() throws Exception {
         SoundPlayer player = player(fakeOpener());
-        player.playSound(SoundPlayer.LADEN);
-        await(() -> !opened.isEmpty(), "Ton wurde nicht geoeffnet");
+        player.playSound(SoundPlayer.LOADING);
+        await(() -> !opened.isEmpty(), "Sound was not opened");
         assertNotSame(Thread.currentThread(), openThread.get());
         assertEquals("SoundPlayer", openThread.get().getName());
         assertTrue(openThread.get().isDaemon());
@@ -111,8 +111,8 @@ public class SoundPlayerTest {
     @Test(timeout = 20000)
     public void clipIsClosedAtEndAndSlotIsFreed() throws Exception {
         SoundPlayer player = player(fakeOpener());
-        player.playSound(SoundPlayer.LADEN);
-        await(() -> !opened.isEmpty() && opened.get(0).started.getCount() == 0, "nicht gestartet");
+        player.playSound(SoundPlayer.LOADING);
+        await(() -> !opened.isEmpty() && opened.get(0).started.getCount() == 0, "not started");
         assertEquals(1, player.activeSounds());
         assertFalse(opened.get(0).closed.get());
         opened.get(0).finish();
@@ -130,9 +130,9 @@ public class SoundPlayerTest {
             throw new LineUnavailableException("belegt");
         });
         for (int i = 0; i < 20; i++) {
-            player.playSound(SoundPlayer.SUCHEN);
+            player.playSound(SoundPlayer.SEARCH);
         }
-        await(() -> player.activeSounds() == 0, "Slots nach Fehlern nicht frei: " + player.activeSounds());
+        await(() -> player.activeSounds() == 0, "Slots not free after errors: " + player.activeSounds());
         assertTrue(calls.get() > 0);
     }
 
@@ -141,8 +141,8 @@ public class SoundPlayerTest {
         SoundPlayer player = player(file -> {
             throw new UnsupportedAudioFileException("kaputt");
         });
-        player.playSound(SoundPlayer.LADEN);
-        await(() -> player.activeSounds() == 0, "Slot nach ungueltigem Format nicht frei");
+        player.playSound(SoundPlayer.LOADING);
+        await(() -> player.activeSounds() == 0, "Slot not free after invalid format");
 
         pack.set("gibtsnicht");
         AtomicInteger calls = new AtomicInteger();
@@ -150,8 +150,8 @@ public class SoundPlayerTest {
             calls.incrementAndGet();
             return new FakePlayback(file);
         });
-        missing.playSound(SoundPlayer.LADEN);
-        await(() -> missing.activeSounds() == 0, "Slot nach fehlender Datei nicht frei");
+        missing.playSound(SoundPlayer.LOADING);
+        await(() -> missing.activeSounds() == 0, "Slot not free after missing file");
         assertEquals(0, calls.get());
     }
 
@@ -159,7 +159,7 @@ public class SoundPlayerTest {
     public void limitsConcurrentSoundsAndRecoversWhenTheyEnd() throws Exception {
         SoundPlayer player = player(fakeOpener());
         for (int i = 0; i < 12; i++) {
-            player.playSound(SoundPlayer.LADEN);
+            player.playSound(SoundPlayer.LOADING);
         }
         await(() -> opened.size() == SoundPlayer.MAX_ACTIVE_SOUNDS, "erwartet " + SoundPlayer.MAX_ACTIVE_SOUNDS);
         Thread.sleep(200);
@@ -170,17 +170,17 @@ public class SoundPlayerTest {
             playback.finish();
         }
         assertEquals(0, player.activeSounds());
-        player.playSound(SoundPlayer.LADEN);
-        await(() -> opened.size() == SoundPlayer.MAX_ACTIVE_SOUNDS + 1, "kein neuer Ton nach Freigabe");
+        player.playSound(SoundPlayer.LOADING);
+        await(() -> opened.size() == SoundPlayer.MAX_ACTIVE_SOUNDS + 1, "no new sound after release");
         opened.get(opened.size() - 1).finish();
     }
 
     @Test(timeout = 20000)
     public void lostEndEventIsCaughtByWatchdog() throws Exception {
         SoundPlayer player = player(fakeOpener());
-        player.playSound(SoundPlayer.LADEN);
-        await(() -> !opened.isEmpty(), "nicht geoeffnet");
-        await(() -> opened.get(0).closed.get(), "Watchdog hat den Clip nicht geschlossen");
+        player.playSound(SoundPlayer.LOADING);
+        await(() -> !opened.isEmpty(), "not opened");
+        await(() -> opened.get(0).closed.get(), "Watchdog did not close the clip");
         assertEquals(0, player.activeSounds());
     }
 
@@ -188,11 +188,11 @@ public class SoundPlayerTest {
     public void disabledSoundsStaySilentButPreviewPlays() throws Exception {
         enabled.set(false);
         SoundPlayer player = player(fakeOpener());
-        player.playSound(SoundPlayer.LADEN);
+        player.playSound(SoundPlayer.LOADING);
         Thread.sleep(200);
         assertTrue(opened.isEmpty());
         player.playPreview();
-        await(() -> !opened.isEmpty(), "Hoerprobe wurde nicht gespielt");
+        await(() -> !opened.isEmpty(), "Preview was not played");
         assertEquals("gespeichert.wav", opened.get(0).file.getFileName().toString());
         opened.get(0).finish();
     }
@@ -200,11 +200,11 @@ public class SoundPlayerTest {
     @Test(timeout = 20000)
     public void soundPackChangeTakesEffectWithoutRestart() throws Exception {
         SoundPlayer player = player(fakeOpener());
-        player.playSound(SoundPlayer.KOMPLETT);
+        player.playSound(SoundPlayer.COMPLETE_SOUND);
         await(() -> opened.size() == 1, "erster Ton");
         opened.get(0).finish();
         pack.set("warp");
-        player.playSound(SoundPlayer.KOMPLETT);
+        player.playSound(SoundPlayer.COMPLETE_SOUND);
         await(() -> opened.size() == 2, "zweiter Ton");
         assertEquals("classic", opened.get(0).file.getParent().getFileName().toString());
         assertEquals("warp", opened.get(1).file.getParent().getFileName().toString());

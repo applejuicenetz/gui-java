@@ -12,9 +12,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
 
-/**
- * Kleine vektorgezeichnete Icons fuer die Statusleiste. Ohne Farbe wird die Vordergrundfarbe des Labels genutzt.
- */
+/** Small vector-drawn icons for the status bar. Without a color the label foreground color is used. */
 final class StatusIcons {
     private static final int SIZE = 12;
     private static final Color DOWN = new Color(0x3B82F6);
@@ -27,7 +25,7 @@ final class StatusIcons {
     private StatusIcons() {
     }
 
-    /** Aktuelle Download-Geschwindigkeit. */
+    /** Current download speed. */
     static Icon speedDown() {
         return icon(DOWN, g -> {
             g.draw(new Line2D.Float(6, 1, 6, 10));
@@ -35,7 +33,7 @@ final class StatusIcons {
         });
     }
 
-    /** Aktuelle Upload-Geschwindigkeit. */
+    /** Current upload speed. */
     static Icon speedUp() {
         return icon(UP, g -> {
             g.draw(new Line2D.Float(6, 11, 6, 2));
@@ -43,7 +41,7 @@ final class StatusIcons {
         });
     }
 
-    /** Gesamter Download: Pfeil auf eine Ablage. */
+    /** Total download: arrow onto a tray. */
     static Icon totalDown() {
         return icon(DOWN, g -> {
             g.draw(new Line2D.Float(6, 0.5f, 6, 7.5f));
@@ -52,7 +50,7 @@ final class StatusIcons {
         });
     }
 
-    /** Gesamter Upload: Pfeil von einer Ablage weg. */
+    /** Total upload: arrow away from a tray. */
     static Icon totalUp() {
         return icon(UP, g -> {
             g.draw(new Line2D.Float(2, 1, 10, 1));
@@ -61,7 +59,7 @@ final class StatusIcons {
         });
     }
 
-    /** Externe IP. */
+    /** External IP. */
     static Icon globe() {
         return icon(null, g -> {
             g.draw(new Ellipse2D.Float(1, 1, 10, 10));
@@ -70,7 +68,7 @@ final class StatusIcons {
         });
     }
 
-    /** Credits: Diamant. */
+    /** Credits: diamond. */
     static Icon coin() {
         return icon(null, g -> {
             Path2D gem = new Path2D.Float();
@@ -89,7 +87,7 @@ final class StatusIcons {
         });
     }
 
-    /** Offene Verbindungen. */
+    /** Open connections. */
     static Icon connections() {
         return icon(null, g -> {
             g.draw(new Line2D.Float(6, 3, 2.5f, 9));

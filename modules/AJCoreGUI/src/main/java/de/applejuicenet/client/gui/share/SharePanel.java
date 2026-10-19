@@ -4,8 +4,8 @@
 
 package de.applejuicenet.client.gui.share;
 
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.shared.AJSettings;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.shared.AJSettings;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.gui.components.table.NormalHeaderRenderer;
@@ -29,8 +29,8 @@ import java.awt.*;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/SharePanel.java,v 1.13 2009/02/12 09:11:24 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r [aj@tkl-soft.de]
@@ -40,14 +40,14 @@ public class SharePanel extends TklPanel {
     private DirectoryTree folderTree = new DirectoryTree();
     private TitledBorder folderTreeBolder;
     private TitledBorder mailPanelBolder;
-    private JLabel dateien = new JLabel();
-    private JButton neueListe = new JButton();
-    private JButton neuLaden = new JButton();
+    private JLabel files = new JLabel();
+    private JButton newList = new JButton();
+    private JButton reload = new JButton();
     private JButton refresh = new JButton();
     private JButton stopShareCheck = new JButton();
-    private JButton prioritaetSetzen = new JButton();
-    private JButton prioritaetAufheben = new JButton();
-    private JComboBox cmbPrio = new JComboBox();
+    private JButton applyPriority = new JButton();
+    private JButton clearPriority = new JButton();
+    private JComboBox cmbPriority = new JComboBox();
     private JTextField searchField = new JTextField(16);
     private AJSettings ajSettings;
     private ShareTable shareTable;
@@ -63,7 +63,7 @@ public class SharePanel extends TklPanel {
     private JMenuItem itemCopyToClipboard = new JMenuItem();
     private JMenuItem itemCopyToClipboardWithSources = new JMenuItem();
     private JMenuItem itemCopyToClipboardAsUBBCode = new JMenuItem();
-    private JMenuItem itemOpenWithStandardProgramm = new JMenuItem();
+    private JMenuItem itemOpenWithDefaultProgram = new JMenuItem();
     private Logger logger;
 
     public SharePanel(GuiController guiController) {
@@ -72,12 +72,12 @@ public class SharePanel extends TklPanel {
         try {
             init();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
     public JMenuItem getMnuOpenWithStandardProgram() {
-        return itemOpenWithStandardProgramm;
+        return itemOpenWithDefaultProgram;
     }
 
     private void installSearch() {
@@ -129,16 +129,16 @@ public class SharePanel extends TklPanel {
         return searchField;
     }
 
-    public JButton getBtnPrioritaetAufheben() {
-        return prioritaetAufheben;
+    public JButton getBtnClearPriority() {
+        return clearPriority;
     }
 
-    public JButton getBtnPrioritaetSetzen() {
-        return prioritaetSetzen;
+    public JButton getBtnSetPriority() {
+        return applyPriority;
     }
 
-    public JButton getBtnNeuLaden() {
-        return neuLaden;
+    public JButton getBtnReload() {
+        return reload;
     }
 
     public JButton getBtnRefresh() {
@@ -149,8 +149,8 @@ public class SharePanel extends TklPanel {
         return stopShareCheck;
     }
 
-    public JButton getBtnNeueListe() {
-        return neueListe;
+    public JButton getBtnNewList() {
+        return newList;
     }
 
     public JMenuItem getMnuNotShared() {
@@ -189,12 +189,12 @@ public class SharePanel extends TklPanel {
         return shareModel;
     }
 
-    public JLabel getLblDateien() {
-        return dateien;
+    public JLabel getLblFiles() {
+        return files;
     }
 
-    public JComboBox getCmbPrioritaet() {
-        return cmbPrio;
+    public JComboBox getCmbPriority() {
+        return cmbPriority;
     }
 
     public DirectoryTree getDirectoryTree() {
@@ -234,9 +234,9 @@ public class SharePanel extends TklPanel {
         itemCopyToClipboardWithSources.setIcon(im.getIcon("clipboard"));
         itemCreateFileList.setIcon(im.getIcon("treeRoot"));
         folderPopup.add(itemCreateFileList);
-        prioritaetAufheben.setEnabled(false);
-        prioritaetSetzen.setEnabled(false);
-        neuLaden.setEnabled(false);
+        clearPriority.setEnabled(false);
+        applyPriority.setEnabled(false);
+        reload.setEnabled(false);
         refresh.setEnabled(false);
         stopShareCheck.setEnabled(false);
 
@@ -245,13 +245,13 @@ public class SharePanel extends TklPanel {
         popup2.add(itemCopyToClipboardAsUBBCode);
         popup2.add(new JSeparator());
         popup2.add(itemReleaseInfo);
-        popup2.add(itemOpenWithStandardProgramm);
+        popup2.add(itemOpenWithDefaultProgram);
         folderTree.setModel(new DefaultTreeModel(new WaitNode()));
         folderTree.setCellRenderer(new ShareSelectionTreeCellRenderer());
 
-        cmbPrio.setEditable(false);
+        cmbPriority.setEditable(false);
         for (int i = 1; i < 251; i++) {
-            cmbPrio.addItem(Integer.valueOf(i));
+            cmbPriority.addItem(Integer.valueOf(i));
         }
 
         sharedwsub = new JMenuItem();
@@ -281,16 +281,16 @@ public class SharePanel extends TklPanel {
         panelCenter = new JPanel(new BorderLayout());
         panelCenter.setBorder(mailPanelBolder);
 
-        neueListe.setIcon(IconManager.getInstance().getIcon("treeRoot"));
-        neuLaden.setIcon(IconManager.getInstance().getIcon("erneuern"));
+        newList.setIcon(IconManager.getInstance().getIcon("treeRoot"));
+        reload.setIcon(IconManager.getInstance().getIcon("erneuern"));
 
         JPanel panel1 = new JPanel(new GridBagLayout());
         GridBagConstraints toolbar = new GridBagConstraints();
 
         toolbar.fill = GridBagConstraints.VERTICAL;
         toolbar.insets = new Insets(2, 2, 2, 3);
-        for (JComponent component : new JComponent[] {neuLaden, neueListe, cmbPrio, prioritaetSetzen,
-                prioritaetAufheben}) {
+        for (JComponent component : new JComponent[] {reload, newList, cmbPriority, applyPriority,
+                clearPriority}) {
             panel1.add(component, toolbar);
         }
         toolbar.weightx = 1;
@@ -306,7 +306,7 @@ public class SharePanel extends TklPanel {
         scrollPane.getViewport().setOpaque(false);
 
         panelCenter.add(scrollPane, BorderLayout.CENTER);
-        panelCenter.add(dateien, BorderLayout.SOUTH);
+        panelCenter.add(files, BorderLayout.SOUTH);
 
         JScrollPane aScrollPane = new JScrollPane(folderTree);
 

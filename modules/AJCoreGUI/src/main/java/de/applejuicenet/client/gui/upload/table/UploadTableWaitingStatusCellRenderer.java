@@ -4,7 +4,7 @@
 
 package de.applejuicenet.client.gui.upload.table;
 
-import de.applejuicenet.client.fassade.entity.Upload;
+import de.applejuicenet.client.facade.entity.Upload;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.IconManager;
 
@@ -14,10 +14,10 @@ import java.awt.*;
 
 public class UploadTableWaitingStatusCellRenderer extends DefaultTableCellRenderer
 {
-   private static Icon      verbindungUnbekanntIcon = IconManager.getInstance().getIcon("verbindungUnbekannt");
-   private static Icon      indirektVerbundenIcon = IconManager.getInstance().getIcon("treeWarteschlange");
-   private static Icon      versucheIndirektIcon  = IconManager.getInstance().getIcon("treeIndirekt");
-   private static ImageIcon direktVerbundenIcon   = IconManager.getInstance().getIcon("treeUebertrage");
+   private static Icon      connectionUnknownIcon = IconManager.getInstance().getIcon("verbindungUnbekannt");
+   private static Icon      indirectConnectedIcon = IconManager.getInstance().getIcon("treeWarteschlange");
+   private static Icon      tryingIndirectIcon  = IconManager.getInstance().getIcon("treeIndirekt");
+   private static ImageIcon directConnectedIcon   = IconManager.getInstance().getIcon("treeUebertrage");
 
    @Override
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
@@ -30,19 +30,19 @@ public class UploadTableWaitingStatusCellRenderer extends DefaultTableCellRender
       switch((Integer) value)
       {
 
-         case Upload.STATE_DIREKT_VERBUNDEN:
-            icon = direktVerbundenIcon;
-            text = ls.getFirstAttrbuteByTagName("mainform.uploads.direkteverbindung");
+         case Upload.STATE_DIRECT_CONNECTED:
+            icon = directConnectedIcon;
+            text = ls.getFirstAttributeByTagName("mainform.uploads.directconnection");
             break;
 
-         case Upload.STATE_INDIREKT_VERBUNDEN:
-            icon = indirektVerbundenIcon;
-            text = ls.getFirstAttrbuteByTagName("mainform.uploads.indirekteverbindung");
+         case Upload.STATE_INDIRECT_CONNECTED:
+            icon = indirectConnectedIcon;
+            text = ls.getFirstAttributeByTagName("mainform.uploads.indirectconnection");
             break;
 
          default:
-            icon = verbindungUnbekanntIcon;
-            text = ls.getFirstAttrbuteByTagName("mainform.uploads.verbindungunbekannt");
+            icon = connectionUnknownIcon;
+            text = ls.getFirstAttributeByTagName("mainform.uploads.connectionunknown");
       }
 
       JLabel label = (JLabel) super.getTableCellRendererComponent(table, text, isSelected, hasFocus, row, column);

@@ -5,11 +5,11 @@
 package de.applejuicenet.client.gui.search;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Search;
-import de.applejuicenet.client.fassade.entity.SearchEntry;
-import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
-import de.applejuicenet.client.fassade.shared.FileType;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Search;
+import de.applejuicenet.client.facade.entity.SearchEntry;
+import de.applejuicenet.client.facade.exception.IllegalArgumentException;
+import de.applejuicenet.client.facade.shared.FileType;
 import de.applejuicenet.client.gui.AppleJuiceDialog;
 import de.applejuicenet.client.gui.components.table.SortButtonRenderer;
 import de.applejuicenet.client.gui.components.table.AutoRowHeightTable;
@@ -40,29 +40,29 @@ import java.util.List;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.19 2009/02/12 13:03:34 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
  */
 public class SearchResultPanel extends JPanel {
-    private static String offeneSuchen = "%i offene Suchen";
-    private static String gefundeneDateien = "%i gefundene Dateien";
-    private static String durchsuchteClients = "%i durchsuchte Clients";
-    private static String linkLaden = "Link";
-    private static String sucheStoppen = "Suche stoppen";
+    private static String openSearches = "%i offene Suchen";
+    private static String foundFilesList = "%i gefundene Dateien";
+    private static String searchedClients = "%i durchsuchte Clients";
+    private static String loadLink = "Link";
+    private static String stopSearch = "Suche stoppen";
     private static String alreadyLoaded;
     private static String invalidLink;
     private static String linkFailure;
-    private static String dialogTitel;
+    private static String dialogTitle;
     private static String releaseInfo;
     private static String[] columns;
     private final Logger logger;
     private AutoRowHeightTable searchResultTable;
     private SearchTableModel searchResultTableModel;
     private Search search;
-    private JButton sucheAbbrechen = new JButton();
+    private JButton cancelSearchButton = new JButton();
     private JLabel label1 = new JLabel();
     private JLabel label2 = new JLabel();
     private JLabel label3 = new JLabel();
@@ -78,7 +78,7 @@ public class SearchResultPanel extends JPanel {
         try {
             init();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -89,16 +89,16 @@ public class SearchResultPanel extends JPanel {
     private void init() throws Exception {
         IconManager im = IconManager.getInstance();
 
-        item1.setText(linkLaden);
+        item1.setText(loadLink);
         item1.setIcon(im.getIcon("download"));
-        sucheAbbrechen.setText(sucheStoppen);
-        sucheAbbrechen.addActionListener(new ActionListener() {
+        cancelSearchButton.setText(stopSearch);
+        cancelSearchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                sucheAbbrechen.setEnabled(false);
+                cancelSearchButton.setEnabled(false);
                 try {
-                    AppleJuiceClient.getAjFassade().cancelSearch(search);
+                    AppleJuiceClient.getAjFacade().cancelSearch(search);
                 } catch (IllegalArgumentException e) {
-                    logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                    logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
                 }
             }
         });
@@ -116,12 +116,12 @@ public class SearchResultPanel extends JPanel {
 
                 SearchEntry curSearchEntry = searchResultTableModel.getRow(sel[0]);
 
-                ReleaseInfo.handle(curSearchEntry.getFileNames()[0].getDateiName(), curSearchEntry.getChecksumme(), curSearchEntry.getGroesse());
+                ReleaseInfo.handle(curSearchEntry.getFileNames()[0].getFileName(), curSearchEntry.getChecksum(), curSearchEntry.getSize());
             }
         });
         popup.add(mnuReleaseInfo);
         setLayout(new BorderLayout());
-        updateZahlen();
+        updateNumbers();
         JPanel buttonPanel = new JPanel(new FlowLayout());
         JButton all = new JButton(IconManager.getInstance().getIcon("abbrechen"));
 
@@ -165,7 +165,7 @@ public class SearchResultPanel extends JPanel {
 
         JPanel panel1 = new JPanel(new FlowLayout());
 
-        panel1.add(sucheAbbrechen);
+        panel1.add(cancelSearchButton);
         southPanel.add(panel1, BorderLayout.WEST);
         southPanel.add(textPanel, BorderLayout.CENTER);
         add(southPanel, BorderLayout.SOUTH);
@@ -212,8 +212,8 @@ public class SearchResultPanel extends JPanel {
                         StringBuilder toCopy = new StringBuilder();
 
                         toCopy.append("ajfsp://file|");
-                        toCopy.append(curSearchEntry.getFileNames()[0].getDateiName() + "|" + curSearchEntry.getChecksumme() + "|" +
-                                curSearchEntry.getGroesse() + "/");
+                        toCopy.append(curSearchEntry.getFileNames()[0].getFileName() + "|" + curSearchEntry.getChecksum() + "|" +
+                                curSearchEntry.getSize() + "/");
                         String link = toCopy.toString();
 
                         processLink(link);
@@ -243,16 +243,16 @@ public class SearchResultPanel extends JPanel {
 
         sortMouseAdapter.sort(sort[0], sort[1] == 1);
         if (!search.isRunning()) {
-            sucheAbbrechen.setEnabled(false);
+            cancelSearchButton.setEnabled(false);
         }
     }
 
     private void processLink(final String link) {
         Thread.ofVirtual().name("ProcessLink").start(() -> {
             try {
-                final String result = AppleJuiceClient.getAjFassade().processLink(link, "");
+                final String result = AppleJuiceClient.getAjFacade().processLink(link, "");
 
-                SoundPlayer.getInstance().playSound(SoundPlayer.LADEN);
+                SoundPlayer.getInstance().playSound(SoundPlayer.LOADING);
                 if (result.indexOf("ok") != 0) {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
@@ -267,29 +267,29 @@ public class SearchResultPanel extends JPanel {
                             }
 
                             if (message != null) {
-                                JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), message, dialogTitel,
+                                JOptionPane.showMessageDialog(AppleJuiceDialog.getApp(), message, dialogTitle,
                                         JOptionPane.OK_OPTION | JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
                     });
                 }
             } catch (IllegalArgumentException e) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
             }
         });
     }
 
-    public static void setTexte(String[] texte, String[] tableColumns) {
-        offeneSuchen = texte[0];
-        gefundeneDateien = texte[1];
-        durchsuchteClients = texte[2];
-        linkLaden = texte[3];
-        sucheStoppen = texte[4];
-        alreadyLoaded = texte[5];
-        invalidLink = texte[6];
-        linkFailure = texte[7];
-        dialogTitel = texte[8];
-        releaseInfo = texte[9];
+    public static void setTexts(String[] texts, String[] tableColumns) {
+        openSearches = texts[0];
+        foundFilesList = texts[1];
+        searchedClients = texts[2];
+        loadLink = texts[3];
+        stopSearch = texts[4];
+        alreadyLoaded = texts[5];
+        invalidLink = texts[6];
+        linkFailure = texts[7];
+        dialogTitle = texts[8];
+        releaseInfo = texts[9];
         columns = tableColumns;
     }
 
@@ -321,17 +321,17 @@ public class SearchResultPanel extends JPanel {
             TableColumnSettings.refreshCompact(searchResultTable);
             searchResultTable.revalidate();
             searchResultTable.repaint();
-            updateZahlen();
+            updateNumbers();
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
-    public void updateZahlen() {
+    public void updateNumbers() {
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    updateZahlen();
+                    updateNumbers();
 
                 }
             });
@@ -340,26 +340,26 @@ public class SearchResultPanel extends JPanel {
 
         List<SearchEntry> searchEntries = search.getAllSearchEntries();
 
-        label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));
-        label2.setText(gefundeneDateien.replaceFirst("%i", Integer.toString(searchEntries.size())));
-        label3.setText(durchsuchteClients.replaceFirst("%i", Integer.toString(search.getDurchsuchteClients())));
+        label1.setText(openSearches.replaceFirst("%i", Integer.toString(search.getOpenSearches())));
+        label2.setText(foundFilesList.replaceFirst("%i", Integer.toString(searchEntries.size())));
+        label3.setText(searchedClients.replaceFirst("%i", Integer.toString(search.getSearchedClients())));
     }
 
-    public void aendereSprache() {
+    public void changeLanguage() {
         try {
-            item1.setText(linkLaden);
+            item1.setText(loadLink);
             mnuReleaseInfo.setText(releaseInfo);
-            sucheAbbrechen.setText(sucheStoppen);
-            label1.setText(offeneSuchen.replaceFirst("%i", Integer.toString(search.getOffeneSuchen())));
-            label2.setText(gefundeneDateien.replaceFirst("%i", Long.toString(search.getEntryCount())));
-            label3.setText(durchsuchteClients.replaceFirst("%i", Integer.toString(search.getDurchsuchteClients())));
+            cancelSearchButton.setText(stopSearch);
+            label1.setText(openSearches.replaceFirst("%i", Integer.toString(search.getOpenSearches())));
+            label2.setText(foundFilesList.replaceFirst("%i", Long.toString(search.getEntryCount())));
+            label3.setText(searchedClients.replaceFirst("%i", Integer.toString(search.getSearchedClients())));
             TableColumnModel tcm = searchResultTable.getColumnModel();
 
             for (int i = 0; i < tcm.getColumnCount(); i++) {
                 tcm.getColumn(i).setHeaderValue(columns[i]);
             }
         } catch (Exception e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 

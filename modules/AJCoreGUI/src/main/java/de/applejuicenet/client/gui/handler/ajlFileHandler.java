@@ -19,7 +19,7 @@ public class ajlFileHandler implements OpenFilesHandler {
 
         for (File inputFile : e.getFiles()) {
             if (inputFile.getName().toLowerCase(Locale.ROOT).endsWith(".ajl")) {
-                logger.debug("AJL Datei " + inputFile.getName() + " gefunden");
+                logger.debug("AJL file " + inputFile.getName() + " found");
                 Thread.ofVirtual().name("AJL-Import").start(() -> {
                     try {
                         if (AppleJuiceClient.linkListener != null) {
@@ -28,11 +28,11 @@ public class ajlFileHandler implements OpenFilesHandler {
                             LinkListener.forwardAjl(inputFile);
                         }
                     } catch (IOException ex) {
-                        logger.warn("AJL-Datei konnte nicht importiert werden: " + inputFile, ex);
+                        logger.warn("Could not import AJL file: " + inputFile, ex);
                     }
                 });
             } else {
-                logger.debug("Die Datei " + inputFile.getName() + " ist keine .ajl Datei");
+                logger.debug("The file " + inputFile.getName() + " is not an .ajl file");
             }
         }
     }

@@ -71,8 +71,8 @@ public class TrayMenuIconTest {
     @Test
     public void keepsMenuItemAtNormalSize() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
-            JMenuItem normal = new JMenuItem("Zeigen", icon(16, 16));
-            JMenuItem scaled = new JMenuItem("Zeigen", TrayMenuIcon.fit(icon(128, 128)));
+            JMenuItem normal = new JMenuItem("Show", icon(16, 16));
+            JMenuItem scaled = new JMenuItem("Show", TrayMenuIcon.fit(icon(128, 128)));
             assertEquals(normal.getPreferredSize(), scaled.getPreferredSize());
         });
     }

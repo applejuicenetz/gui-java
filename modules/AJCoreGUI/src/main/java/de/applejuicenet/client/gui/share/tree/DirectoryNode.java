@@ -1,11 +1,11 @@
 package de.applejuicenet.client.gui.share.tree;
 
 import de.applejuicenet.client.AppleJuiceClient;
-import de.applejuicenet.client.fassade.ApplejuiceFassade;
-import de.applejuicenet.client.fassade.entity.Directory;
-import de.applejuicenet.client.fassade.entity.ShareEntry;
-import de.applejuicenet.client.fassade.entity.ShareEntry.SHAREMODE;
-import de.applejuicenet.client.fassade.exception.IllegalArgumentException;
+import de.applejuicenet.client.facade.ApplejuiceFacade;
+import de.applejuicenet.client.facade.entity.Directory;
+import de.applejuicenet.client.facade.entity.ShareEntry;
+import de.applejuicenet.client.facade.entity.ShareEntry.SHAREMODE;
+import de.applejuicenet.client.facade.exception.IllegalArgumentException;
 import de.applejuicenet.client.gui.components.tree.ApplejuiceNode;
 import de.applejuicenet.client.gui.components.treetable.Node;
 import de.applejuicenet.client.shared.IconManager;
@@ -20,8 +20,8 @@ import java.util.*;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/tree/DirectoryNode.java,v 1.7 2005/02/28 14:58:19 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r [aj@tkl-soft.de]
@@ -56,12 +56,12 @@ public class DirectoryNode
         this.directory = null;
         try {
             children = new ArrayList<DirectoryNode>();
-            List<Directory> directories = AppleJuiceClient.getAjFassade().getDirectories(null);
+            List<Directory> directories = AppleJuiceClient.getAjFacade().getDirectories(null);
             for (Directory curDirectory : directories) {
                 children.add(new DirectoryNode(this, curDirectory));
             }
         } catch (IllegalArgumentException e) {
-            logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
         }
     }
 
@@ -94,8 +94,8 @@ public class DirectoryNode
                     toLowerCase())) {
                 if (directory.getPath().length() < curShareEntry.getDir().length()
                         &&
-                        directory.getPath().lastIndexOf(ApplejuiceFassade.separator) ==
-                                curShareEntry.getDir().lastIndexOf(ApplejuiceFassade.separator)) {
+                        directory.getPath().lastIndexOf(ApplejuiceFacade.separator) ==
+                                curShareEntry.getDir().lastIndexOf(ApplejuiceFacade.separator)) {
                     continue;
                 }
                 if (curShareEntry.getShareMode() == SHAREMODE.SUBDIRECTORY) {
@@ -152,11 +152,11 @@ public class DirectoryNode
                 return icons.get("server");
             case Directory.TYPE_DISKETTE:
                 return icons.get("diskette");
-            case Directory.TYPE_LAUFWERK:
+            case Directory.TYPE_DRIVE:
                 return icons.get("laufwerk");
-            case Directory.TYPE_ORDNER:
+            case Directory.TYPE_FOLDER:
                 return icons.get("tree");
-            case Directory.TYPE_RECHNER:
+            case Directory.TYPE_COMPUTER:
                 return icons.get("server");
             default:
                 return null;
@@ -210,13 +210,13 @@ public class DirectoryNode
         if (children == null) {
             children = new ArrayList<DirectoryNode>();
             try {
-                List<Directory> directories = AppleJuiceClient.getAjFassade().
+                List<Directory> directories = AppleJuiceClient.getAjFacade().
                         getDirectories(directory.getPath());
                 for (Directory curDirectory : directories) {
                     children.add(new DirectoryNode(this, curDirectory));
                 }
             } catch (IllegalArgumentException e) {
-                logger.error(ApplejuiceFassade.ERROR_MESSAGE, e);
+                logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
             }
             sortChildren();
         }

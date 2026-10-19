@@ -14,8 +14,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 /**
  * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/tree/WaitNode.java,v 1.5 2009/01/12 09:19:20 maj0r Exp $
  *
- * <p>Titel: AppleJuice Client-GUI</p>
- * <p>Beschreibung: Offizielles GUI fuer den von muhviehstarr entwickelten appleJuice-Core</p>
+ * <p>Title: AppleJuice Client-GUI</p>
+ * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
  * <p>Copyright: General Public License</p>
  *
  * @author Maj0r <aj@tkl-soft.de>
@@ -30,8 +30,8 @@ public class WaitNode extends DefaultMutableTreeNode implements Node
 
    public String toString()
    {
-      String anzeige = LanguageSelector.getInstance().getFirstAttrbuteByTagName("javagui.downloadform.waitnodetext");
+      String display = LanguageSelector.getInstance().getFirstAttributeByTagName("javagui.downloadform.waitnodetext");
 
-      return anzeige;
+      return display;
    }
 }
