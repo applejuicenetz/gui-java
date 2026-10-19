@@ -127,6 +127,39 @@ public class StartSearchThreadingTest {
         }
     }
 
+    @Test(timeout = 10000)
+    public void firstSearchDoesNotRegisterDuplicatePropertyListener() throws Exception {
+        ApplejuiceFacade facade = new ApplejuiceFacade(
+                new CoreConnectionSettingsHolder("127.0.0.1", 9851, "", true)) {
+            @Override public java.util.Map<Integer, de.applejuicenet.client.facade.entity.Share> getShare(boolean refresh) {
+                return java.util.Map.of();
+            }
+            @Override public java.util.Map<Integer, de.applejuicenet.client.facade.entity.Download> getDownloadsSnapshot() {
+                return java.util.Map.of();
+            }
+        };
+        facadeField.set(null, facade);
+        Constructor<SearchController> constructor = SearchController.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        SearchController[] controller = new SearchController[1];
+        SwingUtilities.invokeAndWait(() -> {
+            try { controller[0] = constructor.newInstance(); }
+            catch (ReflectiveOperationException e) { throw new AssertionError(e); }
+        });
+        var informer = facade.getDownloadPropertyChangeInformer();
+        Field listenersField = informer.getClass().getDeclaredField("listener");
+        listenersField.setAccessible(true);
+        var listeners = (Set<?>) listenersField.get(informer);
+        int initial = listeners.size();
+        try {
+            controller[0].startFirstSearch();
+            controller[0].startFirstSearch();
+            assertEquals("First search added another property listener", initial, listeners.size());
+        } finally {
+            LanguageSelector.getInstance().removeLanguageListener(controller[0]);
+        }
+    }
+
     @Test(timeout = 60000)
     public void searchButtonReturnsImmediatelyWhileTheCoreIsSlow() throws Exception {
         try (SlowCore core = new SlowCore()) {

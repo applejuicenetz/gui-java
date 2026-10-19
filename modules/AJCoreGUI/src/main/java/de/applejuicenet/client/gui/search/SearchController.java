@@ -155,8 +155,6 @@ public class SearchController extends GuiController
       }
 
       firstSearch = false;
-      AppleJuiceClient.getAjFacade().getDownloadPropertyChangeInformer()
-      .addDataPropertyChangeListener(new DownloadPropertyChangeListener(this, DOWNLOAD_PROPERTY_CHANGE_EVENT));
       Map<Integer, Share> shares = AppleJuiceClient.getAjFacade().getShare(false);
 
       for(Share curShare : shares.values())
