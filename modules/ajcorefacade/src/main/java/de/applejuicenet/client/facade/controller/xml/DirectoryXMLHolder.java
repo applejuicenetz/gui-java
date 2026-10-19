@@ -39,7 +39,7 @@ public class DirectoryXMLHolder extends WebXMLParser {
 		super(coreHolder, "/xml/directory.xml", "");
 	}
 
-	public void update() {
+	public synchronized void update() {
 		try {
 			if (directory == null) {
 				directory = "";
@@ -52,6 +52,10 @@ public class DirectoryXMLHolder extends WebXMLParser {
 			}
 			Element e = null;
 			NodeList nodes = document.getElementsByTagName("filesystem");
+			if (nodes.getLength() == 0) {
+				throw new IllegalStateException("The core answered without a <filesystem> element for directory '"
+						+ directory + "'");
+			}
 			e = (Element) nodes.item(0);
 			DirectoryDO.setSeparator(e.getAttribute("seperator"));
 			nodes = document.getElementsByTagName("dir");
@@ -100,7 +104,12 @@ public class DirectoryXMLHolder extends WebXMLParser {
 		directories.add(childDO);
 	}
 
-	public List<Directory> getDirectories(String directory) {
+	/**
+	 * Loads one folder listing. The holder keeps the requested folder and the result in fields while it
+	 * parses, so concurrent callers (share tree and folder chooser) would mix their results; calls are
+	 * therefore serialized and every call returns its own list.
+	 */
+	public synchronized List<Directory> getDirectories(String directory) {
 		this.directory = directory;
 		directories = new Vector<Directory>();
 		update();
