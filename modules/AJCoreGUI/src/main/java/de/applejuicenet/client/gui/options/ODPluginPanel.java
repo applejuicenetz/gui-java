@@ -35,14 +35,11 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
    private JTextArea        description            = new JTextArea();
    private JLabel           label1                  = new JLabel();
    private AppleJuiceDialog theApp;
-   private JButton          settings           = new JButton();
    private String           name;
    private String           version;
    private String           author;
    private String           explanation;
    private Logger logger;
-   private PluginConnector  selectedPluginConnector = null;
-   private JDialog          parentDialog;
    private Icon             menuIcon;
    private String           menuText;
 
@@ -52,7 +49,6 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
       try
       {
          theApp       = AppleJuiceDialog.getApp();
-         parentDialog = parent;
          init();
       }
       catch(Exception e)
@@ -67,7 +63,6 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
       menuIcon = im.getIcon("opt_plugins");
       Set<PluginConnector> plugins = PluginFactory.getPlugins();
 
-      settings.setVisible(false);
       Vector<PluginContainer> v = new Vector<PluginContainer>();
 
       for(PluginConnector curPlugin : plugins)
@@ -93,44 +88,20 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
       version = languageSelector.getFirstAttributeByTagName("javagui.options.plugins.version");
       explanation = languageSelector.getFirstAttributeByTagName("javagui.options.plugins.description");
       author = languageSelector.getFirstAttributeByTagName("javagui.options.plugins.author");
-      settings.setText(languageSelector.getFirstAttributeByTagName("javagui.options.plugins.settings"));
       menuText = languageSelector.getFirstAttributeByTagName("einstform.TabSheet1.caption");
 
       add(label1, BorderLayout.NORTH);
       add(pluginList, BorderLayout.WEST);
-      JPanel panel1 = new JPanel(new BorderLayout());
-      JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-      panel2.add(settings);
-      JScrollPane sp = new JScrollPane(description);
-
-      panel1.add(sp, BorderLayout.CENTER);
-      panel1.add(panel2, BorderLayout.SOUTH);
-      add(panel1, BorderLayout.CENTER);
-      settings.addActionListener(ae -> {
-         if(selectedPluginConnector != null)
-         {
-            ODPluginOptionsDialog pluginOptionsDialog = new ODPluginOptionsDialog(parentDialog, selectedPluginConnector);
-
-            pluginOptionsDialog.setResizable(true);
-            pluginOptionsDialog.setVisible(true);
-         }
-      });
+      add(new JScrollPane(description), BorderLayout.CENTER);
    }
 
    void pluginList_valueChanged(ListSelectionEvent e)
    {
       PluginContainer selected = (PluginContainer) ((JList) e.getSource()).getSelectedValue();
 
-      description.setText(selected.getDescription());
-      if(selected.getPluginOptionPanel() == null)
+      if(selected != null)
       {
-         settings.setVisible(false);
-      }
-      else
-      {
-         selectedPluginConnector = selected.getPlugin();
-         settings.setVisible(true);
+         description.setText(selected.getDescription());
       }
    }
 
@@ -177,11 +148,6 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
                 "]" + "\r\n\r\n" + version + ":\r\n" + plugin.getVersion() + "\r\n\r\n" + explanation + ":\r\n" +
                 plugin.getDescription();
          return text;
-      }
-
-      public JPanel getPluginOptionPanel()
-      {
-         return plugin.getOptionPanel();
       }
    }
 }

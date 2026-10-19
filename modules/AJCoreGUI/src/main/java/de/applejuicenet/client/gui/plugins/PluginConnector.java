@@ -135,12 +135,6 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
       }
    }
 
-   /** @return JPanel: a JPanel for the options dialog or NULL if there are no options */
-   public JPanel getOptionPanel()
-   {
-      return null;
-   }
-
    /**
     * Liefert ein Icon zurueck, welches in der Lasche angezeigt werden soll. Es muss als icon.png im Plugin-Unterordner /icons gespeichert
     * werden, damit es spaeter an die richtige Stelle im jar-Archiv wandert (ca. 16x16)
