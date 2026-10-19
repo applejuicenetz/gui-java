@@ -23,11 +23,14 @@ import de.applejuicenet.client.gui.controller.PositionManagerImpl;
 import de.applejuicenet.client.gui.controller.TableColumnSettings;
 import de.applejuicenet.client.gui.share.table.ShareNode;
 import de.applejuicenet.client.gui.share.tree.DirectoryNode;
+import de.applejuicenet.client.gui.share.tree.DirectoryTree;
 import de.applejuicenet.client.gui.share.tree.ShareSelectionTreeModel;
+import de.applejuicenet.client.gui.share.tree.ShareTreeLocator;
 import de.applejuicenet.client.shared.DesktopTools;
 import de.applejuicenet.client.shared.ReleaseInfo;
 
 import javax.swing.*;
+import javax.swing.tree.TreePath;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
@@ -660,7 +663,7 @@ public class ShareController extends GuiController
                      try
                      {
                         DirectoryNode.setShareDirs(get().getShareDirs());
-                        initShareSelectionTree();
+                        initShareSelectionTree(get().getIncomingDir());
                      }
                      catch(Exception e)
                      {
@@ -686,23 +689,32 @@ public class ShareController extends GuiController
       }
    }
 
-   private void initShareSelectionTree()
+   private void initShareSelectionTree(String incomingDir)
    {
       sharePanel.getDirectoryTree().removeMouseListener(shareTreeMouseAdapter);
-      javax.swing.SwingWorker<ShareSelectionTreeModel, Void> worker2 = new javax.swing.SwingWorker<ShareSelectionTreeModel, Void>()
+      javax.swing.SwingWorker<DirectoryTreeInit, Void> worker2 = new javax.swing.SwingWorker<DirectoryTreeInit, Void>()
       {
-         protected ShareSelectionTreeModel doInBackground()
+         protected DirectoryTreeInit doInBackground()
          {
-            return new ShareSelectionTreeModel();
+            ShareSelectionTreeModel model = new ShareSelectionTreeModel();
+            TreePath incomingPath = ShareTreeLocator.locate(model, incomingDir, ApplejuiceFacade.separator,
+                  node -> ((DirectoryNode) node).getDirectory() == null ? null
+                        : ((DirectoryNode) node).getDirectory().getPath());
+
+            return new DirectoryTreeInit(model, incomingPath);
          }
 
          protected void done()
          {
             try
             {
-               sharePanel.getDirectoryTree().setModel(get());
-               sharePanel.getDirectoryTree().setRootVisible(false);
-               sharePanel.getDirectoryTree().addMouseListener(shareTreeMouseAdapter);
+               DirectoryTreeInit init = get();
+               DirectoryTree tree = sharePanel.getDirectoryTree();
+
+               tree.setModel(init.model());
+               tree.setRootVisible(false);
+               tree.addMouseListener(shareTreeMouseAdapter);
+               openIncomingDirectory(tree, init.incomingPath());
             }
             catch(Exception e)
             {
@@ -713,6 +725,27 @@ public class ShareController extends GuiController
       };
 
       worker2.execute();
+   }
+
+   /** Opens the way to the incoming directory and selects it, so its files are shown right away. */
+   private static void openIncomingDirectory(DirectoryTree tree, TreePath incomingPath)
+   {
+      if(incomingPath == null)
+      {
+         return;
+      }
+
+      if(incomingPath.getParentPath() != null)
+      {
+         tree.expandPath(incomingPath.getParentPath());
+      }
+
+      tree.setSelectionPath(incomingPath);
+      tree.scrollPathToVisible(incomingPath);
+   }
+
+   private record DirectoryTreeInit(ShareSelectionTreeModel model, TreePath incomingPath)
+   {
    }
 
    public void componentLostSelection()
