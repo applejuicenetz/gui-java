@@ -3,9 +3,9 @@ package de.applejuicenet.client.facade.shared;
 /**
  * Central refresh intervals in milliseconds.
  *
- * <p>The two intervals shown in the options (core polling and part list) have a default and an allowed
+ * The two intervals shown in the options (core polling and part list) have a default and an allowed
  * range. The part list interval is read by running workers on every cycle, so a change in the options
- * takes effect without a restart.</p>
+ * takes effect without a restart.
  */
 public final class RefreshIntervals
 {

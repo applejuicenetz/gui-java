@@ -7,14 +7,7 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/dragndrop/DndTargetAdapter.java,v 1.1 2004/10/29 11:58:43 maj0r Exp $
- *
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r <aj@tkl-soft.de>
- *
+ * Copyright: General Public License
  */
 
 abstract public class DndTargetAdapter

@@ -23,13 +23,7 @@ import java.util.Set;
 import java.util.Properties;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/LanguageSelector.java,v 1.30 2009/01/12 09:02:56 maj0r Exp $
- *
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r [aj@tkl-soft.de]
+ * Copyright: General Public License
  */
 public class LanguageSelector extends XMLValueHolder {
     private static LanguageSelector instance = null;

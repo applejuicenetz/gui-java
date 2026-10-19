@@ -24,13 +24,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/WizardDialog.java,v 1.10 2009/01/12 09:19:20 maj0r Exp $
- *
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r <aj@tkl-soft.de>
+ * Copyright: General Public License
  */
 public class WizardDialog extends JDialog implements LanguageListener {
     private Logger logger;

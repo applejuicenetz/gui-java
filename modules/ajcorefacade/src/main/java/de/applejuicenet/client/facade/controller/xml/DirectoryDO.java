@@ -6,22 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * $Header:
- * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/DirectoryDO.java,v
- * 1.1 2004/12/03 07:57:12 maj0r Exp $
- * 
- * <p>
- * Title: AppleJuice Client-GUI
- * </p>
- * <p>
- * Description: Official GUI for the appleJuice core developed by muhviehstarr
- * </p>
- * <p>
+ *
  * Copyright: General Public License
- * </p>
- * 
- * @author Maj0r <aj@tkl-soft.de>
- * 
+ *
  */
 
 class DirectoryDO extends Directory {

@@ -13,14 +13,7 @@ import java.awt.event.ItemListener;
 import java.io.File;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/wizard/Step1Panel.java,v 1.16 2009/01/14 13:20:55 maj0r Exp $
- *
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r <aj@tkl-soft.de>
- *
+ * Copyright: General Public License
  */
 public class Step1Panel extends WizardPanel
 {

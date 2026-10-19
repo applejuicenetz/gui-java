@@ -16,8 +16,6 @@ import java.util.Map;
  * Automatic powerdownload: keeps the first {@code downloadCount} downloads
  * (sorted by {@link Order}) active with the configured powerdownload value
  * and pauses all other waiting downloads.
- *
- * @author Maj0r [aj@tkl-soft.de] &amp; loevenwong
  */
 public class AutomaticPowerdownload extends Thread {
 

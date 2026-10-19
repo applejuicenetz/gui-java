@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Runs a blocking core command off the calling thread, usually the EDT.
  *
- * <p>A command that the core rejects or cannot answer is logged as a warning with the task name. A
+ * A command that the core rejects or cannot answer is logged as a warning with the task name. A
  * lost core or a wrong password is passed on unchanged: the default handler turns exactly these two
- * into the shutdown dialog. Every other failure is a bug and stays visible as an uncaught exception.</p>
+ * into the shutdown dialog. Every other failure is a bug and stays visible as an uncaught exception.
  */
 public final class CoreCall {
     private static final Logger logger = LoggerFactory.getLogger(CoreCall.class);

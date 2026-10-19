@@ -3,14 +3,7 @@ package de.applejuicenet.client.gui.controller;
 import de.applejuicenet.client.facade.shared.ProxySettings;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/controller/ProxyManagerImpl.java,v 1.3 2005/01/18 17:35:27 maj0r Exp $
- *
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r <aj@tkl-soft.de>
- *
+ * Copyright: General Public License
  */
 
 public class ProxyManagerImpl implements ProxyManager{

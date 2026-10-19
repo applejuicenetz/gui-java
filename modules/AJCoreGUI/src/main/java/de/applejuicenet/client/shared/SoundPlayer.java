@@ -24,15 +24,11 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- * <p>Copyright: General Public License</p>
+ * Copyright: General Public License
  *
- * <p>Files are loaded and played in their own thread, never in the caller (EDT, poller).
+ * Files are loaded and played in their own thread, never in the caller (EDT, poller).
  * Every clip is closed after it ends or on an error. At most
- * {@value #MAX_ACTIVE_SOUNDS} sounds play at the same time; further ones are dropped instead of occupying audio lines.</p>
- *
- * @author Maj0r <aj@tkl-soft.de>
+ * {@value #MAX_ACTIVE_SOUNDS} sounds play at the same time; further ones are dropped instead of occupying audio lines.
  */
 public class SoundPlayer {
     public static final int CANCELLED = 0;

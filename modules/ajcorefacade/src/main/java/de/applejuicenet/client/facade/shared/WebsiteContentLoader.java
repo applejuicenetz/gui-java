@@ -21,21 +21,9 @@ import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 /**
- * $Header:
- * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/shared/WebsiteContentLoader.java,v
- * 1.1 2004/12/03 07:57:12 maj0r Exp $
  *
- * <p>
- * Title: AppleJuice Client-GUI
- * </p>
- * <p>
- * Description: Official GUI for the appleJuice core developed by muhviehstarr
- * </p>
- * <p>
  * Copyright: General Public License
- * </p>
  *
- * @author Maj0r <aj@tkl-soft.de>
  */
 
 public abstract class WebsiteContentLoader {

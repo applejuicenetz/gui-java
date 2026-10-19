@@ -36,13 +36,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/share/FileListDialog.java,v 1.8 2009/01/12 09:19:20 maj0r Exp $
- *
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r [aj@tkl-soft.de]
+ * Copyright: General Public License
  */
 public class FileListDialog extends JDialog {
     private static final javax.swing.border.Border IDLE_BORDER = BorderFactory.createEmptyBorder(1, 1, 1, 1);

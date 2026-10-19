@@ -15,16 +15,10 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * <p>Title: AppleJuice Core-GUI</p>
+ * <b>Copyright: General Public License</b>
  *
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- *
- * <p><b>Copyright: General Public License</b></p>
- *
- * <p>This class must not be changed.
- * To create a plugin, extend this class.</p>
- *
- * @author Maj0r [aj@tkl-soft.de]
+ * This class must not be changed.
+ * To create a plugin, extend this class.
  */
 public abstract class PluginConnector extends JPanel implements DataUpdateListener, RegisterI
 {

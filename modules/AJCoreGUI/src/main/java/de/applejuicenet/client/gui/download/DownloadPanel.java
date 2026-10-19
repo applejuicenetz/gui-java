@@ -24,21 +24,9 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 
 /**
- * $Header:
- * /cvsroot/applejuicejava/AJClientGUI/src/de/applejuicenet/client/gui/DownloadPanel.java,v
- * 1.109 2004/06/23 12:39:15 maj0r Exp $
  *
- * <p>
- * Title: AppleJuice Client-GUI
- * </p>
- * <p>
- * Description: Official GUI for the appleJuice core developed by muhviehstarr
- * </p>
- * <p>
  * Copyright: General Public License
- * </p>
  *
- * @author Maj0r <aj@tkl-soft.de>
  */
 public class DownloadPanel extends TklPanel {
     private DownloadOverviewPanel downloadOverviewPanel;

@@ -9,21 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * $Header:
- * /cvsroot/applejuicejava/AJClientGUI/src/de/applejuicenet/client/gui/StartPanel.java,v
- * 1.57 2004/06/15 16:19:19 maj0r Exp $
  *
- * <p>
- * Title: AppleJuice Client-GUI
- * </p>
- * <p>
- * Description: Official GUI for the appleJuice core developed by muhviehstarr
- * </p>
- * <p>
  * Copyright: General Public License
- * </p>
  *
- * @author Maj0r [aj@tkl-soft.de]
  */
 
 public class StartPanel extends TklPanel {

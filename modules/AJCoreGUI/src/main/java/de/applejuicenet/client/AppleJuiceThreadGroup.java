@@ -16,13 +16,11 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/AppleJuiceClientTG.java,v 1.12 2009/01/12 09:19:20 maj0r Exp $.
+ * .
  *
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- * <p>Copyright: General Public License</p>
  *
- * @author Maj0r <aj@tkl-soft.de>
+ *
+ * Copyright: General Public License
  */
 public class AppleJuiceThreadGroup extends ThreadGroup {
 

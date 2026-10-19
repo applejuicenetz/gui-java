@@ -20,14 +20,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/options/OptionsDialog.java,v 1.9 2009/01/12 09:19:20 maj0r Exp $
- *
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r <aj@tkl-soft.de>
- *
+ * Copyright: General Public License
  */
 public class OptionsDialog extends JDialog
 {

@@ -6,14 +6,7 @@ package de.applejuicenet.client.facade.controller.xml;
 
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/ajcorefassade/src/de/applejuicenet/client/fassade/controller/xml/NetworkServerXMLHolder.java,v 1.3 2009/01/05 12:07:01 maj0r Exp $
- *
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r <aj@tkl-soft.de>
- *
+ * Copyright: General Public License
  */
 
 import de.applejuicenet.client.facade.shared.WebsiteContentLoader;

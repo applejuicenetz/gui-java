@@ -39,13 +39,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/search/SearchResultPanel.java,v 1.19 2009/02/12 13:03:34 maj0r Exp $
- *
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r <aj@tkl-soft.de>
+ * Copyright: General Public License
  */
 public class SearchResultPanel extends JPanel {
     private static String openSearches = "%i offene Suchen";

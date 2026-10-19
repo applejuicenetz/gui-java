@@ -17,11 +17,7 @@ import java.awt.event.MouseEvent;
 import java.net.URI;
 
 /**
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r <aj@tkl-soft.de>
+ * Copyright: General Public License
  */
 public class UpdateInformationDialog extends JDialog {
     private final JButton close = new JButton();

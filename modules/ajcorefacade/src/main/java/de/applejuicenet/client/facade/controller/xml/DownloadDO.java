@@ -12,21 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * $Header:
- * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/controller/dac/DownloadDO.java,v
- * 1.1 2004/12/03 07:57:12 maj0r Exp $
  *
- * <p>
- * Title: AppleJuice Client-GUI
- * </p>
- * <p>
- * Description: Official GUI for the appleJuice core developed by muhviehstarr
- * </p>
- * <p>
  * Copyright: General Public License
- * </p>
- *
- * @author Maj0r [aj@tkl-soft.de]
  *
  */
 class DownloadDO implements Download, Cloneable

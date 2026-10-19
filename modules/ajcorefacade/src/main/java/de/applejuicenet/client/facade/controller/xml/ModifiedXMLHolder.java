@@ -30,21 +30,8 @@ import java.io.StringReader;
 import java.util.*;
 
 /**
- * $Header:
- * /cvsroot/applejuicejava/ajcorefassade/src/de/applejuicenet/client/fassade/controller/xmlholder/ModifiedXMLHolder.java,v
- * 1.1 2004/12/03 07:57:12 maj0r Exp $
  *
- * <p>
- * Title: AppleJuice Client-GUI
- * </p>
- * <p>
- * Description: Official GUI for the appleJuice core developed by muhviehstarr
- * </p>
- * <p>
  * Copyright: General Public License
- * </p>
- *
- * @author Maj0r [aj@tkl-soft.de]
  *
  */
 public class ModifiedXMLHolder extends DefaultHandler

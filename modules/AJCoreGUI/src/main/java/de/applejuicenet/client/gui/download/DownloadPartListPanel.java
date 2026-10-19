@@ -22,21 +22,9 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
 /**
- * $Header:
- * /cvsroot/applejuicejava/AJClientGUI/src/de/applejuicenet/client/gui/DownloadPartListPanel.java,v
- * 1.33 2004/07/09 12:42:01 loevenwong Exp $
  *
- * <p>
- * Title: AppleJuice Client-GUI
- * </p>
- * <p>
- * Description: Official GUI for the appleJuice core developed by muhviehstarr
- * </p>
- * <p>
  * Copyright: General Public License
- * </p>
  *
- * @author Maj0r [aj@tkl-soft.de]
  */
 public class DownloadPartListPanel extends JPanel implements MouseMotionListener, LanguageListener {
     private static DownloadPartListPanel instance = null;

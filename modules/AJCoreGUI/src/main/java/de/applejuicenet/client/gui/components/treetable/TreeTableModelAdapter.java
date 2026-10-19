@@ -28,14 +28,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.tree.TreePath;
 
 /**
- * $Header: /home/xubuntu/berlios_backup/github/tmp-cvs/applejuicejava/Repository/AJClientGUI/src/de/applejuicenet/client/gui/components/treetable/TreeTableModelAdapter.java,v 1.4 2009/01/12 07:45:46 maj0r Exp $
- *
- * <p>Title: AppleJuice Client-GUI</p>
- * <p>Description: Official GUI for the appleJuice core developed by muhviehstarr</p>
- * <p>Copyright: General Public License</p>
- *
- * @author Maj0r <aj@tkl-soft.de>
- *
+ * Copyright: General Public License
  */
 public class TreeTableModelAdapter extends AbstractTableModel
 {

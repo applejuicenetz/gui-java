@@ -39,21 +39,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * $Header:
- * /cvsroot/applejuicejava/AJClientGUI/src/de/applejuicenet/client/gui/controller/PropertiesManager.java,v
- * 1.49 2004/07/09 11:34:00 loevenwong Exp $
  *
- * <p>
- * Title: AppleJuice Client-GUI
- * </p>
- * <p>
- * Description: Official GUI for the appleJuice core developed by muhviehstarr
- * </p>
- * <p>
  * Copyright: General Public License
- * </p>
  *
- * @author Maj0r [aj@tkl-soft.de]
  */
 public class PropertiesManager implements OptionsManager, PositionManager, ProxyManager {
     private final Map<String, Integer> tableColumnSettings = new HashMap<>();
