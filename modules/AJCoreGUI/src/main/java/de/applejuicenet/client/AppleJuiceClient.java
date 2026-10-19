@@ -161,12 +161,16 @@ public class AppleJuiceClient {
         boolean ajlForwarded = false;
         boolean linkForwarded = false;
 
+        IOException listenerError = null;
+
         try {
             linkListener = new LinkListener();
-        } catch (IOException ex) {
-            //a GUI already exists, so close this GUI
+        } catch (InstanceLock.AlreadyRunningException ex) {
             logger.info("Another GUI instance is already running");
             doubleInstance = true;
+        } catch (IOException ex) {
+            logger.error("The link listener could not be started", ex);
+            listenerError = ex;
         }
 
         if (Desktop.getDesktop().isSupported(Desktop.Action.APP_OPEN_FILE)) {
@@ -193,34 +197,6 @@ public class AppleJuiceClient {
                         System.out.println(" -link=<md5Password|link>    Pass an ajfsp link to the GUI. The GUI is started if necessary.");
                         System.out.println();
                         helpPrinted = true;
-                    } else if (curArg.contains("-command=")) {
-                        if (linkListener == null) {
-                            try {
-                                linkListener = new LinkListener();
-                            } catch (IOException ex) {
-                                //a GUI already exists, so close this GUI
-                                doubleInstance = true;
-                            }
-                        }
-
-                        if (doubleInstance) {
-                            int PORT = OptionsManagerImpl.getInstance().getLinkListenerPort();
-                            String password = OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword();
-                            Socket socket = new Socket("localhost", PORT);
-                            PrintStream out = new PrintStream(socket.getOutputStream(), true, StandardCharsets.UTF_8);
-                            DataInputStream in = new DataInputStream(socket.getInputStream());
-
-                            out.println(password + "|" + curArg);
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-                            String line = reader.readLine();
-
-                            System.out.println(line);
-                            socket.close();
-                            System.exit(1);
-                        } else {
-                            System.out.println("appleJuice JavaGUI not started");
-                            System.exit(1);
-                        }
                     } else if (curArg.startsWith("ajfsp://") || curArg.startsWith("web+ajfsp://") || (curArg.contains("-link=") && curArg.length() > "-link=".length() + 1)) {
                         link = curArg.startsWith("ajfsp://") || curArg.startsWith("web+ajfsp://") ? curArg : curArg.substring(curArg.indexOf("-link=") + "-link=".length());
 
@@ -256,13 +232,10 @@ public class AppleJuiceClient {
             }
         }
 
-        if (linkListener == null) {
-            try {
-                linkListener = new LinkListener();
-            } catch (IOException ex) {
-                //a GUI already exists, so close this GUI
-                doubleInstance = true;
-            }
+        if (listenerError != null) {
+            JOptionPane.showMessageDialog(new Frame(),
+                    GuiText.text("javagui.instance.failed", listenerError.getMessage()), "appleJuice Client", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
         }
 
         if (doubleInstance && (ajlForwarded || linkForwarded)) {

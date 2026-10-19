@@ -81,10 +81,6 @@ public interface OptionsManager
 
    void setDefaultLookAndFeel(LookAFeel lookAFeel);
 
-   int getLinkListenerPort();
-
-   void setLinkListenerPort(int port);
-
    void loadPluginsOnStartup(boolean loadPluginsOnStartup);
 
    boolean shouldLoadPluginsOnStartup();

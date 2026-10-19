@@ -145,14 +145,6 @@ public class OptionsManagerImpl implements OptionsManager{
         propertiesManager.setDefaultLookAndFeel(lookAFeel);
     }
 
-    public int getLinkListenerPort() {
-        return propertiesManager.getLinkListenerPort();
-    }
-
-    public void setLinkListenerPort(int port) {
-        propertiesManager.setLinkListenerPort(port);
-    }
-
 
 	public void loadPluginsOnStartup(boolean loadPluginsOnStartup) {
         propertiesManager.loadPluginsOnStartup(loadPluginsOnStartup);

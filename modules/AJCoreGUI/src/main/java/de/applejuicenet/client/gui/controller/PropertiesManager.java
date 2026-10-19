@@ -330,14 +330,6 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
         propertyHandler.put("options_updateinfo", UpdateInfo);
     }
 
-    public int getLinkListenerPort() {
-        return propertyHandler.getAsInt("options_linklistenerport", 8768);
-    }
-
-    public void setLinkListenerPort(int port) {
-        propertyHandler.put("options_linklistenerport", port);
-    }
-
     public boolean isSoundEnabled() {
         try {
             return propertyHandler.getAsBoolean("options_sound", true);
@@ -561,7 +553,6 @@ public class PropertiesManager implements OptionsManager, PositionManager, Proxy
             aPropertyHandler.put("options_sprache", "english");
             aPropertyHandler.put("options_loadplugins", true);
             aPropertyHandler.put("options_enableToolTip", true);
-            aPropertyHandler.put("options_linklistenerport", 8768);
             aPropertyHandler.put("options_updateinfo", true);
             aPropertyHandler.put("options_remote_host", "localhost");
             aPropertyHandler.put("options_remote_passwort", "");

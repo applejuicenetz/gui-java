@@ -17,33 +17,39 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class LinkListener extends Thread implements CoreStatusListener, AutoCloseable {
     private static final String WEB_PREFIX = "web+ajfsp://";
     private static final Logger logger = LoggerFactory.getLogger(LinkListener.class);
     private final ServerSocket listen;
-    private final Supplier<String> passwordSupplier;
+    private final InstanceLock instanceLock;
+    private final String token;
     private final BiConsumer<String, String> linkProcessor;
     private final List<Link> linkCache = new ArrayList<>();
     private boolean ready;
 
+    /** @throws InstanceLock.AlreadyRunningException if another GUI of this profile is running */
     public LinkListener() throws IOException {
-        this(OptionsManagerImpl.getInstance().getLinkListenerPort(),
-                () -> OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword(),
-                LinkListener::submitToCore);
+        this(profileDirectory(), LinkListener::submitToCore);
         ApplejuiceFacade.addCoreStatusListener(this);
     }
 
-    LinkListener(int port, Supplier<String> passwordSupplier, BiConsumer<String, String> linkProcessor) throws IOException {
-        this.passwordSupplier = passwordSupplier;
+    LinkListener(Path profile, BiConsumer<String, String> linkProcessor) throws IOException {
         this.linkProcessor = linkProcessor;
-        listen = new ServerSocket(port, 50, InetAddress.getByName("localhost"));
-        logger.debug("Link listener started on port {}", port);
+        instanceLock = InstanceLock.acquire(profile);
+        try {
+            listen = new ServerSocket(0, 50, InetAddress.getLoopbackAddress());
+            token = instanceLock.publish(listen.getLocalPort());
+        } catch (IOException | RuntimeException e) {
+            instanceLock.close();
+            throw e;
+        }
+        logger.debug("Link listener started on port {}", listen.getLocalPort());
         setName("LinkListenerThread");
         setDaemon(true);
         start();
@@ -78,7 +84,7 @@ public class LinkListener extends Thread implements CoreStatusListener, AutoClos
     }
 
     private boolean handleMessage(String line) throws IOException {
-        String prefix = passwordSupplier.get() + "|";
+        String prefix = token + "|";
         if (line == null || !line.startsWith(prefix)) {
             return false;
         }
@@ -98,30 +104,45 @@ public class LinkListener extends Thread implements CoreStatusListener, AutoClos
         return false;
     }
 
-    public static void forwardAjl(File file) throws IOException {
-        forwardAjl(OptionsManagerImpl.getInstance().getLinkListenerPort(),
-                OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword(), file);
+    private static final long INFO_WAIT_MILLIS = 5000;
+
+    /** Folder that holds the instance lock: the profile folder of this GUI. */
+    private static Path profileDirectory() {
+        return Path.of(AppleJuiceClient.getPath());
     }
 
-    static void forwardAjl(int port, String password, File file) throws IOException {
+    public static void forwardAjl(File file) throws IOException {
+        forwardAjl(profileDirectory(), file);
+    }
+
+    static void forwardAjl(Path profile, File file) throws IOException {
+        InstanceLock.Info info = InstanceLock.read(profile, INFO_WAIT_MILLIS);
+        forwardAjl(info.port(), info.token(), file);
+    }
+
+    static void forwardAjl(int port, String token, File file) throws IOException {
         String path = Base64.getUrlEncoder().encodeToString(file.getAbsolutePath().getBytes(StandardCharsets.UTF_8));
-        forwardMessage(port, password, "-ajl=" + path);
+        forwardMessage(port, token, "-ajl=" + path);
     }
 
     public static void forwardLink(String link) throws IOException {
-        forwardLink(OptionsManagerImpl.getInstance().getLinkListenerPort(),
-                OptionsManagerImpl.getInstance().getRemoteSettings().getOldPassword(), link);
+        forwardLink(profileDirectory(), link);
     }
 
-    static void forwardLink(int port, String password, String link) throws IOException {
-        forwardMessage(port, password, link);
+    static void forwardLink(Path profile, String link) throws IOException {
+        InstanceLock.Info info = InstanceLock.read(profile, INFO_WAIT_MILLIS);
+        forwardLink(info.port(), info.token(), link);
     }
 
-    private static void forwardMessage(int port, String password, String message) throws IOException {
-        try (Socket socket = new Socket("localhost", port)) {
+    static void forwardLink(int port, String token, String link) throws IOException {
+        forwardMessage(port, token, link);
+    }
+
+    private static void forwardMessage(int port, String token, String message) throws IOException {
+        try (Socket socket = new Socket(InetAddress.getLoopbackAddress(), port)) {
             socket.setSoTimeout(5000);
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
-            writer.write(password + "|" + message + "\n");
+            writer.write(token + "|" + message + "\n");
             writer.flush();
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
             if (!"OK".equals(reader.readLine())) {
@@ -176,10 +197,18 @@ public class LinkListener extends Thread implements CoreStatusListener, AutoClos
         return listen.getLocalPort();
     }
 
+    String getToken() {
+        return token;
+    }
+
     @Override
     public void close() throws IOException {
         ApplejuiceFacade.removeCoreStatusListener(this);
-        listen.close();
+        try {
+            listen.close();
+        } finally {
+            instanceLock.close();
+        }
     }
 
     private static class Link {
