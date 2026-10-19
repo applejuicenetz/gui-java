@@ -29,6 +29,9 @@ public class AutomaticPowerdownload extends Thread {
     private final ApplejuiceFacade applejuiceFacade;
     private volatile PowerDownloadPanel parentToInformEnd;
     private volatile boolean paused = false;
+    private final Object stateLock = new Object();
+    private boolean pausePending;
+    private long stateVersion;
 
     private volatile int powerdownloadValue = 12;
     private volatile int downloadCount = 2;
@@ -49,12 +52,25 @@ public class AutomaticPowerdownload extends Thread {
         logger.debug("Automatic powerdownload started (interval {} ms, {} downloads, power {})", sleepTime, downloadCount, powerdownloadValue);
         try {
             while (!isInterrupted()) {
-                if (!paused) {
-                    doAction();
-                    sleep(sleepTime);
+                boolean applyPause;
+                boolean runAction;
+                long version;
+                synchronized (stateLock) {
+                    version = stateVersion;
+                    applyPause = pausePending;
+                    pausePending = false;
+                    runAction = !paused;
                 }
-
-                sleep(1000);
+                if (applyPause) {
+                    pauseAllDownloads();
+                } else if (runAction) {
+                    doAction();
+                }
+                synchronized (stateLock) {
+                    if (version == stateVersion && !isInterrupted()) {
+                        stateLock.wait(paused ? 1000 : sleepTime);
+                    }
+                }
             }
         } catch (InterruptedException iE) {
             interrupt();
@@ -83,16 +99,17 @@ public class AutomaticPowerdownload extends Thread {
         this.order = order.clone();
     }
 
-    public final synchronized void setPaused(boolean pause) {
-        if (pause == paused) {
-            return;
+    public final void setPaused(boolean pause) {
+        synchronized (stateLock) {
+            if (pause == paused) {
+                return;
+            }
+            paused = pause;
+            pausePending = pause;
+            stateVersion++;
+            stateLock.notifyAll();
         }
-
-        paused = pause;
         logger.debug("Automatic powerdownload {}", pause ? "paused" : "resumed");
-        if (paused) {
-            pauseAllDownloads();
-        }
     }
 
     public final boolean isPaused() {
@@ -106,8 +123,13 @@ public class AutomaticPowerdownload extends Thread {
             synchronized (downloads) {
                 List<Download> downloadList = new ArrayList<>(downloads.values());
 
+                if (isInterrupted()) return;
                 applejuiceFacade.pauseDownload(downloadList);
+                if (isInterrupted()) return;
                 applejuiceFacade.setPowerDownload(downloadList, Integer.valueOf(0));
+                resumedDownloads = new ArrayList<>();
+                pausedDownloads = new ArrayList<>();
+                informedPowerdownload = -1;
             }
         } catch (Exception ex) {
             logger.error(ApplejuiceFacade.ERROR_MESSAGE, ex);
@@ -128,6 +150,7 @@ public class AutomaticPowerdownload extends Thread {
                 List<Download> power = new ArrayList<>(downloads.values());
 
                 setPowerDownload(power);
+                if (isInterrupted() || paused) return;
                 applejuiceFacade.resumeDownload(power);
                 return;
             }
@@ -151,7 +174,9 @@ public class AutomaticPowerdownload extends Thread {
             if (changed(downloads2Start, downloads2Stop)) {
                 logger.debug("Automatic powerdownload: {} downloads started, {} paused", downloads2Start.size(), downloads2Stop.size());
                 setPowerDownload(downloads2Start);
+                if (isInterrupted() || paused) return;
                 applejuiceFacade.resumeDownload(downloads2Start);
+                if (isInterrupted() || paused) return;
                 applejuiceFacade.pauseDownload(downloads2Stop);
             } else if (informedPowerdownload != powerdownloadValue) {
                 setPowerDownload(downloads2Start);
