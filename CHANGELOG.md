@@ -12,6 +12,7 @@
   - Statusbar: dünnere Trenner, Monospace-Schrift, „…“ beim Verbindungsstatus entfernt
   - Spaltenüberschriften und weitere feste Texte kommen aus den Sprachdateien
   - Plugin-Beschreibungen auf Deutsch und Englisch
+  - Core-Befehle prüfen Antworten und Passwortfehler; Anfragen enden spätestens nach 70 Sekunden
   - Dateiliste: Fehler beim Speichern und Kopieren werden angezeigt
   - AJL-Export bleibt gültig bei Zeilenumbrüchen im Namen; Einträge ohne Name oder Prüfsumme entfallen
 
