@@ -29,6 +29,9 @@ public class StartPanel extends TklPanel {
     private JLabel version;
     private JLabel warningIcon;
     private JTextPane serverMessage;
+    private JPanel bannerPanel;
+    private JPanel messagesPanel;
+    private JPanel scrollPanel;
 
     public StartPanel(GuiController guiController) {
         super(guiController);
@@ -36,6 +39,28 @@ public class StartPanel extends TklPanel {
             init();
         } catch (Exception e) {
             logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
+        }
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        applyThemeBackground();
+    }
+
+    /** The look and feel colours are read again after every theme change. */
+    private void applyThemeBackground() {
+        Color background = UIManager.getColor("TextField.background");
+        if (background == null) {
+            return;
+        }
+        for (JPanel panel : new JPanel[] {bannerPanel, scrollPanel, messagesPanel}) {
+            if (panel != null) {
+                panel.setBackground(background);
+            }
+        }
+        if (messages != null) {
+            messages.setBackground(background);
         }
     }
 
@@ -90,14 +115,14 @@ public class StartPanel extends TklPanel {
         serverMessage.setEditable(false);
 
         JPanel panel3 = new JPanel(new GridBagLayout());
-        panel3.setBackground(UIManager.getColor("TextField.background"));
+        messagesPanel = panel3;
 
         JPanel panel4 = new JPanel(new BorderLayout());
-        panel4.setBackground(UIManager.getColor("TextField.background"));
+        scrollPanel = panel4;
 
         IconManager im = IconManager.getInstance();
         JPanel panel1 = new NorthPanel(serverMessage);
-        panel1.setBackground(UIManager.getColor("TextField.background"));
+        bannerPanel = panel1;
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;
@@ -158,7 +183,6 @@ public class StartPanel extends TklPanel {
         messages = new JTextPane();
         panel3.add(messages, constraints);
         messages.setEditable(false);
-        messages.setBackground(UIManager.getColor("TextField.background"));
 
         constraints.gridy++;
         constraints.insets.left = 5;
@@ -189,5 +213,6 @@ public class StartPanel extends TklPanel {
         JScrollPane scrollPane = new JScrollPane(panel4);
         scrollPane.setBorder(null);
         add(scrollPane, BorderLayout.CENTER);
+        applyThemeBackground();
     }
 }

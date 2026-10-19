@@ -328,10 +328,6 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
                 statusbar[i].setHorizontalTextPosition(SwingConstants.LEFT);
             }
             statusbar[i].setHorizontalAlignment(JLabel.RIGHT);
-            java.awt.Color separator = UIManager.getColor("Separator.foreground");
-            statusbar[i].setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createMatteBorder(0, 1, 0, 0, separator != null ? separator : java.awt.Color.GRAY),
-                    BorderFactory.createEmptyBorder(1, 5, 1, 5)));
         }
 
         coreHost.setFont(statusbar[0].getFont());

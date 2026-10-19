@@ -28,12 +28,18 @@ public class SortButtonRenderer extends JButton implements TableCellRenderer
       downButton = new JButton();
       downButton.setMargin(new Insets(0, 0, 0, 0));
       downButton.setHorizontalTextPosition(LEFT);
-      downButton.setIcon(new BevelArrowIcon(BevelArrowIcon.DOWN, false, false));
-      downButton.setPressedIcon(new BevelArrowIcon(BevelArrowIcon.DOWN, false, true));
 
       upButton = new JButton();
       upButton.setMargin(new Insets(0, 0, 0, 0));
       upButton.setHorizontalTextPosition(LEFT);
+      installArrowIcons();
+   }
+
+   /** The arrow colours come from the look and feel, so they are built again after a theme change. */
+   private void installArrowIcons()
+   {
+      downButton.setIcon(new BevelArrowIcon(BevelArrowIcon.DOWN, false, false));
+      downButton.setPressedIcon(new BevelArrowIcon(BevelArrowIcon.DOWN, false, true));
       upButton.setIcon(new BevelArrowIcon(BevelArrowIcon.UP, false, false));
       upButton.setPressedIcon(new BevelArrowIcon(BevelArrowIcon.UP, false, true));
    }
@@ -47,6 +53,7 @@ public class SortButtonRenderer extends JButton implements TableCellRenderer
          updateUI();
          downButton.updateUI();
          upButton.updateUI();
+         installArrowIcons();
          renderedLookAndFeel = UIManager.getLookAndFeel();
       }
       JButton button = this;

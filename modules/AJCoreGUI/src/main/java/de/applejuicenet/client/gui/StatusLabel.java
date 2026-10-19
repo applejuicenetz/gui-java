@@ -1,6 +1,8 @@
 package de.applejuicenet.client.gui;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.UIManager;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Insets;
@@ -16,6 +18,16 @@ class StatusLabel extends JLabel {
     StatusLabel(int minChars) {
         super(" ");
         this.minChars = minChars;
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        // The separator colour comes from the look and feel, so rebuild it on every theme change.
+        java.awt.Color separator = UIManager.getColor("Separator.foreground");
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 1, 0, 0, separator != null ? separator : java.awt.Color.GRAY),
+                BorderFactory.createEmptyBorder(1, 5, 1, 5)));
     }
 
     @Override
