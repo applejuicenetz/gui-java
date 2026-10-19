@@ -29,9 +29,9 @@ final class ShareListFormat {
     }
 
     static String ajl(Share[] shares, boolean descending) {
-        StringBuilder text = new StringBuilder("\r\nDu benoetigst ein appleJuice-GUI, um diese Datei zu oeffnen. Das gibts z.B. hier "
-                + "http://developer.berlios.de/projects/applejuicejava/\r\n\r\n"
-                + "Diese Datei darf nicht modifiziert werden!\r\n-----\r\n100\r\n");
+        StringBuilder text = new StringBuilder("\r\nYou need an appleJuice GUI to open this file. You can get one here: "
+                + "https://applejuicenetz.github.io\r\n\r\n"
+                + "Do not modify this file!\r\n-----\r\n100\r\n");
         for (Share share : sorted(shares, descending)) {
             text.append(share.getShortfilename()).append("\r\n")
                     .append(share.getCheckSum()).append("\r\n")

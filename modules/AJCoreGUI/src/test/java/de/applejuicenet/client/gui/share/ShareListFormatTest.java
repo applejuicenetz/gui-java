@@ -17,7 +17,7 @@ public class ShareListFormatTest {
     public void ajlListHasHeaderAndSortedTriples() {
         Share[] shares = {share("b.bin", "h2", 2), share("A.bin", "h1", 1)};
         String ajl = ShareListFormat.ajl(shares);
-        assertTrue(ajl.contains("Diese Datei darf nicht modifiziert werden!\r\n-----\r\n100\r\n"));
+        assertTrue(ajl.contains("Do not modify this file!\r\n-----\r\n100\r\n"));
         assertTrue(ajl.endsWith("100\r\nA.bin\r\nh1\r\n1\r\nb.bin\r\nh2\r\n2\r\n"));
     }
 
