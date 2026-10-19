@@ -4,29 +4,24 @@
 
 ### Sichtbare Änderungen
 
-- [red171] Bedienung:
+- [red171] Themes:
   - Themes nach Familie gruppiert; neue FlatLaf-Themes und Farbvarianten zur Auswahl
-  - Tabellenüberschriften übernehmen beim Theme-Wechsel Farben und Schrift vollständig
-  - Kontextmenüs übernehmen den Theme-Wechsel sofort mit
-  - Theme-Wechsel von JGoodies Plastic bricht die GUI nicht mehr ab; Auswahl wird immer gespeichert
-  - Statusleiste, Start-Seite und Sortierpfeile übernehmen die Farben des neuen Themes
+  - Menüs, Tabellenköpfe, Statusleiste, Start-Seite und Plugins übernehmen das neue Theme sofort
+  - Akzentfarben auf Start-Seite, im Update-Dialog und in der Teilliste in dunklen Themes besser lesbar
+- [red171] „Mein Share“:
+  - Verzeichnisbaum öffnet beim Start den Pfad zum Incoming-Ordner und wählt ihn aus
+  - Warnung bei Freigabe von Systemlaufwerk, `/` oder Home; betroffene Ordner blinken rot
+  - Systemlaufwerk, `/` und Home lassen sich nicht mehr freigeben; andere Laufwerke bleiben möglich
+- [red171] Optionen:
+  - Kompakter Dialog mit Tabs, klaren Gruppen und einheitlichen Feldern; Infos hinter den Labels
+  - „Allgemein“: Abfrageintervall des Cores (0,5–10 s) und der Teilliste (1–30 s) einstellbar
+- [red171] Statusleiste:
+  - Icons, Tooltips und getrennte Felder für Status, Verbindungen, Server, Speed und Traffic
+  - Feste Feldbreiten ohne Wackeln, Servername wird gekürzt, Icons, Tooltips
+- [red171] Bedienung:
   - „Fenster schließen minimiert in den Tray“ ist jetzt standardmäßig aus; Schließen beendet die GUI
   - Link-Leiste nimmt mehrere `ajfsp`-Links auf (getrennt durch Leerzeichen oder Zeilenumbruch)
-  - Statusbar: Icons, Tooltips und getrennte Felder für Status, Verbindungen, Server, Speed und Traffic
-  - Statusbar: feste Feldbreiten ohne Wackeln, Servername wird gekürzt, Host und Port im Tooltip
-  - Spaltenüberschriften und weitere feste Texte kommen aus den Sprachdateien
-  - Plugin-Beschreibungen auf Deutsch und Englisch
-  - Optionen „Allgemein“: Abfrageintervall des Cores (0,5–10 s) und der Teilliste (1–30 s) einstellbar
-  - Optionen: kompakter Dialog mit Tabs, klaren Gruppen und einheitlichen Feldern; Infos hinter den Labels
-  - Proxy-Hinweis erklärt Geltungsbereich: Verbindung zwischen JavaGUI und XML-API des Cores
-  - Zweiter Start erkennt die laufende GUI zuverlässig und übergibt Links und AJL-Dateien ohne festen Port
-  - Core-Befehle prüfen Antworten und Passwortfehler; Anfragen enden spätestens nach 70 Sekunden
-  - SpeedGraph: feste Farben statt Farbeinstellungen; Plugins haben keine eigenen Einstellungen mehr
-  - Dateiliste: Fehler beim Speichern und Kopieren werden angezeigt
-  - „Mein Share“: Verzeichnisbaum öffnet beim Start den Pfad zum Incoming-Ordner und wählt ihn aus
-  - „Mein Share“: Warnung bei Freigaben von Laufwerk, `/` oder Home; betroffene Ordner blinken rot
-  - Freigaben: Ordner hinzufügen sendet die richtige Anzahl an den Core
-  - AJL-Export bleibt gültig bei Zeilenumbrüchen im Namen; Einträge ohne Name oder Prüfsumme entfallen
+  - Zweiter Start erkennt die laufende GUI zuverlässiger und übergibt Links und AJL-Dateien
 
 ### Technische Änderungen
 
