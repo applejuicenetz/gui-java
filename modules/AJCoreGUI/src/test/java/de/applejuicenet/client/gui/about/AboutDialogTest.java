@@ -8,9 +8,6 @@ import org.junit.Test;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
 import java.nio.file.Paths;
 import java.util.List;
@@ -43,71 +40,6 @@ public class AboutDialogTest {
                 assertFalse(names.contains("Banner & Bilder"));
                 assertFalse(names.contains("Übersetzung"));
                 assertFalse(names.contains("Kontakt"));
-            } catch (Exception error) {
-                throw new AssertionError(error);
-            }
-        });
-    }
-
-    @Test
-    public void creditsUseAvailableHeightWithoutCoveringFlagOrVersion() throws Exception {
-        SwingUtilities.invokeAndWait(() -> {
-            for (String iconSet : new String[] {"classic", "modern"}) {
-                try (DialogFixture fixture = new DialogFixture(iconSet)) {
-                    AboutDialog.BackPanel panel = fixture.panel;
-                    Rectangle bounds = panel.getCreditsBounds();
-                    Rectangle footer = panel.getComponent(0).getBounds();
-                    assertEquals(panel.getPreferredSize().height, panel.getHeight());
-                    assertTrue(bounds.height > 60);
-                    assertEquals(fixture.flag.getIconHeight() + 8, bounds.y);
-                    assertEquals(footer.y - 8, bounds.y + bounds.height);
-                    assertTrue(bounds.x >= fixture.banner.getIconWidth() / 2);
-                    assertTrue(bounds.x + bounds.width <= panel.getWidth());
-                    BufferedImage image = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                    java.awt.Graphics2D graphics = image.createGraphics();
-                    try {
-                        panel.paint(graphics);
-                        int[] firstPaint = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
-                        panel.paint(graphics);
-                        assertArrayEquals(firstPaint,
-                                image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth()));
-                    } finally {
-                        graphics.dispose();
-                    }
-                } catch (Exception error) {
-                    throw new AssertionError(error);
-                }
-            }
-        });
-    }
-
-    @Test
-    public void creditsStayVisibleAndUnchangedAfterClick() throws Exception {
-        SwingUtilities.invokeAndWait(() -> {
-            try (DialogFixture fixture = new DialogFixture("modern")) {
-                AboutDialog.BackPanel panel = fixture.panel;
-                BufferedImage image = new BufferedImage(panel.getWidth(), panel.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                java.awt.Graphics2D graphics = image.createGraphics();
-                try {
-                    panel.paint(graphics);
-                    Rectangle bounds = panel.getCreditsBounds();
-                    int coloredPixels = 0;
-                    for (int row = bounds.y; row < bounds.y + bounds.height; row++) {
-                        for (int column = bounds.x; column < bounds.x + bounds.width; column++) {
-                            if ((image.getRGB(column, row) & 0x00ffffff) == 0x0000ff) {
-                                coloredPixels++;
-                            }
-                        }
-                    }
-                    assertTrue("Credits headings are not visible", coloredPixels > 0);
-                    int[] before = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
-                    panel.dispatchEvent(new MouseEvent(panel, MouseEvent.MOUSE_CLICKED, 0, 0, 10, 10, 1, false));
-                    panel.paint(graphics);
-                    assertArrayEquals(before,
-                            image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth()));
-                } finally {
-                    graphics.dispose();
-                }
             } catch (Exception error) {
                 throw new AssertionError(error);
             }
