@@ -344,7 +344,6 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
             statusbar[i].setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createMatteBorder(0, 1, 0, 0, separator != null ? separator : java.awt.Color.GRAY),
                     BorderFactory.createEmptyBorder(1, 5, 1, 5)));
-            statusbar[i].setFont(new java.awt.Font(java.awt.Font.MONOSPACED, 0, 11));
         }
 
         coreHost.setFont(statusbar[0].getFont());
