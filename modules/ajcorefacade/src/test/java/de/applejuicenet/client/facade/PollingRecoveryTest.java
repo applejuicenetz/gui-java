@@ -110,6 +110,20 @@ public class PollingRecoveryTest {
 
     @Test(timeout = 15000)
     public void immediateRestartWaitsForOldPollerWithoutBlockingCaller() throws Exception {
+        verifyRestartChain(1, false);
+    }
+
+    @Test(timeout = 15000)
+    public void repeatedRestartsPreservePredecessorOrder() throws Exception {
+        verifyRestartChain(5, false);
+    }
+
+    @Test(timeout = 15000)
+    public void stoppedWaitingSuccessorsNeverPoll() throws Exception {
+        verifyRestartChain(5, true);
+    }
+
+    private void verifyRestartChain(int restarts, boolean stopLast) throws Exception {
         java.util.concurrent.CountDownLatch entered = new java.util.concurrent.CountDownLatch(1);
         java.util.concurrent.CountDownLatch release = new java.util.concurrent.CountDownLatch(1);
         AtomicInteger calls = new AtomicInteger();
@@ -130,14 +144,22 @@ public class PollingRecoveryTest {
             try {
                 facade.startXMLCheck();
                 assertTrue(entered.await(3, java.util.concurrent.TimeUnit.SECONDS));
-                facade.stopXMLCheck();
-                facade.startXMLCheck();
+                for (int index = 0; index < restarts; index++) {
+                    facade.stopXMLCheck();
+                    facade.startXMLCheck();
+                }
+                if (stopLast) facade.stopXMLCheck();
                 Thread.sleep(250);
                 assertEquals("New poller overlapped the stopped poller", 1, calls.get());
                 release.countDown();
-                long deadline = System.nanoTime() + java.util.concurrent.TimeUnit.SECONDS.toNanos(3);
-                while (calls.get() < 2 && System.nanoTime() < deadline) Thread.sleep(10);
-                assertTrue("Restart never resumed", calls.get() >= 2);
+                if (stopLast) {
+                    awaitPollerCount(0);
+                    assertEquals("Stopped successor performed an update", 1, calls.get());
+                } else {
+                    long deadline = System.nanoTime() + java.util.concurrent.TimeUnit.SECONDS.toNanos(3);
+                    while (calls.get() < 2 && System.nanoTime() < deadline) Thread.sleep(10);
+                    assertTrue("Restart never resumed", calls.get() >= 2);
+                }
             } finally {
                 release.countDown();
                 facade.stopXMLCheck();
