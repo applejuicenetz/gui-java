@@ -41,6 +41,18 @@ public class OptionsFormLayoutTest {
                         assertEquals(group.getPreferredSize().height, group.getHeight());
                     }
                     assertTrue(groups.getComponent(0).getHeight() > groups.getComponent(2).getHeight());
+                    JComboBox<?> logging = (JComboBox<?>) component(general, "cmbLog");
+                    assertEquals("Logging", logging.getItemAt(0).toString());
+                    Object selectedLevel = logging.getSelectedItem();
+                    logging.setSelectedIndex(0);
+                    assertSame(selectedLevel, logging.getSelectedItem());
+                    Container logRow = logging.getParent();
+                    assertEquals(2, logRow.getComponentCount());
+                    Component closeToTray = component(general, "cmbCloseToTray");
+                    assertSame(logRow, closeToTray.getParent());
+                    assertEquals(closeToTray.getY(), logging.getY());
+                    assertEquals(closeToTray.getHeight(), logging.getHeight());
+                    assertEquals(logRow.getWidth(), logging.getX() + logging.getWidth());
                     ODProxyPanel proxy = new ODProxyPanel();
                     assertTrue("Proxy explanation missing", containsText(proxy, "XML-API"));
                     JTabbedPane tabs = OptionsDialog.createTabs(new OptionsRegister[] {general, proxy});
@@ -54,7 +66,7 @@ public class OptionsFormLayoutTest {
                     // Tab construction reparents the panels; use standalone layout below.
                     general.getParent().remove(general);
                     proxy.getParent().remove(proxy);
-                    assertEquals(new Dimension(700, 640), OptionsDialog.compactSize(new Dimension(1000, 700)));
+                    assertEquals(new Dimension(700, 630), OptionsDialog.compactSize(new Dimension(1000, 700)));
                     ODStandardPanel standard = new ODStandardPanel(null, new AJSettings("test", 9850, 9851, 102400, 0, 3, "", "", java.util.Set.of(), 50, false, 5, 500), new ConnectionSettings()) {
                         @Override public void reloadSettings() { }
                     };

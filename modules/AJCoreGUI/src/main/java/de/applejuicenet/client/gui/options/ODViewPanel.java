@@ -103,19 +103,40 @@ public class ODViewPanel extends JPanel implements OptionsRegister {
             new LevelItem("INFO", "Info"), new LevelItem("WARN", "Warn"), new LevelItem("ERROR", "Error"),
             new LevelItem("DEBUG", "Debug"), new LevelItem("OFF", "Off")
         };
-        cmbLog = new JComboBox<>(levelItems);
+        String loggingTitle = languageSelector.getFirstAttributeByTagName("javagui.options.logging");
+        LevelItem heading = new LevelItem("", loggingTitle);
+        DefaultComboBoxModel<LevelItem> logModel = new DefaultComboBoxModel<>() {
+            @Override public void setSelectedItem(Object item) {
+                if (item != heading) super.setSelectedItem(item);
+            }
+        };
+        logModel.addElement(heading);
+        for (LevelItem item : levelItems) logModel.addElement(item);
+        cmbLog = new JComboBox<>(logModel);
+        cmbLog.setRenderer(new DefaultListCellRenderer() {
+            @Override public Component getListCellRendererComponent(JList<?> list, Object value,
+                    int index, boolean selected, boolean focused) {
+                Component cell = super.getListCellRendererComponent(list, value, index, selected, focused);
+                cell.setEnabled(value != heading);
+                return cell;
+            }
+        });
+        cmbLog.setSelectedItem(levelItems[0]);
+        cmbLog.setName("loggingLevel");
+        cmbLog.getAccessibleContext().setAccessibleName(loggingTitle);
         String currentLevel = om.getLogLevel().toString();
         for (int i = 0; i < levelItems.length; i++) {
             if (levelItems[i].getLevel().equals(currentLevel)) {
-                cmbLog.setSelectedIndex(i);
+                cmbLog.setSelectedItem(levelItems[i]);
             }
         }
         cmbLog.addItemListener(e -> dirty = true);
 
-        JPanel logRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        logRow.add(GuiText.label("javagui.options.logging"));
-        logRow.add(Box.createHorizontalStrut(8));
-        logRow.add(cmbLog);
+        JPanel logRow = new JPanel(new BorderLayout(12, 0));
+        logRow.add(cmbCloseToTray, BorderLayout.WEST);
+        logRow.add(cmbLog, BorderLayout.EAST);
+        logRow.setMaximumSize(new Dimension(Integer.MAX_VALUE, logRow.getPreferredSize().height));
+        cmbLog.setToolTipText(null); // The popup heading identifies the control.
 
         JPanel box = new JPanel(new GridBagLayout());
         GridBagConstraints groupConstraints = new GridBagConstraints();
@@ -126,7 +147,7 @@ public class ODViewPanel extends JPanel implements OptionsRegister {
         groupConstraints.gridy = 0;
         box.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         box.setName("generalGroups");
-        box.add(group("javagui.options.group.start", cmbShowStartscreen, loadPlugins, updateNotification, cmbCloseToTray, logRow), groupConstraints);
+        box.add(group("javagui.options.group.start", cmbShowStartscreen, loadPlugins, updateNotification, logRow), groupConstraints);
         groupConstraints.gridy++;
         box.add(group("javagui.options.group.display", cmbTableWidths, cmbMaskIp), groupConstraints);
         groupConstraints.gridy++;

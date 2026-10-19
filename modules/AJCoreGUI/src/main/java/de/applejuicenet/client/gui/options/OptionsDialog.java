@@ -207,6 +207,6 @@ public class OptionsDialog extends JDialog
    static Dimension compactSize(Dimension previous)
    {
       return new Dimension(Math.max(560, (int) Math.ceil(previous.width * 0.7 / 10) * 10),
-            (int) Math.ceil((previous.height * 0.77 + 100) / 10) * 10);
+            (int) Math.ceil((previous.height * 0.77 + 90) / 10) * 10);
    }
 }
