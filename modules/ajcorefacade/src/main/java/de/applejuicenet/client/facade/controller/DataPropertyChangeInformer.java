@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.Set;
 
 public final class DataPropertyChangeInformer {
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DataPropertyChangeInformer.class);
 	private final Set<DataPropertyChangeListener> listener =
 		new CopyOnWriteArraySet<DataPropertyChangeListener>();
 
@@ -22,7 +23,11 @@ public final class DataPropertyChangeInformer {
 
 	public void propertyChanged(DataPropertyChangeEvent dataPropertyChangeEvent) {
 		for (DataPropertyChangeListener curListener : listener) {
-			curListener.propertyChanged(dataPropertyChangeEvent);
+            try {
+                curListener.propertyChanged(dataPropertyChangeEvent);
+            } catch (RuntimeException exception) {
+                logger.warn("Property listener {} failed", curListener.getClass().getName(), exception);
+            }
 		}
 	}
 }

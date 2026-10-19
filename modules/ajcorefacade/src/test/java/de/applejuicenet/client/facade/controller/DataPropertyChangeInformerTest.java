@@ -7,6 +7,17 @@ import static org.junit.Assert.assertEquals;
 
 public class DataPropertyChangeInformerTest {
     @Test
+    public void listenerFailureDoesNotPreventLaterDeliveryOrNextUpdate() {
+        DataPropertyChangeInformer informer = new DataPropertyChangeInformer();
+        AtomicInteger calls = new AtomicInteger();
+        informer.addDataPropertyChangeListener(event -> { throw new IllegalStateException("broken listener"); });
+        informer.addDataPropertyChangeListener(event -> calls.incrementAndGet());
+        informer.propertyChanged(null);
+        informer.propertyChanged(null);
+        assertEquals(2, calls.get());
+    }
+
+    @Test
     public void listenersMayRemoveOtherListenersDuringDispatch() {
         DataPropertyChangeInformer informer = new DataPropertyChangeInformer();
         AtomicInteger calls = new AtomicInteger();
