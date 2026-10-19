@@ -15,16 +15,4 @@ public class DirectoryNodePathTest {
         assertFalse(DirectoryNode.sameDirectory("/home/user/incoming", null));
         assertFalse(DirectoryNode.sameDirectory("/home/user/incoming", ""));
     }
-
-    @Test
-    public void rootPathsAreRecognised() {
-        assertTrue(DirectoryNode.isRootPath("/"));
-        assertTrue(DirectoryNode.isRootPath("C:"));
-        assertTrue(DirectoryNode.isRootPath("C:\\"));
-        assertTrue(DirectoryNode.isRootPath("d:/"));
-        assertFalse(DirectoryNode.isRootPath("/home"));
-        assertFalse(DirectoryNode.isRootPath("C:\\Users"));
-        assertFalse(DirectoryNode.isRootPath(""));
-        assertFalse(DirectoryNode.isRootPath(null));
-    }
 }

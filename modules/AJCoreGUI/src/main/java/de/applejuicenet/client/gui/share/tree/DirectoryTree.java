@@ -67,11 +67,6 @@ public class DirectoryTree
         return result;
     }
 
-    /** True when the node at {@code path} is a drive or filesystem root, e.g. {@code C:} or {@code /}. */
-    public static boolean isRootDrive(TreePath path) {
-        return path != null && path.getLastPathComponent() instanceof DirectoryNode node && node.isRootDrive();
-    }
-
     /** Explains core-owned folders that cannot be shared or unshared from the tree. */
     public String getToolTipText(MouseEvent event) {
         TreePath path = getPathForLocation(event.getX(), event.getY());
@@ -106,6 +101,9 @@ public class DirectoryTree
         }
         if (node.isWarningShare()) {
             return "mainform.sharetree.warning.hint";
+        }
+        if (node.isCriticalDirectory()) {
+            return "mainform.sharetree.critical.hint";
         }
         return null;
     }

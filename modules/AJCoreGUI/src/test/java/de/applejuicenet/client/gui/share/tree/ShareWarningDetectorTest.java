@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ShareWarningDetectorTest {
@@ -20,9 +21,18 @@ public class ShareWarningDetectorTest {
 
     @Test
     public void driveRootsAreWarningsInEverySpelling() {
-        for (String dir : List.of("C:", "C:\\", "c:/", "D:\\")) {
+        for (String dir : List.of("C:", "C:\\", "c:/")) {
             assertEquals("dir " + dir, ShareWarningDetector.Reason.DRIVE_ROOT, only(dir, WINDOWS_HOME));
         }
+    }
+
+    @Test
+    public void otherDrivesAreNoWarning() {
+        for (String dir : List.of("R:", "R:\\", "d:/")) {
+            assertTrue("dir " + dir + " must not warn", warnings(dir, WINDOWS_HOME).isEmpty());
+        }
+        assertEquals(ShareWarningDetector.Reason.DRIVE_ROOT, ShareWarningDetector.findWarnings(
+                List.of(entry("D:\\", ShareEntry.SHAREMODE.SUBDIRECTORY)), WINDOWS_HOME, "D:").get(0).reason());
     }
 
     @Test
@@ -42,22 +52,22 @@ public class ShareWarningDetectorTest {
     @Test
     public void entriesThatAreNotSharedAreIgnored() {
         assertTrue(ShareWarningDetector.findWarnings(
-                List.of(entry("/", ShareEntry.SHAREMODE.NOT_SHARED)), LINUX_HOME).isEmpty());
+                List.of(entry("/", ShareEntry.SHAREMODE.NOT_SHARED)), LINUX_HOME, "C:").isEmpty());
     }
 
     @Test
     public void missingValuesDoNotWarn() {
-        assertTrue(ShareWarningDetector.findWarnings(null, LINUX_HOME).isEmpty());
-        assertTrue(ShareWarningDetector.findWarnings(Set.of(entry(null, ShareEntry.SHAREMODE.SUBDIRECTORY)), LINUX_HOME).isEmpty());
+        assertTrue(ShareWarningDetector.findWarnings(null, LINUX_HOME, "C:").isEmpty());
+        assertTrue(ShareWarningDetector.findWarnings(Set.of(entry(null, ShareEntry.SHAREMODE.SUBDIRECTORY)), LINUX_HOME, "C:").isEmpty());
         assertTrue(ShareWarningDetector.findWarnings(
-                List.of(entry("/", ShareEntry.SHAREMODE.SUBDIRECTORY)), null).stream()
+                List.of(entry("/", ShareEntry.SHAREMODE.SUBDIRECTORY)), null, "C:").stream()
                 .noneMatch(warning -> warning.reason() == ShareWarningDetector.Reason.HOME_DIRECTORY));
     }
 
     @Test
     public void warningKeepsTheOriginalDirectory() {
         List<ShareWarningDetector.Warning> warnings = ShareWarningDetector.findWarnings(
-                List.of(entry("C:\\", ShareEntry.SHAREMODE.SUBDIRECTORY)), WINDOWS_HOME);
+                List.of(entry("C:\\", ShareEntry.SHAREMODE.SUBDIRECTORY)), WINDOWS_HOME, "C:");
 
         assertEquals("C:\\", warnings.get(0).directory());
     }
@@ -70,7 +80,7 @@ public class ShareWarningDetectorTest {
     }
 
     private static List<ShareWarningDetector.Warning> warnings(String dir, String home) {
-        return ShareWarningDetector.findWarnings(List.of(entry(dir, ShareEntry.SHAREMODE.SUBDIRECTORY)), home);
+        return ShareWarningDetector.findWarnings(List.of(entry(dir, ShareEntry.SHAREMODE.SUBDIRECTORY)), home, "C:");
     }
 
     private static ShareEntry entry(String dir, ShareEntry.SHAREMODE mode) {

@@ -69,8 +69,7 @@ public class DirectoryNode
     private static Set<String> collectWarningDirs(Set<ShareEntry> entries) {
         Set<String> result = new HashSet<String>();
 
-        for (ShareWarningDetector.Warning warning : ShareWarningDetector.findWarnings(
-                entries, System.getProperty("user.home"))) {
+        for (ShareWarningDetector.Warning warning : ShareWarningDetector.findWarnings(entries)) {
             result.add(warning.directory());
         }
         return result;
@@ -106,17 +105,9 @@ public class DirectoryNode
         return isConfiguredDirectory(false);
     }
 
-    /** True for a drive or filesystem root such as {@code C:} or {@code /}. */
-    public boolean isRootDrive() {
-        if (directory == null) {
-            return false;
-        }
-        return directory.getType() == Directory.TYPE_DRIVE || isRootPath(directory.getPath());
-    }
-
-    /** Recognises root paths like {@code /}, {@code C:} or {@code C:\} without touching the filesystem. */
-    static boolean isRootPath(String path) {
-        return ShareWarningDetector.isRootPath(path);
+    /** Filesystem root, home directory or system drive; other drives such as a network drive stay shareable. */
+    public boolean isCriticalDirectory() {
+        return directory != null && ShareWarningDetector.isCritical(directory.getPath());
     }
 
     private boolean isConfiguredDirectory(boolean incoming) {

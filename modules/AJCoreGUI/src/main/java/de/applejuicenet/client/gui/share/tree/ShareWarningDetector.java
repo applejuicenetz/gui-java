@@ -23,8 +23,12 @@ public final class ShareWarningDetector {
     private ShareWarningDetector() {
     }
 
-    /** Risky share entries of the core settings, in settings order. */
-    public static List<Warning> findWarnings(Collection<ShareEntry> entries, String home) {
+    /** Risky share entries of the core settings of this machine, in settings order. */
+    public static List<Warning> findWarnings(Collection<ShareEntry> entries) {
+        return findWarnings(entries, userHome(), systemDrive());
+    }
+
+    static List<Warning> findWarnings(Collection<ShareEntry> entries, String home, String systemDrive) {
         List<Warning> warnings = new ArrayList<>();
 
         if (entries == null) {
@@ -35,7 +39,7 @@ public final class ShareWarningDetector {
                     || entry.getShareMode() == ShareEntry.SHAREMODE.NOT_SHARED) {
                 continue;
             }
-            Reason reason = reasonFor(entry.getDir(), home);
+            Reason reason = reasonFor(entry.getDir(), home, systemDrive);
 
             if (reason != null) {
                 warnings.add(new Warning(entry.getDir(), reason));
@@ -44,13 +48,21 @@ public final class ShareWarningDetector {
         return warnings;
     }
 
-    static Reason reasonFor(String directory, String home) {
+    /**
+     * True for the folders behind the warning: filesystem root, home directory and system drive. Other
+     * drives (e.g. a network drive {@code R:}) are a deliberate choice, so they are no risk.
+     */
+    public static boolean isCritical(String directory) {
+        return reasonFor(directory, userHome(), systemDrive()) != null;
+    }
+
+    static Reason reasonFor(String directory, String home, String systemDrive) {
         String trimmed = trimSeparators(directory);
 
         if (trimmed.isEmpty()) {
             return Reason.FILESYSTEM_ROOT;
         }
-        if (isDriveRoot(trimmed)) {
+        if (isDriveRoot(trimmed) && trimmed.equalsIgnoreCase(trimSeparators(systemDrive))) {
             return Reason.DRIVE_ROOT;
         }
         if (isHomeDirectory(directory, home)) {
@@ -59,17 +71,15 @@ public final class ShareWarningDetector {
         return null;
     }
 
-    /** Recognises root paths like {@code /}, {@code C:} or {@code C:\} without touching the filesystem. */
-    public static boolean isRootPath(String path) {
-        if (path == null || path.isEmpty()) {
-            return false;
-        }
-        String trimmed = trimSeparators(path);
+    private static String userHome() {
+        return System.getProperty("user.home");
+    }
 
-        if (trimmed.isEmpty()) {
-            return true;
-        }
-        return isDriveRoot(trimmed);
+    /** System drive of this machine, e.g. {@code C:}; {@code C:} when the environment does not tell. */
+    private static String systemDrive() {
+        String drive = System.getenv("SystemDrive");
+
+        return drive == null || drive.isBlank() ? "C:" : drive;
     }
 
     private static boolean isDriveRoot(String trimmed) {

@@ -70,6 +70,12 @@ public class ShareTreeMouseAdapter extends MouseAdapter {
                 }
                 popup.removeAll();
                 int nodeShareMode = node.getShareMode();
+                if (node.isCriticalDirectory() && nodeShareMode != DirectoryNode.SHARED_WITH_SUB
+                        && nodeShareMode != DirectoryNode.SHARED_WITHOUT_SUB) {
+                    // Drives, filesystem root and home would expose too much: no share actions,
+                    // the tree tooltip explains why. An existing share can still be removed below.
+                    return;
+                }
                 if (nodeShareMode == DirectoryNode.NOT_SHARED
                         || nodeShareMode == DirectoryNode.SHARED_SOMETHING
                         || nodeShareMode == DirectoryNode.SHARED_SUB) {

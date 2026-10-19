@@ -638,8 +638,7 @@ public class ShareController extends GuiController
                AJSettings settings = AppleJuiceClient.getAjFacade().getAJSettings();
 
                return settings == null ? List.<ShareWarningDetector.Warning>of()
-                                    : ShareWarningDetector.findWarnings(settings.getShareDirs(),
-                                          System.getProperty("user.home"));
+                                    : ShareWarningDetector.findWarnings(settings.getShareDirs());
             }
             catch(RuntimeException e)
             {
