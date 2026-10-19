@@ -29,6 +29,7 @@ public abstract class HtmlLoader
    private static final int DEFAULT_CONNECT_TIMEOUT_MILLIS = 10000;
    private static final int MAX_BODY_BYTES = 256 * 1024 * 1024;
    private static final int DEFAULT_READ_TIMEOUT_MILLIS = 60000;
+   private static final int DEFAULT_TOTAL_TIMEOUT_MILLIS = 70000;
 
    public static String getHtmlXMLContent(String host, Integer port, int method, String command, boolean withResult)
                                    throws WebSiteNotFoundException, WrongPasswordException
@@ -40,6 +41,64 @@ public abstract class HtmlLoader
    static String getHtmlXMLContent(String host, Integer port, int method, String command, boolean withResult,
                                           int connectTimeoutMillis, int readTimeoutMillis)
                                    throws WebSiteNotFoundException, WrongPasswordException
+   {
+      return getHtmlXMLContent(host, port, method, command, withResult, connectTimeoutMillis,
+                               readTimeoutMillis, DEFAULT_TOTAL_TIMEOUT_MILLIS, InetAddress::getByName);
+   }
+
+   @FunctionalInterface
+   interface Resolver
+   {
+      InetAddress resolve(String host) throws IOException;
+   }
+
+   static String getHtmlXMLContent(String host, Integer port, int method, String command, boolean withResult,
+                                   int connectTimeoutMillis, int readTimeoutMillis, int totalTimeoutMillis,
+                                   Resolver resolver)
+   {
+      if(totalTimeoutMillis <= 0 || connectTimeoutMillis <= 0 || readTimeoutMillis <= 0)
+      {
+         throw new IllegalArgumentException("Timeouts must be positive");
+      }
+      java.util.concurrent.FutureTask<String> task = new java.util.concurrent.FutureTask<>(() ->
+              request(host, port, method, command, withResult, connectTimeoutMillis, readTimeoutMillis, resolver));
+      Thread.ofVirtual().name("CoreRequest").start(task);
+      try
+      {
+         return task.get(totalTimeoutMillis, java.util.concurrent.TimeUnit.MILLISECONDS);
+      }
+      catch(java.util.concurrent.TimeoutException e)
+      {
+         throw new WebSiteNotFoundException(WebSiteNotFoundException.INPUT_ERROR,
+                 new java.net.SocketTimeoutException("Core request exceeded its total deadline"));
+      }
+      catch(InterruptedException e)
+      {
+         Thread.currentThread().interrupt();
+         throw new WebSiteNotFoundException(WebSiteNotFoundException.INPUT_ERROR,
+                 new java.io.InterruptedIOException("Core request interrupted"));
+      }
+      catch(java.util.concurrent.ExecutionException e)
+      {
+         if(e.getCause() instanceof RuntimeException runtime)
+         {
+            throw runtime;
+         }
+         if(e.getCause() instanceof Error error)
+         {
+            throw error;
+         }
+         throw new WebSiteNotFoundException(WebSiteNotFoundException.INPUT_ERROR, e.getCause());
+      }
+      finally
+      {
+         // Interrupting SocketChannel I/O closes its socket, including blocked writes.
+         task.cancel(true);
+      }
+   }
+
+   private static String request(String host, Integer port, int method, String command, boolean withResult,
+                                 int connectTimeoutMillis, int readTimeoutMillis, Resolver resolver)
    {
       int           ajPort     = port.intValue();
       StringBuilder urlContent = new StringBuilder();
@@ -53,7 +112,11 @@ public abstract class HtmlLoader
          try(SocketChannel channel = SocketChannel.open())
          {
             Socket socket = channel.socket();
-            InetAddress addr   = InetAddress.getByName(host);
+            InetAddress addr   = resolver.resolve(host);
+            if(Thread.currentThread().isInterrupted())
+            {
+               throw new InterruptedIOException("Core request cancelled during DNS resolution");
+            }
 
             socket.connect(new InetSocketAddress(addr, ajPort), connectTimeoutMillis);
             socket.setSoTimeout(readTimeoutMillis);
@@ -80,9 +143,14 @@ public abstract class HtmlLoader
             out.println();
             out.flush();
 
+            if(out.checkError())
+            {
+               throw new IOException("Core request could not be sent");
+            }
+
             if(!withResult)
             {
-               return StringConstants.OK;
+               return readAcknowledgement(new DataInputStream(new BufferedInputStream(socket.getInputStream(), 8192)));
             }
 
             DataInputStream in        = new DataInputStream(new BufferedInputStream(socket.getInputStream(), 8192));
@@ -187,6 +255,60 @@ public abstract class HtmlLoader
       }
 
       return urlContent.toString();
+   }
+
+   private static String readAcknowledgement(DataInputStream in) throws IOException
+   {
+      String status = readLn(in);
+      if(!status.matches("HTTP/1\\.[01] 200(?: .*)?"))
+      {
+         // Authentication redirects can follow Content-Length, so inspect every header.
+         String header;
+         while(!(header = readLn(in)).isEmpty())
+         {
+            if(header.contains(StringConstants.WRONGPASSWORD))
+            {
+               throw new WrongPasswordException();
+            }
+         }
+         throw new IOException("Core command returned an unsuccessful HTTP status");
+      }
+      int length = -1;
+      String header;
+      while(!(header = readLn(in)).isEmpty())
+      {
+         if(header.toLowerCase(java.util.Locale.ROOT).startsWith("content-length:"))
+         {
+            try
+            {
+               length = Integer.parseInt(header.substring(header.indexOf(':') + 1).trim());
+            }
+            catch(NumberFormatException e)
+            {
+               throw new IOException("Invalid acknowledgement length", e);
+            }
+            if(length < 0 || length > MAX_BODY_BYTES)
+            {
+               throw new IOException("Invalid acknowledgement length");
+            }
+         }
+      }
+      if(length < 0)
+      {
+         throw new IOException("Missing acknowledgement length");
+      }
+      byte[] body = in.readNBytes(length);
+      if(body.length != length)
+      {
+         throw new EOFException("Incomplete core acknowledgement");
+      }
+      String result = new String(body, StandardCharsets.UTF_8).toLowerCase(java.util.Locale.ROOT);
+      if(result.contains("error:") || result.contains("failure") || result.contains("invalid id"))
+      {
+         // Never include the response: it may echo credentials or private request data.
+         throw new IOException("Core rejected the command");
+      }
+      return StringConstants.OK;
    }
 
    private static String readLn(DataInputStream in) throws IOException

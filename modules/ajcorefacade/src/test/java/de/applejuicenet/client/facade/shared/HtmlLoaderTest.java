@@ -175,10 +175,35 @@ public class HtmlLoaderTest {
     }
 
     @Test(timeout = 10000)
-    public void commandsWithoutResultDoNotWaitForResponseAndCloseConnection() throws Exception {
-        try (CoreResponse core = new CoreResponse("")) {
+    public void commandsWithoutResultWaitForAcknowledgementAndCloseConnection() throws Exception {
+        try (CoreResponse core = new CoreResponse("HTTP/1.1 200 OK\r\nContent-Length: 2\r\n\r\nok")) {
             assertEquals(StringConstants.OK, request(core, HtmlLoader.POST, false));
             core.awaitClientClose();
+        }
+    }
+
+    @Test(timeout = 10000)
+    public void commandWithoutResultRejectsWrongPassword() throws Exception {
+        try (CoreResponse core = new CoreResponse("HTTP/1.1 302 Found\nContent-Length: 0\nLocation: /wrongpassword\n\n")) {
+            assertThrows(WrongPasswordException.class, () -> request(core, HtmlLoader.POST, false));
+            core.awaitClientClose();
+        }
+    }
+
+    @Test(timeout = 10000)
+    public void commandWithoutResultRejectsCoreFailure() throws Exception {
+        String body = "error: invalid id";
+        try (CoreResponse core = new CoreResponse("HTTP/1.1 200 OK\nContent-Length: " + body.length() + "\n\n" + body)) {
+            assertThrows(WebSiteNotFoundException.class, () -> request(core, HtmlLoader.POST, false));
+        }
+    }
+
+    @Test(timeout = 10000)
+    public void commandWithoutResultTimesOutOnSilentCore() throws Exception {
+        try (CoreResponse core = new CoreResponse("")) {
+            WebSiteNotFoundException error = assertThrows(WebSiteNotFoundException.class,
+                    () -> request(core, HtmlLoader.POST, false));
+            assertTrue(error.getCause() instanceof SocketTimeoutException);
         }
     }
 
@@ -237,6 +262,42 @@ public class HtmlLoaderTest {
                             CONNECT_TIMEOUT_MILLIS, READ_TIMEOUT_MILLIS));
             assertTrue(error.getCause() instanceof SocketTimeoutException);
             core.awaitClientClose();
+        }
+    }
+
+    @Test(timeout = 10000)
+    public void totalDeadlineClosesSilentSocket() throws Exception {
+        try (CoreResponse core = new CoreResponse("")) {
+            WebSiteNotFoundException error = assertThrows(WebSiteNotFoundException.class,
+                    () -> HtmlLoader.getHtmlXMLContent("127.0.0.1", core.port(), HtmlLoader.POST, COMMAND, false,
+                            1000, 5000, 150, InetAddress::getByName));
+            assertTrue(error.getCause() instanceof SocketTimeoutException);
+            core.awaitClientClose();
+        }
+    }
+
+    @Test(timeout = 10000)
+    public void totalDeadlineIncludesDnsResolution() throws Exception {
+        CountDownLatch resolving = new CountDownLatch(1);
+        CountDownLatch release = new CountDownLatch(1);
+        try {
+            long start = System.nanoTime();
+            WebSiteNotFoundException error = assertThrows(WebSiteNotFoundException.class,
+                    () -> HtmlLoader.getHtmlXMLContent("slow.example", 1, HtmlLoader.GET, COMMAND, true,
+                            1000, 1000, 100, host -> {
+                                resolving.countDown();
+                                try {
+                                    release.await();
+                                } catch (InterruptedException e) {
+                                    throw new IOException(e);
+                                }
+                                return InetAddress.getLoopbackAddress();
+                            }));
+            assertEquals(0, resolving.getCount());
+            assertTrue(error.getCause() instanceof SocketTimeoutException);
+            assertTrue(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) < 2000);
+        } finally {
+            release.countDown();
         }
     }
 
