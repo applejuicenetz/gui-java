@@ -171,41 +171,40 @@ public class DirectoryNode
         if (directory == null) {
             return NOT_SHARED;
         }
-        int shareMode = NOT_SHARED;
+        String nodePath = normalizeSharePath(directory.getPath());
         for (ShareEntry curShareEntry : shareDirs) {
-            if (directory.getName().indexOf("crypto") != -1) {
-                int i = 0;
+            String sharePath = normalizeSharePath(curShareEntry.getDir());
+
+            if (!sharePath.startsWith(nodePath)) {
+                continue;
             }
-            if (curShareEntry.getDir().toLowerCase().startsWith(directory.getPath().
-                    toLowerCase())) {
-                if (directory.getPath().length() < curShareEntry.getDir().length()
-                        &&
-                        directory.getPath().lastIndexOf(ApplejuiceFacade.separator) ==
-                                curShareEntry.getDir().lastIndexOf(ApplejuiceFacade.separator)) {
-                    continue;
-                }
-                if (curShareEntry.getShareMode() == SHAREMODE.SUBDIRECTORY) {
-                    if (directory.getPath().toLowerCase().startsWith(curShareEntry.
-                            getDir().toLowerCase())) {
-                        return SHARED_WITH_SUB;
-                    } else {
-                        return SHARED_SOMETHING;
-                    }
-                } else {
-                    if (directory.getPath().toLowerCase().startsWith(curShareEntry.
-                            getDir().toLowerCase())) {
-                        return SHARED_WITHOUT_SUB;
-                    } else {
-                        return SHARED_SOMETHING;
-                    }
-                }
+            if (nodePath.length() < sharePath.length()
+                    && lastSeparatorIndex(nodePath) == lastSeparatorIndex(sharePath)) {
+                continue;
             }
+            if (nodePath.equals(sharePath)) {
+                return curShareEntry.getShareMode() == SHAREMODE.SUBDIRECTORY
+                        ? SHARED_WITH_SUB : SHARED_WITHOUT_SUB;
+            }
+            return SHARED_SOMETHING;
         }
         int parentShareMode = parent.getShareMode();
         if (parentShareMode == SHARED_WITH_SUB || parentShareMode == SHARED_SUB) {
-            shareMode = SHARED_SUB;
+            return SHARED_SUB;
         }
-        return shareMode;
+        return NOT_SHARED;
+    }
+
+    /** Lower case and without trailing separators, so {@code C:\} matches the share entry {@code C:}. */
+    private static String normalizeSharePath(String path) {
+        return ShareWarningDetector.trimSeparators(path).toLowerCase(Locale.ROOT);
+    }
+
+    private static int lastSeparatorIndex(String path) {
+        int slash = path.lastIndexOf('/');
+        int backslash = path.lastIndexOf('\\');
+
+        return Math.max(slash, backslash);
     }
 
     public Icon getShareModeIcon() {
