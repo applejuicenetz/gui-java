@@ -194,13 +194,8 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
                         }
                     }
 
-                    Thread.ofVirtual().name("RemoveServers").start(() -> {
-                        try {
-                            AppleJuiceClient.getAjFacade().removeServer(toRemove);
-                        } catch (Exception e) {
-                            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
-                        }
-                    });
+                    CoreCall.runInBackground("RemoveServers",
+                            () -> AppleJuiceClient.getAjFacade().removeServer(toRemove));
                 }
             }
         };

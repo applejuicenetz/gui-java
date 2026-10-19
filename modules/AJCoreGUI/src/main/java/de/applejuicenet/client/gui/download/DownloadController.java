@@ -430,14 +430,10 @@ public class DownloadController extends GuiController {
 
                 int requestedPower = powerDownload;
                 boolean playSound = downloadPanel.getBtnPowerDownloadActive().isSelected();
-                Thread.ofVirtual().name("SetPowerDownload").start(() -> {
-                    try {
-                        AppleJuiceClient.getAjFacade().setPowerDownload(temp, requestedPower);
-                        if (playSound) {
-                            SoundPlayer.getInstance().playSound(SoundPlayer.POWER);
-                        }
-                    } catch (Exception error) {
-                        logger.error("Setting powerdownload failed", error);
+                CoreCall.runInBackground("SetPowerDownload", () -> {
+                    AppleJuiceClient.getAjFacade().setPowerDownload(temp, requestedPower);
+                    if (playSound) {
+                        SoundPlayer.getInstance().playSound(SoundPlayer.POWER);
                     }
                 });
             }
@@ -523,13 +519,8 @@ public class DownloadController extends GuiController {
                 return;
             } else {
                 if (curDownload.getFilename().compareTo(newName) != 0) {
-                    Thread.ofVirtual().name("RenameDownload").start(() -> {
-                        try {
-                            AppleJuiceClient.getAjFacade().renameDownload(curDownload, newName);
-                        } catch (Exception e) {
-                            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
-                        }
-                    });
+                    CoreCall.runInBackground("RenameDownload",
+                            () -> AppleJuiceClient.getAjFacade().renameDownload(curDownload, newName));
                 }
             }
         }
@@ -615,13 +606,8 @@ public class DownloadController extends GuiController {
 
         if (toChange.size() > 0) {
             String targetDirectory = newName;
-            Thread.ofVirtual().name("SetTargetDirectory").start(() -> {
-                try {
-                    AppleJuiceClient.getAjFacade().setTargetDir(toChange, targetDirectory);
-                } catch (Exception e) {
-                    logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
-                }
-            });
+            CoreCall.runInBackground("SetTargetDirectory",
+                    () -> AppleJuiceClient.getAjFacade().setTargetDir(toChange, targetDirectory));
         }
     }
 

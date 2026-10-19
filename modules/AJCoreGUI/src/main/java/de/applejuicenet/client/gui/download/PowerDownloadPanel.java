@@ -4,6 +4,7 @@
 
 package de.applejuicenet.client.gui.download;
 
+import de.applejuicenet.client.shared.CoreCall;
 import de.applejuicenet.client.AppleJuiceClient;
 import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.facade.entity.Download;
@@ -565,13 +566,8 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
 
                 if (!toPause.isEmpty()) {
                     // Core command: never on the poller thread, a slow core would stop all data updates
-                    Thread.ofVirtual().name("PausePolicyDownloads").start(() -> {
-                        try {
-                            AppleJuiceClient.getAjFacade().pauseDownload(toPause);
-                        } catch (Exception e) {
-                            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
-                        }
-                    });
+                    CoreCall.runInBackground("PausePolicyDownloads",
+                            () -> AppleJuiceClient.getAjFacade().pauseDownload(toPause));
                 }
             }
         } catch (Exception e) {
