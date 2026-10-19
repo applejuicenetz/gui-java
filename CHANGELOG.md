@@ -7,19 +7,20 @@
 - [red171] Bedienung:
   - „Fenster schließen minimiert in den Tray“ ist jetzt standardmäßig aus; Schließen beendet die GUI
   - Link-Leiste nimmt mehrere `ajfsp`-Links auf (getrennt durch Leerzeichen oder Zeilenumbruch)
-  - Statusbar überarbeitet: Icons mit Tooltips, getrennte Felder für Status, Verbindungen, Server, Speed und Traffic
-  - Statusbar: Werte feste Mindestbreite und rechtsbündig, kein Wackeln mehr; Servername wird bei Platzmangel gekürzt, Host und Port im Tooltip
-  - Statusbar: schlankere Feldtrenner und Monospace-Schrift, „…“ hinter dem Verbindungsstatus entfernt
-  - Spaltenüberschriften (Suche, Server, Dateiliste, Uploads) und weitere bisher fest eingebaute Texte kommen aus den Sprachdateien
-  - Plugin-Beschreibungen sind mehrsprachig (Deutsch und Englisch)
-  - Dateiliste: Fehler beim Speichern oder Kopieren werden angezeigt; AJL-Export bleibt bei Zeilenumbrüchen im Dateinamen gültig und überspringt Einträge ohne Namen oder Prüfsumme
+  - Statusbar: Icons, Tooltips und getrennte Felder für Status, Verbindungen, Server, Speed und Traffic
+  - Statusbar: feste Feldbreiten ohne Wackeln, Servername wird gekürzt, Host und Port im Tooltip
+  - Statusbar: dünnere Trenner, Monospace-Schrift, „…“ beim Verbindungsstatus entfernt
+  - Spaltenüberschriften und weitere feste Texte kommen aus den Sprachdateien
+  - Plugin-Beschreibungen auf Deutsch und Englisch
+  - Dateiliste: Fehler beim Speichern und Kopieren werden angezeigt
+  - AJL-Export bleibt gültig bei Zeilenumbrüchen im Namen; Einträge ohne Name oder Prüfsumme entfallen
 
 ### Technische Änderungen
 
 - [red171] Code und Bibliotheken:
-  - Gesamter Code auf Englisch: Klassen-, Methoden- und Variablennamen, Kommentare und Logtexte
-  - Paket `fassade` heißt `facade`, Modul `ajcorefassade` heißt `ajcorefacade`
-  - Sprachschlüssel durchgehend englisch benannt, ungenutzte Schlüssel aus den Sprachdateien entfernt
+  - Code, Kommentare und Logtexte auf Englisch
+  - Paket `fassade` zu `facade`, Modul `ajcorefassade` zu `ajcorefacade`
+  - Sprachschlüssel englisch benannt, ungenutzte Schlüssel entfernt
   - Neue Tests für Sprachschlüssel und Plugin-Metadaten
 
 ## 0.86.4
