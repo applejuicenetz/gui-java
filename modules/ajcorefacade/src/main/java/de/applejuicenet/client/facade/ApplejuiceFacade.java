@@ -57,6 +57,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
     // Thread
     private final Object workerLock = new Object();
     private Thread workerThread;
+    private boolean workerStopRequested;
     private final Map<Integer, CancelThread> cancelWorkers = new HashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(ApplejuiceFacade.class);
 
@@ -206,18 +207,31 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
 
     public void startXMLCheck() {
         synchronized (workerLock) {
-            if (workerThread != null && workerThread.isAlive()) {
+            if (workerThread != null && workerThread.isAlive() && !workerStopRequested) {
                 return;
             }
             logger.debug("Starting the core poller for {}:{}", coreHolder.getCoreHost(), coreHolder.getCorePort());
-            workerThread = createWorkerThread();
+            workerThread = createWorkerThread(workerThread);
+            workerStopRequested = false;
             workerThread.start();
         }
     }
 
-    private Thread createWorkerThread() {
+    private Thread createWorkerThread(Thread previous) {
         return new Thread("ApplejuiceFassadeXMLCheckThread") {
             public void run() {
+                // Keep restart chains ordered even if this waiting successor is stopped too.
+                boolean cancelled = false;
+                while (previous != null && previous.isAlive()) {
+                    try {
+                        previous.join();
+                    } catch (InterruptedException e) {
+                        cancelled = true;
+                    }
+                }
+                if (cancelled) {
+                    interrupt();
+                }
                 setPriority(Thread.NORM_PRIORITY);
                 int attempt = 0;
 
@@ -279,8 +293,9 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
                 return;
             }
             logger.debug("Stopping the core poller");
+            workerStopRequested = true;
             workerThread.interrupt();
-            workerThread = null;
+            // Retain predecessor until termination so immediate restarts cannot overlap.
         }
         informCoreStatusListener(STATUS.CLOSED);
     }

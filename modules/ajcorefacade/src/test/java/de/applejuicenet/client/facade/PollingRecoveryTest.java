@@ -108,6 +108,44 @@ public class PollingRecoveryTest {
         }
     }
 
+    @Test(timeout = 15000)
+    public void immediateRestartWaitsForOldPollerWithoutBlockingCaller() throws Exception {
+        java.util.concurrent.CountDownLatch entered = new java.util.concurrent.CountDownLatch(1);
+        java.util.concurrent.CountDownLatch release = new java.util.concurrent.CountDownLatch(1);
+        AtomicInteger calls = new AtomicInteger();
+        try (CoreStub core = new CoreStub(request -> INFORMATION)) {
+            ApplejuiceFacade facade = new ApplejuiceFacade(core.settings()) {
+                @Override public boolean updateModifiedXML() {
+                    if (calls.incrementAndGet() == 1) {
+                        entered.countDown();
+                        boolean interrupted = false;
+                        while (release.getCount() > 0) {
+                            try { release.await(); } catch (InterruptedException e) { interrupted = true; }
+                        }
+                        if (interrupted) Thread.currentThread().interrupt();
+                    }
+                    return true;
+                }
+            };
+            try {
+                facade.startXMLCheck();
+                assertTrue(entered.await(3, java.util.concurrent.TimeUnit.SECONDS));
+                facade.stopXMLCheck();
+                facade.startXMLCheck();
+                Thread.sleep(250);
+                assertEquals("New poller overlapped the stopped poller", 1, calls.get());
+                release.countDown();
+                long deadline = System.nanoTime() + java.util.concurrent.TimeUnit.SECONDS.toNanos(3);
+                while (calls.get() < 2 && System.nanoTime() < deadline) Thread.sleep(10);
+                assertTrue("Restart never resumed", calls.get() >= 2);
+            } finally {
+                release.countDown();
+                facade.stopXMLCheck();
+                awaitPollerCount(0);
+            }
+        }
+    }
+
     private static void awaitPollerCount(int expected) throws InterruptedException {
         long deadline = System.currentTimeMillis() + 5000;
 
