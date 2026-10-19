@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -67,7 +67,10 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
     private int defaultAutomaticPowerdownloadTo = 30;
     private DownloadController downloadController;
     private volatile AutomaticPowerdownload autoPowerdownloadThread;
-    private Information lastInformation;
+    private volatile Information lastInformation;
+    /** Credit limits in bytes, set on the EDT when the automatic powerdownload starts. */
+    private volatile long creditThresholdFrom = Long.MAX_VALUE;
+    private volatile long creditThresholdTo = 0;
     private JPanel backPanel = new JPanel();
     private JScrollPane scrollPane;
 
@@ -380,6 +383,8 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
     private void startAutoPowerdownload() {
         AutomaticPowerdownload powerdownload = new AutomaticPowerdownload(AppleJuiceClient.getAjFacade());
 
+        creditThresholdFrom = Long.parseLong(autoFrom.getText()) * 1048576L;
+        creditThresholdTo = Long.parseLong(autoTo.getText()) * 1048576L;
         applyAutoPowerdownloadSettings(powerdownload);
         powerdownload.setParentToInform(this);
         autoPowerdownloadThread = powerdownload;
@@ -534,29 +539,39 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
         try {
             if (type == DATALISTENER_TYPE.INFORMATION_CHANGED) {
                 lastInformation = (Information) content;
-                if (autoPowerdownloadThread != null && lastInformation != null) {
-                    long enteredTo = Long.parseLong(autoTo.getText()) * 1048576L;
-                    long enteredFrom = Long.parseLong(autoFrom.getText()) * 1048576L;
+                AutomaticPowerdownload policy = autoPowerdownloadThread;
+                if (policy != null && lastInformation != null) {
+                    // thresholds were read on the EDT; the poller thread must not touch Swing fields
+                    long enteredTo = creditThresholdTo;
+                    long enteredFrom = creditThresholdFrom;
 
                     if (lastInformation.getCredits() > enteredFrom) {
-                        autoPowerdownloadThread.setPaused(false);
+                        policy.setPaused(false);
                     } else if (lastInformation.getCredits() < enteredTo) {
-                        autoPowerdownloadThread.setPaused(true);
+                        policy.setPaused(true);
                     }
                 }
             } else if (type == DATALISTENER_TYPE.DOWNLOAD_CHANGED && autoPowerdownloadThread != null && autoPowerdownloadThread.isPaused()) {
-                HashMap<String, Download> downloads = (HashMap<String, Download>) content;
+                Map<Integer, Download> downloads = (Map<Integer, Download>) content;
+                List<Download> toPause = new Vector<Download>();
 
                 synchronized (downloads) {
-                    List<Download> toPause = new Vector<Download>();
-
                     for (Download curDownload : downloads.values()) {
                         if (curDownload.getStatus() == Download.SEARCHING_LOADING) {
                             toPause.add(curDownload);
                         }
                     }
+                }
 
-                    AppleJuiceClient.getAjFacade().pauseDownload(toPause);
+                if (!toPause.isEmpty()) {
+                    // Core command: never on the poller thread, a slow core would stop all data updates
+                    Thread.ofVirtual().name("PausePolicyDownloads").start(() -> {
+                        try {
+                            AppleJuiceClient.getAjFacade().pauseDownload(toPause);
+                        } catch (Exception e) {
+                            logger.error(ApplejuiceFacade.ERROR_MESSAGE, e);
+                        }
+                    });
                 }
             }
         } catch (Exception e) {
