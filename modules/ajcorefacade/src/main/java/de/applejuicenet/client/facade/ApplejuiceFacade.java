@@ -440,18 +440,21 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
             throw new IllegalArgumentException("invalid maxDown");
         }
 
-        new Thread() {
-            public void run() {
-                StringBuilder parameters = new StringBuilder("MaxUpload=");
+        Thread.ofVirtual().name("SetMaxUpAndDown").start(() -> {
+            StringBuilder parameters = new StringBuilder("MaxUpload=");
 
-                parameters.append(maxUp.toString());
-                parameters.append("&MaxDownload=");
-                parameters.append(maxDown.toString());
+            parameters.append(maxUp.toString());
+            parameters.append("&MaxDownload=");
+            parameters.append(maxDown.toString());
+            try {
                 HtmlLoader.getHtmlXMLContent(coreHolder.getCoreHost(), coreHolder.getCorePort(), HtmlLoader.GET,
                         "/function/setsettings?password=" + coreHolder.getCorePassword() + "&" +
                                 parameters.toString(), false);
+            } catch (WebSiteNotFoundException error) {
+                // A failed limit change must not look like a lost core: report it and keep running.
+                logger.warn("Speed limits could not be sent to the core: {}", error.toString());
             }
-        }.start();
+        });
     }
 
     public void saveAJSettings(AJSettings ajSettings) {
