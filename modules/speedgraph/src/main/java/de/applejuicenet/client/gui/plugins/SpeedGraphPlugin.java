@@ -25,6 +25,7 @@ public class SpeedGraphPlugin extends PluginConnector implements CoreStatusListe
     private final GraphPanel view;
     private final Timer refreshTimer;
     private boolean listening;
+    private final java.util.concurrent.atomic.AtomicBoolean limitsRequest = new java.util.concurrent.atomic.AtomicBoolean();
 
     public SpeedGraphPlugin(Properties pluginsProperties, Map<String, Properties> languageFiles,
                             ImageIcon icon, Map<String, ImageIcon> availableIcons) {
@@ -93,11 +94,30 @@ public class SpeedGraphPlugin extends PluginConnector implements CoreStatusListe
     }
 
     private void refresh() {
-        if (facade != null && facade.getCurrentAJSettings() != null) {
-            var coreSettings = facade.getCurrentAJSettings();
-            view.setLimits(coreSettings.getMaxUploadInKB() * 1024L, coreSettings.getMaxDownloadInKB() * 1024L);
-        }
+        requestLimits();
         view.refresh(System.currentTimeMillis());
+    }
+
+    /**
+     * Fetches the core limits on a worker thread. The first call can wait for the core; the refresh
+     * runs on the event dispatch thread every second and must never block there.
+     */
+    private void requestLimits() {
+        if (facade == null || !limitsRequest.compareAndSet(false, true)) return;
+        Thread.ofVirtual().name("SpeedGraphLimits").start(() -> {
+            try {
+                var coreSettings = facade.getCurrentAJSettings();
+                if (coreSettings != null) {
+                    long upload = coreSettings.getMaxUploadInKB() * 1024L;
+                    long download = coreSettings.getMaxDownloadInKB() * 1024L;
+                    SwingUtilities.invokeLater(() -> view.setLimits(upload, download));
+                }
+            } catch (RuntimeException e) {
+                LOGGER.debug("Core limits not available: {}", e.toString());
+            } finally {
+                limitsRequest.set(false);
+            }
+        });
     }
 
     private void saveSettings() {

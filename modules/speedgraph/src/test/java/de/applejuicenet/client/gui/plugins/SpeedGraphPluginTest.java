@@ -25,6 +25,35 @@ public class SpeedGraphPluginTest {
         SwingUtilities.invokeAndWait(() -> assertEquals("—", ((GraphPanel) plugin[0].getComponent(0)).downloadText()));
     }
 
+    @Test(timeout = 15000) public void refreshNeverWaitsForTheCoreOnTheEventDispatchThread() throws Exception {
+        java.util.concurrent.CountDownLatch asked = new java.util.concurrent.CountDownLatch(1);
+        java.util.concurrent.CountDownLatch release = new java.util.concurrent.CountDownLatch(1);
+        java.util.concurrent.atomic.AtomicBoolean askedOnEdt = new java.util.concurrent.atomic.AtomicBoolean();
+        var facade = new de.applejuicenet.client.facade.ApplejuiceFacade(
+                new de.applejuicenet.client.facade.controller.CoreConnectionSettingsHolder("127.0.0.1", 9, "", true)) {
+            @Override public de.applejuicenet.client.facade.shared.AJSettings getCurrentAJSettings() {
+                if (SwingUtilities.isEventDispatchThread()) askedOnEdt.set(true);
+                asked.countDown();
+                try { release.await(); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+                return null;
+            }
+        };
+        SpeedGraphPlugin[] plugin = new SpeedGraphPlugin[1];
+        SwingUtilities.invokeAndWait(() -> plugin[0] = new SpeedGraphPlugin(new Properties(), Map.of(), new ImageIcon(),
+                Map.of(), folder.getRoot().toPath().resolve("edt.properties"), facade));
+        try {
+            SwingUtilities.invokeAndWait(() -> plugin[0].registerSelected());
+            assertTrue("The plugin never asked for the core limits", asked.await(5, java.util.concurrent.TimeUnit.SECONDS));
+            long start = System.nanoTime();
+            SwingUtilities.invokeAndWait(() -> { });
+            long blockedMillis = (System.nanoTime() - start) / 1_000_000;
+            assertFalse("Core limits were requested on the event dispatch thread", askedOnEdt.get());
+            assertTrue("The event dispatch thread was blocked for " + blockedMillis + " ms", blockedMillis < 1000);
+        } finally {
+            release.countDown();
+        }
+    }
+
     @Test public void changesOpenPluginControlsToEnglishAndBack() throws Exception {
         SwingUtilities.invokeAndWait(() -> {
             var selector = de.applejuicenet.client.gui.controller.LanguageSelector.getInstance(
