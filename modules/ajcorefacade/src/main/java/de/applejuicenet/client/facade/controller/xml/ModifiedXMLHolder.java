@@ -174,7 +174,10 @@ public class ModifiedXMLHolder extends DefaultHandler
 
    public NetworkInfo getNetworkInfo()
    {
-      return netInfo;
+      synchronized(stateLock)
+      {
+         return netInfo == null ? null : netInfo.snapshot();
+      }
    }
 
    public void setDownloadPolling(boolean enabled)
@@ -332,7 +335,10 @@ public class ModifiedXMLHolder extends DefaultHandler
 
    public Information getInformation()
    {
-      return information;
+      synchronized(stateLock)
+      {
+         return information == null ? null : information.snapshot();
+      }
    }
 
    public long getTimestamp()

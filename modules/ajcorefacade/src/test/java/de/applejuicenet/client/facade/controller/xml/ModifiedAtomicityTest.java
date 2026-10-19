@@ -10,6 +10,35 @@ import static org.junit.Assert.*;
 
 public class ModifiedAtomicityTest {
     @Test
+    public void statusGettersDoNotExposeMutableParserState() throws Exception {
+        ModifiedXMLHolder holder = new ModifiedXMLHolder(
+                new CoreConnectionSettingsHolder("localhost", 9851, "", true), null);
+        InformationDO internal = new InformationDO();
+        internal.setCredits(42);
+        ServerDO server = new ServerDO(1);
+        server.setName("original");
+        internal.setServer(server);
+        Field info = ModifiedXMLHolder.class.getDeclaredField("information");
+        info.setAccessible(true);
+        info.set(holder, internal);
+        var network = new de.applejuicenet.client.facade.shared.NetworkInfo();
+        network.setAjTotalUsers(7);
+        Field net = ModifiedXMLHolder.class.getDeclaredField("netInfo");
+        net.setAccessible(true);
+        net.set(holder, network);
+        InformationDO delivered = (InformationDO) holder.getInformation();
+        delivered.setCredits(99);
+        ((ServerDO) delivered.getServer()).setName("changed");
+        holder.getNetworkInfo().setAjTotalUsers(99);
+        assertEquals(42, holder.getInformation().getCredits());
+        assertEquals("original", holder.getInformation().getServer().getName());
+        assertEquals(7, holder.getNetworkInfo().getAJTotalUsers());
+        internal.setCredits(123);
+        network.setAjTotalUsers(123);
+        assertEquals(99, delivered.getCredits());
+    }
+
+    @Test
     @SuppressWarnings("unchecked")
     public void badDiffDoesNotPublishEarlierChangesAndNextDiffWorks() throws Exception {
         ModifiedXMLHolder holder = new ModifiedXMLHolder(
