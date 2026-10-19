@@ -48,6 +48,13 @@ public class UpdateChecker {
     }
 
     static void run(boolean silent, Loader loader, String currentVersion, Ui ui) {
+        if (currentVersion == null || currentVersion.isBlank()) {
+            logger.debug("Skipping update check: no packaged version metadata (development start).");
+            if (!silent) {
+                ui.failed();
+            }
+            return;
+        }
         logger.debug("VersionWorkerThread started.");
 
         try {
@@ -62,10 +69,6 @@ public class UpdateChecker {
 
             logger.info("current version " + currentVersion + " | latest released version: " + latestVersion);
 
-            if (currentVersion == null) {
-                throw new IllegalStateException("own version unknown");
-            }
-
             if (compareVersion(latestVersion, currentVersion) == 1) {
                 ui.newVersion(latestVersion, jsonObject.get("html_url").asString());
             } else if (!silent) {
@@ -78,7 +81,7 @@ public class UpdateChecker {
             }
         }
 
-        logger.debug("VersionWorkerThread beendet.");
+        logger.debug("VersionWorkerThread finished.");
     }
 
     private static final class SwingUi implements Ui {

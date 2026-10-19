@@ -77,6 +77,21 @@ public class UpdateCheckerTest {
     }
 
     @Test
+    public void unknownDevelopmentVersionDoesNotContactUpdateServer() {
+        for (String version : new String[] {null, "", " "}) {
+            for (boolean silent : new boolean[] {true, false}) {
+                java.util.concurrent.atomic.AtomicBoolean loaded = new java.util.concurrent.atomic.AtomicBoolean();
+                Recorder result = run(silent, () -> {
+                    loaded.set(true);
+                    return release("0.87.0");
+                }, version);
+                assertFalse("Development starts must not request release metadata", loaded.get());
+                assertEquals(silent ? List.of() : List.of("failed"), result.events);
+            }
+        }
+    }
+
+    @Test
     public void unknownOwnVersionIsNotReportedAsUpToDate() {
         assertEquals(List.of(), run(true, () -> release("0.87.0"), null).events);
         assertEquals(List.of("failed"), run(false, () -> release("0.87.0"), null).events);
