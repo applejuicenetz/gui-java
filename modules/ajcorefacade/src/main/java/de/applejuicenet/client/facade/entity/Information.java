@@ -37,14 +37,14 @@ public abstract class Information implements Serializable
 
 	public final String getCreditsAsString()
 	{
-		StringBuffer result = new StringBuffer(" Credits: ");
+		StringBuilder result = new StringBuilder(" Credits: ");
 		result.append(convertBytes(getCredits()));
 		return result.toString();
 	}
 
 	public final String getUpDownSessionAsString()
 	{
-		StringBuffer result = new StringBuffer(" in: ");
+		StringBuilder result = new StringBuilder(" in: ");
 		result.append(convertBytes(getSessionDownload()));
 		result.append(" out: ");
 		result.append(convertBytes(getSessionUpload()));
@@ -53,45 +53,45 @@ public abstract class Information implements Serializable
 
 	public final String getUpDownAsString()
 	{
-		StringBuffer result = new StringBuffer(" in: ");
+		StringBuilder result = new StringBuilder(" in: ");
 		result.append(getBytesSpeed(getDownloadSpeed()));
 		result.append(" out: ");
 		result.append(getBytesSpeed(getUploadSpeed()));
 		return result.toString();
 	}
 
-	public final StringBuffer getSessionDownAsString()
+	public final StringBuilder getSessionDownAsString()
 	{
 		return convertBytes(getSessionDownload());
 	}
 
-	public final StringBuffer getSessionUpAsString()
+	public final StringBuilder getSessionUpAsString()
 	{
 		return convertBytes(getSessionUpload());
 	}
 
-	public final StringBuffer getUpAsString()
+	public final StringBuilder getUpAsString()
 	{
 		return getBytesSpeed(getUploadSpeed());
 	}
 
-	public final StringBuffer getDownAsString()
+	public final StringBuilder getDownAsString()
 	{
 		return getBytesSpeed(getDownloadSpeed());
 	}
 
-	private final StringBuffer getBytesSpeed(long bytes)
+	private final StringBuilder getBytesSpeed(long bytes)
 	{
 		if (bytes == 0)
 		{
-			return new StringBuffer("0 KB/s");
+			return new StringBuilder("0 KB/s");
 		}
-		StringBuffer result = convertBytes(bytes);
+		StringBuilder result = convertBytes(bytes);
 		result.append("/s");
 		return result;
 	}
 
-	private final StringBuffer convertBytes(long bytes)
+	private final StringBuilder convertBytes(long bytes)
 	{
 		boolean minus = false;
 		if (bytes < 0)
@@ -101,7 +101,7 @@ public abstract class Information implements Serializable
 		}
 		if (bytes == 0)
 		{
-			return new StringBuffer("0 MB");
+			return new StringBuilder("0 MB");
 		}
 		long factor = 1;
 		if (bytes < 1024l)
@@ -129,7 +129,7 @@ public abstract class Information implements Serializable
 			bytes *= -1;
 		}
 		double converted = (double) bytes / factor;
-		StringBuffer result = new StringBuffer(percentFormatter.format(converted));
+		StringBuilder result = new StringBuilder(percentFormatter.format(converted));
 		if (factor == 1)
 		{
 			result.append(" Bytes");

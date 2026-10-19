@@ -279,7 +279,7 @@ public class FileListDialog extends JDialog {
 
             if (i == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
-                StringBuffer text = new StringBuffer();
+                StringBuilder text = new StringBuilder();
                 Share[] share = ((FileListTableModel) table.getModel()).getShares();
 
                 if (!file.getPath().toLowerCase().endsWith(".ajl")) {

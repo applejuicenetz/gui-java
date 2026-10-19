@@ -298,7 +298,7 @@ public class ShareController extends GuiController
       {
          Share        share  = ((ShareNode) obj[0]).getShare();
          Clipboard    cb     = Toolkit.getDefaultToolkit().getSystemClipboard();
-         StringBuffer toCopy = new StringBuffer();
+         StringBuilder toCopy = new StringBuilder();
 
          toCopy.append("ajfsp://file|");
          toCopy.append(share.getShortfilename());
@@ -341,8 +341,8 @@ public class ShareController extends GuiController
       {
          Share        share        = ((ShareNode) obj[0]).getShare();
          Clipboard    cb           = Toolkit.getDefaultToolkit().getSystemClipboard();
-         StringBuffer toCopy       = new StringBuffer();
-         StringBuffer tempFilename = new StringBuffer(share.getShortfilename());
+         StringBuilder toCopy       = new StringBuilder();
+         StringBuilder tempFilename = new StringBuilder(share.getShortfilename());
 
          for(int i = 0; i < tempFilename.length(); i++)
          {
@@ -371,7 +371,7 @@ public class ShareController extends GuiController
       {
          Share        shareDO = ((ShareNode) obj[0]).getShare();
          Clipboard    cb     = Toolkit.getDefaultToolkit().getSystemClipboard();
-         StringBuffer toCopy = new StringBuffer();
+         StringBuilder toCopy = new StringBuilder();
 
          toCopy.append("ajfsp://file|");
          toCopy.append(shareDO.getShortfilename() + "|" + shareDO.getCheckSum() + "|" + shareDO.getSize() + "/");
@@ -598,7 +598,7 @@ public class ShareController extends GuiController
 
                temp = temp.replaceFirst("%i", Integer.toString(fileCount));
                temp = temp.replaceFirst("%s", fileSize);
-               StringBuffer tmp = new StringBuffer(temp);
+               StringBuilder tmp = new StringBuilder(temp);
 
                tmp.append(" - Prio: ");
                tmp.append(priorityTotal);
@@ -789,7 +789,7 @@ public class ShareController extends GuiController
 
          temp = temp.replaceFirst("%i", Integer.toString(fileCount));
          temp = temp.replaceFirst("%s", fileSize);
-         StringBuffer tmp = new StringBuffer(temp);
+         StringBuilder tmp = new StringBuilder(temp);
 
          tmp.append(" - Prio: ");
          tmp.append(priorityTotal);

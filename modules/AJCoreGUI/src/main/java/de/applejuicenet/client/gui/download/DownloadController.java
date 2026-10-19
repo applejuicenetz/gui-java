@@ -651,7 +651,7 @@ public class DownloadController extends GuiController {
         if (selectedDownloads.length == 1) {
             Download curDownload = selectedDownloads[0];
             Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
-            StringBuffer toCopy = new StringBuffer();
+            StringBuilder toCopy = new StringBuilder();
 
             toCopy.append("ajfsp://file|");
             boolean copyToClipboard = false;
@@ -692,7 +692,7 @@ public class DownloadController extends GuiController {
         if (selectedDownloads.length == 1) {
             Download curDownload = selectedDownloads[0];
             Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
-            StringBuffer toCopy = new StringBuffer();
+            StringBuilder toCopy = new StringBuilder();
 
             toCopy.append("ajfsp://file|");
             toCopy.append(curDownload.getFilename() + "|" + curDownload.getHash() + "|" + curDownload.getSize() + "/");

@@ -94,7 +94,7 @@ public class StartController extends GuiController {
 
         noServer = languageSelector.getFirstAttributeByTagName("javagui.mainform.noserver");
         status2Text = languageSelector.getFirstAttributeByTagName("mainform.status.status2");
-        StringBuffer temp = new StringBuffer(status2Text);
+        StringBuilder temp = new StringBuilder(status2Text);
         int pos;
 
         if (netInfo != null) {
@@ -142,7 +142,7 @@ public class StartController extends GuiController {
         }
 
         connectionMessageText = languageSelector.getFirstAttributeByTagName("mainform.html10");
-        temp = new StringBuffer(connectionMessageText);
+        temp = new StringBuilder(connectionMessageText);
         pos = temp.indexOf("%s");
         if (pos != -1) {
             temp.replace(pos, pos + 2, noServer);
@@ -184,7 +184,7 @@ public class StartController extends GuiController {
                         }
 
                         netInfo = (NetworkInfo) content;
-                        StringBuffer temp = new StringBuffer(status2Text);
+                        StringBuilder temp = new StringBuilder(status2Text);
                         int pos = temp.indexOf("%d");
 
                         if (pos != -1) {
@@ -230,7 +230,7 @@ public class StartController extends GuiController {
             SwingUtilities.invokeLater(() -> {
                 try {
                     information = (Information) content;
-                    StringBuffer temp = new StringBuffer(connectionMessageText);
+                    StringBuilder temp = new StringBuilder(connectionMessageText);
                     int pos = temp.indexOf("%s");
 
                     if (pos != -1) {

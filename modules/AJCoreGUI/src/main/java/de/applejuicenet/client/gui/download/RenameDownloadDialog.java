@@ -134,7 +134,7 @@ public class RenameDownloadDialog extends JDialog
             newName = null;
          }
 
-         StringBuffer tempLink = new StringBuffer(newName);
+         StringBuilder tempLink = new StringBuilder(newName);
 
          for(int i = 0; i < tempLink.length(); i++)
          {

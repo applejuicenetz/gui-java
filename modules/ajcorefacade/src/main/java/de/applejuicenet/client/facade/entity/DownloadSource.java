@@ -123,7 +123,7 @@ public abstract class DownloadSource implements IdOwner
 
          remainingTime -= minutes * 60;
 
-         StringBuffer temp = new StringBuffer();
+         StringBuilder temp = new StringBuilder();
 
          if(days < 10)
          {

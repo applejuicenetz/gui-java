@@ -1116,7 +1116,7 @@ public class AppleJuiceDialog extends JFrame implements LanguageListener, DataUp
     public void importAjl(File file, String targetDir) {
         try {
             ApplejuiceFacade af = AppleJuiceClient.getAjFacade();
-            final StringBuffer returnValues = new StringBuffer();
+            final StringBuilder returnValues = new StringBuilder();
             boolean somethingAdded = false;
 
             for (String link : AjlFile.readLinks(file)) {

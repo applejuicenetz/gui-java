@@ -232,7 +232,7 @@ public class UploadController extends GuiController {
 
         if (shareObj != null) {
             Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
-            StringBuffer toCopy = new StringBuffer();
+            StringBuilder toCopy = new StringBuilder();
 
             toCopy.append(shareObj.getAjfspLink());
             StringSelection contents = new StringSelection(toCopy.toString());

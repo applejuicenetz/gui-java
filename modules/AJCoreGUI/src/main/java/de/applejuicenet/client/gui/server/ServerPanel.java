@@ -211,7 +211,7 @@ public class ServerPanel extends JPanel implements LanguageListener, DataUpdateL
 
             if (selectedItems.length == 1) {
                 Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
-                StringBuffer toCopy = new StringBuffer();
+                StringBuilder toCopy = new StringBuilder();
 
                 toCopy.append("ajfsp://server|");
                 Server server = ((ServerTableModel) serverTable.getModel()).getRow(selectedItems[0]);

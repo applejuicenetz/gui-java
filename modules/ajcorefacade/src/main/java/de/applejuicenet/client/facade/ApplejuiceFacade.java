@@ -520,7 +520,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
             }
         }
 
-        StringBuffer parameters = new StringBuffer();
+        StringBuilder parameters = new StringBuilder();
         int index = 0;
 
         for (Download curDownload : downloads) {
@@ -579,7 +579,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
 
         String encodedName = newFilename;
 
-        StringBuffer tempLink = new StringBuffer(encodedName);
+        StringBuilder tempLink = new StringBuilder(encodedName);
 
         for (int i = 0; i < tempLink.length(); i++) {
             if (tempLink.charAt(i) == ' ') {
@@ -647,7 +647,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
             }
         }
 
-        StringBuffer parameters = new StringBuffer();
+        StringBuilder parameters = new StringBuilder();
         int index = 0;
 
         for (Download curDownload : downloads) {
@@ -690,7 +690,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
             }
         }
 
-        StringBuffer parameters = new StringBuffer();
+        StringBuilder parameters = new StringBuilder();
         int index = 0;
 
         for (Download curDownload : downloads) {
@@ -805,7 +805,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
         subdir = processSubdir(subdir);
         String encodedLink = link;
 
-        StringBuffer tempLink = new StringBuffer(link);
+        StringBuilder tempLink = new StringBuilder(link);
 
         for (int i = 0; i < tempLink.length(); i++) {
             if (tempLink.charAt(i) == ' ') {
@@ -840,7 +840,7 @@ public class ApplejuiceFacade implements CoreConnectionSettingsListener {
             throw new IllegalArgumentException("invalid priority: has to be 1<= x <=490");
         }
 
-        StringBuffer parameters = new StringBuffer(StringConstants.AND_POWERDOWNLOAD + powerDownload);
+        StringBuilder parameters = new StringBuilder(StringConstants.AND_POWERDOWNLOAD + powerDownload);
         int index = 0;
 
         for (Download curDownload : downloads) {

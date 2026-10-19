@@ -24,7 +24,7 @@ public abstract class CharacterReplacer {
         if (text == null) {
             return "";
         }
-        StringBuffer temp = new StringBuffer(text);
+        StringBuilder temp = new StringBuilder(text);
         int index;
         while ((index = temp.indexOf("\\\"")) != -1) {
             temp.replace(index, index + 2, "\"");

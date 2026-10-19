@@ -201,7 +201,7 @@ public class NetworkInfo implements Cloneable {
     }
 
     private String insertPoints(String tochange) {
-        StringBuffer result = new StringBuffer(tochange);
+        StringBuilder result = new StringBuilder(tochange);
         int length;
 
         if (result.indexOf(StringConstants.COMMA) == -1) {

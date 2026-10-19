@@ -138,12 +138,12 @@ public abstract class ZLibUtils
       }
    }
 
-   public static StringBuffer uncompress(byte[] b)
+   public static StringBuilder uncompress(byte[] b)
    {
       try
       {
          byte[]       data   = inflate(b, Integer.MAX_VALUE - 8);
-         StringBuffer retval = new StringBuffer(data.length);
+         StringBuilder retval = new StringBuilder(data.length);
 
          for(byte value : data)
          {

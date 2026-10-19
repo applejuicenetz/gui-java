@@ -36,7 +36,7 @@ public class LanguageSelector extends XMLValueHolder {
     private static final Logger logger = LoggerFactory.getLogger(LanguageSelector.class);
     private Set<LanguageListener> languageListener = new HashSet<LanguageListener>();
     private CharArrayWriter contents = new CharArrayWriter();
-    private StringBuffer key = new StringBuffer();
+    private StringBuilder key = new StringBuilder();
     private final Properties englishValues = new Properties();
     @SuppressWarnings("unchecked")
     private Set pluginsToWatch = null;
@@ -134,7 +134,7 @@ public class LanguageSelector extends XMLValueHolder {
     }
 
     public String getFirstAttributeByTagName(String[] pathToValue) {
-        StringBuffer path = new StringBuffer();
+        StringBuilder path = new StringBuilder();
 
         path.append(".");
         path.append("root");

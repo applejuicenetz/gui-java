@@ -17,7 +17,7 @@ import java.util.Properties;
 public class XMLValueHolder extends DefaultHandler
 {
    private XMLReader    xr     = null;
-   private StringBuffer key    = new StringBuffer();
+   private StringBuilder key    = new StringBuilder();
    protected Properties values = new Properties();
 
    public XMLValueHolder()
