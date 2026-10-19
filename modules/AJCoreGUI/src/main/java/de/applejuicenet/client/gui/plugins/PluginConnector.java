@@ -100,15 +100,6 @@ public abstract class PluginConnector extends JPanel implements DataUpdateListen
       return getGeneralXMLAttributeByTagName("general.author");
    }
 
-   /**
-    *
-    * @return String: Kontaktadresse
-    */
-   public final String getContact()
-   {
-      return getGeneralXMLAttributeByTagName("general.contact");
-   }
-
    /** @return boolean: true if the plugin should have a visible user interface, otherwise false */
    public final boolean isTab()
    {

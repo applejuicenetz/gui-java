@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /** Plugin metadata: English default in plugin.properties, one language file per supported language. */
@@ -60,6 +61,18 @@ public class PluginMetadataTest {
                 String description = properties.getProperty("language.description");
                 assertTrue(file + " has no description", description != null && !description.isBlank());
             }
+        }
+    }
+
+    @Test
+    public void authorIsAPlainNameWithoutContactData() throws IOException {
+        for (Path resources : pluginResources()) {
+            Properties properties = load(resources.resolve("plugin.properties"));
+            String author = properties.getProperty("general.author");
+            assertTrue(resources + " has no author", author != null && !author.isBlank());
+            assertFalse(resources + " author contains a URL or e-mail: " + author,
+                    author.matches("(?s).*(@|://|www\\.|\\.(de|com|org|net|homelinux)\\b).*"));
+            assertNull(resources + " still declares general.contact", properties.getProperty("general.contact"));
         }
     }
 

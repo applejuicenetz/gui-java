@@ -144,8 +144,7 @@ public class ODPluginPanel extends JPanel implements OptionsRegister
       {
          String text;
 
-         text = name + ":\r\n" + plugin.getTitle() + "\r\n\r\n" + author + ":\r\n" + plugin.getAuthor() + " [" + plugin.getContact() +
-                "]" + "\r\n\r\n" + version + ":\r\n" + plugin.getVersion() + "\r\n\r\n" + explanation + ":\r\n" +
+         text = name + ":\r\n" + plugin.getTitle() + "\r\n\r\n" + author + ":\r\n" + plugin.getAuthor() + "\r\n\r\n" + version + ":\r\n" + plugin.getVersion() + "\r\n\r\n" + explanation + ":\r\n" +
                 plugin.getDescription();
          return text;
       }
