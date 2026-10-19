@@ -20,7 +20,6 @@ public class SpeedGraphPluginTest {
         SwingUtilities.invokeAndWait(() -> {
             plugin[0].registerSelected();
             assertEquals("1 MiB/s", ((GraphPanel) plugin[0].getComponent(0)).downloadText());
-            assertNotNull(plugin[0].getOptionPanel());
         });
         plugin[0].fireStatusChanged(STATUS.CLOSED);
         SwingUtilities.invokeAndWait(() -> assertEquals("—", ((GraphPanel) plugin[0].getComponent(0)).downloadText()));

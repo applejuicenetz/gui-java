@@ -15,14 +15,14 @@ import java.util.Locale;
 public class UpDownChart extends JPanel {
     static final long STALE_AFTER = 15000;
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault());
+    static final Color UPLOAD_COLOR = new Color(220, 130, 40);
+    static final Color DOWNLOAD_COLOR = new Color(40, 145, 210);
     private List<SpeedHistory.Sample> samples = List.of();
     private long now;
     private long window = 300000;
     private SpeedFormat format = SpeedFormat.BINARY;
     private double ceiling = 1;
     private long smallerSince;
-    private Color upload = new Color(220, 130, 40);
-    private Color download = new Color(40, 145, 210);
     private long uploadLimit;
     private long downloadLimit;
     private boolean showLimits;
@@ -31,11 +31,6 @@ public class UpDownChart extends JPanel {
     public UpDownChart() {
         setPreferredSize(new Dimension(700, 320));
         setToolTipText("");
-    }
-
-    void setColors(Color upload, Color download) {
-        this.upload = upload;
-        this.download = download;
     }
 
     void setLimits(long upload, long download, boolean visible) {
@@ -99,14 +94,14 @@ public class UpDownChart extends JPanel {
             drawSeries(g, true, width, height);
             drawSeries(g, false, width, height);
             if (showLimits) {
-                drawLimit(g, uploadLimit, upload, width, height);
-                drawLimit(g, downloadLimit, download, width, height);
+                drawLimit(g, uploadLimit, UPLOAD_COLOR, width, height);
+                drawLimit(g, downloadLimit, DOWNLOAD_COLOR, width, height);
             }
         } finally { g.dispose(); }
     }
 
     private void drawSeries(Graphics2D g, boolean up, int width, int height) {
-        g.setColor(up ? upload : download);
+        g.setColor(up ? UPLOAD_COLOR : DOWNLOAD_COLOR);
         g.setStroke(up ? new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10, new float[]{6, 4}, 0) : new BasicStroke(2));
         Path2D path = new Path2D.Double();
         long previous = Long.MIN_VALUE;

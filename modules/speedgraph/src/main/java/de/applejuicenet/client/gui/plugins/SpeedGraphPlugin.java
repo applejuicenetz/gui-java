@@ -108,7 +108,6 @@ public class SpeedGraphPlugin extends PluginConnector implements CoreStatusListe
         refresh();
     }
 
-    @Override public JPanel getOptionPanel() { return new SpeedGraphSettings(settings, this::saveSettings); }
     @Override public void registerSelected() { refresh(); }
     @Override public void fireLanguageChanged() { GuiText.refreshLanguage(); }
 }

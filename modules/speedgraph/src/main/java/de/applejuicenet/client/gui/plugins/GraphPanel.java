@@ -101,11 +101,8 @@ public class GraphPanel extends JPanel {
         upStats.setText(stats(samples, true, format));
         GuiText.clearTextBinding(status);
         status.setText(disconnected ? GuiText.text("plugins.speed.disconnected") : fresh ? GuiText.text("plugins.speed.current") : GuiText.text("plugins.speed.stale"));
-        Color upColor = SpeedGraphSettings.color(settings, "UploadColor", new Color(220, 130, 40));
-        Color downColor = SpeedGraphSettings.color(settings, "DownloadColor", new Color(40, 145, 210));
-        upload.setForeground(upColor);
-        download.setForeground(downColor);
-        chart.setColors(upColor, downColor);
+        upload.setForeground(UpDownChart.UPLOAD_COLOR);
+        download.setForeground(UpDownChart.DOWNLOAD_COLOR);
         chart.setLimits(uploadLimit, downloadLimit, limits.isSelected());
         chart.setData(samples, now, window, format);
     }
