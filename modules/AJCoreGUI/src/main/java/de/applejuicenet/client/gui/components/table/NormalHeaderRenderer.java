@@ -20,7 +20,8 @@ import java.awt.*;
  */
 public class NormalHeaderRenderer extends JButton implements TableCellRenderer
 {
-   private static Font textFont = new JTable().getFont();
+   private LookAndFeel renderedLookAndFeel = UIManager.getLookAndFeel();
+
 
    public NormalHeaderRenderer()
    {
@@ -31,8 +32,13 @@ public class NormalHeaderRenderer extends JButton implements TableCellRenderer
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
                                                   int column)
    {
+      if(renderedLookAndFeel != UIManager.getLookAndFeel())
+      {
+         updateUI();
+         renderedLookAndFeel = UIManager.getLookAndFeel();
+      }
       setText((value == null) ? "" : value.toString());
-      setFont(textFont);
+      setFont(table.getTableHeader().getFont());
       return this;
    }
 }

@@ -20,7 +20,7 @@ import java.awt.*;
  */
 public class SortButtonRenderer extends JButton implements TableCellRenderer
 {
-   private static Font textFont       = new JTable().getFont();
+   private LookAndFeel renderedLookAndFeel = UIManager.getLookAndFeel();
    private int         selectedColumn = -1;
    private boolean     curAscent      = true;
    private JButton     downButton;
@@ -48,6 +48,14 @@ public class SortButtonRenderer extends JButton implements TableCellRenderer
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
                                                   int column)
    {
+      if(renderedLookAndFeel != UIManager.getLookAndFeel())
+      {
+         // Renderer buttons are not children of the table and miss tree UI updates.
+         updateUI();
+         downButton.updateUI();
+         upButton.updateUI();
+         renderedLookAndFeel = UIManager.getLookAndFeel();
+      }
       JButton button = this;
 
       if(selectedColumn == column)
@@ -56,7 +64,7 @@ public class SortButtonRenderer extends JButton implements TableCellRenderer
       }
 
       button.setText(null == value ? "" : value.toString());
-      button.setFont(textFont);
+      button.setFont(table.getTableHeader().getFont());
       return button;
    }
 
