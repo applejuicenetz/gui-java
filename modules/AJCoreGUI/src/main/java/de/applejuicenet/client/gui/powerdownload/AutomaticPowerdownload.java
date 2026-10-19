@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Automatischer Powerdownload: haelt die ersten {@code downloadCount} Downloads
- * (nach {@link Order} sortiert) mit dem eingestellten Powerdownload-Wert aktiv
- * und pausiert alle uebrigen wartenden Downloads.
+ * Automatic powerdownload: keeps the first {@code downloadCount} downloads
+ * (sorted by {@link Order}) active with the configured powerdownload value
+ * and pauses all other waiting downloads.
  *
  * @author Maj0r [aj@tkl-soft.de] &amp; loevenwong
  */
@@ -32,7 +32,7 @@ public class AutomaticPowerdownload extends Thread {
 
     private volatile int powerdownloadValue = 12;
     private volatile int downloadCount = 2;
-    private volatile int sleeptime = 30000;
+    private volatile int sleepTime = 30000;
     private volatile Order[] order = new Order[] {
             Order.SOURCES, Order.PERCENT_LOADED, Order.SIZE, Order.ID};
 
@@ -46,12 +46,12 @@ public class AutomaticPowerdownload extends Thread {
     }
 
     public final void run() {
-        logger.debug("Automatic powerdownload started (interval {} ms, {} downloads, power {})", sleeptime, downloadCount, powerdownloadValue);
+        logger.debug("Automatic powerdownload started (interval {} ms, {} downloads, power {})", sleepTime, downloadCount, powerdownloadValue);
         try {
             while (!isInterrupted()) {
                 if (!paused) {
                     doAction();
-                    sleep(sleeptime);
+                    sleep(sleepTime);
                 }
 
                 sleep(1000);
@@ -76,10 +76,10 @@ public class AutomaticPowerdownload extends Thread {
     }
 
     /** Applies new settings; takes effect from the next run. */
-    public void applySettings(int downloadCount, int powerdownloadValue, int sleeptimeMillis, Order[] order) {
+    public void applySettings(int downloadCount, int powerdownloadValue, int sleepTimeMillis, Order[] order) {
         this.downloadCount = downloadCount;
         this.powerdownloadValue = powerdownloadValue;
-        this.sleeptime = sleeptimeMillis;
+        this.sleepTime = sleepTimeMillis;
         this.order = order.clone();
     }
 

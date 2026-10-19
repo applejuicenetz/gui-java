@@ -117,13 +117,13 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
 
                     case KeyEvent.VK_UP: {
                         btnActive.setSelected(true);
-                        alterRatio(true);
+                        changeRatio(true);
                         break;
                     }
 
                     case KeyEvent.VK_DOWN: {
                         btnActive.setSelected(true);
-                        alterRatio(false);
+                        changeRatio(false);
                         break;
                     }
 
@@ -188,13 +188,13 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
         btnPowerdownloadUp.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 btnActive.setSelected(true);
-                alterRatio(true);
+                changeRatio(true);
             }
         });
         btnPowerdownloadDown.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 btnActive.setSelected(true);
-                alterRatio(false);
+                changeRatio(false);
             }
         });
         constraints2.gridx = 1;
@@ -309,7 +309,7 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
         backPanel.add(btnAutoPowerdownload, constraints);
         btnAutoPowerdownload.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                alterAutoPowerdownload();
+                toggleAutoPowerdownload();
             }
         });
         constraints.gridy = 13;
@@ -346,7 +346,7 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
         }
     }
 
-    private void alterAutoPowerdownload() {
+    private void toggleAutoPowerdownload() {
         if (btnAutoActive.isSelected()) {
             if (autoPowerdownloadThread == null && autoFrom.isEnabled()) {
                 if (!openAutoPowerdownloadSettings()) {
@@ -412,7 +412,7 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
 
     private void applyAutoPowerdownloadSettings(AutomaticPowerdownload powerdownload) {
         powerdownload.applySettings(autoPowerdownloadDialog.getDownloadCount(), autoPowerdownloadDialog.getPowerDownload(),
-                autoPowerdownloadDialog.getSleeptime(), autoPowerdownloadDialog.getOrder());
+                autoPowerdownloadDialog.getSleepTime(), autoPowerdownloadDialog.getOrder());
     }
 
     private void openAutomaticPowerdownloadSettings() {
@@ -456,7 +456,7 @@ public class PowerDownloadPanel extends JPanel implements LanguageListener, Data
         return minimum;
     }
 
-    private void alterRatio(boolean increase) {
+    private void changeRatio(boolean increase) {
         try {
             String temp = ratio.getText();
             int pos = temp.indexOf('.');

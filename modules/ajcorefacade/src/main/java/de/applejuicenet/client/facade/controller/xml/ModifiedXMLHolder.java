@@ -1010,11 +1010,11 @@ public class ModifiedXMLHolder extends DefaultHandler
 
       if(tryConnectToServer != -1)
       {
-         Object alterServer = serverMap.get(tryConnectToServer);
+         Object previousServer = serverMap.get(tryConnectToServer);
 
-         if(alterServer != null)
+         if(previousServer != null)
          {
-            ((ServerDO) alterServer).setTryConnect(false);
+            ((ServerDO) previousServer).setTryConnect(false);
          }
 
          information.setServer(null);
@@ -1043,11 +1043,11 @@ public class ModifiedXMLHolder extends DefaultHandler
 
       if(connectedWithServerId != -1)
       {
-         Object alterServer = serverMap.get(connectedWithServerId);
+         Object previousServer = serverMap.get(connectedWithServerId);
 
-         if(alterServer != null)
+         if(previousServer != null)
          {
-            ((ServerDO) alterServer).setConnected(false);
+            ((ServerDO) previousServer).setConnected(false);
          }
 
          information.setServer(null);

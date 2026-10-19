@@ -26,7 +26,7 @@ import java.awt.event.*;
  */
 public class NewServerDialog extends JDialog {
     private JButton ok = new JButton();
-    private JTextField dyn = new JTextField();
+    private JTextField dynamicDns = new JTextField();
     private JTextField port = new JTextField();
     private boolean legal = false;
     private String link = "";
@@ -53,7 +53,7 @@ public class NewServerDialog extends JDialog {
 
         setTitle(languageSelector.getFirstAttributeByTagName("addserverform.caption"));
         ok.setText(languageSelector.getFirstAttributeByTagName("addserverform.okbtn.caption"));
-        dyn.setColumns(15);
+        dynamicDns.setColumns(15);
         port.setColumns(5);
         port.setDocument(new NumberInputVerifier());
         getContentPane().setLayout(new BorderLayout());
@@ -71,7 +71,7 @@ public class NewServerDialog extends JDialog {
         constraints.insets.left = 0;
         constraints.gridx = 1;
         constraints.gridy = 0;
-        panel2.add(dyn, constraints);
+        panel2.add(dynamicDns, constraints);
         constraints.gridy = 1;
         panel2.add(port, constraints);
         getContentPane().add(panel2, BorderLayout.CENTER);
@@ -90,9 +90,9 @@ public class NewServerDialog extends JDialog {
         });
         ok.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                if (dyn.getText().length() > 0 && port.getText().length() > 0) {
+                if (dynamicDns.getText().length() > 0 && port.getText().length() > 0) {
                     legal = true;
-                    link = "ajfsp://server|" + dyn.getText() + "|" + port.getText();
+                    link = "ajfsp://server|" + dynamicDns.getText() + "|" + port.getText();
                     close();
                 }
             }

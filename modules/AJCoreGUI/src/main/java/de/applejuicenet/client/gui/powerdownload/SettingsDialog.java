@@ -23,11 +23,11 @@ public class SettingsDialog extends JDialog implements ActionListener {
 
     private int powerDownload = 12;
     private int downloadCount = 2;
-    private int sleeptime = 30;
+    private int sleepTime = 30;
     private boolean confirmed;
     private JTextField tfPowerdownloadValue = new JTextField();
     private JTextField tfPowerdownloadCount = new JTextField();
-    private JTextField tfSleeptime = new JTextField();
+    private JTextField tfSleepTime = new JTextField();
     private JButton btnOk = new JButton("Ok");
     private JList listSorting = new JList();
     private DefaultListModel listSortingModel = new DefaultListModel();
@@ -35,11 +35,11 @@ public class SettingsDialog extends JDialog implements ActionListener {
     private JLabel btnDown;
 
     public SettingsDialog(Frame parent, int powerDownload,
-            int downloadCount, int sleeptime) {
+            int downloadCount, int sleepTime) {
         super(parent, true);
         this.powerDownload = powerDownload;
         this.downloadCount = downloadCount;
-        this.sleeptime = sleeptime;
+        this.sleepTime = sleepTime;
         listSorting.setModel(listSortingModel);
         initGui();
         initData();
@@ -71,7 +71,7 @@ public class SettingsDialog extends JDialog implements ActionListener {
         verifier.setSpecialPattern("^([1-4]?[0-9]|50$)([,.][0-9]{0,2})?$");
         tfPowerdownloadValue.setDocument(verifier);
         tfPowerdownloadCount.setDocument(new NumberInputVerifier(1, 99));
-        tfSleeptime.setDocument(new NumberInputVerifier(0,
+        tfSleepTime.setDocument(new NumberInputVerifier(0,
                 Integer.MAX_VALUE / 1000));
 
         getContentPane().setLayout(new GridBagLayout());
@@ -104,14 +104,14 @@ public class SettingsDialog extends JDialog implements ActionListener {
         constr.gridy++;
         getContentPane().add(tfPowerdownloadCount, constr);
         constr.gridy++;
-        getContentPane().add(tfSleeptime, constr);
+        getContentPane().add(tfSleepTime, constr);
         constr.gridy++;
         getContentPane().add(btnUp, constr);
         constr.gridy++;
         getContentPane().add(btnDown, constr);
 
         listSorting.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tfSleeptime.setText(Integer.toString(sleeptime));
+        tfSleepTime.setText(Integer.toString(sleepTime));
         tfPowerdownloadValue.setText(Double.toString((powerDownload + 10) / 10.0));
         tfPowerdownloadCount.setText(Integer.toString(downloadCount));
 
@@ -123,7 +123,7 @@ public class SettingsDialog extends JDialog implements ActionListener {
         btnOk.addActionListener(this);
         tfPowerdownloadCount.addActionListener(this);
         tfPowerdownloadValue.addActionListener(this);
-        tfSleeptime.addActionListener(this);
+        tfSleepTime.addActionListener(this);
         btnUp.addMouseListener(new MouseAdapter() {
 
             public void mouseClicked(MouseEvent e) {
@@ -186,15 +186,15 @@ public class SettingsDialog extends JDialog implements ActionListener {
             returnValue = false;
         }
         try {
-            int slt = Integer.parseInt(tfSleeptime.getText());
+            int slt = Integer.parseInt(tfSleepTime.getText());
             if (slt >= 30) {
-                sleeptime = slt;
+                sleepTime = slt;
             } else {
-                tfSleeptime.setText(Integer.toString(sleeptime));
+                tfSleepTime.setText(Integer.toString(sleepTime));
                 returnValue = false;
             }
         } catch (NumberFormatException e) {
-            tfSleeptime.setText(Integer.toString(sleeptime));
+            tfSleepTime.setText(Integer.toString(sleepTime));
             returnValue = false;
         }
         return returnValue;
@@ -208,8 +208,8 @@ public class SettingsDialog extends JDialog implements ActionListener {
         return powerDownload;
     }
 
-    public int getSleeptime() {
-        return sleeptime * 1000;
+    public int getSleepTime() {
+        return sleepTime * 1000;
     }
 
     public boolean isConfirmed() {
