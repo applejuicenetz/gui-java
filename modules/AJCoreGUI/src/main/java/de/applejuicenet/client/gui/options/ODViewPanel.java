@@ -14,7 +14,6 @@ import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.controller.OptionsManager;
 import de.applejuicenet.client.gui.controller.OptionsManagerImpl;
 import de.applejuicenet.client.shared.IconManager;
-import de.applejuicenet.client.shared.MultiLineToolTip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +53,7 @@ public class ODViewPanel extends JPanel implements OptionsRegister {
         LanguageSelector languageSelector = LanguageSelector.getInstance();
         IconManager im = IconManager.getInstance();
 
-        menuIcon = im.getIcon("opt_standard");
+        menuIcon = im.getIcon("opt_ansicht");
         menuText = languageSelector.getFirstAttributeByTagName("javagui.options.general.caption");
         cmbShowStartscreen.setText(languageSelector.getFirstAttributeByTagName("javagui.options.view.showstartscreen"));
 
@@ -113,32 +112,28 @@ public class ODViewPanel extends JPanel implements OptionsRegister {
         }
         cmbLog.addItemListener(e -> dirty = true);
 
-        ImageIcon icon = im.getIcon("hint");
-        JLabel hint3 = new JLabel(icon) {
-            public JToolTip createToolTip() {
-                MultiLineToolTip tip = new MultiLineToolTip();
-
-                tip.setComponent(this);
-                return tip;
-            }
-        };
-        hint3.setToolTipText(languageSelector.getFirstAttributeByTagName("javagui.options.logging.tooltip"));
-
         JPanel logRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         logRow.add(GuiText.label("javagui.options.logging"));
-        logRow.add(Box.createHorizontalStrut(5));
+        logRow.add(Box.createHorizontalStrut(8));
         logRow.add(cmbLog);
-        logRow.add(Box.createHorizontalStrut(5));
-        logRow.add(hint3);
 
-        JPanel box = new JPanel();
-        box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
-        box.add(group("javagui.options.group.start", cmbShowStartscreen, loadPlugins, updateNotification, cmbCloseToTray));
-        box.add(group("javagui.options.group.display", cmbTableWidths, cmbMaskIp));
+        JPanel box = new JPanel(new GridBagLayout());
+        GridBagConstraints groupConstraints = new GridBagConstraints();
+        groupConstraints.gridx = 0;
+        groupConstraints.weightx = 1;
+        groupConstraints.fill = GridBagConstraints.HORIZONTAL;
+        groupConstraints.insets = new Insets(0, 0, 12, 0);
+        groupConstraints.gridy = 0;
+        box.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        box.setName("generalGroups");
+        box.add(group("javagui.options.group.start", cmbShowStartscreen, loadPlugins, updateNotification, cmbCloseToTray, logRow), groupConstraints);
+        groupConstraints.gridy++;
+        box.add(group("javagui.options.group.display", cmbTableWidths, cmbMaskIp), groupConstraints);
+        groupConstraints.gridy++;
+        groupConstraints.insets.bottom = 0;
         box.add(group("javagui.options.group.refresh",
                 intervalRow("javagui.options.refresh.corepoll", corePollSeconds),
-                intervalRow("javagui.options.refresh.partlist", partlistSeconds)));
-        box.add(group("javagui.options.group.logging", logRow));
+                intervalRow("javagui.options.refresh.partlist", partlistSeconds)), groupConstraints);
 
         add(box, BorderLayout.NORTH);
 
@@ -183,7 +178,12 @@ public class ODViewPanel extends JPanel implements OptionsRegister {
         JPanel panel = new JPanel();
 
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(BorderFactory.createTitledBorder(LanguageSelector.getInstance().getFirstAttributeByTagName(titleKey)));
+        Color border = UIManager.getColor("Separator.foreground");
+        if (border == null) border = Color.GRAY;
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(BorderFactory.createLineBorder(border),
+                        LanguageSelector.getInstance().getFirstAttributeByTagName(titleKey)),
+                BorderFactory.createEmptyBorder(6, 10, 8, 10)));
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
         for (JComponent c : components) {
             c.setAlignmentX(Component.LEFT_ALIGNMENT);

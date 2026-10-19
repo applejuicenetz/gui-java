@@ -30,7 +30,7 @@ public class OptionsDialog extends JDialog
    private JButton            cancel;
    private AJSettings         ajSettings;
    private ConnectionSettings remote;
-   private JList<Object>          menuList;
+   private JTabbedPane        tabs;
    private ODStandardPanel    standardPanel;
    private ODCoreConnectionPanel  coreConnectionPanel;
    private ODConnectionPanel  connectionPanel;
@@ -38,8 +38,7 @@ public class OptionsDialog extends JDialog
    private ODViewPanel     viewPanel;
    private ODPluginPanel      pluginPanel;
    private OptionsRegister[]  optionPanels;
-   private CardLayout         registerLayout = new CardLayout();
-   private JPanel             registerPanel  = new JPanel(registerLayout);
+
 
    public OptionsDialog(JFrame parent) throws HeadlessException
    {
@@ -70,59 +69,21 @@ public class OptionsDialog extends JDialog
       viewPanel    = new ODViewPanel();
       pluginPanel     = new ODPluginPanel(this);
 
-      // Section 1: settings that are sent to the core
-      OptionsRegister[] coreSection = {standardPanel, coreConnectionPanel, connectionPanel};
-      // Section 2: settings that only affect the JavaGUI
-      OptionsRegister[] guiSection = {viewPanel, proxyPanel, pluginPanel};
-
-      DefaultListModel<Object> model = new DefaultListModel<>();
-
-      model.addElement(new SectionHeader(languageSelector.getFirstAttributeByTagName("javagui.options.section.core")));
-      for(OptionsRegister r : coreSection)
-      {
-         model.addElement(r);
-      }
-
-      model.addElement(new SectionHeader(languageSelector.getFirstAttributeByTagName("javagui.options.section.gui")));
-      for(OptionsRegister r : guiSection)
-      {
-         model.addElement(r);
-      }
-
-      optionPanels = new OptionsRegister[coreSection.length + guiSection.length];
-      System.arraycopy(coreSection, 0, optionPanels, 0, coreSection.length);
-      System.arraycopy(guiSection, 0, optionPanels, coreSection.length, guiSection.length);
-
-      menuList = new JList<>(model);
-      menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-      menuList.setCellRenderer(new MenuListCellRenderer());
-      for(OptionsRegister r : optionPanels)
-      {
-         registerPanel.add(r.getMenuText(), (JPanel) r);
-      }
-
-      menuList.addListSelectionListener(listSelectionEvent -> {
-         Object selected = menuList.getSelectedValue();
-
-         if(selected instanceof OptionsRegister)
-         {
-            registerLayout.show(registerPanel, ((OptionsRegister) selected).getMenuText());
-         }
-      });
-      // headings are not selectable
-      menuList.setSelectionModel(new DefaultListSelectionModel()
-         {
-            @Override
-            public void setSelectionInterval(int index0, int index1)
-            {
-               if(index0 >= 0 && model.get(index0) instanceof OptionsRegister)
-               {
-                  super.setSelectionInterval(index0, index1);
-               }
-            }
-         });
-      menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-      menuList.setSelectedValue(standardPanel, true);
+      connectionPanel.setBorder(BorderFactory.createTitledBorder(
+            languageSelector.getFirstAttributeByTagName("einstform.pwsheet.caption")));
+      JPanel coreContent = new JPanel(new BorderLayout(0, 16));
+      Component fields = standardPanel.getComponent(0);
+      standardPanel.remove(fields);
+      coreContent.add(fields, BorderLayout.NORTH);
+      coreContent.add(connectionPanel, BorderLayout.SOUTH);
+      standardPanel.add(coreContent, BorderLayout.NORTH);
+      optionPanels = new OptionsRegister[] {standardPanel, coreConnectionPanel, connectionPanel,
+            viewPanel, proxyPanel, pluginPanel};
+      tabs = createTabs(new OptionsRegister[] {viewPanel, standardPanel,
+            coreConnectionPanel, proxyPanel, pluginPanel});
+      Dimension contentSize = tabs.getPreferredSize();
+      // Approximate the previous sidebar width when reducing the complete dialog to 70 percent.
+      tabs.setPreferredSize(compactSize(new Dimension(contentSize.width + 180, contentSize.height)));
       saveButton = new JButton(languageSelector.getFirstAttributeByTagName("einstform.Button1.caption"));
       cancel = new JButton(languageSelector.getFirstAttributeByTagName("einstform.Button2.caption"));
       cancel.addActionListener(e -> dispose());
@@ -135,9 +96,8 @@ public class OptionsDialog extends JDialog
       panel.setLayout(flowL);
       panel.add(saveButton);
       panel.add(cancel);
-      getContentPane().add(registerPanel, BorderLayout.CENTER);
+      getContentPane().add(tabs, BorderLayout.CENTER);
       getContentPane().add(panel, BorderLayout.SOUTH);
-      getContentPane().add(new JScrollPane(menuList), BorderLayout.WEST);
       pack();
       setResizable(false);
 
@@ -221,40 +181,32 @@ public class OptionsDialog extends JDialog
       }
    }
 
-   record SectionHeader(String text)
+   static JTabbedPane createTabs(OptionsRegister[] panels)
    {
+      JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
+      for(OptionsRegister panel : panels)
+      {
+         JPanel content = new JPanel(new BorderLayout());
+         content.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+         content.add((JPanel) panel, BorderLayout.CENTER);
+         if(panel instanceof ODPluginPanel)
+         {
+            tabs.addTab(panel.getMenuText(), panel.getIcon(), content);
+         }
+         else
+         {
+            JScrollPane scroll = new JScrollPane(content);
+            scroll.setBorder(BorderFactory.createEmptyBorder());
+            scroll.getVerticalScrollBar().setUnitIncrement(16);
+            tabs.addTab(panel.getMenuText(), panel.getIcon(), scroll);
+         }
+      }
+      return tabs;
    }
 
-   class MenuListCellRenderer implements ListCellRenderer<Object>
+   static Dimension compactSize(Dimension previous)
    {
-      private final JLabel label = new JLabel();
-
-      public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
-      {
-         label.setOpaque(true);
-         label.setFont(list.getFont());
-         label.setEnabled(list.isEnabled());
-         if(value instanceof SectionHeader header)
-         {
-            label.setText(header.text());
-            label.setIcon(null);
-            label.setFont(list.getFont().deriveFont(Font.BOLD));
-            label.setBackground(UIManager.getColor("Panel.background"));
-            label.setForeground(UIManager.getColor("Label.disabledForeground"));
-            label.setBorder(BorderFactory.createCompoundBorder(
-                  BorderFactory.createMatteBorder(0, 0, 1, 0, UIManager.getColor("Separator.foreground")),
-                  BorderFactory.createEmptyBorder(6, 4, 2, 4)));
-            return label;
-         }
-
-         OptionsRegister r = (OptionsRegister) value;
-
-         label.setText(r.getMenuText() + "   ");
-         label.setIcon(r.getIcon());
-         label.setBorder(BorderFactory.createEmptyBorder(4, 12, 4, 0));
-         label.setBackground(isSelected ? list.getSelectionBackground() : list.getBackground());
-         label.setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());
-         return label;
-      }
+      return new Dimension(Math.max(560, (int) Math.ceil(previous.width * 0.7 / 10) * 10),
+            (int) Math.ceil((previous.height * 0.77 + 100) / 10) * 10);
    }
 }

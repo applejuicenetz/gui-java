@@ -14,6 +14,8 @@
   - Spaltenüberschriften und weitere feste Texte kommen aus den Sprachdateien
   - Plugin-Beschreibungen auf Deutsch und Englisch
   - Optionen „Allgemein“: Abfrageintervall des Cores (0,5–10 s) und der Teilliste (1–30 s) einstellbar
+  - Optionen: kompakter Dialog mit Tabs, klaren Gruppen und einheitlichen Feldern; Infos hinter den Labels
+  - Proxy-Hinweis erklärt Geltungsbereich: Verbindung zwischen JavaGUI und XML-API des Cores
   - Zweiter Start erkennt die laufende GUI zuverlässig und übergibt Links und AJL-Dateien ohne festen Port
   - Core-Befehle prüfen Antworten und Passwortfehler; Anfragen enden spätestens nach 70 Sekunden
   - SpeedGraph: feste Farben statt Farbeinstellungen; Plugins haben keine eigenen Einstellungen mehr

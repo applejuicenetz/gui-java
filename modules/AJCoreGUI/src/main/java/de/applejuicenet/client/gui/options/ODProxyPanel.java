@@ -118,8 +118,16 @@ public class ODProxyPanel extends JPanel implements OptionsRegister {
         constraints.gridy = 4;
         constraints.gridx = 0;
         constraints.gridwidth = 2;
+        constraints.weightx = 1;
+        JLabel explanation = new JLabel("<html>" + languageSelector.getFirstAttributeByTagName(
+                "javagui.options.proxy.scope") + "</html>");
+        explanation.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0));
+        panel1.add(explanation, constraints);
+        constraints.gridy = 5;
         panel2.add(use);
         panel1.add(panel2, constraints);
+        // Keep the explanatory text from setting the dialog width.
+        explanation.setPreferredSize(new Dimension(0, explanation.getPreferredSize().height * 2));
 
         add(panel1, BorderLayout.NORTH);
     }

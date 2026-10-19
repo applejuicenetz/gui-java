@@ -106,9 +106,9 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
       constraints.insets.top  = 5;
       constraints.insets.left = 5;
 
-      panel1.add(label1, constraints);
+      if(quickConnectionSettingsDialog != null) panel1.add(label1, constraints);
 
-      int gridy = 1;
+      int gridy = quickConnectionSettingsDialog != null ? 1 : 0;
 
       if(showPort)
       {
@@ -119,15 +119,31 @@ public class ODConnectionPanel extends JPanel implements OptionsRegister
 
       constraints.gridy = gridy;
       gridy++;
-      panel1.add(label3, constraints);
+      if(quickConnectionSettingsDialog == null)
+      {
+         JPanel passwordLabel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+         passwordLabel.add(label3);
+         JLabel hint = new JLabel(im.getIcon("hint")) {
+            @Override public JToolTip createToolTip() {
+               JToolTip tip = new de.applejuicenet.client.shared.MultiLineToolTip();
+               tip.setComponent(this);
+               return tip;
+            }
+         };
+         hint.setToolTipText(languageSelector.getFirstAttributeByTagName("javagui.options.remote.passwordhint"));
+         passwordLabel.add(Box.createHorizontalStrut(5));
+         passwordLabel.add(hint);
+         panel1.add(passwordLabel, constraints);
+      }
+      else panel1.add(label3, constraints);
 
       constraints.insets.right = 5;
       constraints.gridy        = 0;
       constraints.gridx        = 1;
       constraints.weightx      = 1;
-      panel1.add(host, constraints);
+      if(quickConnectionSettingsDialog != null) panel1.add(host, constraints);
 
-      gridy = 1;
+      gridy = quickConnectionSettingsDialog != null ? 1 : 0;
       if(showPort)
       {
          constraints.gridy = gridy;

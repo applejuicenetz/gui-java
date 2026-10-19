@@ -69,15 +69,6 @@ public class ODCoreConnectionPanel extends JPanel implements OptionsRegister {
         setLayout(new BorderLayout());
         JPanel panel1 = new JPanel(new GridBagLayout());
 
-        JPanel panel2 = new JPanel(new GridBagLayout());
-        JPanel panel3 = new JPanel(new GridBagLayout());
-        JPanel panel4 = new JPanel(new GridBagLayout());
-        JPanel panel5 = new JPanel(new GridBagLayout());
-        JPanel panel6 = new JPanel(new GridBagLayout());
-        JPanel panel7 = new JPanel(new GridBagLayout());
-        JPanel panel8 = new JPanel(new GridBagLayout());
-        JPanel panel10 = new JPanel(new GridBagLayout());
-        JPanel panel12 = new JPanel(new GridBagLayout());
         FlowLayout flowL = new FlowLayout();
 
         flowL.setAlignment(FlowLayout.RIGHT);
@@ -136,87 +127,48 @@ public class ODCoreConnectionPanel extends JPanel implements OptionsRegister {
             }
         });
 
+        JPanel slot = new JPanel(new BorderLayout(5, 0));
+        slot.add(kbSlider, BorderLayout.CENTER);
+        slot.add(kbSlot, BorderLayout.EAST);
+        JLabel[] labels = {label1, label2, label3, label4, label5, label6};
+        JComponent[] fields = {maxConnections, maxUpload, slot, maxDownload,
+                maxConnectionsPerTurn, maxSourcesPerFile};
+        String[] hints = {"javagui.options.connection.hint.maxconnections",
+                "javagui.options.connection.hint.maxupload", "javagui.options.connection.hint.slot",
+                "javagui.options.connection.hint.maxdownload", "javagui.options.connection.hint.newconnections",
+                "javagui.options.connection.hint.sources"};
+        for (int row = 0; row < labels.length; row++) {
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.gridy = row;
+            constraints.fill = GridBagConstraints.BOTH;
+            constraints.insets = new Insets(5, 5, 0, 0);
+            panel1.add(labels[row], constraints);
+            constraints.gridx = 1;
+            JLabel hint = new JLabel(im.getIcon("hint")) {
+                @Override public JToolTip createToolTip() {
+                    JToolTip tip = new de.applejuicenet.client.shared.MultiLineToolTip();
+                    tip.setComponent(this);
+                    return tip;
+                }
+            };
+            hint.setToolTipText(languageSelector.getFirstAttributeByTagName(hints[row]));
+            panel1.add(hint, constraints);
+            constraints.gridx = 2;
+            constraints.weightx = 1;
+            constraints.insets.right = 5;
+            panel1.add(fields[row], constraints);
+        }
+
         GridBagConstraints constraints = new GridBagConstraints();
-
-        constraints.anchor = GridBagConstraints.NORTH;
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.insets.top = 5;
-
-        constraints.insets.left = 5;
-        panel2.add(label1, constraints);
-        constraints.gridx = 1;
+        constraints.gridy = labels.length;
+        constraints.gridwidth = 3;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weightx = 1;
-        panel2.add(maxConnections, constraints);
-        constraints.weightx = 0;
-
-        constraints.gridx = 0;
-        panel3.add(label2, constraints);
-        constraints.gridx = 1;
-        constraints.weightx = 1;
-        panel3.add(maxUpload, constraints);
-        constraints.weightx = 0;
-
-        constraints.gridx = 0;
-        panel4.add(label3, constraints);
-        constraints.gridx = 1;
-        constraints.weightx = 1;
-        panel4.add(kbSlider, constraints);
-        constraints.gridx = 2;
-        constraints.weightx = 0;
-        panel4.add(kbSlot, constraints);
-
-        constraints.gridx = 0;
-        panel5.add(label4, constraints);
-        constraints.gridx = 1;
-        constraints.weightx = 1;
-        panel5.add(maxDownload, constraints);
-        constraints.weightx = 0;
-
-        constraints.gridx = 0;
-        panel10.add(label5, constraints);
-        constraints.gridx = 1;
-        constraints.weightx = 1;
-        panel10.add(maxConnectionsPerTurn, constraints);
-        constraints.weightx = 0;
-
-        constraints.gridx = 0;
-        panel12.add(label6, constraints);
-        constraints.gridx = 1;
-        constraints.weightx = 1;
-        panel12.add(maxSourcesPerFile, constraints);
-        constraints.weightx = 0;
-
+        constraints.insets = new Insets(5, 5, 0, 5);
         panel9.add(automaticConnect);
-
-        constraints.gridx = 0;
-        constraints.weightx = 1;
-        constraints.gridy = 0;
-        constraints.insets.right = 5;
-        panel1.add(panel2, constraints);
-        constraints.gridy = 1;
-        panel1.add(panel3, constraints);
-        constraints.gridy = 2;
-        panel1.add(panel4, constraints);
-        constraints.gridy = 3;
-        panel1.add(panel5, constraints);
-        constraints.gridy = 4;
-        panel1.add(panel6, constraints);
-        constraints.gridy = 5;
-        panel1.add(panel7, constraints);
-        constraints.gridy = 6;
-        panel1.add(panel8, constraints);
-        constraints.gridy = 7;
-        panel1.add(panel10, constraints);
-        constraints.gridy = 8;
-        panel1.add(panel12, constraints);
-        constraints.gridy = 9;
         panel1.add(panel9, constraints);
-
-        constraints.gridy = 10;
+        constraints.gridy++;
         JPanel panel11 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-
         panel11.add(wizard);
         panel1.add(panel11, constraints);
 

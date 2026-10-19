@@ -106,7 +106,7 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         hint1.setToolTipText(languageSelector.getFirstAttributeByTagName("javagui.options.standard.tooltip_temp"));
         hint2.setToolTipText(languageSelector.getFirstAttributeByTagName("javagui.options.standard.tooltip_port"));
         hint3.setToolTipText(languageSelector.getFirstAttributeByTagName("javagui.options.standard.tooltip_nick"));
-        hint4.setToolTipText(languageSelector.getFirstAttributeByTagName("einstform.Label1.caption"));
+        hint4.setToolTipText(languageSelector.getFirstAttributeByTagName("javagui.options.standard.tooltip_incoming"));
         hint6.setToolTipText(languageSelector.getFirstAttributeByTagName("javagui.options.standard.tooltip_xmlport"));
 
         Icon icon2 = im.getIcon("folderopen");
@@ -119,71 +119,28 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
         openIncoming.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         openIncoming.addMouseListener(dcMouseAdapter);
 
-        GridBagConstraints constraints = new GridBagConstraints();
-
-        constraints.anchor = GridBagConstraints.NORTH;
-        constraints.fill = GridBagConstraints.BOTH;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.insets.top = 5;
-
-        JPanel panel1 = new JPanel(new GridBagLayout());
-        JPanel panel2 = new JPanel(new GridBagLayout());
-        JPanel panel3 = new JPanel(new GridBagLayout());
-        JPanel panel4 = new JPanel(new GridBagLayout());
-        JPanel panel7 = new JPanel(new GridBagLayout());
-        JPanel panel10 = new JPanel(new GridBagLayout());
-
-        constraints.insets.right = 5;
-        constraints.insets.left = 4;
-        panel1.add(label1, constraints);
-        panel2.add(label2, constraints);
-        panel3.add(label3, constraints);
-        panel4.add(label4, constraints);
-        panel7.add(label6, constraints);
-
-        constraints.insets.left = 0;
-        constraints.insets.right = 2;
-        constraints.gridx = 1;
-        constraints.weightx = 1;
-        panel1.add(temp, constraints);
-        panel2.add(incoming, constraints);
-        panel3.add(port, constraints);
-        panel7.add(xmlPort, constraints);
-        panel4.add(nick, constraints);
-        constraints.gridx = 2;
-        constraints.weightx = 0;
-        panel1.add(openTemp, constraints);
-        panel2.add(openIncoming, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.weightx = 1;
-        panel6.add(panel1, constraints);
-        constraints.gridy = 1;
-        panel6.add(panel2, constraints);
-        constraints.gridy = 2;
-        panel6.add(panel3, constraints);
-        constraints.gridy = 3;
-        panel6.add(panel7, constraints);
-        constraints.gridy = 4;
-        panel6.add(panel4, constraints);
-        constraints.gridy = 5;
-        panel6.add(panel10, constraints);
-
-        constraints.insets.top = 10;
-        constraints.gridx = 1;
-        constraints.gridy = 0;
-        constraints.weightx = 0;
-        panel6.add(hint1, constraints);
-        constraints.gridy = 2;
-        panel6.add(hint2, constraints);
-        constraints.gridy = 3;
-        panel6.add(hint6, constraints);
-        constraints.gridy = 4;
-        panel6.add(hint3, constraints);
-
-
+        JLabel[] labels = {label1, label2, label3, label6, label4};
+        JLabel[] hints = {hint1, hint4, hint2, hint6, hint3};
+        JTextField[] fields = {temp, incoming, port, xmlPort, nick};
+        JLabel[] choosers = {openTemp, openIncoming, null, null, null};
+        for (int row = 0; row < labels.length; row++) {
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.gridy = row;
+            constraints.fill = GridBagConstraints.BOTH;
+            constraints.insets = new Insets(5, 5, 0, 0);
+            panel6.add(labels[row], constraints);
+            constraints.gridx = 1;
+            constraints.fill = GridBagConstraints.VERTICAL;
+            if (hints[row] != null) panel6.add(hints[row], constraints);
+            constraints.gridx = 2;
+            constraints.weightx = 1;
+            constraints.fill = GridBagConstraints.BOTH;
+            panel6.add(fields[row], constraints);
+            constraints.gridx = 3;
+            constraints.weightx = 0;
+            constraints.insets.right = 5;
+            if (choosers[row] != null) panel6.add(choosers[row], constraints);
+        }
         add(panel6, BorderLayout.NORTH);
     }
 
@@ -276,12 +233,6 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
     }
 
     class DirectoryChooserMouseAdapter extends MouseAdapter {
-        public void mouseEntered(MouseEvent e) {
-            JLabel source = (JLabel) e.getSource();
-
-            source.setBorder(BorderFactory.createLineBorder(Color.black));
-        }
-
         public void mouseClicked(MouseEvent e) {
             JLabel source = (JLabel) e.getSource();
             String title = "";
@@ -310,10 +261,5 @@ public class ODStandardPanel extends JPanel implements OptionsRegister {
             }
         }
 
-        public void mouseExited(MouseEvent e) {
-            JLabel source = (JLabel) e.getSource();
-
-            source.setBorder(null);
-        }
     }
 }
