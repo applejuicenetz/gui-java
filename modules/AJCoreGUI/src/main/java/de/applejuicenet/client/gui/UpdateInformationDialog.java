@@ -7,6 +7,7 @@ package de.applejuicenet.client.gui;
 import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.shared.DesktopTools;
+import de.applejuicenet.client.shared.ThemeColors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +109,8 @@ public class UpdateInformationDialog extends JDialog {
         constraints.gridy = 2;
         constraints.insets.bottom = 5;
 
-        linkWin.setForeground(Color.blue);
+        Color link = UIManager.getColor("Component.linkColor");
+        linkWin.setForeground(link != null ? link : ThemeColors.pick(Color.blue, new Color(110, 170, 255)));
         linkWin.addMouseListener(new MouseAdapter() {
             public void mouseExited(MouseEvent e) {
                 setCursor(new Cursor(Cursor.DEFAULT_CURSOR));

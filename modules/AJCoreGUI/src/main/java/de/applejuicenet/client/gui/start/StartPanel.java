@@ -4,6 +4,7 @@ import de.applejuicenet.client.facade.ApplejuiceFacade;
 import de.applejuicenet.client.gui.components.GuiController;
 import de.applejuicenet.client.gui.components.TklPanel;
 import de.applejuicenet.client.shared.IconManager;
+import de.applejuicenet.client.shared.ThemeColors;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,8 @@ import java.awt.*;
 public class StartPanel extends TklPanel {
 
     private static final Color APPLE_RED = new Color(146, 36, 60);
+    private static final Color APPLE_RED_DARK = new Color(235, 105, 130);
+    private static final Color WARNING_RED_DARK = new Color(255, 120, 110);
 
     private JLabel warnings;
     private JLabel yourClient;
@@ -46,6 +49,20 @@ public class StartPanel extends TklPanel {
     public void updateUI() {
         super.updateUI();
         applyThemeBackground();
+        applyThemeAccent();
+    }
+
+    /** The dark red of the labels is unreadable on dark themes, so pick a variant per theme. */
+    private void applyThemeAccent() {
+        Color accent = ThemeColors.pick(APPLE_RED, APPLE_RED_DARK);
+        for (JLabel label : new JLabel[] {yourClient, warnings, news, network}) {
+            if (label != null) {
+                label.setForeground(accent);
+            }
+        }
+        if (firewallWarning != null) {
+            firewallWarning.setForeground(ThemeColors.pick(Color.RED, WARNING_RED_DARK));
+        }
     }
 
     /** The look and feel colours are read again after every theme change. */
@@ -138,7 +155,7 @@ public class StartPanel extends TklPanel {
         constraints.gridx = 1;
         constraints.weightx = 1;
         yourClient = new JLabel();
-        yourClient.setForeground(APPLE_RED);
+        yourClient.setForeground(ThemeColors.pick(APPLE_RED, APPLE_RED_DARK));
         panel3.add(yourClient, constraints);
         constraints.weightx = 0;
 
@@ -156,13 +173,13 @@ public class StartPanel extends TklPanel {
 
         constraints.gridx = 1;
         warnings = new JLabel();
-        warnings.setForeground(APPLE_RED);
+        warnings.setForeground(ThemeColors.pick(APPLE_RED, APPLE_RED_DARK));
         panel3.add(warnings, constraints);
 
         constraints.gridy++;
         constraints.insets.left = 15;
         firewallWarning = new JLabel();
-        firewallWarning.setForeground(Color.RED);
+        firewallWarning.setForeground(ThemeColors.pick(Color.RED, WARNING_RED_DARK));
 
         panel3.add(firewallWarning, constraints);
 
@@ -175,7 +192,7 @@ public class StartPanel extends TklPanel {
 
         constraints.gridx = 1;
         news = new JLabel();
-        news.setForeground(APPLE_RED);
+        news.setForeground(ThemeColors.pick(APPLE_RED, APPLE_RED_DARK));
         panel3.add(news, constraints);
 
         constraints.gridy++;
@@ -193,7 +210,7 @@ public class StartPanel extends TklPanel {
 
         constraints.gridx = 1;
         network = new JLabel();
-        network.setForeground(APPLE_RED);
+        network.setForeground(ThemeColors.pick(APPLE_RED, APPLE_RED_DARK));
         panel3.add(network, constraints);
 
         constraints.gridy++;

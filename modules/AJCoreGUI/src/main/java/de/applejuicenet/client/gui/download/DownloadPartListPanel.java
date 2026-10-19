@@ -10,6 +10,7 @@ import de.applejuicenet.client.facade.entity.DownloadSource;
 import de.applejuicenet.client.facade.entity.Part;
 import de.applejuicenet.client.facade.entity.PartList;
 import de.applejuicenet.client.facade.shared.CharacterReplacer;
+import de.applejuicenet.client.shared.ThemeColors;
 import de.applejuicenet.client.gui.controller.LanguageSelector;
 import de.applejuicenet.client.gui.listener.LanguageListener;
 import org.slf4j.Logger;
@@ -308,7 +309,15 @@ public class DownloadPartListPanel extends JPanel implements MouseMotionListener
         }
     }
 
+    /** Black parts and the dark-to-light blue scale vanish on dark themes, so use a brighter scale there. */
     private Color getColorByType(int type) {
+        if (ThemeColors.isDark(getBackground()) && (type == -1 || type >= 1)) {
+            if (type == -1) {
+                return new Color(200, 200, 200);
+            }
+            float t = Math.min(type, 10) / 10f;
+            return new Color(Math.round(60 + 40 * t), Math.round(60 + 100 * t), Math.round(120 + 135 * t));
+        }
         switch (type) {
 
             case -1:
