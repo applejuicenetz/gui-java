@@ -211,6 +211,18 @@ public class HtmlLoaderTest {
     }
 
     @Test
+    public void refusedConnectionWithoutResultKeepsOriginalCause() throws Exception {
+        int closedPort;
+        try (ServerSocket server = new ServerSocket(0, 50, InetAddress.getByName("127.0.0.1"))) {
+            closedPort = server.getLocalPort();
+        }
+        WebSiteNotFoundException error = assertThrows(WebSiteNotFoundException.class,
+                () -> HtmlLoader.getHtmlXMLContent("127.0.0.1", closedPort, HtmlLoader.POST, COMMAND, false,
+                        CONNECT_TIMEOUT_MILLIS, READ_TIMEOUT_MILLIS));
+        assertTrue(error.getCause() instanceof IOException);
+    }
+
+    @Test
     public void rejectsTimeoutsThatWouldAllowUnboundedWaiting() {
         assertThrows(IllegalArgumentException.class, () -> HtmlLoader.getHtmlXMLContent("127.0.0.1", 1,
                 HtmlLoader.GET, COMMAND, true, 0, READ_TIMEOUT_MILLIS));

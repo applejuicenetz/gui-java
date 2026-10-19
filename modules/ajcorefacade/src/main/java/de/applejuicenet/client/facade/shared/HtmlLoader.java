@@ -183,11 +183,7 @@ public abstract class HtmlLoader
       }
       catch(WebSiteNotFoundException wnfE)
       {
-         if(withResult)
-         {
-            throw wnfE;
-         }
-         logger.debug("Core command without a result failed: {}", wnfE.toString());
+         throw wnfE;
       }
 
       return urlContent.toString();
