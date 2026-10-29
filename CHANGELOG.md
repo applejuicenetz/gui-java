@@ -4,6 +4,7 @@
 
 ### Sichtbare Änderungen
 
+- [red171] „Mein Share“: Freigabe-Aktionen klar benannt, ohne Löschen oder Entfernen von Ordnern anzudeuten
 - [red171] Downloads und Quellen: Partliste aktualisiert sich auch bei Auswahl per Pfeiltasten
 
 ## 0.86.5
