@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.86.6 (WIP)
+
+### Sichtbare Änderungen
+
+- [red171] Downloads und Quellen: Partliste aktualisiert sich auch bei Auswahl per Pfeiltasten
+
 ## 0.86.5
 
 ### Sichtbare Änderungen

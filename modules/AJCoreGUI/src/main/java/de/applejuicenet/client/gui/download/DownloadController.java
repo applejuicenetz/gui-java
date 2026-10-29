@@ -73,6 +73,7 @@ public class DownloadController extends GuiController {
     private boolean isFirstDownloadPropertyChanged = true;
     private volatile boolean selected = false;
     private int autoPartListId = -1;
+    private int selectedSourceId = -1;
     private boolean autoPartListEligible;
     private String alreadyLoaded;
     private String invalidLink;
@@ -149,6 +150,11 @@ public class DownloadController extends GuiController {
                 }
             }
         });
+        downloadPanel.getDownloadTable().getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting()) {
+                SwingUtilities.invokeLater(this::updateSelectedDownload);
+            }
+        });
         downloadPanel.getDownloadTable().addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent ke) {
                 switch (ke.getKeyCode()) {
@@ -192,6 +198,24 @@ public class DownloadController extends GuiController {
 
                     downloadSourceClicked(downloadSource);
                 }
+            }
+        });
+        downloadPanel.getDownloadSourceTable().getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting()) {
+                SwingUtilities.invokeLater(() -> {
+                    if (!selected) {
+                        return;
+                    }
+                    int row = downloadPanel.getDownloadSourceTable().getSelectedRow();
+                    if (row != -1) {
+                        DownloadSource source = downloadPanel.getDownloadSourcesTableModel().getRow(row);
+                        if (selectedSourceId != source.getId()) {
+                            downloadSourceClicked(source);
+                        }
+                    } else {
+                        selectedSourceId = -1;
+                    }
+                });
             }
         });
         downloadPartListWatcher = new DownloadPartListWatcher(this);
@@ -380,10 +404,14 @@ public class DownloadController extends GuiController {
     }
 
     private void downloadSourceClicked(DownloadSource downloadSource) {
+        selectedSourceId = downloadSource.getId();
         tryGetPartList(downloadSource);
     }
 
     private void downloadClicked(Download download) {
+        selectedSourceId = -1;
+        autoPartListId = download.getId();
+        autoPartListEligible = download.getStatus() == Download.SEARCHING_LOADING || download.getStatus() == Download.PAUSED;
         tryGetPartList(download);
 
         if (!downloadPanel.getPowerDownloadPanel().isAutomaticPowerdownloadActive()) {
@@ -827,23 +855,30 @@ public class DownloadController extends GuiController {
 
     public void componentLostSelection() {
         selected = false;
+        selectedSourceId = -1;
         autoPartListId = -1;
         updateDownloadPolling();
         downloadPartListWatcher.setDownloadNode((Download) null);
     }
 
     private void selectSingleDownload() {
-        JTable table = downloadPanel.getDownloadTable();
-        boolean newlySelected = TableSelection.selectOnlyRow(table);
-        if (table.getRowCount() != 1) {
+        TableSelection.selectOnlyRow(downloadPanel.getDownloadTable());
+        updateSelectedDownload();
+    }
+
+    private void updateSelectedDownload() {
+        if (!selected) {
             return;
         }
-        Download download = downloadPanel.getDownloadTableModel().getRow(0);
+        int row = downloadPanel.getDownloadTable().getSelectedRow();
+        if (row == -1) {
+            autoPartListId = -1;
+            downloadPartListWatcher.setDownloadNode((Download) null);
+            return;
+        }
+        Download download = downloadPanel.getDownloadTableModel().getRow(row);
         boolean partListEligible = download.getStatus() == Download.SEARCHING_LOADING || download.getStatus() == Download.PAUSED;
-        boolean partListStale = autoPartListId != download.getId() || autoPartListEligible != partListEligible;
-        if (newlySelected || partListStale || downloadPanel.getDownloadSourcesTableModel().getDownload() != download) {
-            autoPartListId = download.getId();
-            autoPartListEligible = partListEligible;
+        if (autoPartListId != download.getId() || autoPartListEligible != partListEligible) {
             downloadClicked(download);
             if (downloadPanel.getDownloadSourcesTableModel().setDownload(download)) {
                 downloadPanel.getDownloadSourcesTableModel().forceResort();
