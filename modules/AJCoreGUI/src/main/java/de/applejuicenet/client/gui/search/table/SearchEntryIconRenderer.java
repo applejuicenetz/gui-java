@@ -26,6 +26,7 @@ public class SearchEntryIconRenderer extends DefaultTableCellRenderer
    {
       SearchEntry entry    = (SearchEntry) value;
       String      filename = entry.getFileNames()[0].getFileName();
+      setForeground(null);
       JLabel      label    = (JLabel) super.getTableCellRendererComponent(table, filename, isSelected, hasFocus, row, column);
 
       label.setOpaque(true);

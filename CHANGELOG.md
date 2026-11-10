@@ -6,6 +6,7 @@
 
 - [red171] „Mein Share“: Freigabe-Aktionen klar benannt, ohne Löschen oder Entfernen von Ordnern anzudeuten
 - [red171] Downloads und Quellen: Partliste aktualisiert sich auch bei Auswahl per Pfeiltasten
+- [red171] Suche: Schrift bleibt in dunklen Themes auch nach Treffern im eigenen Share lesbar
 
 ## 0.86.5
 
